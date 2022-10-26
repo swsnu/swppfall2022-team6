@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import Map from "./../../components/Map/Map";
 import InputSlider from "react-input-range";
+import { useNavigate } from "react-router-dom";
 
 function MainPage() {
     const [searchQuery, setSearchQuery] = useState<string>("");
+    const navigate = useNavigate();
 
-    const onClickMyPageIcon = () => {};
+    const onClickMyPageIcon = () => {
+        navigate("/mypage");
+    };
     const onChangeMapRadius = () => {};
     const onSubmitSearchBox = (e: React.KeyboardEvent<HTMLInputElement>) => {
         //if (e.key === "Enter") {}
@@ -14,14 +18,14 @@ function MainPage() {
     const onClickReportButton = () => {};
 
     return (
-        <div id="MainPage">
-            <div id="UpperContainer">
+        <div className="MainPage">
+            <div id="upper-container">
                 NowSee
-                <button id="mypage-button" onClick={() => onClickMyPageIcon()}>
+                <button id="mypage-button" onClick={onClickMyPageIcon}>
                     MyPage
                 </button>
             </div>
-            <div id="SearchBoxContainer">
+            <div id="search-box-container">
                 <input
                     id="search-box"
                     value={searchQuery}
@@ -30,21 +34,15 @@ function MainPage() {
                 />
             </div>
             <Map />
-            <div id="LowerMapContainer">
+            <div id="lower-map-container">
                 <div id="range-slider"></div>
-                <button
-                    id="findout-button"
-                    onClick={() => onClickFindOutButton()}
-                >
+                <button id="findout-button" onClick={onClickFindOutButton}>
                     Find out
                 </button>
             </div>
-            <div id="BottomContainer">
+            <div id="bottom-container">
                 <span>Current location: </span>
-                <button
-                    id="report-button"
-                    onClick={() => onClickReportButton()}
-                >
+                <button id="report-button" onClick={onClickReportButton}>
                     Report
                 </button>
             </div>

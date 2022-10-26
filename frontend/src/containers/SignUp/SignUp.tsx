@@ -8,13 +8,15 @@ function SignUp() {
     const navigate = useNavigate();
 
     const onClickSignUpButton = () => {
-        //navigate("/");
+        navigate("/");
     };
-    const onClickSignInButton = () => {};
+    const onClickSignInButton = () => {
+        navigate("/signin");
+    };
 
     return (
         <div className="SignUp">
-            <div id="InputContainer">
+            <div id="input-container">
                 <label>
                     Email :{" "}
                     <input
@@ -42,12 +44,12 @@ function SignUp() {
             </div>
             <button
                 id="signup-button"
-                onClick={() => onClickSignUpButton()}
+                onClick={onClickSignUpButton}
                 //disabled={!(email && userName && password)}
             >
                 Sign Up
             </button>
-            <button id="signin-button" onClick={() => onClickSignInButton()}>
+            <button id="signin-button" onClick={onClickSignInButton}>
                 Sign In
             </button>
         </div>

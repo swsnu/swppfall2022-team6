@@ -1,11 +1,26 @@
-import React from 'react'
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function MyBadges() {
-  return (
-    <div>
-      
-    </div>
-  )
+    const navigate = useNavigate();
+    const onClickBackButton = () => {navigate("/mypage")};
+    const onClickBadge = () => {};
+    const onClickSetAsMainBadgeButton = () => {};
+    return (
+        <div className="MyBadges">
+            <button id="back-button" onClick={onClickBackButton}>
+                Back
+            </button>
+            <div id="main-badge"></div>
+            <div id="badge-list"></div>
+            <button
+                id="set-main-badge-button"
+                onClick={onClickSetAsMainBadgeButton}
+            >
+                Set As Main Badge
+            </button>
+        </div>
+    );
 }
 
-export default MyBadges
+export default MyBadges;
