@@ -1,16 +1,29 @@
 import React, { useState } from "react";
 import Map from "./../../components/Map/Map";
-import InputSlider from "react-input-range";
+import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
 import { useNavigate } from "react-router-dom";
+
+const marks = [
+    {value: 0, label: '1km',},
+    {value: 25, label: '2km',},
+    {value: 50, label: '3km',},
+    {value: 75, label: '4km',},
+    {value: 100, label: '5km',},
+  ];
 
 function MainPage() {
     const [searchQuery, setSearchQuery] = useState<string>("");
+    const [radius, setRadius] = useState<number>(25);
     const navigate = useNavigate();
 
     const onClickMyPageIcon = () => {
         navigate("/mypage");
     };
-    const onChangeMapRadius = () => {};
+    const onChangeMapRadius = (event: Event, newValue: number | number[]) => {
+        setRadius(newValue as number);
+
+    };
     const onSubmitSearchBox = (e: React.KeyboardEvent<HTMLInputElement>) => {
         //if (e.key === "Enter") {}
     };
@@ -33,9 +46,23 @@ function MainPage() {
                     onKeyPress={(e) => onSubmitSearchBox(e)}
                 />
             </div>
-            <Map />
+            <Map radius={radius}/>
             <div id="lower-map-container">
-                <div id="range-slider"></div>
+                <Box sx={{ width: 300 }} id="radius-slider">
+                    <Slider
+                        aria-label="Custom marks"
+                        defaultValue={radius}
+                        getAriaValueText={
+                            (value: number): string=>{return `${value}km`}
+                        }
+                        valueLabelDisplay="auto"
+                        valueLabelFormat={
+                            (value: number): string=>{return `${value/25+1}km`}
+                        }
+                        onChange={onChangeMapRadius}
+                        marks={marks}
+                    />
+                </Box>
                 <button id="findout-button" onClick={onClickFindOutButton}>
                     Find out
                 </button>

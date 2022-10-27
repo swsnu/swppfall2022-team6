@@ -1,27 +1,21 @@
 import React, { useState } from "react";
-import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { Map, MapMarker, Circle } from "react-kakao-maps-sdk";
 
-// const Geocoder = kakao.maps.services.Geocoder;
+type IProps = {
+    radius?: number;
+}
 
 type PositionType = {
     lat: number;
     lng: number;
 };
-const markerPosition: PositionType = {lat: 37.44877599087201, lng: 126.95264777802309}
-const centerPosition: PositionType = {lat: 37.4586330265914, lng: 126.95252853624115}
+const markerPosition: PositionType = {lat: 37.44877599087201, lng: 126.95264777802309}; // 서울대 중심
+const centerPosition: PositionType = {lat: 37.4586330265914, lng: 126.95252853624115}; // 302 건물
 
-function MapComponent() {
-    // const geocoder = new  kakao.maps.services.Geocoder();
-    // geocoder.addressSearch(initAddress, function(result, status) {
-    //     // 정상적으로 검색이 완료됐으면 
-    //      if (status === kakao.maps.services.Status.OK) {
-    //         geoPosition = {lat: +result[0].y, lng: +result[0].x}
-    //      }
-    // }); 
-
+function MapComponent(props: IProps) {
+    const {radius} = props;
     const [position, setPosition] = useState<PositionType>(markerPosition)
     return (
-        <>
         <Map
             center={centerPosition}
             style={{ width: "100%", height: "600px" }}
@@ -29,12 +23,20 @@ function MapComponent() {
             onClick={(_t, mouseEvent) => setPosition({
                 lat: mouseEvent.latLng.getLat(),
                 lng: mouseEvent.latLng.getLng(),
-            })}
-        >
+            })}>
             {position && <MapMarker position={position} />}
+            {radius&&
+            <Circle
+                center={position}
+                radius={(radius/25+1)*1000}
+                strokeWeight={5} // 선의 두께입니다
+                strokeColor={"#75B8FA"} // 선의 색깔입니다
+                strokeOpacity={0} // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                strokeStyle={"dash"} // 선의 스타일 입니다
+                fillColor={"#0000FF"} // 채우기 색깔입니다
+                fillOpacity={0.1} // 채우기 불투명도 입니다
+            />}
         </Map>
-        {position && <p>{'클릭한 위치의 위도는 ' + position.lat + ' 이고, 경도는 ' + position.lng + ' 입니다'}</p>}
-        </>
     );
 }
 
