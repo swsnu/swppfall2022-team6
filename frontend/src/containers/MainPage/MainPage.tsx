@@ -3,6 +3,7 @@ import Map from "./../../components/Map/Map";
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import { useNavigate } from "react-router-dom";
+import DetailPage from "../DetailPage/DetailPage";
 
 const marks = [
     {value: 0, label: '1km',},
@@ -48,6 +49,7 @@ function MainPage() {
     const [searchResult, setSearchResult] = useState<SearchResult[]>([]);
     const [searchPagination, setSearchPagination] = useState<kakao.maps.Pagination|undefined>(undefined);
     const [radius, setRadius] = useState<number>(25);
+    const [openReport, setOpenReport] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const searchResultBox = () => {
@@ -81,6 +83,12 @@ function MainPage() {
         setRadius(newValue as number);
 
     };
+    const onClickFindOutButton = () => {
+        navigate("/detail");
+    };
+    const onClickReportButton = () => {
+        setOpenReport(true);
+    };
     const onSubmitSearchBox = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key != "Enter") return;
         const ps = new kakao.maps.services.Places();
@@ -105,8 +113,6 @@ function MainPage() {
         }); 
 
     };
-    const onClickFindOutButton = () => {};
-    const onClickReportButton = () => {};
 
     return (
         <div className="MainPage">
@@ -133,6 +139,7 @@ function MainPage() {
                     <Slider
                         aria-label="Custom marks"
                         defaultValue={radius}
+                        step={2.5}
                         getAriaValueText={
                             (value: number): string=>{return `${value}km`}
                         }
@@ -154,6 +161,7 @@ function MainPage() {
                     Report
                 </button>
             </div>
+            {openReport? <DetailPage/>: null}
         </div>
     );
 }
