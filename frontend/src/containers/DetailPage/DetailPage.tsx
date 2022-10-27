@@ -9,7 +9,7 @@ function DetailPage() {
     const navigate = useNavigate();
 
     const onClickBackButton = () => {
-        navigate("/detail");
+        navigate("/");
     };
     const onClickRefreshButton = () => {};
     const onSubmitSearchBox = (e: React.KeyboardEvent<HTMLInputElement>) => {};
