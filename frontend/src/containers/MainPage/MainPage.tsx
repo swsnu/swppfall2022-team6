@@ -33,23 +33,47 @@ type SearchResult = {
     y: string;
 }
 
+function range(start:number, count:number) {
+    let array = [];
+    while(count--) {
+      array.push(start++);
+    }
+    return array;
+}
+const N_ITEM_PAGE = 15
+
 function MainPage() {
     const [searchQuery, setSearchQuery] = useState<string>("");
-    const [searchResponse, setSearchResponse] = useState<string>(Response.success);
+    const [searchResponse, setSearchResponse] = useState<string>(Response.zero_result);
     const [searchResult, setSearchResult] = useState<SearchResult[]>([]);
+    const [searchPagination, setSearchPagination] = useState<kakao.maps.Pagination|undefined>(undefined);
     const [radius, setRadius] = useState<number>(25);
     const navigate = useNavigate();
 
     const searchResultBox = () => {
+        const pagination = searchPagination as kakao.maps.Pagination;
+        const idxArray: number[] = range(1, pagination.totalCount/N_ITEM_PAGE);
         return (
-            <ul>
-                {searchResult.map((value)=>{
-                    return <li key={value.id}>{value.place_name}</li>
-                })}
-            </ul>
-        )
+            <div className="search-result-box">
+                <ul className="search-result-list">
+                    {searchResult.map((value)=>{
+                        return <li key={value.id} className="search-result">{value.place_name}</li>
+                    })}
+                </ul>
+                <div className="search-result-pagination">
+                    <a href="#" onClick={()=>{pagination.gotoFirst()}}>{"< "}</a>
+                    {idxArray.map((idx)=>{
+                        return (<a 
+                                    href="#" 
+                                    className={idx===1?"on idx": "idx"}
+                                    onClick={()=>{pagination.gotoPage(idx)}}
+                                >{`${idx} `}</a>) 
+                    })}
+                    <a href="#" onClick={()=>{pagination.gotoLast()}}>{">"}</a>
+                </div>
+            </div>
+        );
     }
-
     const onClickMyPageIcon = () => {
         navigate("/mypage");
     };
@@ -60,12 +84,12 @@ function MainPage() {
     const onSubmitSearchBox = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key != "Enter") return;
         const ps = new kakao.maps.services.Places();
-        const infowindow = new kakao.maps.InfoWindow({zIndex:1});
         ps.keywordSearch(searchQuery, (data: SearchResult[], status, pagination)=>{
             if (status === kakao.maps.services.Status.OK) {
                 console.log(data);
                 setSearchResponse(Response.success);
                 setSearchResult(data);
+                setSearchPagination(pagination);
                 return;
             } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
                 alert('검색 결과가 존재하지 않습니다.');
