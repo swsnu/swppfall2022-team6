@@ -14,7 +14,7 @@ function AreaFeed() {
     const onClickRefreshButton = () => {};
     const onSubmitSearchBox = (e: React.KeyboardEvent<HTMLInputElement>) => {};
     const onClickHashtagButton = () => {};
-    const onSelectOnlyPhotos = () => {};
+    // const onSelectOnlyPhotos = () => {};
 
     return (
         <div className="AreaFeed">
