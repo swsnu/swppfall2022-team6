@@ -14,7 +14,9 @@ function MainPage() {
     const onSubmitSearchBox = (e: React.KeyboardEvent<HTMLInputElement>) => {
         //if (e.key === "Enter") {}
     };
-    const onClickFindOutButton = () => {};
+    const onClickFindOutButton = () => {
+        navigate("/detail");
+    };
     const onClickReportButton = () => {};
 
     return (

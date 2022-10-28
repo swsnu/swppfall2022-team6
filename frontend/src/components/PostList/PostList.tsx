@@ -31,6 +31,8 @@ function PostList() {
         }
     ])
 
+    // map 통해서 lat, long 처리 + chain_open, username 추가한 postProps
+
     const clickPostHandler = (post: PostType) => {
         navigate("/detail/" + post.id);
     };
