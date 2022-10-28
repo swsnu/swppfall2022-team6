@@ -10,23 +10,12 @@ jest.mock("react-router", ()=>({
   useNavigate: ()=>mockNavigate,
 }));
 
-const renderComponent = () => {
-  const result = render (
-    <MemoryRouter>
-      <Routes>
-        <Route path="/" element={<Map initPosition={initMarkPosition} radius={25}/>}/>
-      </Routes>
-    </MemoryRouter>
-  );
-  return(result);
-}
-
 describe("<Map />", ()=>{
   beforeEach(()=>{
     jest.clearAllMocks();
   });
   it("should render withour errors", ()=>{
-    const {container} = renderComponent();
+    const {container} = render(<Map initPosition={initMarkPosition} radius={25}/>);
     expect(container).toBeTruthy();
   });
 })
