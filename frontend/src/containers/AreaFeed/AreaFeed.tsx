@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Statistics from "../../components/Statistics/Statistics";
-import Posts from "../../components/PostList/PostList";
 import { useNavigate } from "react-router-dom";
+import PostList from "../../components/PostList/PostList";
 
-function DetailPage() {
+function AreaFeed() {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const navigate = useNavigate();
 
@@ -17,7 +17,7 @@ function DetailPage() {
     const onSelectOnlyPhotos = () => {};
 
     return (
-        <div className="DetailPage">
+        <div className="AreaFeed">
             <div id="upper-container">
                 <button id="back-button" onClick={onClickBackButton}>
                     Back
@@ -40,10 +40,10 @@ function DetailPage() {
                     Only Photos
                 </button>
             </div>
-            <Posts />
+            <PostList />
             <NavigationBar />
         </div>
     );
 }
 
-export default DetailPage;
+export default AreaFeed;

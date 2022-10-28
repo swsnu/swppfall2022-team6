@@ -2,41 +2,40 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Post, { PostType } from "../Post/Post";
-import { AppDispatch } from "../../store";
 
 function PostList() {
     const onClickAddPostButton = () => {};
     const navigate = useNavigate();
-    const dispatch = useDispatch<AppDispatch>();
 
     const [allPosts, setAllPosts] = useState<PostType[]>([
         {
             id: 2,
             user_id: 2,
-            content: "ÇÐ±³´Â ¸¹ÀÌ Ãä³×¿ä¤Ð¤Ð\n°Ñ¿Ê Ã¬±â½Ã´Â°Ô ÁÁÀ» °Í °°¾Æ¿ä!",
+            content: "ï¿½Ð±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½×¿ï¿½Ð¤ï¿½\nï¿½Ñ¿ï¿½ Ã¬ï¿½ï¿½Ã´Â°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Æ¿ï¿½!",
             latitude: 37.44877599087201,
             longitude: 126.95264777802309,
             time: new Date().toLocaleDateString(),
             reply_to: 1,
-            chain_open: false
+            chain_open: false,
         },
         {
             id: 1,
             user_id: 1,
-            content: "Áö±Ý ¼³ÀÔÀº ¸¼±ä ÇÑµ¥ ¹Ù¶÷ÀÌ ¸¹ÀÌ ºÒ¾î¿ä\n°Ñ¿ÊÀ» ¾È Ã¬°Ü ³ª¿Ô´Âµ¥ ÇÐ±³µµ Ãä³ª¿ä? ÀÚ¿¬´ë ÂÊ¿¡...",
+            content:
+                "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ñµï¿½ ï¿½Ù¶ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò¾ï¿½ï¿½\nï¿½Ñ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ Ã¬ï¿½ï¿½ ï¿½ï¿½ï¿½Ô´Âµï¿½ ï¿½Ð±ï¿½ï¿½ï¿½ ï¿½ä³ªï¿½ï¿½? ï¿½Ú¿ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½...",
             latitude: 37.44877599087201,
             longitude: 126.95264777802309,
             time: new Date().toLocaleDateString(),
-            reply_to: 0
-        }
-    ])
+            reply_to: 0,
+        },
+    ]);
 
-    // map ÅëÇØ¼­ lat, long Ã³¸® + chain_open, username Ãß°¡ÇÑ postProps
+    // map ï¿½ï¿½ï¿½Ø¼ï¿½ lat, long Ã³ï¿½ï¿½ + chain_open, username ï¿½ß°ï¿½ï¿½ï¿½ postProps
 
     const clickPostHandler = (post: PostType) => {
-        navigate("/detail/" + post.id);
+        navigate("/areafeed/" + post.id);
     };
-    
+
     return (
         <div id="PostList">
             <div id="PostsContainer">
