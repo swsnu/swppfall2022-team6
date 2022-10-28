@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { useNavigate } from "react-router-dom";
 import AreaFeed from "../AreaFeed/AreaFeed";
+import MapSearch from "../../components/MapSearch/MapSearch";
 
 const marks = [
     { value: 0, label: "0km" },
@@ -43,9 +44,7 @@ function MainPage() {
                     MyPage
                 </button>
             </div>
-            <div className="search-input-contan">
-                <input type="text" className="search-input" />
-            </div>
+            <MapSearch setMarkPosition={setMarkPosition}/>
             <Map initPosition={markPosition} radius={radius} />
             <div id="lower-map-container">
                 <div className="radius-slider-container">
