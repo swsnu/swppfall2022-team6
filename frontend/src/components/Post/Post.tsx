@@ -47,9 +47,11 @@ const Post = (post: postProps) => {
             <div id="chain-toggle">
                 {post.reply_to === 0
                 ? null
-                : (post.chain_open === false 
-                    ? <button id="chain-toggle-button">Show All</button>
-                    : <button id="chain-toggle-button">Close All</button>)
+                : <button id="chain-toggle-button">Show All</button>
+                //  future implementation of chain
+                //     (post.chain_open === false 
+                //     ? <button id="chain-toggle-button">Show All</button>
+                //     : <button id="chain-toggle-button">Close All</button>)
                 }
             </div>
         </div>

@@ -55,6 +55,8 @@ function PostList() {
         navigate("/areafeed/" + post.id);
     };
 
+    const isChainOpen = false;  //default is false when rendered, should be toggled in redux state
+
     return (
         <div id="PostList">
             <div id="PostsContainer">
@@ -64,16 +66,15 @@ function PostList() {
                             <Post
                                 key={post.id}
                                 id={post.id}
-                                user_name={
-                                    users.find((user) => user.user_id == post.user_id)!.user_name
-                                }
+                                user_name={users.find((user) => user.user_id == post.user_id)!.user_name}
                                 content={post.content}
                                 location={post_location} //should come from map API
                                 time={post.time}
                                 reply_to={post.reply_to}
                                 image={""}
-                                chain_open={false}  //default is false when rendered
+                                chain_open={isChainOpen}  //default is false when rendered
                                 clickPost={() => clickPostHandler(post)}
+                                // toggleChain={} for chain open/close w redux
                             />
                         );
                     })}
