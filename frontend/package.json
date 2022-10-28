@@ -70,7 +70,7 @@
             "!src/containers/MyPage/MyPage.tsx",
             "!src/containers/PostDetail/PostDetail.tsx",
             "!src/containers/SignIn/SignIn.tsx",
-            "!src/containers/SignOut/SignOut.tsx",
+            "!src/containers/SignUp/SignUp.tsx",
             "!src/store/index.ts"
         ]
     }
