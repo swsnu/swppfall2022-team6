@@ -8,11 +8,16 @@ from rest_framework.response import Response
 #from rest_framework.decorators import action
 
 class PostViewSet(viewsets.GenericViewSet):
+    '''
+        PostViewSet
+    '''
     # POST /post/
     @transaction.atomic
-    def create(self): # change when using request ; def create(self, request):
+    def create(self, request):
+        del request
         return Response("create post", status=status.HTTP_201_CREATED)
 
     # GET /post/
-    def list(self): # change when using request ; def create(list, request):
+    def list(self, request):
+        del request
         return Response("get post", status=status.HTTP_200_OK)

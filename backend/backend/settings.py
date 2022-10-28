@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'report.apps.ReportConfig',
     'post.apps.PostConfig',
     'hashtag.apps.HashtagConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

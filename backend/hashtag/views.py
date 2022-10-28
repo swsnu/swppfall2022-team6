@@ -10,5 +10,6 @@ from rest_framework.response import Response
 class HashtagViewSet(viewsets.GenericViewSet):
     # POST /hashtag/
     @transaction.atomic
-    def create(self): #change to when using request; def create(self, request):
+    def create(self, request):
+        del request
         return Response("create hashtag", status=status.HTTP_201_CREATED)

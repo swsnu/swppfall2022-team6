@@ -16,21 +16,24 @@ User = get_user_model()
 class UserSignUpView(GenericAPIView):
 
     # POST /user/signup/
-    def post(self): # def post(self, request):
+    def post(self, request):
+        del request
         return Response("signup", status=status.HTTP_201_CREATED)
 
 
 class UserLoginView(GenericAPIView):
 
     # POST /user/signin/
-    def post(self): # def post(self, request):
+    def post(self, request):
+        del request
         return Response("signin", status=status.HTTP_200_OK)
 
 
 class UserLogoutView(GenericAPIView):
 
     # POST /user/signout/
-    def post(self): # def post(self, request):
+    def post(self, request):
+        del request
         return Response("signout", status=status.HTTP_200_OK)
 
 
@@ -40,18 +43,24 @@ class UserViewSet(viewsets.GenericViewSet):
     '''
 
     # GET /user/me/
-    def retrieve(self): # def retrieve(self, request, pk=None):
+    def retrieve(self, request, pk=None):
+        del request
+        del pk
         return Response("get me", status=status.HTTP_200_OK)
 
     # PUT /user/me/
     @transaction.atomic
-    def update(self): # def update(self, request, pk=None):
+    def update(self, request, pk=None):
+        del request
+        del pk
         return Response("put me", status=status.HTTP_200_OK)
 
     # GET/POST /user/:id/badges/
     @action(detail=True, methods=["GET", "POST"])
     @transaction.atomic
-    def badges(self): # def badges(self, request, pk=None):
+    def badges(self, request, pk=None):
+        del request
+        del pk
         if self.request.method == "GET":
             return Response("get badges", status=status.HTTP_200_OK)
 
@@ -61,7 +70,9 @@ class UserViewSet(viewsets.GenericViewSet):
     # GET/PUT /user/:id/radius/
     @action(detail=True, methods=["GET", "PUT"])
     @transaction.atomic
-    def radius(self): # def radius(self, request, pk=None):
+    def radius(self, request, pk=None):
+        del request
+        del pk
         if self.request.method == "GET":
             return Response("get radius", status=status.HTTP_200_OK)
 
@@ -71,7 +82,9 @@ class UserViewSet(viewsets.GenericViewSet):
     # GET/PUT /user/:id/achievement/
     @action(detail=True, methods=["GET", "PUT"])
     @transaction.atomic
-    def achievement(self): # def achievement(self, request, pk=None):
+    def achievement(self, request, pk=None):
+        del request
+        del pk
         if self.request.method == "GET":
             return Response("get achievement", status=status.HTTP_200_OK)
 
@@ -81,15 +94,15 @@ class UserViewSet(viewsets.GenericViewSet):
     # GET /user/:id/report/
     @action(detail=True)
     @transaction.atomic
-    def report(self): # def report(self, request, pk=None):
+    def report(self, request, pk=None):
+        del request
+        del pk
         return Response("get report", status=status.HTTP_200_OK)
 
     # GET /user/:id/post/
     @action(detail=True)
     @transaction.atomic
-    def post(self): # def post(self, request, pk=None):
+    def post(self, request, pk=None):
+        del request
+        del pk
         return Response("get post", status=status.HTTP_200_OK)
-
-
-
-
