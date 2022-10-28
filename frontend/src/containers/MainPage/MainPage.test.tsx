@@ -30,7 +30,8 @@ describe("<MainPage />", ()=>{
   });
   it("should handle report button", async ()=>{
     render(<MainPage />);
-    screen.getByRole("button", {name: "Report"});
-    // fireEvent.click(reportBtn!);
+    console.error = jest.fn();
+    const reportBtn = screen.getByRole("button", {name: "Report"});
+    fireEvent.click(reportBtn!);
   });
 })
