@@ -62,7 +62,16 @@
         "collectCoverageFrom": [
             "src/**/*.{js,jsx,ts,tsx}",
             "!src/index.tsx",
-            "!src/test-utils/*"
+            "!src/test-utils/*",
+            "!src/reportWebVitals.js",
+            "!src/components/NavigationBar/NavigationBar.tsx",
+            "!src/containers/AreaFeed/AreaFeed.tsx",
+            "!src/containers/MyBadges/MyBadges.tsx",
+            "!src/containers/MyPage/MyPage.tsx",
+            "!src/containers/PostDetail/PostDetail.tsx",
+            "!src/containers/SignIn/SignIn.tsx",
+            "!src/containers/SignOut/SignOut.tsx",
+            "!src/store/index.ts"
         ]
     }
 }
