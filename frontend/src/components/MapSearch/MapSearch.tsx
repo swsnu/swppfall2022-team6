@@ -53,7 +53,7 @@ const MapSearch = (props: IProps)=>{
     const ps = new kakao.maps.services.Places();
     ps.keywordSearch(
         searchQuery,
-        (data, status, pagination) => {
+        (data: SearchResult[], status, pagination) => {
             if (status === kakao.maps.services.Status.OK) {
                 console.log(data);
                 setSearchResponse(Response.success);
