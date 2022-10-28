@@ -1,33 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Map, MapMarker, Circle } from "react-kakao-maps-sdk";
 
 type IProps = {
+    initPosition: PositionType;
     radius?: number;
 }
 
-type PositionType = {
+export type PositionType = {
     lat: number;
     lng: number;
 };
-const markerPosition: PositionType = {lat: 37.44877599087201, lng: 126.95264777802309}; // 서울대 중심
-const centerPosition: PositionType = {lat: 37.4586330265914, lng: 126.95252853624115}; // 302 건물
 
 function MapComponent(props: IProps) {
-    const {radius} = props;
-    const [position, setPosition] = useState<PositionType>(markerPosition)
+    const {initPosition, radius} = props;
+    const [markerPosition, setMarkerPosition] = useState<PositionType>(initPosition);
+    const [centerPosition, setCenterPosition] = useState<PositionType>(initPosition);
+    useEffect(()=>{
+        setMarkerPosition(initPosition);
+        setCenterPosition(initPosition);
+    }, [initPosition]);
     return (
         <Map
             center={centerPosition}
             style={{ width: "100%", height: "600px" }}
             level={5}
-            onClick={(_t, mouseEvent) => setPosition({
+            onClick={(_t, mouseEvent) => setMarkerPosition({
                 lat: mouseEvent.latLng.getLat(),
                 lng: mouseEvent.latLng.getLng(),
             })}>
-            {position && <MapMarker position={position} />}
+            {markerPosition && <MapMarker position={markerPosition} />}
             {radius&&
             <Circle
-                center={position}
+                center={markerPosition}
                 radius={(radius/25+1)*1000}
                 strokeWeight={5} // 선의 두께입니다
                 strokeColor={"#75B8FA"} // 선의 색깔입니다
