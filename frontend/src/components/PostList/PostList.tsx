@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Post from "../Post/Post";
 
@@ -66,7 +65,7 @@ function PostList() {
                             <Post
                                 key={post.id}
                                 id={post.id}
-                                user_name={users.find((user) => user.user_id == post.user_id)!.user_name}
+                                user_name={users.find((user) => user.user_id === post.user_id)!.user_name}
                                 content={post.content}
                                 location={post_location} //should come from map API
                                 time={post.time}

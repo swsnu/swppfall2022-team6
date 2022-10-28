@@ -28,13 +28,13 @@ describe("<PostList />", () => {
         render(postList);
         const first_post = screen.getByText("WeatherFairy");
         const second_post = screen.getByText("Toothfairy");
-        expect(first_post).toBeInTheDocument;
-        expect(second_post).toBeInTheDocument;
+        expect(first_post).toBeInTheDocument();
+        expect(second_post).toBeInTheDocument();
     });
     it("should render Add Post button", () => {
         render(postList);
         const addPostButton = screen.getByText("Add Post");
-        expect(addPostButton).toBeInTheDocument;
+        expect(addPostButton).toBeInTheDocument();
     });
     it("should navigate to post detail page when post is clicked", () => {
         render(postList);

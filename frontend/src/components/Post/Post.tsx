@@ -1,6 +1,4 @@
-import React, { useState } from "react";
-import { Chart } from "react-chartjs-2";
-import { Navigate, useNavigate } from "react-router";
+import React from "react";
 
 
 export interface postProps {
