@@ -2,7 +2,7 @@ dist: bionic
 
 jobs:
     include:
-        - language: node_js
+        - language: python, node_js
           node_js: 14
           python: "3.9.6"
           addons:
