@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Map, { PositionType } from "./../../components/Map/Map";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
@@ -22,9 +22,6 @@ function MainPage() {
     const [openReport, setOpenReport] = useState<boolean>(false);
     const [markPosition, setMarkPosition] = useState<PositionType>(initMarkPosition);
     const navigate = useNavigate();
-
-    useEffect(()=>{
-    }, [markPosition])
 
     const onClickMyPageIcon = () => {
         navigate("/mypage");
