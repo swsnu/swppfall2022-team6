@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 
 function MyBadges() {
     const navigate = useNavigate();
-    const onClickBackButton = () => {navigate("/mypage")};
-    const onClickBadge = () => {};
+    const onClickBackButton = () => {
+        navigate("/mypage");
+    };
+    // const onClickBadge = () => {};
     const onClickSetAsMainBadgeButton = () => {};
     return (
         <div className="MyBadges">
