@@ -1,7 +1,13 @@
+'''
+    post tests
+'''
 from django.test import TestCase, Client
-from .models import Post
+#from .models import Post
 
 class PostTestCase(TestCase):
+    '''
+        PostTestCase
+    '''
     def test_post(self):
         client = Client()
         response = client.post('/post/')

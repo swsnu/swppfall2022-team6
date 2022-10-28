@@ -1,5 +1,8 @@
+'''
+    hashtag tests
+'''
 from django.test import TestCase, Client
-from .models import Hashtag
+#from .models import Hashtag
 
 class HashtagTestCase(TestCase):
     def test_post(self):

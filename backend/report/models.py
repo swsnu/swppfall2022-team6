@@ -1,9 +1,16 @@
+'''
+    report models
+'''
 from django.db import models
 from user.models import User
 
 class Report(models.Model):
-    user = models.ForeignKey(User, related_name='userreport', on_delete=models.CASCADE)
-    weather = models.CharField(max_length=300, default="")
+    '''
+        report model
+    '''
+    user = models.ForeignKey(User, related_name='userreport', \
+        on_delete=models.CASCADE)
+    weather = models.CharField(max_length=300, default='')
     weather_degree = models.PositiveSmallIntegerField(default=0)
     wind_degree = models.PositiveSmallIntegerField(default=0)
     happy_degree = models.PositiveSmallIntegerField(default=0)

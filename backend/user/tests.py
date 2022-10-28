@@ -1,7 +1,13 @@
+'''
+    user tests
+'''
 from django.test import TestCase, Client
-from .models import Badge, User, Achievement, UserBadge
+#from .models import Badge, User, Achievement, UserBadge
 
 class UserTestCase(TestCase):
+    '''
+        UserTestCase
+    '''
     def test_signup(self):
         client = Client()
         response = client.post('/user/signup/')
@@ -19,19 +25,19 @@ class UserTestCase(TestCase):
         response = client.post('/user/signout/')
 
         self.assertEqual(response.status_code, 200)
-    
+
     def test_getme(self):
         client = Client()
         response = client.get('/user/me/')
 
         self.assertEqual(response.status_code, 200)
-    
+
     def test_putme(self):
         client = Client()
         response = client.put('/user/me/')
 
         self.assertEqual(response.status_code, 200)
-    
+
     def test_badges(self):
         client = Client()
 
@@ -49,7 +55,7 @@ class UserTestCase(TestCase):
 
         response = client.put('/user/1/radius/')
         self.assertEqual(response.status_code, 200)
-    
+
     def test_achievement(self):
         client = Client()
 
@@ -58,7 +64,7 @@ class UserTestCase(TestCase):
 
         response = client.put('/user/1/achievement/')
         self.assertEqual(response.status_code, 200)
-    
+
     def test_report_post(self):
         client = Client()
 
@@ -67,5 +73,3 @@ class UserTestCase(TestCase):
 
         response = client.get('/user/1/post/')
         self.assertEqual(response.status_code, 200)
-
-
