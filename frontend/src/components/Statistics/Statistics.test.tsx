@@ -21,7 +21,6 @@ describe("<Statistics />", () => {
     });
     it("should render without errors", () => {
         const { container } = render(<Statistics />);
-        expect(container.querySelector("#statistics-container")).toBeTruthy();
         screen.getByText("Bar Chart");
         screen.getByText("Pie Chart");
         // expect(mockRegister).toHaveBeenCalled();
