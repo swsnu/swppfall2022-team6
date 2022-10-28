@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { convertCompilerOptionsFromJson } from "typescript";
+import React, { useState } from "react";
 import { PositionType } from "../Map/Map";
 
 type IProps = {
@@ -53,7 +52,7 @@ const MapSearch = (props: IProps)=>{
     const ps = new kakao.maps.services.Places();
     ps.keywordSearch(
         searchQuery,
-        (data: SearchResult[], status, pagination) => {
+        (data, status, pagination) => {
             if (status === kakao.maps.services.Status.OK) {
                 console.log(data);
                 setSearchResponse(Response.success);
