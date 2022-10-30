@@ -32,8 +32,10 @@ describe("<Statistics />", () => {
             },
         });
         render(<Statistics />);
-        await waitFor(async () => {
-            await waitFor(() => screen.getByText("Bar Chart"));
-        });
+        await waitFor(async () => await screen.findByText("Bar Chart"));
+
+        // await waitFor(async () => {
+        //     await waitFor(() => screen.getByText("Bar Chart"));
+        // });
     });
 });

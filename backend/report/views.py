@@ -20,9 +20,9 @@ class ReportViewSet(viewsets.GenericViewSet):
 
     # GET /report/
     def list(self, request):
-        latitude = request.GET['latitude']
-        longitude = request.GET['longitude']
-        radius = request.GET['radius']
+        latitude = request.GET["latitude"]
+        longitude = request.GET["longitude"]
+        radius = request.GET["radius"]
         # reports = Report.objects.filter(latitude <= latitude + radius and
         # latitude >= latitude - radius and longitude <= longitude + radius and
         # longitude >= longitude - radius)
@@ -30,7 +30,9 @@ class ReportViewSet(viewsets.GenericViewSet):
         del longitude
         del radius
         reports = Report.objects.all()
-        ret_reports = [{"weather": report.weather, "weather_degree": report.weather_degree,
-        "wind_degree": report.wind_degree, "happy_degree": report.happy_degree, 
+        ret_reports = [{"weather": report.weather,
+        "weather_degree": report.weather_degree,
+        "wind_degree": report.wind_degree,
+        "happy_degree": report.happy_degree,
         "humidity_degree": report.humidity_degree} for report in reports]
         return Response(ret_reports, status=status.HTTP_200_OK)
