@@ -1,6 +1,7 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Statistics from "./Statistics";
+import axios from "axios";
 import React from "react";
 
 jest.mock("react-chartjs-2", () => ({
@@ -9,25 +10,30 @@ jest.mock("react-chartjs-2", () => ({
 jest.mock("react-minimal-pie-chart", () => ({
     PieChart: () => <div>Pie Chart</div>,
 }));
-const mockRegister = jest.fn();
-jest.mock("chart.js", () => ({
-    ...jest.requireActual("chart.js"),
-    register: () => mockRegister,
-}));
 
 describe("<Statistics />", () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
     it("should render without errors", () => {
-        const { container } = render(<Statistics />);
+        render(<Statistics />);
         screen.getByText("Bar Chart");
         screen.getByText("Pie Chart");
-        // expect(mockRegister).toHaveBeenCalled();
     });
-    // it("should not show anything if no reports", () => {
-    //     const mockedSetform = jest.fn();
-    //     jest.spyOn(React, "useState").mockReturnValue([[], mockedSetform]);
-    //     render(<Statistics />);
-    // }); when implement axios
+    it("should successfully get reports", async () => {
+        axios.get = jest.fn().mockResolvedValue({
+            data: {
+                weather: "Sunny",
+                weather_degree: 2,
+                wind_degree: 1,
+                happy_degree: 2,
+                humidity_degree: 5,
+                time: "",
+            },
+        });
+        render(<Statistics />);
+        await waitFor(async () => {
+            await waitFor(() => screen.getByText("Bar Chart"));
+        });
+    });
 });

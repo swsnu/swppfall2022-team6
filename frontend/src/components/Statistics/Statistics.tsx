@@ -10,6 +10,7 @@ import {
     Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import axios from "axios";
 
 ChartJS.register(
     CategoryScale,
@@ -21,7 +22,7 @@ ChartJS.register(
 );
 
 export interface ReportType {
-    weather: number;
+    weather: string;
     weather_degree: number;
     wind_degree: number;
     happy_degree: number;
@@ -54,26 +55,10 @@ const labels = ["Sunny", "Wind", "Happy", "Humidity"];
 function Statistics() {
     const [allReports, setAllReports] = useState<ReportType[]>([
         {
-            weather: 0,
+            weather: "Sunny",
             weather_degree: 2,
             wind_degree: 1,
             happy_degree: 2,
-            humidity_degree: 5,
-            time: "",
-        },
-        {
-            weather: 1,
-            weather_degree: 3,
-            wind_degree: 1,
-            happy_degree: 3,
-            humidity_degree: 2,
-            time: "",
-        },
-        {
-            weather: 1,
-            weather_degree: 4,
-            wind_degree: 2,
-            happy_degree: 4.2,
             humidity_degree: 5,
             time: "",
         },
@@ -81,22 +66,30 @@ function Statistics() {
     const [maxIndex, setMaxIndex] = useState<number>(0);
 
     useEffect(() => {
-        //axios.get("/report").then, instead mock
-        const lenArray: number[] = [0, 0, 0, 0];
-        lenArray[0] = allReports.filter(
-            (report) => report.weather === 0
-        ).length;
-        lenArray[1] = allReports.filter(
-            (report) => report.weather === 0
-        ).length;
-        lenArray[2] = allReports.filter(
-            (report) => report.weather === 0
-        ).length;
-        lenArray[3] = allReports.filter(
-            (report) => report.weather === 0
-        ).length;
-        setMaxIndex(lenArray.indexOf(Math.max(...lenArray)));
-    }, [allReports]);
+        axios
+            .get("/report/", {
+                params: { latitude: 30, longitude: 30, radius: 2 }, // modify to redux
+            })
+            .then((response) => {
+                setAllReports(response.data);
+            })
+            .then(() => {
+                const lenArray: number[] = [0, 0, 0, 0];
+                lenArray[0] = allReports.filter(
+                    (report) => report.weather === "Sunny"
+                ).length;
+                lenArray[1] = allReports.filter(
+                    (report) => report.weather === "Wind"
+                ).length;
+                lenArray[2] = allReports.filter(
+                    (report) => report.weather === "Happy"
+                ).length;
+                lenArray[3] = allReports.filter(
+                    (report) => report.weather === "Humidity"
+                ).length;
+                setMaxIndex(lenArray.indexOf(Math.max(...lenArray)));
+            });
+    }, []);
 
     return (
         <div
@@ -112,28 +105,28 @@ function Statistics() {
                         {
                             title: "Sunny",
                             value: allReports.filter(
-                                (report) => report.weather === 0
+                                (report) => report.weather === "Sunny"
                             ).length,
                             color: "#F6CB44",
                         },
                         {
                             title: "Cloudy",
                             value: allReports.filter(
-                                (report) => report.weather === 1
+                                (report) => report.weather === "Wind"
                             ).length,
                             color: "#E3A454",
                         },
                         {
                             title: "Rain",
                             value: allReports.filter(
-                                (report) => report.weather === 2
+                                (report) => report.weather === "Happy"
                             ).length,
                             color: "#76BEE3",
                         },
                         {
                             title: "Snow",
                             value: allReports.filter(
-                                (report) => report.weather === 3
+                                (report) => report.weather === "Humidity"
                             ).length,
                             color: "#654321",
                         },
@@ -147,7 +140,7 @@ function Statistics() {
                         dataIndex === maxIndex
                             ? dataEntry.title +
                               " " +
-                              Math.round(dataEntry.percentage).toString() +
+                              Math.ceil(dataEntry.percentage).toString() +
                               "%"
                             : ""
                     }
@@ -166,7 +159,8 @@ function Statistics() {
                             data: [
                                 allReports
                                     .filter(
-                                        (report) => report.weather === maxIndex
+                                        (report) =>
+                                            report.weather === labels[maxIndex]
                                     )
                                     .map((report) => report.weather_degree)
                                     .reduce(
@@ -176,7 +170,8 @@ function Statistics() {
                                     allReports
                                         .filter(
                                             (report) =>
-                                                report.weather === maxIndex
+                                                report.weather ===
+                                                labels[maxIndex]
                                         )
                                         .map((report) => report.weather_degree)
                                         .length,

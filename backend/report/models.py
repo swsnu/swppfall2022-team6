@@ -16,7 +16,7 @@ class Report(models.Model):
     happy_degree = models.PositiveSmallIntegerField(default=0)
     humidity_degree = models.PositiveSmallIntegerField(default=0)
     latitude = models.FloatField()
-    longitutde = models.FloatField()
+    longitude = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
