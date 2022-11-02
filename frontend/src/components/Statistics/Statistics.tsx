@@ -38,23 +38,49 @@ export const Baroptions = {
         },
     },
     responsive: false,
-    x: {
-        min: 0,
-        max: 5,
-        ticks: { stepSize: 1 },
+    scales: {
+        x: {
+            min: 0,
+            max: 5,
+            ticks: { stepSize: 1, display: false },
+            grid: {
+                drawBorder: false,
+                display: false,
+            },
+        },
+        y: {
+            ticks: {
+                color: "black",
+                font: {
+                    family: "NanumGothic",
+                    weight: "700",
+                    lineHeight: "140%",
+                    size: 10,
+                },
+            },
+        },
     },
     plugins: {
         legend: {
             display: false,
         },
+        tooltip: { enabled: false },
     },
 };
 
-const labels = ["Sunny", "Wind", "Happy", "Humidity"];
+const labels = ["Sunny", "Cloudy", "Snow", "Wind"];
 
 function Statistics() {
     const [allReports, setAllReports] = useState<ReportType[]>([]);
     const [maxIndex, setMaxIndex] = useState<number>(0);
+    const [reportPerc, setReportPerc] = useState<number[]>([0, 0, 0, 0]);
+
+    const displaylabels = [
+        ["☀️ ", "☁️ ", "☔ ", "❄️ "][maxIndex] + labels[maxIndex],
+        "💨 Wind",
+        "🤗 Happy",
+        "💧 Humidity",
+    ];
 
     useEffect(() => {
         axios
@@ -77,13 +103,49 @@ function Statistics() {
         setMaxIndex(lenArray.indexOf(Math.max(...lenArray)));
     }, [allReports]);
 
+    useEffect(() => {
+        if (allReports.length) {
+            setReportPerc([
+                allReports
+                    .filter((report) => report.weather === labels[maxIndex])
+                    .map((report) => report.weather_degree)
+                    .reduce((a: number, b: number) => a + b, 0) /
+                    allReports.filter(
+                        (report) => report.weather === labels[maxIndex]
+                    ).length,
+                allReports.reduce(
+                    (a: number, b: ReportType) => a + b.wind_degree,
+                    0
+                ) / allReports.length,
+                allReports.reduce(
+                    (a: number, b: ReportType) => a + b.happy_degree,
+                    0
+                ) / allReports.length,
+                allReports.reduce(
+                    (a: number, b: ReportType) => a + b.humidity_degree,
+                    0
+                ) / allReports.length,
+            ]);
+        }
+    }, [maxIndex, allReports]);
+
     return (
         <div
             id="statistics-container"
-            style={{ display: "flex", justifyContent: "space-around" }}
+            style={{
+                display: "flex",
+                justifyContent: "space-around",
+                fontFamily: "NanumGothic",
+                fontStyle: "normal",
+                fontWeight: "700",
+                lineHeight: "140%",
+                fontSize: "10px",
+                fill: "#33333",
+                whiteSpace: "pre-wrap",
+            }}
         >
             {allReports.length ? (
-                <div>
+                <div style={{ display: "flex" }}>
                     <div
                         id="piechart-container"
                         style={{ width: "150px", height: "200px" }}
@@ -91,50 +153,48 @@ function Statistics() {
                         <PieChart
                             data={[
                                 {
-                                    title: "Sunny",
+                                    title: "☀️ Sunny",
                                     value: allReports.filter(
                                         (report) => report.weather === "Sunny"
                                     ).length,
-                                    color: "#F6CB44",
+                                    color: "#FBD679",
                                 },
                                 {
-                                    title: "Cloudy",
+                                    title: "☁️ Cloudy",
                                     value: allReports.filter(
                                         (report) => report.weather === "Cloudy"
                                     ).length,
-                                    color: "#E3A454",
+                                    color: "#C18BEC",
                                 },
                                 {
-                                    title: "Rain",
+                                    title: "☔ Rain",
                                     value: allReports.filter(
                                         (report) => report.weather === "Rain"
                                     ).length,
-                                    color: "#76BEE3",
+                                    color: "#C5E8FC",
                                 },
                                 {
-                                    title: "Snow",
+                                    title: "❄️ Snow",
                                     value: allReports.filter(
                                         (report) => report.weather === "Snow"
                                     ).length,
-                                    color: "#654321",
+                                    color: "#F5F5F5",
                                 },
                             ]}
-                            lineWidth={18}
+                            lineWidth={40}
                             background="#f3f3f3"
                             lengthAngle={360}
-                            rounded
                             animate
                             label={({ dataEntry, dataIndex }) =>
                                 dataIndex === maxIndex
                                     ? dataEntry.title +
-                                      " " +
+                                      "\n" +
                                       Math.ceil(
                                           dataEntry.percentage
                                       ).toString() +
                                       "%"
                                     : ""
                             }
-                            labelStyle={{ fontSize: "13px", fill: "#33333" }}
                             labelPosition={0}
                             viewBoxSize={[100, 100]}
                         />
@@ -142,51 +202,11 @@ function Statistics() {
                     <Bar
                         options={Baroptions}
                         data={{
-                            labels,
+                            labels: displaylabels,
                             datasets: [
                                 {
                                     label: "Statistics",
-                                    data: [
-                                        allReports
-                                            .filter(
-                                                (report) =>
-                                                    report.weather ===
-                                                    labels[maxIndex]
-                                            )
-                                            .map(
-                                                (report) =>
-                                                    report.weather_degree
-                                            )
-                                            .reduce(
-                                                (a: number, b: number) => a + b,
-                                                0
-                                            ) /
-                                            allReports
-                                                .filter(
-                                                    (report) =>
-                                                        report.weather ===
-                                                        labels[maxIndex]
-                                                )
-                                                .map(
-                                                    (report) =>
-                                                        report.weather_degree
-                                                ).length,
-                                        allReports.reduce(
-                                            (a: number, b: ReportType) =>
-                                                a + b.wind_degree,
-                                            0
-                                        ) / allReports.length,
-                                        allReports.reduce(
-                                            (a: number, b: ReportType) =>
-                                                a + b.happy_degree,
-                                            0
-                                        ) / allReports.length,
-                                        allReports.reduce(
-                                            (a: number, b: ReportType) =>
-                                                a + b.humidity_degree,
-                                            0
-                                        ) / allReports.length,
-                                    ],
+                                    data: reportPerc,
                                     backgroundColor: [
                                         "pink",
                                         "lightblue",
@@ -198,6 +218,21 @@ function Statistics() {
                         }}
                         style={{ position: "relative", height: "200px" }}
                     />
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            height: "100%",
+                            alignItems: "center",
+                            justifyContent: "space-evenly",
+                            fontSize: "14px",
+                        }}
+                    >
+                        <div>{Math.ceil(20 * reportPerc[0]).toString()}</div>
+                        <div>{Math.ceil(20 * reportPerc[1]).toString()}</div>
+                        <div>{Math.ceil(20 * reportPerc[2]).toString()}</div>
+                        <div>{Math.ceil(20 * reportPerc[3]).toString()}</div>
+                    </div>
                 </div>
             ) : (
                 <span>No Statistics!</span>

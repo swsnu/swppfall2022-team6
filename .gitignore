@@ -30,3 +30,7 @@ yarn-error.log*
 #backend
 __pycache__
 **-env/
+
+#photos
+/backend/post/static
+/backend/db.sqlite3

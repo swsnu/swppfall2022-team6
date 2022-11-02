@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { useNavigate } from "react-router-dom";
 import AreaFeed from "../AreaFeed/AreaFeed";
+import ReportModal from "../../components/ReportModal/ReportModal";
 
 const marks = [
     { value: 0, label: "0km" },
@@ -13,13 +14,16 @@ const marks = [
     { value: 100, label: "4km" },
 ];
 
-const initMarkPosition: PositionType = {lat: 37.44877599087201, lng: 126.95264777802309}; // 서울대 중심
+const initMarkPosition: PositionType = {
+    lat: 37.44877599087201,
+    lng: 126.95264777802309,
+}; // 서울대 중심
 
 function MainPage() {
-    
     const [radius, setRadius] = useState<number>(50);
     const [openReport, setOpenReport] = useState<boolean>(false);
-    const [markPosition, setMarkPosition] = useState<PositionType>(initMarkPosition);
+    const [markPosition, setMarkPosition] =
+        useState<PositionType>(initMarkPosition);
     const navigate = useNavigate();
 
     const onClickMyPageIcon = () => {
@@ -81,7 +85,10 @@ function MainPage() {
                     Report
                 </button>
             </div>
-            {openReport ? <AreaFeed /> : null}
+            <ReportModal
+                openReport={openReport}
+                setOpenReport={setOpenReport}
+            />
         </div>
     );
 }
