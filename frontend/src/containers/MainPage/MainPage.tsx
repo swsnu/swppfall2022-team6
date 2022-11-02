@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { useNavigate } from "react-router-dom";
 import AreaFeed from "../AreaFeed/AreaFeed";
+import "./MainPage.css"
 
 const marks = [
     { value: 0, label: "0km" },
@@ -43,43 +44,45 @@ function MainPage() {
                     MyPage
                 </button>
             </div>
-            <div className="search-input-contan">
-                <input type="text" className="search-input" />
-            </div>
-            <Map initPosition={markPosition} radius={radius} />
-            <div id="lower-map-container">
-                <div className="radius-slider-container">
-                    <p>Change Radius</p>
-                    <Box sx={{ width: 300 }} id="radius-slider">
-                        <Slider
-                            key="radius-slider"
-                            aria-label="Custom marks"
-                            defaultValue={radius}
-                            step={2.5}
-                            min={0.01}
-                            getAriaValueText={(value: number): string => {
-                                return `${value}km`;
-                            }}
-                            valueLabelDisplay="auto"
-                            valueLabelFormat={(value: number): string => {
-                                return `${value / 25}km`;
-                            }}
-                            onChange={onChangeMapRadius}
-                            marks={marks}
-                        />
-                    </Box>
+            <div id="main-container">
+                <div className="search-input-container">
+                    <input type="text" className="search-input" />
                 </div>
-                <div className="findout-container">
-                    <button id="findout-button" onClick={onClickFindOutButton}>
-                        Find out
+                <Map initPosition={markPosition} radius={radius} />
+                <div id="lower-map-container">
+                    <div className="radius-slider-container">
+                        <p>Change Radius</p>
+                        <Box sx={{ width: 300 }} id="radius-slider">
+                            <Slider
+                                key="radius-slider"
+                                aria-label="Custom marks"
+                                defaultValue={radius}
+                                step={2.5}
+                                min={0.01}
+                                getAriaValueText={(value: number): string => {
+                                    return `${value}km`;
+                                }}
+                                valueLabelDisplay="auto"
+                                valueLabelFormat={(value: number): string => {
+                                    return `${value / 25}km`;
+                                }}
+                                onChange={onChangeMapRadius}
+                                marks={marks}
+                            />
+                        </Box>
+                    </div>
+                    <div className="findout-container">
+                        <button id="findout-button" onClick={onClickFindOutButton}>
+                            {"Find out  >"}
+                        </button>
+                    </div>
+                </div>
+                <div id="bottom-container">
+                    <span>Current location: </span>
+                    <button id="report-button" onClick={onClickReportButton}>
+                        Report
                     </button>
                 </div>
-            </div>
-            <div id="bottom-container">
-                <span>Current location: </span>
-                <button id="report-button" onClick={onClickReportButton}>
-                    Report
-                </button>
             </div>
             {openReport ? <AreaFeed /> : null}
         </div>
