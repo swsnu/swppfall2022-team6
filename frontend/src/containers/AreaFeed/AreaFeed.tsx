@@ -11,9 +11,15 @@ function AreaFeed() {
     const onClickBackButton = () => {
         navigate("/");
     };
-    const onClickRefreshButton = () => {};
-    const onSubmitSearchBox = (e: React.KeyboardEvent<HTMLInputElement>) => {};
-    const onClickHashtagButton = () => {};
+    const onClickRefreshButton = () => {
+        // TODO: re-render weather container, Statistics, PostList
+    };
+    const onSubmitSearchBox = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        // TODO: filter PostList by search value
+    };
+    const onClickHashtagButton = () => {
+        // TODO: filter PostList by hashtag
+    };
     // const onSelectOnlyPhotos = () => {};
     const postListCallback = () => {}; // axios.get again
 
