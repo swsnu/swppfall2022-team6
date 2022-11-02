@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ReducerState, useEffect, useState } from "react";
 import Map, { PositionType } from "./../../components/Map/Map";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
@@ -25,6 +25,20 @@ function MainPage() {
     const [markPosition, setMarkPosition] =
         useState<PositionType>(initMarkPosition);
     const navigate = useNavigate();
+    
+    useEffect(()=>{
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                setMarkPosition({
+                    lat: position.coords.latitude, 
+                    lng: position.coords.longitude
+                })
+            });
+        } else { 
+            console.log("Geolocation is not supported by this browser.");
+        }
+        // setMarkPosition(initMarkPosition);
+    }, [])
 
     const onClickMyPageIcon = () => {
         navigate("/mypage");
