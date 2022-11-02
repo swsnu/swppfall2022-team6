@@ -14,7 +14,12 @@ class ReportTestCase(TestCase):
     '''
     def test_post(self):
         client = Client()
-        response = client.post('/report/')
+        badge = Badge.objects.create()
+        User.objects.create_user(username='swpp', password='iluvswpp',
+        main_badge_id=badge.id)
+        response = client.post('/report/', data={'weather':'Sunny',
+        'weather_degree':1, 'wind_degree':2, 'happy_degree':3,
+        'humidity_degree':4})
 
         self.assertEqual(response.status_code, 201)
 

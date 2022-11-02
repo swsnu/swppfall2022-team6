@@ -12,12 +12,12 @@ class Post(models.Model):
     user = models.ForeignKey(User, \
         related_name='userpost', on_delete=models.CASCADE)
     content = models.CharField(max_length=300, default='')
-    image = models.ImageField(upload_to='post', null=True)
+    image = models.ImageField(upload_to='post/static', blank=True)
     latitude = models.FloatField()
-    longitutde = models.FloatField()
+    longitude = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
     reply_to = models.ForeignKey('self', related_name='post', \
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE, null=True)
 
     class Meta:
         db_table = 'post'
