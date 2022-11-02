@@ -33,3 +33,4 @@ __pycache__
 
 #photos
 /backend/post/static
+/backend/db.sqlite3
