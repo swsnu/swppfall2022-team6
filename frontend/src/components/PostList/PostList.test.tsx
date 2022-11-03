@@ -1,24 +1,67 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
+import { IProps } from "../PostModal/PostModal";
 import PostList from "./PostList";
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
-  ...jest.requireActual("react-router"),
-  useNavigate: () => mockNavigate,
+    ...jest.requireActual("react-router"),
+    useNavigate: () => mockNavigate,
 }));
+
+jest.mock("../../components/PostModal/PostModal", () => (props: IProps) => (
+    <div>
+        <button
+            data-testid="spyModal"
+            className="submitButton"
+            onClick={props.postModalCallback}
+        ></button>
+    </div>
+));
 
 describe("<PostList />", () => {
     let postList: JSX.Element;
     beforeEach(() => {
-      jest.clearAllMocks();
-      postList = (
-        <MemoryRouter>
-            <Routes>
-                <Route path="/" element={<PostList />} />
-            </Routes>
-        </MemoryRouter>
-      );
+        jest.clearAllMocks();
+        postList = (
+            <MemoryRouter>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={
+                            <PostList
+                                type={"Post"}
+                                postListCallback={jest.fn()}
+                                replyTo={0}
+                                allPosts={[
+                                    {
+                                        id: 2,
+                                        user_id: 2,
+                                        content: "학교는 많이 춥네요ㅠㅠ\n겉옷 챙기시는게 좋을 것 같아요!",
+                                        latitude: 37.44877599087201,
+                                        longitude: 126.95264777802309,
+                                        time: new Date().toLocaleDateString(),
+                                        reply_to: 1,
+                                        image: "",
+                                    },
+                                    {
+                                        id: 1,
+                                        user_id: 1,
+                                        content:
+                                            "지금 설입은 맑긴 한데 바람이 많이 불어요\n겉옷을 안 챙겨 나왔는데 학교도 춥나요? 자연대 쪽에...",
+                                        latitude: 37.44877599087201,
+                                        longitude: 126.95264777802309,
+                                        time: new Date().toLocaleDateString(),
+                                        image: "",
+                                        reply_to: 0,
+                                    },
+                                ]}
+                            />
+                        }
+                    />
+                </Routes>
+            </MemoryRouter>
+        );
     });
     it("should render PostList", () => {
         const { container } = render(postList);
@@ -43,5 +86,54 @@ describe("<PostList />", () => {
         fireEvent.click(first_post!);
         fireEvent.click(second_post!);
         expect(mockNavigate).toHaveBeenCalledTimes(2);
+    });
+    it("should show modal properly", () => {
+        render(postList);
+        const modalbutton = screen.getByText("Add Post");
+        fireEvent.click(modalbutton);
+    });
+    it("should close modal proplery", () => {
+        const mockCallback = jest.fn();
+        render(
+            <MemoryRouter>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={
+                            <PostList
+                                type={"Post"}
+                                postListCallback={mockCallback}
+                                replyTo={0}
+                                allPosts={[]}
+                            />
+                        }
+                    />
+                </Routes>
+            </MemoryRouter>
+        );
+        const modalbutton = screen.getByText("Add Post");
+        fireEvent.click(modalbutton);
+        const modalButton = screen.getByTestId("spyModal");
+        fireEvent.click(modalButton);
+        expect(mockCallback).toHaveBeenCalled();
+    });
+    it("should not show button when mypage", () => {
+        render(
+            <MemoryRouter>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={
+                            <PostList
+                                type={"Mypage"}
+                                postListCallback={jest.fn()}
+                                replyTo={0}
+                                allPosts={[]}
+                            />
+                        }
+                    />
+                </Routes>
+            </MemoryRouter>
+        );
     });
 });

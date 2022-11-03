@@ -2,6 +2,7 @@
     report tests
 '''
 from datetime import datetime
+import json
 from django.test import TestCase, Client
 from report.models import Report
 
@@ -17,9 +18,9 @@ class ReportTestCase(TestCase):
         badge = Badge.objects.create()
         User.objects.create_user(username='swpp', password='iluvswpp',
         main_badge_id=badge.id)
-        response = client.post('/report/', data={'weather':'Sunny',
+        response = client.post('/report/', json.dumps({'weather':'Sunny',
         'weather_degree':1, 'wind_degree':2, 'happy_degree':3,
-        'humidity_degree':4})
+        'humidity_degree':4}), content_type='application/json')
 
         self.assertEqual(response.status_code, 201)
 
