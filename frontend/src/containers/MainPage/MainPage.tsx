@@ -61,7 +61,7 @@ function MainPage() {
                     MyPage
                 </button>
             </div>
-            <MapSearch setMarkPosition={setMarkPosition}/>
+            <MapSearch markPosition={markPosition} setMarkPosition={setMarkPosition}/>
             <Map initPosition={markPosition} radius={radius} />
             <div id="lower-map-container">
                 <div className="radius-slider-container">
