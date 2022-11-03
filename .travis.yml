@@ -16,13 +16,18 @@ jobs:
               - sudo tar xjf python-3.9.6.tar.bz2 --directory /
               - source ~/virtualenv/python3.9.6/bin/activate
               - pip install -r requirements.txt
+              - pip install coveralls
               - cd ../frontend
               - yarn install
+              - yarn global add coveralls
+              - gem install coveralls-lcov
           script:
               - ./node_modules/.bin/eslint src
               - yarn test --coverage --watchAll=false
+              - coveralls-lcov -v -n coverage/lcov.info > coverage.json
               - cd ../backend
               - pylint --rcfile=pylintrc **/*.py
               - coverage run --source='.' manage.py test
               - coverage xml
               - cd .. && sonar-scanner
+              - coveralls --merge=../frontend/coverage.json
