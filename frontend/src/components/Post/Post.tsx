@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PostType, HashtagType } from "../PostList/PostList";
+import { PostType } from "../PostList/PostList";
 
 export interface postProps {
     id: number,
@@ -32,7 +32,7 @@ const Post = (post: postProps) => {
             id: 1,
             user: 1,
             content:
-                "Áö±Ý ¼³ÀÔÀº ¸¼±ä ÇÑµ¥ ¹Ù¶÷ÀÌ ¸¹ÀÌ ºÒ¾î¿ä\n°Ñ¿ÊÀ» ¾È Ã¬°Ü ³ª¿Ô´Âµ¥ ÇÐ±³µµ Ãä³ª¿ä? ÀÚ¿¬´ë ÂÊ¿¡...",
+                "ì§€ê¸ˆ ì„¤ìž…ì€ ë§‘ê¸´ í•œë° ë°”ëžŒì´ ë§Žì´ ë¶ˆì–´ìš”\nê²‰ì˜·ì„ ì•ˆ ì±™ê²¨ ë‚˜ì™”ëŠ”ë° í•™êµë„ ì¶¥ë‚˜ìš”? ìžì—°ëŒ€ ìª½ì—...",
             latitude: 37.44877599087201,
             longitude: 126.95264777802309,
             created_at: new Date().toLocaleDateString(),
@@ -45,15 +45,17 @@ const Post = (post: postProps) => {
     //     // setChainedPosts();
     //     // call chain from backend
     // })
+    useEffect(() => {}, [isChainOpen]);
 
     const clickPostHandler = (post: PostType) => {
         navigate("/areafeed/" + post.id);
     };
     const clickToggleChain = () => {
         setChainOpen(!isChainOpen);
+        console.log('Chain toggled!')
     }
     const renderChainedPosts = (): JSX.Element[] => {
-        const chain = chainedPosts.map((post: PostType)=>{
+        const chain = chainedPosts.map((post: PostType)=> {
             return (
                 <Post 
                     key={post.id}
@@ -68,13 +70,13 @@ const Post = (post: postProps) => {
                     created_at={post.created_at}
                     reply_to={post.reply_to}
                     image={""}
-                    chain_open={isChainOpen} //default is false when rendered
+                    chain_open={isChainOpen}
                     clickPost={() => clickPostHandler(post)}
                     toggleChain={() => clickToggleChain()}
                 />
             );
-        })
-        return chain
+        });
+        return chain;
     }
 
 
@@ -102,31 +104,30 @@ const Post = (post: postProps) => {
             </div>
         </div>
         {/* Show chain when it is a reply */}
-        { post.reply_to === 0
+        { post.reply_to === null
         ? null
-        : <div id="chain-container">
-            <div id="chained-posts"> { 
-                post.reply_to === 0
-                ? null
-                : renderChainedPosts()
-            }
-            </div>
-            <div id="chain-toggle">
-                
-            </div>
-            { post.chain_open === false 
+        : ((isChainOpen === false)
             ? <button 
                 id="chain-toggle-button"
                 onClick={clickToggleChain}>
                     Show All
               </button>
-            : <button 
-                id="chain-toggle-button"
-                onClick={clickToggleChain}>
-                    Close All
-              </button>
-            }
+            : <div id="chain-container">
+              <div id="chained-posts"> { 
+                post.reply_to === 0
+                ? null
+                : renderChainedPosts()
+              }
+              </div>
+              <div id="chain-toggle">
+                <button 
+                    id="chain-toggle-button"
+                    onClick={clickToggleChain}>
+                        Close All
+                </button>
+              </div>
           </div>
+          )
         }
     </div>
     );
