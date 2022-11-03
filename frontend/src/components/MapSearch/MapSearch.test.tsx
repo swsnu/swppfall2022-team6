@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import MapSearch from "./MapSearch";
 import {mockSearchResultData} from "../../test-utils/mock";
 
@@ -11,8 +11,8 @@ jest.mock("react-router", ()=>({
 }));
 
 const renderComponent = () => {
-  const result = render (<MapSearch markPosition={{lat:0, lng:0}} setMarkPosition={setStateMock}/>);
-  return(result);
+  const view = render (<MapSearch markPosition={{lat:0, lng:0}} setMarkPosition={setStateMock}/>);
+  return(view);
 }
 
 const mockResultData = mockSearchResultData();
@@ -51,7 +51,7 @@ describe("<MapSearch />", ()=>{
     const mockKeywordSearch = jest.fn((searchQuery, callback, option)=>callback(
       mockResultData, 
       "OK", 
-      new kakao.maps.Pagination
+      new kakao.maps.Pagination()
     ));
     (kakao.maps.services.Places as jest.Mock).mockReturnValue({
       keywordSearch: mockKeywordSearch,
@@ -71,7 +71,7 @@ describe("<MapSearch />", ()=>{
     const mockKeywordSearch = jest.fn((searchQuery, callback, option)=>callback(
       mockResultData, 
       "ZERO_RESULT", 
-      new kakao.maps.Pagination
+      new kakao.maps.Pagination()
     ));
     (kakao.maps.services.Places as jest.Mock).mockReturnValue({
       keywordSearch: mockKeywordSearch,
@@ -91,7 +91,7 @@ describe("<MapSearch />", ()=>{
     const mockKeywordSearch = jest.fn((searchQuery, callback, option)=>callback(
       mockResultData, 
       "ERROR", 
-      new kakao.maps.Pagination
+      new kakao.maps.Pagination()
     ));
     (kakao.maps.services.Places as jest.Mock).mockReturnValue({
       keywordSearch: mockKeywordSearch,
@@ -111,7 +111,7 @@ describe("<MapSearch />", ()=>{
     const mockKeywordSearch = jest.fn((searchQuery, callback, option)=>callback(
       mockResultData, 
       "ABC", 
-      new kakao.maps.Pagination
+      new kakao.maps.Pagination()
     ));
     (kakao.maps.services.Places as jest.Mock).mockReturnValue({
       keywordSearch: mockKeywordSearch,
@@ -128,7 +128,7 @@ describe("<MapSearch />", ()=>{
     const mockKeywordSearch = jest.fn((searchQuery, callback, option)=>callback(
       mockResultData, 
       "OK", 
-      new kakao.maps.Pagination
+      new kakao.maps.Pagination()
     ));
     (kakao.maps.services.Places as jest.Mock).mockReturnValue({
       keywordSearch: mockKeywordSearch,
@@ -140,8 +140,8 @@ describe("<MapSearch />", ()=>{
     fireEvent.keyDown(searchInput, {key: "Enter"});
     expect(mockKeywordSearch).toHaveBeenCalled();
     await screen.findByLabelText("Search Results");
-    const searchResultItem = screen.getByLabelText("Search Result List Item");
-    fireEvent.click(searchResultItem.lastChild!)
+    const searchResultItem = screen.getByText("place1");
+    fireEvent.click(searchResultItem!)
   });
 
   it("should handle click on pagination", async ()=>{
@@ -157,7 +157,7 @@ describe("<MapSearch />", ()=>{
     const mockKeywordSearch = jest.fn((searchQuery, callback, option)=>callback(
       mockResultData, 
       "OK", 
-      new kakao.maps.Pagination
+      new kakao.maps.Pagination()
     ));
     (kakao.maps.services.Places as jest.Mock).mockReturnValue({
       keywordSearch: mockKeywordSearch,
