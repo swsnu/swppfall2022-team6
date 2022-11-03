@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { PositionType } from "../Map/Map";
 
 type IProps = {
+  markPosition: PositionType;
   setMarkPosition: React.Dispatch<React.SetStateAction<PositionType>>
 }
 const Response = {
@@ -36,7 +37,7 @@ const range = (start: number, count: number)=>{
 }
 
 const MapSearch = (props: IProps)=>{
-  const {setMarkPosition} = props
+  const {markPosition, setMarkPosition} = props
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchResponse, setSearchResponse] = useState<string>(
       Response.zero_result
@@ -70,6 +71,10 @@ const MapSearch = (props: IProps)=>{
                 setSearchResult([]);
                 return;
             }
+        },
+        {
+          x: markPosition["lng"],
+          y: markPosition["lat"],
         }
     );
 
