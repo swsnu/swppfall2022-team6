@@ -53,7 +53,6 @@ describe("<MainPage />", () => {
         fireEvent.change(weatherSlider, { target: { value: 1 } });
     });
     it("should get current location if navigator avaliable", async () => {
-        render(<MainPage />);
         const mockGeolocation = {
           ...navigator.geolocation,
           getCurrentPosition: jest.fn().mockImplementation((success) =>
@@ -69,9 +68,9 @@ describe("<MainPage />", () => {
         };
           // @ts-ignore
         navigator.geolocation = mockGeolocation;
-
-        // const spyGeo = jest.spyOn(navigator, 'geolocation');
         const spy = jest.spyOn(navigator.geolocation, 'getCurrentPosition');
+
+        render(<MainPage />);
         expect(spy).toHaveBeenCalled();
 
         
