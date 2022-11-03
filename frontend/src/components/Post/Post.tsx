@@ -10,7 +10,6 @@ export interface postProps {
     location: string,
     created_at: string,               // date & time string
     reply_to: number | null,           // id of the chained post
-    chain_open: boolean,
     clickPost?: React.MouseEventHandler<HTMLDivElement>,
     toggleChain?: () => void    // toggle chain open/close
 }
@@ -22,7 +21,7 @@ const users: { user_name: string; user_id: number }[] = [
     { user_name: "Toothfairy", user_id: 2 },
 ];
 
-const Post = (post: postProps) => {
+function Post(post: postProps) {
     const navigate = useNavigate();
     // set chain toggle status
     const [isChainOpen, setChainOpen] = useState<boolean>(false);
@@ -32,7 +31,7 @@ const Post = (post: postProps) => {
             id: 1,
             user: 1,
             content:
-                "지금 설입은 맑긴 한데 바람이 많이 불어요\n겉옷을 안 챙겨 나왔는데 학교도 춥나요? 자연대 쪽에...",
+                "Original Post...",
             latitude: 37.44877599087201,
             longitude: 126.95264777802309,
             created_at: new Date().toLocaleDateString(),
@@ -52,7 +51,6 @@ const Post = (post: postProps) => {
     };
     const clickToggleChain = () => {
         setChainOpen(!isChainOpen);
-        console.log('Chain toggled!')
     }
     const renderChainedPosts = (): JSX.Element[] => {
         const chain = chainedPosts.map((post: PostType)=> {
@@ -70,7 +68,6 @@ const Post = (post: postProps) => {
                     created_at={post.created_at}
                     reply_to={post.reply_to}
                     image={""}
-                    chain_open={isChainOpen}
                     clickPost={() => clickPostHandler(post)}
                     toggleChain={() => clickToggleChain()}
                 />

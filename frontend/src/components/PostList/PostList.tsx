@@ -96,7 +96,6 @@ function PostList({
                                 created_at={post.created_at}
                                 reply_to={post.reply_to}
                                 image={""}
-                                chain_open={false} //default is false when rendered
                                 clickPost={() => clickPostHandler(post)}
                                 // toggleChain={} for chain open/close w useState
                             />
