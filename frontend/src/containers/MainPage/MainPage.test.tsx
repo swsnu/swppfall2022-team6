@@ -7,6 +7,15 @@ jest.mock("react-router", () => ({
     ...jest.requireActual("react-router"),
     useNavigate: () => mockNavigate,
 }));
+// console.log=jest.fn();
+
+// const mockGeolocation = {
+//   getCurrentPosition: jest.fn(),
+// };
+
+// (global.navigator as unknown as jest.Mock).mockReturnValue({
+//   geolocation: mockGeolocation
+// })
 
 describe("<MainPage />", () => {
     beforeEach(() => {
@@ -43,4 +52,39 @@ describe("<MainPage />", () => {
         const weatherSlider = screen.getByLabelText("Custom marks");
         fireEvent.change(weatherSlider, { target: { value: 1 } });
     });
+    it("should get current location if navigator avaliable", async () => {
+        render(<MainPage />);
+        const mockGeolocation = {
+          ...navigator.geolocation,
+          getCurrentPosition: jest.fn().mockImplementation((success) =>
+            Promise.resolve(
+              success({
+                coords: {
+                  latitude: 10,
+                  longitude: 10
+                }
+              })
+            )
+          )
+        };
+          // @ts-ignore
+        navigator.geolocation = mockGeolocation;
+
+        // const spyGeo = jest.spyOn(navigator, 'geolocation');
+        const spy = jest.spyOn(navigator.geolocation, 'getCurrentPosition');
+        expect(spy).toHaveBeenCalled();
+
+        
+    });
 });
+
+// getCurrentPosition: jest.fn().mockImplementation((success) =>
+//   Promise.resolve(
+//     success({
+//       coords: {
+//         latitude: 10,
+//         longitude: 10
+//       }
+//     })
+//   )
+// )
