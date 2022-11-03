@@ -1,4 +1,4 @@
-import React, { ReducerState, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Map, { PositionType } from "./../../components/Map/Map";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
@@ -37,7 +37,6 @@ function MainPage() {
         } else { 
             console.log("Geolocation is not supported by this browser.");
         }
-        // setMarkPosition(initMarkPosition);
     }, [])
 
     const onClickMyPageIcon = () => {
