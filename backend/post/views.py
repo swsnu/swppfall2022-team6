@@ -22,7 +22,8 @@ class PostViewSet(viewsets.GenericViewSet):
         content=request.POST['content'],
         image=request.FILES['image'] if 'image' in request.FILES else None,
         latitude=30, longitude=30, created_at=datetime.now(),
-        reply_to=request.POST['replyTo'] if 'replyTo' in request.POST else None)
+        reply_to=Post.objects.get(id=int(request.POST['replyTo']))
+        if 'replyTo' in request.POST else None)
         return Response('create post', status=status.HTTP_201_CREATED)
 
     # GET /post/

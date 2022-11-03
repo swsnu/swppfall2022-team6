@@ -1,22 +1,30 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Post from "../Post/Post";
+import PostModal from "../PostModal/PostModal";
 
 type PostType = {
-    id: number,
-    user_id: number,
-    content: string,
-    image: string,    // image url
-    latitude: number,
-    longitude: number,
-    time: string, // date string
-    reply_to: number    // id of the chained post
+    id: number;
+    user_id: number;
+    content: string;
+    image: string; // image url
+    latitude: number;
+    longitude: number;
+    time: string; // date string
+    reply_to: number; // id of the chained post
 };
 
-function PostList() {
-    const onClickAddPostButton = () => {}; // should be implemented with postModal
+function PostList({
+    type,
+    postListCallback,
+    replyTo,
+}: {
+    type: string;
+    postListCallback: () => void;
+    replyTo: number;
+}) {
     const navigate = useNavigate();
-    
+    const [openPost, setOpenPost] = useState<boolean>(false);
 
     const [allPosts, setAllPosts] = useState<PostType[]>([
         {
@@ -43,18 +51,25 @@ function PostList() {
     ]);
 
     // get user from backend with user_id
-    const users: {user_name: string, user_id: number}[] = [
-        {"user_name": 'WeatherFairy', "user_id": 1},
-        {"user_name": 'Toothfairy', "user_id": 2}
+    const users: { user_name: string; user_id: number }[] = [
+        { user_name: "WeatherFairy", user_id: 1 },
+        { user_name: "Toothfairy", user_id: 2 },
     ];
 
-    const post_location = "Bongcheon-dong, Gwanak-gu"; //should be implemented with Map API, 
+    const post_location = "Bongcheon-dong, Gwanak-gu"; //should be implemented with Map API,
 
     const clickPostHandler = (post: PostType) => {
         navigate("/areafeed/" + post.id);
     };
+    const onClickAddPostButton = () => {
+        setOpenPost(true);
+    };
+    const postModalCallback = () => {
+        setOpenPost(false);
+        postListCallback();
+    };
 
-    const isChainOpen = false;  //default is false when rendered, should be toggled in redux state
+    const isChainOpen = false; //default is false when rendered, should be toggled in redux state
 
     return (
         <div id="PostList">
@@ -65,13 +80,17 @@ function PostList() {
                             <Post
                                 key={post.id}
                                 id={post.id}
-                                user_name={users.find((user) => user.user_id === post.user_id)!.user_name}
+                                user_name={
+                                    users.find(
+                                        (user) => user.user_id === post.user_id
+                                    )!.user_name
+                                }
                                 content={post.content}
                                 location={post_location} //should come from map API
                                 time={post.time}
                                 reply_to={post.reply_to}
                                 image={""}
-                                chain_open={isChainOpen}  //default is false when rendered
+                                chain_open={isChainOpen} //default is false when rendered
                                 clickPost={() => clickPostHandler(post)}
                                 // toggleChain={} for chain open/close w redux
                             />
@@ -79,9 +98,20 @@ function PostList() {
                     })}
                 </div>
             </div>
-            <button id="add-post-button" onClick={onClickAddPostButton}>
-                Add Post
-            </button>
+            {type === "Mypage" ? null : (
+                <div>
+                    <button id="add-post-button" onClick={onClickAddPostButton}>
+                        Add {type}
+                    </button>
+                    <PostModal
+                        openPost={openPost}
+                        setOpenPost={setOpenPost}
+                        postModalCallback={postModalCallback}
+                        type={type}
+                        replyTo={replyTo}
+                    />
+                </div>
+            )}
         </div>
     );
 }

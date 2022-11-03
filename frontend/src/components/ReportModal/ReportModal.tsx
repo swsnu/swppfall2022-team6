@@ -216,6 +216,7 @@ function ReportModal({ openReport, setOpenReport }: IProps) {
                                     fullWidth
                                     margin="normal"
                                     value={content}
+                                    maxRows={5}
                                     onChange={(e) => setContent(e.target.value)}
                                 />
                             </div>

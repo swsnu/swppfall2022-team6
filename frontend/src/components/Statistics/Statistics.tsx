@@ -68,7 +68,7 @@ export const Baroptions = {
     },
 };
 
-const labels = ["Sunny", "Cloudy", "Snow", "Wind"];
+const labels = ["Sunny", "Cloudy", "Rain", "Snow"];
 
 function Statistics() {
     const [allReports, setAllReports] = useState<ReportType[]>([]);
