@@ -4,7 +4,10 @@ import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { useNavigate } from "react-router-dom";
 import AreaFeed from "../AreaFeed/AreaFeed";
+<<<<<<< HEAD
 import ReportModal from "../../components/ReportModal/ReportModal";
+=======
+>>>>>>> 446834c917355f35b0ca9881880e1f80802ffbd9
 import "./MainPage.css"
 
 const marks = [
