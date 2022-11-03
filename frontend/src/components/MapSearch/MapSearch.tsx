@@ -55,7 +55,7 @@ const MapSearch = (props: IProps)=>{
         searchQuery,
         (data, status, pagination) => {
             if (status === kakao.maps.services.Status.OK) {
-                console.log(data);
+                // console.log(data);
                 setSearchResponse(Response.success);
                 setSearchResult(data);
                 setSearchPagination(pagination);
@@ -86,8 +86,8 @@ const MapSearch = (props: IProps)=>{
           pagination.totalCount / N_ITEM_PAGE
       );
       return (
-          <div className="search-result-box">
-              <ul className="search-result-list">
+          <div className="search-result-box" aria-label="Search Results">
+              <ul className="search-result-list" aria-label="Search Result List Item">
                   {searchResult.map((value, idx) => {
                       return (
                           <li 
@@ -99,7 +99,7 @@ const MapSearch = (props: IProps)=>{
                       );
                   })}
               </ul>
-              <div className="search-result-pagination">
+              <div className="search-result-pagination" aria-label="Search Result Pagination">
                   <a
                       href="#"
                       onClick={() => {
@@ -112,6 +112,7 @@ const MapSearch = (props: IProps)=>{
                       return (
                           <a
                               href="#"
+                              key={idx}
                               className={idx === 1 ? "on idx" : "idx"}
                               onClick={() => {
                                   pagination.gotoPage(idx);
