@@ -3,15 +3,21 @@ import { useNavigate } from "react-router-dom";
 import Post from "../Post/Post";
 import PostModal from "../PostModal/PostModal";
 
-type PostType = {
+export type HashtagType = {
     id: number;
-    user_id: number;
+    content: string;
+}
+
+export type PostType = {
+    id: number;
+    user: number;
     content: string;
     image: string; // image url
     latitude: number;
     longitude: number;
-    time: string; // date string
-    reply_to: number; // id of the chained post
+    created_at: string;
+    reply_to: number | null; // id of the chained post
+    hashtag: Array<HashtagType>
 };
 
 function PostList({
@@ -29,24 +35,26 @@ function PostList({
     const [allPosts, setAllPosts] = useState<PostType[]>([
         {
             id: 2,
-            user_id: 2,
+            user: 2,
             content: "학교는 많이 춥네요ㅠㅠ\n겉옷 챙기시는게 좋을 것 같아요!",
             latitude: 37.44877599087201,
             longitude: 126.95264777802309,
-            time: new Date().toLocaleDateString(),
+            created_at: new Date().toLocaleDateString(),
             reply_to: 1,
             image: "",
+            hashtag: [{id: 1, content: "Sunny"}]
         },
         {
             id: 1,
-            user_id: 1,
+            user: 1,
             content:
                 "지금 설입은 맑긴 한데 바람이 많이 불어요\n겉옷을 안 챙겨 나왔는데 학교도 춥나요? 자연대 쪽에...",
             latitude: 37.44877599087201,
             longitude: 126.95264777802309,
-            time: new Date().toLocaleDateString(),
+            created_at: new Date().toLocaleDateString(),
             image: "",
-            reply_to: 0,
+            reply_to: null,
+            hashtag: [{id: 1, content: "Sunny"}]
         },
     ]);
 
@@ -69,8 +77,6 @@ function PostList({
         postListCallback();
     };
 
-    const isChainOpen = false; //default is false when rendered, should be toggled in redux state
-
     return (
         <div id="PostList">
             <div id="PostsContainer">
@@ -82,17 +88,17 @@ function PostList({
                                 id={post.id}
                                 user_name={
                                     users.find(
-                                        (user) => user.user_id === post.user_id
+                                        (user) => user.user_id === post.user
                                     )!.user_name
                                 }
                                 content={post.content}
                                 location={post_location} //should come from map API
-                                time={post.time}
+                                created_at={post.created_at}
                                 reply_to={post.reply_to}
                                 image={""}
-                                chain_open={isChainOpen} //default is false when rendered
+                                chain_open={false} //default is false when rendered
                                 clickPost={() => clickPostHandler(post)}
-                                // toggleChain={} for chain open/close w redux
+                                // toggleChain={} for chain open/close w useState
                             />
                         );
                     })}
