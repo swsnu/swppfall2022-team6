@@ -2,6 +2,7 @@
     report views
 '''
 from datetime import datetime
+import json
 from django.db import transaction
 #from django.shortcuts import redirect
 from rest_framework import status, viewsets
@@ -17,12 +18,13 @@ class ReportViewSet(viewsets.GenericViewSet):
     # POST /report/
     @transaction.atomic
     def create(self, request):
+        req_data = json.loads(request.body.decode())
         Report.objects.create(user=User.objects.get(id=1),
-        weather=request.POST['weather'],
-        weather_degree=request.POST['weather_degree'],
-        wind_degree=request.POST['wind_degree'],
-        happy_degree=request.POST['happy_degree'],
-        humidity_degree=request.POST['humidity_degree'],
+        weather=req_data['weather'],
+        weather_degree=req_data['weather_degree'],
+        wind_degree=req_data['wind_degree'],
+        happy_degree=req_data['happy_degree'],
+        humidity_degree=req_data['humidity_degree'],
         latitude=30.0, longitude=30.0, created_at=datetime.now())
         return Response('create report', status=status.HTTP_201_CREATED)
 

@@ -15,6 +15,7 @@ function AreaFeed() {
     const onSubmitSearchBox = (e: React.KeyboardEvent<HTMLInputElement>) => {};
     const onClickHashtagButton = () => {};
     // const onSelectOnlyPhotos = () => {};
+    const postListCallback = () => {}; // axios.get again
 
     return (
         <div className="AreaFeed">
@@ -40,7 +41,11 @@ function AreaFeed() {
                     Only Photos
                 </button>
             </div>
-            <PostList />
+            <PostList
+                type={"Post"}
+                postListCallback={postListCallback}
+                replyTo={0}
+            />
             <NavigationBar />
         </div>
     );

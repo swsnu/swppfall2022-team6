@@ -27,7 +27,7 @@ function MyPage() {
             <button id="only-photos-button" onClick={onSelectOnlyPhotos}>
                 Only Photos
             </button>
-            <PostList />
+            <PostList type={"Mypage"} postListCallback={() => {}} replyTo={0} />
         </div>
     );
 }
