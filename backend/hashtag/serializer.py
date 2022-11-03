@@ -1,6 +1,8 @@
-from rest_framework import serializers 
-from django.db import models
-from .models import *
+'''
+    HashtagSerializer
+'''
+from rest_framework import serializers
+from .models import Hashtag
 
 class HashtagSerializer(serializers.ModelSerializer):
     class Meta:
