@@ -8,7 +8,7 @@ export interface postProps {
     image: string,              // image url, "" if none
     location: string,
     time: string,               // date & time string
-    reply_to: number,           // id of the chained post, 0 if none
+    reply_to: number | null,           // id of the chained post, 0 if none
     chain_open: boolean,        // default is false, sent from PostList
     clickPost?: React.MouseEventHandler<HTMLDivElement>, // Click the post
     toggleChain?: () => void    // toggle chain open/close
@@ -47,7 +47,7 @@ const Post = (post: postProps) => {
                 ? null
                 : <button id="chain-toggle-button">Show All</button>
                 //  future implementation of chain
-                //     (post.chain_open === false 
+                //     (post.chain_open === false
                 //     ? <button id="chain-toggle-button">Show All</button>
                 //     : <button id="chain-toggle-button">Close All</button>)
                 }

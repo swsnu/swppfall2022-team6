@@ -19,9 +19,9 @@ function PostList({
     const [openPost, setOpenPost] = useState<boolean>(false);
 
     // get user from backend with user_id
-    const users: { user_name: string; user_id: number }[] = [
-        { user_name: "WeatherFairy", user_id: 1 },
-        { user_name: "Toothfairy", user_id: 2 },
+    const users: { user_name: string; id: number }[] = [
+        { user_name: "WeatherFairy", id: 1 },
+        { user_name: "Toothfairy", id: 2 },
     ];
 
     const post_location = "Bongcheon-dong, Gwanak-gu"; //should be implemented with Map API,
@@ -50,12 +50,12 @@ function PostList({
                                 id={post.id}
                                 user_name={
                                     users.find(
-                                        (user) => user.user_id === post.user_id
+                                        (user) => user.id === post.user
                                     )!.user_name
                                 }
                                 content={post.content}
                                 location={post_location} //should come from map API
-                                time={post.time}
+                                time={post.created_at}
                                 reply_to={post.reply_to}
                                 image={""}
                                 chain_open={isChainOpen} //default is false when rendered

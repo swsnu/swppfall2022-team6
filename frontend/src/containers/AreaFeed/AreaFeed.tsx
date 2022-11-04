@@ -6,68 +6,97 @@ import PostList from "../../components/PostList/PostList";
 import { ReportType } from "../../components/Statistics/Statistics";
 import axios from "axios";
 
+type HashtagType = {
+    id: number;
+    content: string;
+};
+
+type WeatherType = {
+    id?: number;
+    temp?: number;
+    main?: string;
+};
+
 export type PostType = {
     id: number;
-    user_id: number;
+    user: number;
     content: string;
-    image: string; // image url
+    image: string | null;  // image url
     latitude: number;
     longitude: number;
-    time: string; // date string
-    reply_to: number; // id of the chained post
+    created_at: string;
+    reply_to: number | null; // id of the chained post
+    hashtags: Array<HashtagType>
 };
 
 function AreaFeed() {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const navigate = useNavigate();
     const [allReports, setAllReports] = useState<ReportType[]>([]);
-    const [allPosts, setAllPosts] = useState<PostType[]>([
-        {
-            id: 2,
-            user_id: 2,
-            content: "학교는 많이 춥네요ㅠㅠ\n겉옷 챙기시는게 좋을 것 같아요!",
-            latitude: 37.44877599087201,
-            longitude: 126.95264777802309,
-            time: new Date().toLocaleDateString(),
-            reply_to: 1,
-            image: "",
-        },
-        {
-            id: 1,
-            user_id: 1,
-            content:
-                "지금 설입은 맑긴 한데 바람이 많이 불어요\n겉옷을 안 챙겨 나왔는데 학교도 춥나요? 자연대 쪽에...",
-            latitude: 37.44877599087201,
-            longitude: 126.95264777802309,
-            time: new Date().toLocaleDateString(),
-            image: "",
-            reply_to: 0,
-        },
-    ]);
+    const [allPosts, setAllPosts] = useState<PostType[]>([]);
+    const [queryPosts, setQueryPosts] = useState<PostType[]>([]);
+    const [refresh, setRefresh] = useState<Boolean>(true);
+    const [top3Hashtag, setTop3Hashtag] = useState<string[]>([])
+    const [weather, setWeather] = useState<WeatherType>({});
 
     useEffect(() => {
+        // update PostList & Hashtags
+        axios
+            .get("/post/", {
+                params: { latitude: 37.0, longitude: 127.0, radius: 143 }, // modify to redux
+            })
+            .then((response) => {
+                setAllPosts(response.data['posts']);
+                setQueryPosts(response.data['posts'])
+                setTop3Hashtag(response.data['top3_hashtags'])
+            });
+        // update WeatherAPI
+        const lat = 37.0
+        const lon = 127.0
+        const api = {
+            key: "c22114b304afd9d97329b0223da5bb01",
+            base: "https://api.openweathermap.org/data/2.5/",
+        };
+        const url = `${api.base}weather?lat=${lat}&lon=${lon}&appid=${api.key}`;
+        axios.get(url)
+            .then((response) => {
+                const data = response.data;
+                console.log(data);
+                setWeather({
+                    id: data.weather[0].id,
+                    temp: Math.round(data.main.temp - 273.15),
+                    main: data.weather[0].main,
+                });
+            })
+        // update Statistics
         axios
             .get("/report/", {
                 params: { latitude: 30, longitude: 30, radius: 2 }, // modify to redux
             })
             .then((response) => {
                 setAllReports(response.data);
+                setRefresh(false);
             });
-    }, []);
+    }, [refresh]);
 
     const onClickBackButton = () => {
         navigate("/");
     };
     const onClickRefreshButton = () => {
-        // TODO: re-render weather container, Statistics, PostList
+        setRefresh(true)
     };
     const onSubmitSearchBox = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        // TODO: filter PostList by search value
+        if(e.key === 'Enter'){
+            setQueryPosts(allPosts.filter((post: PostType) => post.content.includes(searchQuery)));
+        }
     };
-    const onClickHashtagButton = () => {
-        // TODO: filter PostList by hashtag
+    const onClickHashtagButton = (hashtag: string) => {
+        //TODO: queryPosts? allPosts?
+        setQueryPosts(allPosts.filter((post:PostType) => post.hashtags && post.hashtags.map(h => h.content).includes(hashtag)))
     };
-    // const onSelectOnlyPhotos = () => {};
+    const onSelectOnlyPhotos = () => {
+        setQueryPosts(allPosts.filter((post: PostType) => post.image));
+    };
     const postListCallback = () => {}; // axios.get again
 
     return (
@@ -79,10 +108,27 @@ function AreaFeed() {
                 <button id="refresh-button" onClick={onClickRefreshButton}>
                     Refresh
                 </button>
-                <div id="weather-container"></div>
+                <div id="weather-container">
+                    <div id="weather-status">
+                        {weather.main}
+                    </div>
+                    <div id="weather-temp">
+                        {weather.temp}&deg;C
+                    </div>
+                </div>
             </div>
             <Statistics allReports={allReports}/>
-            <div id="hashtag-container"></div>
+            <div id="hashtag-container">
+                {(top3Hashtag[0]) &&<button id="hashtag1-button" onClick={() =>onClickHashtagButton(top3Hashtag[0])}>
+                    {top3Hashtag[0]}
+                </button>}
+                {(top3Hashtag[1]) &&<button id="hashtag2-button" onClick={() =>onClickHashtagButton(top3Hashtag[1])}>
+                    {top3Hashtag[1]}
+                </button>}
+                {(top3Hashtag[2]) &&<button id="hashtag3-button" onClick={() =>onClickHashtagButton(top3Hashtag[2])}>
+                    {top3Hashtag[2]}
+                </button>}
+            </div>
             <div id="search-box-container">
                 <input
                     id="search-box"
@@ -90,7 +136,7 @@ function AreaFeed() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyPress={(e) => onSubmitSearchBox(e)}
                 />
-                <button id="only-photos-button" onClick={onClickHashtagButton}>
+                <button id="only-photos-button" onClick={onSelectOnlyPhotos}>
                     Only Photos
                 </button>
             </div>
@@ -98,7 +144,7 @@ function AreaFeed() {
                 type={"Post"}
                 postListCallback={postListCallback}
                 replyTo={0}
-                allPosts={allPosts}
+                allPosts={queryPosts}
             />
             <NavigationBar />
         </div>

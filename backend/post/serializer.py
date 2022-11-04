@@ -21,6 +21,7 @@ class PostSerializer(serializers.ModelSerializer):
             'image',
             'latitude',
             'longitude',
+            'created_at',
             'reply_to',
             'hashtags',
         )

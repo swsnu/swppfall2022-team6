@@ -7,9 +7,12 @@ from django.db import transaction
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 from user.models import User
-from post.models import Post
+from post.models import Post, Hashtag
 from .serializer import PostSerializer
 from haversine import haversine
+import numpy as np
+from collections import Counter
+
 #from rest_framework.decorators import action
 
 class PostViewSet(viewsets.GenericViewSet):
@@ -64,9 +67,31 @@ class PostViewSet(viewsets.GenericViewSet):
         ids = [post.id for post in all_posts
             if haversine(coordinate, (post.latitude, post.longitude))
             <= float(radius)]
-        posts = all_posts.filter(id__in=ids)
+
+        posts = all_posts.filter(id__in=ids).order_by('-created_at')
+
+        post_hashtags = [Hashtag.objects.filter(posthashtag__post=post).values() for post in posts if Hashtag.objects.filter(posthashtag__post=post)]
+        hashtags = []
+        for hashtag_ls in post_hashtags:
+            for hashtag in hashtag_ls:
+                hashtags.append(hashtag['content'])
+
+        hashtag_count = Counter(hashtags)
+        hashtags = sorted(set(hashtags), key=lambda x: -hashtag_count[x])[:3]
+
+        data = {}
+        data['posts'] = self.get_serializer(posts, many=True).data
+        data['top3_hashtags'] = hashtags
+
+
+        # hashtags = np.array([dict([post['hashtags']]) for post in posts if post['hashtags']], dtype = object)
+        # print(hashtags.ravel())
+        # hashtags = [hashtag['content'] for hashtag in hashtags]
+        # hashtag_count = Counter(hashtags)
+        # hashtag_count = hashtag_count.most_common[3]
+        # print(hashtag_count)
 
         return Response(
-            self.get_serializer(posts, many=True).data,
+            data,
             status=status.HTTP_200_OK
         )
