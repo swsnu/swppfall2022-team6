@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Map, MapMarker, Circle } from "react-kakao-maps-sdk";
+import { Map, MapMarker, Circle, CustomOverlayMap } from "react-kakao-maps-sdk";
+import SkimStatistics from "../Statistics/SkimStatistics";
+
 
 type IProps = {
     initPosition: PositionType;
@@ -15,6 +17,7 @@ function MapComponent(props: IProps) {
     const {initPosition, radius} = props;
     const [markerPosition, setMarkerPosition] = useState<PositionType>(initPosition);
     const [centerPosition, setCenterPosition] = useState<PositionType>(initPosition);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     useEffect(()=>{
         setMarkerPosition(initPosition);
         setCenterPosition(initPosition);
@@ -28,7 +31,15 @@ function MapComponent(props: IProps) {
                 lat: mouseEvent.latLng.getLat(),
                 lng: mouseEvent.latLng.getLng(),
             })}>
-            {markerPosition && <MapMarker position={markerPosition} />}
+            {
+                markerPosition && 
+                <MapMarker position={markerPosition} onClick={()=>setIsOpen(true)}/>
+            }
+            {isOpen && (
+                <CustomOverlayMap position={markerPosition}>
+                    <SkimStatistics position={markerPosition}/>;
+                </CustomOverlayMap>
+            )}
             {radius&&
             <Circle
                 center={markerPosition}
