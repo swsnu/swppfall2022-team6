@@ -200,40 +200,6 @@ function Statistics() {
                             viewBoxSize={[100, 100]}
                         />
                     </div>
-                    {/* <Bar
-                        options={Baroptions}
-                        data={{
-                            labels: displaylabels,
-                            datasets: [
-                                {
-                                    label: "Statistics",
-                                    data: reportPerc,
-                                    backgroundColor: [
-                                        "pink",
-                                        "lightblue",
-                                        "yellow",
-                                        "lightgreen",
-                                    ],
-                                },
-                            ],
-                        }}
-                        style={{ position: "relative", height: "200px" }}
-                    />
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            height: "100%",
-                            alignItems: "center",
-                            justifyContent: "space-evenly",
-                            fontSize: "14px",
-                        }}
-                    >
-                        <div>{Math.ceil(20 * reportPerc[0]).toString()}</div>
-                        <div>{Math.ceil(20 * reportPerc[1]).toString()}</div>
-                        <div>{Math.ceil(20 * reportPerc[2]).toString()}</div>
-                        <div>{Math.ceil(20 * reportPerc[3]).toString()}</div>
-                    </div> */}
                     <SmallStatistics />
                 </div>
             ) : (
