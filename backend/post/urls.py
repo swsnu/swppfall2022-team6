@@ -12,7 +12,7 @@ router = SimpleRouter()
 router.register('post', PostViewSet, basename='post')
 
 urlpatterns = [
-    path('post/<int:id>/', PostDetailView.as_view(), name='detail'),
-    path('post/<int:id>/chain/', PostChainView.as_view(), name='chain'),
+    path('post/<int:post_id>/', PostDetailView.as_view(), name='detail'),
+    path('post/<int:post_id>/chain/', PostChainView.as_view(), name='chain'),
     path('', include((router.urls))),
 ]
