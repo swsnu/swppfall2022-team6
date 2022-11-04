@@ -20,12 +20,14 @@ interface dataType {
 }
 
 
-const SmallStatistics = ()=>{
+export const SmallStatistics = ()=>{
   const [allReports, setAllReports] = useState<ReportType[]>([]);
   const [maxIndex, setMaxIndex] = useState<number>(0);
   const [reportPerc, setReportPerc] = useState<number[]>([0, 0, 0, 0]);
 
   const svgRef = useRef<SVGElement>(); 
+
+  useEffect(()=>{
 
   
     axios
@@ -136,6 +138,7 @@ const SmallStatistics = ()=>{
       .style("font-weight", "700")
       .style("font-size", "15px")
       .style("color", "rgba(0,0,0,75%)");
+  }, [maxIndex, allReports])
 
   useEffect(() => {
     const lenArray: number[] = [0, 0, 0, 0];

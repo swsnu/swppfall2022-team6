@@ -11,6 +11,7 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import axios from "axios";
+import { SmallStatistics } from "./SkimStatistics";
 
 ChartJS.register(
     CategoryScale,
@@ -145,10 +146,10 @@ function Statistics() {
             }}
         >
             {allReports.length ? (
-                <div style={{ display: "flex" }}>
+                <div style={{ margin: "20px", width: "600px", display: "flex", alignItems: "center", justifyContent: "space-between"}}>
                     <div
                         id="piechart-container"
-                        style={{ width: "150px", height: "200px" }}
+                        style={{ width: "150px", height: "150px" }}
                     >
                         <PieChart
                             data={[
@@ -199,7 +200,7 @@ function Statistics() {
                             viewBoxSize={[100, 100]}
                         />
                     </div>
-                    <Bar
+                    {/* <Bar
                         options={Baroptions}
                         data={{
                             labels: displaylabels,
@@ -232,7 +233,8 @@ function Statistics() {
                         <div>{Math.ceil(20 * reportPerc[1]).toString()}</div>
                         <div>{Math.ceil(20 * reportPerc[2]).toString()}</div>
                         <div>{Math.ceil(20 * reportPerc[3]).toString()}</div>
-                    </div>
+                    </div> */}
+                    <SmallStatistics />
                 </div>
             ) : (
                 <span>No Statistics!</span>
