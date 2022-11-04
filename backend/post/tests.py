@@ -73,7 +73,6 @@ class PostTestCase(TestCase):
             'latitude': 36.0, 'longitude': 128.0, 'reply_to': None,
             'hashtags': [{'id': 1, 'content': 'hashtag'}]}]
         )
-    
     def test_get_detail(self):
         client = Client()
         response = client.get('/post/1/')
@@ -95,3 +94,4 @@ class PostTestCase(TestCase):
             'latitude': 36.0, 'longitude': 128.0, 'reply_to': None,
             'hashtags': [{'id': 1, 'content': 'hashtag'}]}]
         )
+        

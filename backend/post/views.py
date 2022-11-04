@@ -6,12 +6,12 @@ from django.db import transaction
 #from django.shortcuts import redirect
 from rest_framework import status, viewsets
 from rest_framework.response import Response
+from rest_framework.generics import GenericAPIView
 from user.models import User
 from post.models import Post
 from .serializer import PostSerializer
 from haversine import haversine
 #from rest_framework.decorators import action
-from rest_framework.generics import GenericAPIView
 
 class PostViewSet(viewsets.GenericViewSet):
     '''
@@ -73,14 +73,17 @@ class PostViewSet(viewsets.GenericViewSet):
         )
 
 class PostDetailView(GenericAPIView):
+    '''
+    post detail views
+    '''
     serializer_class = PostSerializer
     # GET /post/:id/
-    def get(self, request, id):
+    def get(self, request, post_id):
         # if not user.is_authenticated:
         #     return Response(status=status.HTTP_401_UNAUTHORIZED)
-        if request.method == "GET":
-            if Post.objects.filter(id=id).exists():
-                post = Post.objects.get(id=id)
+        if request.method == 'GET':
+            if Post.objects.filter(id=post_id).exists():
+                post = Post.objects.get(id=post_id)
             else:
                 return Response(status=status.HTTP_404_NOT_FOUND)
             return Response(
@@ -89,25 +92,26 @@ class PostDetailView(GenericAPIView):
             )
 
 class PostChainView(GenericAPIView):
+    '''
+    Post Chain Views
+    '''
     serializer_class = PostSerializer
     # GET /post/:id/chain
-    def get(self, request, id):
-        if request.method == "GET":
+    def get(self, request, post_id):
+        if request.method == 'GET':
             # if not user.is_authenticated:
             #     return Response(status=status.HTTP_401_UNAUTHORIZED)
-            
-            if Post.objects.filter(id=id).exists():
-                post = Post.objects.get(id=id)
+            if Post.objects.filter(id=post_id).exists():
+                post = Post.objects.get(id=post_id)
             else:
                 return Response(status=status.HTTP_404_NOT_FOUND)
             # Add chained posts in order
             chain = []
-            replyId = post.reply_to.id
-            while (replyId != None):
-                replyPost = Post.objects.get(id=replyId)
-                chain.append(replyPost)
-                replyId = replyPost.reply_to
-            
+            reply_id = post.reply_to.id
+            while reply_id is not None:
+                reply_post = Post.objects.get(id=reply_id)
+                chain.append(reply_post)
+                reply_id = reply_post.reply_to
             return Response(
                 self.get_serializer(chain, many=True).data,
                 status=status.HTTP_200_OK
