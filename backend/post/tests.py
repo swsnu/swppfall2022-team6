@@ -75,6 +75,8 @@ class PostTestCase(TestCase):
         )
     def test_get_detail(self):
         client = Client()
+        response = client.get('/post/4/')
+        self.assertEqual(response.status_code, 404)
         response = client.get('/post/1/')
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(
@@ -86,6 +88,8 @@ class PostTestCase(TestCase):
 
     def test_get_chain(self):
         client = Client()
+        response = client.get('/post/4/chain/')
+        self.assertEqual(response.status_code, 404)
         response = client.get('/post/2/chain/')
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(
