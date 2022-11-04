@@ -27,17 +27,20 @@ function MapComponent(props: IProps) {
             center={centerPosition}
             style={{ width: "100%", height: "600px" }}
             level={5}
-            onClick={(_t, mouseEvent) => setMarkerPosition({
-                lat: mouseEvent.latLng.getLat(),
-                lng: mouseEvent.latLng.getLng(),
-            })}>
+            onClick={(_t, mouseEvent) => {
+                setMarkerPosition({
+                    lat: mouseEvent.latLng.getLat(),
+                    lng: mouseEvent.latLng.getLng(),
+                });
+                setIsOpen(false);
+            }}>
             {
                 markerPosition && 
                 <MapMarker position={markerPosition} onClick={()=>setIsOpen(true)}/>
             }
             {isOpen && (
-                <CustomOverlayMap position={markerPosition}>
-                    <SkimStatistics position={markerPosition}/>;
+                <CustomOverlayMap position={markerPosition} >
+                    <SkimStatistics position={markerPosition} />;
                 </CustomOverlayMap>
             )}
             {radius&&
