@@ -11,6 +11,7 @@ from post.models import Post
 from .serializer import PostSerializer
 from haversine import haversine
 #from rest_framework.decorators import action
+from rest_framework.generics import GenericAPIView
 
 class PostViewSet(viewsets.GenericViewSet):
     '''
@@ -70,3 +71,44 @@ class PostViewSet(viewsets.GenericViewSet):
             self.get_serializer(posts, many=True).data,
             status=status.HTTP_200_OK
         )
+
+class PostDetailView(GenericAPIView):
+    serializer_class = PostSerializer
+    # GET /post/:id/
+    def get(self, request, id):
+        # if not user.is_authenticated:
+        #     return Response(status=status.HTTP_401_UNAUTHORIZED)
+        if request.method == "GET":
+            if Post.objects.filter(id=id).exists():
+                post = Post.objects.get(id=id)
+            else:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                self.get_serializer(post, many=False).data,
+                status=status.HTTP_200_OK
+            )
+
+class PostChainView(GenericAPIView):
+    serializer_class = PostSerializer
+    # GET /post/:id/chain
+    def get(self, request, id):
+        if request.method == "GET":
+            # if not user.is_authenticated:
+            #     return Response(status=status.HTTP_401_UNAUTHORIZED)
+            
+            if Post.objects.filter(id=id).exists():
+                post = Post.objects.get(id=id)
+            else:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+            # Add chained posts in order
+            chain = []
+            replyId = post.reply_to.id
+            while (replyId != None):
+                replyPost = Post.objects.get(id=replyId)
+                chain.append(replyPost)
+                replyId = replyPost.reply_to
+            
+            return Response(
+                self.get_serializer(chain, many=True).data,
+                status=status.HTTP_200_OK
+            )
