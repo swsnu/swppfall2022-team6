@@ -28,8 +28,6 @@ export const SmallStatistics = ()=>{
   const svgRef = useRef<SVGElement>(); 
 
   useEffect(()=>{
-
-  
     axios
       .get("/report/", {
           params: { latitude: 30, longitude: 30, radius: 2 }, // modify to redux
@@ -94,7 +92,7 @@ export const SmallStatistics = ()=>{
       .attr("width", x(5))
       .attr("fill", "#EDF9FF");
 
-    svg.selectAll(".bar-data")
+    const bar = svg.selectAll(".bar-data")
       .data(data)
     .enter().append("rect")
       .attr("class", "bar")
@@ -107,9 +105,16 @@ export const SmallStatistics = ()=>{
       .attr('ry', barHeight/2)
       //@ts-ignore
       .attr("y", d=>{return y(d.weather)+(y.bandwidth()-barHeight)/2}) 
-      .attr("height", barHeight)
       .attr("x", x(0)) 
-      //@ts-ignore
+      .attr("height", barHeight)
+        .attr("x",  d => { return x(0); })
+        .attr("width", 0)
+            .transition()
+            .duration(750)
+            .delay(function (d, i) {
+                return i * 150;
+            })
+      //@ts-ignores
       .attr("width", d=>x(d.range))
       .attr("fill", "#3185E7") 
       .attr("border", 0);
@@ -130,7 +135,7 @@ export const SmallStatistics = ()=>{
       .style("font-size", "15px")
       .style("color", "rgba(0,0,0,50%)");
       
-      svg.append("g")
+    svg.append("g")
       .call(d3.axisLeft(y))
       .style("stroke-width", 0)
       .style("font-family", "NanumGothic") 
@@ -138,6 +143,16 @@ export const SmallStatistics = ()=>{
       .style("font-weight", "700")
       .style("font-size", "15px")
       .style("color", "rgba(0,0,0,75%)");
+
+    bar.selectAll("rect")
+      .transition()
+      .duration(800)
+      //@ts-ignore
+      .attr("y", function(d) { return x(d.ragne); })
+      //@ts-ignore
+      .attr("height", function(d) { return x(d.range); })
+      .delay(function(d,i){console.log(i) ; return(i*100)});
+    
   }, [maxIndex, allReports])
 
   useEffect(() => {
