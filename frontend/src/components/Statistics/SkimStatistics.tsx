@@ -27,7 +27,7 @@ const SmallStatistics = ()=>{
 
   const svgRef = useRef<SVGElement>(); 
 
-  useEffect(()=>{
+  
     axios
       .get("/report/", {
           params: { latitude: 30, longitude: 30, radius: 2 }, // modify to redux
@@ -41,9 +41,6 @@ const SmallStatistics = ()=>{
         "🤗 Happy",
         "💧 Humidity",
     ];
-    
-    console.log(displaylabels);
-    console.log(reportPerc);
 
     const data: dataType[] = []
     for(let i=0; i<reportPerc.length; i++){
@@ -123,7 +120,7 @@ const SmallStatistics = ()=>{
       //@ts-ignore
       .attr("y", function(d) { return y(d.weather) + (y.bandwidth()+10)/2; })
       .attr("x", x(5.5))
-      .text(d=>{ return d.range*20+"%" })
+      .text(d=>{ return Math.round(d.range*20)+"%" })
       .style("text-anchor", "middle")
       .style("font-family", "NanumGothic") 
       .style("font-family", "sans-serif")
@@ -139,7 +136,6 @@ const SmallStatistics = ()=>{
       .style("font-weight", "700")
       .style("font-size", "15px")
       .style("color", "rgba(0,0,0,75%)");
-  }, []);
 
   useEffect(() => {
     const lenArray: number[] = [0, 0, 0, 0];
@@ -193,16 +189,16 @@ const Address = (props: AddressIProps)=>{
   const { position } = props;
   const geocoder = new kakao.maps.services.Geocoder();
   const [address, setAddress] = useState<string>("");
-  useEffect(()=>{
-    geocoder.coord2RegionCode(
-      position.lng, position.lat, 
-      (result, status)=>{
-        if(status == kakao.maps.services.Status.OK && !!result[0].address_name){
-          setAddress(result[0].address_name)
-        }
-      } 
-    ); 
-  }, []);
+  geocoder.coord2RegionCode(
+    position.lng, position.lat, 
+    (result, status)=>{
+      if(status == kakao.maps.services.Status.OK && !!result[0].address_name){
+        setAddress(result[0].address_name)
+      }
+    } 
+  ); 
+  // useEffect(()=>{
+  // }, []);
 
   return (
     <div className="address-container"> 
