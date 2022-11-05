@@ -85,11 +85,35 @@ describe("<Post />", () => {
           </Routes>
         </MemoryRouter>
         );
-          const username = screen.getByText("User Name"); 
-          expect(username.classList.contains("reply_to")).not.toBe(0);
-          expect(username.classList.contains("chain_open")).toBe(false);
-          screen.getByText("Show All");
+        const username = screen.getByText("User Name"); 
+        expect(username.classList.contains("reply_to")).not.toBe(null);
+        expect(username.classList.contains("chain_open")).toBe(false);
+        screen.getByText("Show All");
     });
+    it("should render author of reply in post", () => {
+      render(        
+      <MemoryRouter>
+        <Routes>
+          <Route
+              path="/"
+              element={
+              <Post 
+                user_name={"User Name"}
+                content={"Post Content"}
+                location={"User Loc"}
+                created_at ={"Date and Time"}
+                id = {1}
+                image={""}
+                reply_to={1}
+              />
+              }
+          />
+        </Routes>
+      </MemoryRouter>
+      );
+        const chainAuthorUsername = screen.getByText("@WeatherFairy");
+        expect(chainAuthorUsername).toBeInTheDocument();
+  }); 
     it("should open the chain properly", () => {
       render(        
         <MemoryRouter>
@@ -114,11 +138,9 @@ describe("<Post />", () => {
       const toggleChainButton = screen.getByText("Show All");
       fireEvent.click(toggleChainButton);
       // should edit after chain backend is implemented
-      const chainUsername = screen.getByText("WeatherFairy"); 
       const chainPostContent = screen.getByText("Original Post..."); 
       const chainPostLoc = screen.getByText("Location");
       const chainDtText = screen.getByText(new Date().toLocaleDateString());
-      expect(chainUsername).toBeInTheDocument();
       expect(chainPostContent).toBeInTheDocument();
       expect(chainPostLoc).toBeInTheDocument();
       expect(chainDtText).toBeInTheDocument();
