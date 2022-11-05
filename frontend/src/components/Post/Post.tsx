@@ -69,7 +69,6 @@ function Post(post: postProps) {
                     reply_to={post.reply_to}
                     image={""}
                     clickPost={() => clickPostHandler(post)}
-                    toggleChain={() => clickToggleChain()}
                 />
             );
         });
