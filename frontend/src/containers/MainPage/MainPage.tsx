@@ -131,7 +131,6 @@ function MainPage() {
                 openReport={openReport}
                 setOpenReport={setOpenReport}
             />
-            {openReport ? <AreaFeed /> : null}
         </div>
     );
 }
