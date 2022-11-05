@@ -4,9 +4,6 @@ import Statistics from "./Statistics";
 import axios from "axios";
 import React from "react";
 
-jest.mock("react-chartjs-2", () => ({
-    Bar: () => <div>BarChart</div>,
-}));
 jest.mock("react-minimal-pie-chart", () => ({
     PieChart: () => <div>PieChart</div>,
 }));
@@ -50,8 +47,10 @@ describe("<Statistics />", () => {
         jest.clearAllMocks();
     });
     it("should successfully get reports", async () => {
-        render(<Statistics allReports={data} />);
-        screen.getByText("BarChart");
+        const { container } = render(<Statistics allReports={data} />);
+        const barChart = container.getElementsByClassName("bar");
+        //console.log(barChart);
+        //screen.getByText("BarChart");
         screen.getByText("PieChart");
     });
     it("should not show anything if no reports", async () => {
