@@ -38,7 +38,7 @@ function MainPage() {
     
     useEffect(()=>{
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(position => {
+            navigator.geolocation.getCurrentPosition((position) => {
                 setMarkPosition({
                     lat: position.coords.latitude, 
                     lng: position.coords.longitude
@@ -48,10 +48,10 @@ function MainPage() {
                     lng: position.coords.longitude
                 });
             });
-        } else { 
+        } else {
             console.log("Geolocation is not supported by this browser.");
         }
-    }, [])
+    }, []);
 
     useEffect(()=>{
         geocoder.coord2RegionCode(
