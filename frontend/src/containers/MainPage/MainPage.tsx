@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
-import Map, { PositionType } from "./../../components/Map/Map";
+import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
-import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBullhorn, faUser } from "@fortawesome/free-solid-svg-icons";
+
+import Map, { PositionType } from "./../../components/Map/Map";
 import AreaFeed from "../AreaFeed/AreaFeed";
 import ReportModal from "../../components/ReportModal/ReportModal";
 import MapSearch from "../../components/MapSearch/MapSearch";
@@ -26,7 +29,12 @@ function MainPage() {
     const [openReport, setOpenReport] = useState<boolean>(false);
     const [markPosition, setMarkPosition] =
         useState<PositionType>(initMarkPosition);
+    const [currPosition, setCurrPosition] =
+        useState<PositionType>(initMarkPosition);
+    const [address, setAddress] = useState<string>("");
     const navigate = useNavigate();
+
+    const geocoder = new kakao.maps.services.Geocoder();
     
     useEffect(()=>{
         if (navigator.geolocation) {
@@ -34,12 +42,28 @@ function MainPage() {
                 setMarkPosition({
                     lat: position.coords.latitude, 
                     lng: position.coords.longitude
-                })
+                });
+                setCurrPosition({
+                    lat: position.coords.latitude, 
+                    lng: position.coords.longitude
+                });
             });
         } else { 
             console.log("Geolocation is not supported by this browser.");
         }
     }, [])
+
+    useEffect(()=>{
+        geocoder.coord2RegionCode(
+            currPosition.lng, currPosition.lat, 
+          (result, status)=>{
+            console.log(result)
+            if(status == kakao.maps.services.Status.OK && !!result[0].address_name){
+              setAddress(result[0].address_name)
+            }
+          } 
+        ); 
+      }, [currPosition])
 
     const onClickMyPageIcon = () => {
         navigate("/mypage");
@@ -59,14 +83,14 @@ function MainPage() {
             <div id="upper-container">
                 NowSee
                 <button id="mypage-button" onClick={onClickMyPageIcon}>
-                    MyPage
+                    <FontAwesomeIcon icon={faUser} size="2x"/>
                 </button>
             </div>
             <div id="main-container">
-                <div className="search-input-container">
-                    <input type="text" className="search-input" />
+                <MapSearch markPosition={markPosition} setMarkPosition={setMarkPosition}/>
+                <div className="map-container">
+                    <Map initPosition={markPosition} radius={radius} />
                 </div>
-                <Map initPosition={markPosition} radius={radius} />
                 <div id="lower-map-container">
                     <div className="radius-slider-container">
                         <p>Change Radius</p>
@@ -96,17 +120,12 @@ function MainPage() {
                     </div>
                 </div>
                 <div id="bottom-container">
-                    <span>Current location: </span>
+                    <span>{`Current location: ${address}`}</span>
                     <button id="report-button" onClick={onClickReportButton}>
-                        Report
+                        <span>Report!</span>
+                        {/* <FontAwesomeIcon icon={faBullhorn}/> */}
                     </button>
                 </div>
-            </div>
-            <div id="bottom-container">
-                <span>Current location: </span>
-                <button id="report-button" onClick={onClickReportButton}>
-                    Report
-                </button>
             </div>
             <ReportModal
                 openReport={openReport}
