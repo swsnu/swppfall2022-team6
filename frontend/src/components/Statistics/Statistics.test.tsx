@@ -53,7 +53,7 @@ describe("<Statistics />", () => {
             ],
         });
         render(<Statistics />);
-        await waitFor(async () => await screen.findByText("BarChart"));
+        await waitFor(async () => await screen.findByLabelText("BarChart"));
         await waitFor(async () => await screen.findByText("PieChart"));
     });
     it("should not show anything if no reports", async () => {

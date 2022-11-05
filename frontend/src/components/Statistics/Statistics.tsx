@@ -12,7 +12,7 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import axios from "axios";
-import { SmallStatistics } from "./SkimStatistics";
+import { SmallStatistics } from "../SkimStatistics/SkimStatistics";
 
 ChartJS.register(
     CategoryScale,
@@ -308,9 +308,9 @@ function Statistics() {
                             viewBoxSize={[100, 100]}
                         />
                     </div>
-                    <div className="bar-container">
+                    <div className="bar-container" >
                         {/* @ts-ignore */}
-                        <svg ref={barRef}/>
+                        <svg ref={barRef} aria-label="BarChart"/>
                     </div>
                 </div>
             ) : (
