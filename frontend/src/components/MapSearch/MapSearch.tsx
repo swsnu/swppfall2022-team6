@@ -1,5 +1,10 @@
 import React, { useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+// import { faSquare } from "@fortawesome/free-regular-svg-icons";
 import { PositionType } from "../Map/Map";
+
+// import SearchIcon from "../../assets/search-svgrepo-com.svg";
 
 type IProps = {
   markPosition: PositionType;
@@ -132,14 +137,27 @@ const MapSearch = (props: IProps)=>{
           </div>
       );
   };
+  const onClickClose = ()=>{
+    setSearchResponse(Response.zero_result);
+    setSearchResult([]);
+    setSearchQuery("");
+    setSearchPagination(undefined);
+  }
   return (
     <div id="search-box-container">
-        <input
-            id="search-box"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e)=>{onSubmitSearchBox(e)}}
-        />
+        <div id="search-input-container">
+            {/* @ts-ignore */}
+            <FontAwesomeIcon icon={faMagnifyingGlass} size="2x"/>
+            <input
+                id="search-box"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e)=>{onSubmitSearchBox(e)}}
+            />
+            <button id="button-close" onClick={onClickClose}>
+                <FontAwesomeIcon icon={faXmark} size="2x"/>
+            </button>
+        </div>
         {searchResponse === Response.success && searchResultBox()}
       </div>
   );
