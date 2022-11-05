@@ -34,10 +34,17 @@ function PostDetail() {
     ]);
     return (
         <div className="PostDetail">
-            <div id="upper-container"></div>
-            <div id="post-container"></div>
+            <div id="upper-container">
+                {/* back button */}
+            </div>
+            <div id="post-container">
+
+            </div>
             <div id="lower-post-container">
-                <div id="hashtag-container"></div>
+                <div id=""></div>
+                <div id="hashtag-container">
+
+                </div>
             </div>
             <PostList
                 type={"Reply"}

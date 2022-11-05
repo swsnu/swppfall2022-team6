@@ -6,7 +6,7 @@ import PostList from "../../components/PostList/PostList";
 import { ReportType } from "../../components/Statistics/Statistics";
 import axios from "axios";
 
-type HashtagType = {
+export type HashtagType = {
     id: number;
     content: string;
 };
@@ -21,7 +21,7 @@ export type PostType = {
     id: number;
     user: number;
     content: string;
-    image: string | null; // image url
+    image: string; // image url
     latitude: number;
     longitude: number;
     created_at: string;

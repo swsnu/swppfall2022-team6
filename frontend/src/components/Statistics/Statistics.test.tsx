@@ -45,18 +45,17 @@ describe("<Statistics />", () => {
             humidity_degree: 5,
             time: "",
         },
-    ]
+    ];
     beforeEach(() => {
         jest.clearAllMocks();
     });
     it("should successfully get reports", async () => {
-
-        render(<Statistics allReports={data}/>);
+        render(<Statistics allReports={data} />);
         screen.getByText("BarChart");
         screen.getByText("PieChart");
     });
     it("should not show anything if no reports", async () => {
-        render(<Statistics allReports={[]}/>);
+        render(<Statistics allReports={[]} />);
         screen.getByText("No Statistics!");
     });
 });

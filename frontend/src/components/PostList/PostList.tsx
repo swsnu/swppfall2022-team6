@@ -13,7 +13,7 @@ function PostList({
     type: string;
     postListCallback: () => void;
     replyTo: number;
-    allPosts:PostType[],
+    allPosts: PostType[];
 }) {
     const navigate = useNavigate();
     const [openPost, setOpenPost] = useState<boolean>(false);
@@ -37,8 +37,6 @@ function PostList({
         postListCallback();
     };
 
-    const isChainOpen = false; //default is false when rendered, should be toggled in redux state
-
     return (
         <div id="PostList">
             <div id="PostsContainer">
@@ -49,18 +47,16 @@ function PostList({
                                 key={post.id}
                                 id={post.id}
                                 user_name={
-                                    users.find(
-                                        (user) => user.id === post.user
-                                    )!.user_name
+                                    users.find((user) => user.id === post.user)!
+                                        .user_name
                                 }
                                 content={post.content}
                                 location={post_location} //should come from map API
-                                time={post.created_at}
+                                created_at={post.created_at}
                                 reply_to={post.reply_to}
                                 image={""}
-                                chain_open={isChainOpen} //default is false when rendered
                                 clickPost={() => clickPostHandler(post)}
-                                // toggleChain={} for chain open/close w redux
+                                // toggleChain={} for chain open/close w useState
                             />
                         );
                     })}
