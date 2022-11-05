@@ -5,3 +5,4 @@ pylint-django==2.5.3
 djangorestframework==3.14.0
 Pillow==9.2.0
 haversine==2.7.0
+numpy==1.23.4

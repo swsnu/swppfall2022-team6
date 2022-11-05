@@ -26,19 +26,19 @@ function MainPage() {
     const [markPosition, setMarkPosition] =
         useState<PositionType>(initMarkPosition);
     const navigate = useNavigate();
-    
-    useEffect(()=>{
+
+    useEffect(() => {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(position => {
+            navigator.geolocation.getCurrentPosition((position) => {
                 setMarkPosition({
-                    lat: position.coords.latitude, 
-                    lng: position.coords.longitude
-                })
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                });
             });
-        } else { 
+        } else {
             console.log("Geolocation is not supported by this browser.");
         }
-    }, [])
+    }, []);
 
     const onClickMyPageIcon = () => {
         navigate("/mypage");
@@ -61,7 +61,10 @@ function MainPage() {
                     MyPage
                 </button>
             </div>
-            <MapSearch markPosition={markPosition} setMarkPosition={setMarkPosition}/>
+            <MapSearch
+                markPosition={markPosition}
+                setMarkPosition={setMarkPosition}
+            />
             <Map initPosition={markPosition} radius={radius} />
             <div id="lower-map-container">
                 <div className="radius-slider-container">

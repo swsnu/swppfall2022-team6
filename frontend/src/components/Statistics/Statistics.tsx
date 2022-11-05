@@ -77,8 +77,7 @@ export const Baroptions = {
 
 const labels = ["Sunny", "Cloudy", "Rain", "Snow"];
 
-function Statistics() {
-    const [allReports, setAllReports] = useState<ReportType[]>([]);
+function Statistics({allReports}:{allReports:ReportType[]}) {
     const [maxIndex, setMaxIndex] = useState<number>(0);
     const [reportPerc, setReportPerc] = useState<number[]>([0, 0, 0, 0]);
 
@@ -190,16 +189,6 @@ function Statistics() {
           .style("font-weight", "700")
           .style("font-size", "15px")
           .style("color", "rgba(0,0,0,75%)");
-
-    useEffect(() => {
-        axios
-            .get("/report/", {
-                params: { latitude: 30, longitude: 30, radius: 2 }, // modify to redux
-            })
-            .then((response) => {
-                setAllReports(response.data);
-            });
-    }, []);
 
     useEffect(() => {
         const lenArray: number[] = [0, 0, 0, 0];

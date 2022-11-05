@@ -36,7 +36,10 @@ function PostModal({
                         "Content-Type": "multipart/form-data",
                     },
                 })
-                .then(() => postModalCallback());
+                .then(() => {
+                    setContent("");
+                    postModalCallback();
+                });
         }
     };
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
