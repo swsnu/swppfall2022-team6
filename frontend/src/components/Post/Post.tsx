@@ -83,8 +83,21 @@ function Post(post: postProps) {
                     <div id="timestamp">{post.created_at}</div>
                 </div>
                 <div id="post-content-container">
-                    <div id="post-text">{post.content}</div>
-                    <div id="post-photo"></div>
+                    <div id="post-content">
+                        { post.reply_to === null
+                        ? null
+                        : <span id="post-reply-to">
+                            @{
+                            users.find(
+                                (user) => user.user_id === post.reply_to
+                            )!.user_name
+                            } </span>
+                        }
+                        <span id="post-text">{post.content}</span>
+                    </div>
+                    <div id="post-photo">
+                        <img src={post.image}></img>
+                    </div>
                 </div>
             </div>
             {/* Show chain when it is a reply */}
@@ -95,30 +108,7 @@ function Post(post: postProps) {
             ) : (
                 <div id="chain-container">
                     <div id="chained-posts">
-                        {" "}
-                        {post.reply_to === 0 ? null : renderChainedPosts()}
-                    </div>
-                    <div id="chain-toggle">
-                        <button
-                            id="chain-toggle-button"
-                            onClick={clickToggleChain}
-                        >
-                            Close All
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            {/* Show chain when it is a reply */}
-            {post.reply_to === null ? null : isChainOpen === false ? (
-                <button id="chain-toggle-button" onClick={clickToggleChain}>
-                    Show All
-                </button>
-            ) : (
-                <div id="chain-container">
-                    <div id="chained-posts">
-                        {" "}
-                        {post.reply_to === 0 ? null : renderChainedPosts()}
+                        {renderChainedPosts()}
                     </div>
                     <div id="chain-toggle">
                         <button
