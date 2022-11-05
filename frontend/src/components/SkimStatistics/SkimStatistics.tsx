@@ -191,15 +191,17 @@ const Address = (props: AddressIProps)=>{
   const { position } = props;
   const geocoder = new kakao.maps.services.Geocoder();
   const [address, setAddress] = useState<string>("");
-  geocoder.coord2RegionCode(
-    position.lng, position.lat, 
-    (result, status)=>{
-      console.log(result)
-      if(status == kakao.maps.services.Status.OK && !!result[0].address_name){
-        setAddress(result[0].address_name)
-      }
-    } 
-  ); 
+  useEffect(()=>{
+    geocoder.coord2RegionCode(
+      position.lng, position.lat, 
+      (result, status)=>{
+        console.log(result)
+        if(status == kakao.maps.services.Status.OK && !!result[0].address_name){
+          setAddress(result[0].address_name)
+        }
+      } 
+    ); 
+  }, [])
 
   return (
     <div className="address-container"> 
