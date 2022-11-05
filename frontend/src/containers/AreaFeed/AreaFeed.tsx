@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import PostList from "../../components/PostList/PostList";
 import { ReportType } from "../../components/Statistics/Statistics";
 import axios from "axios";
+import "./AreaFeed.scss";
 
 export type HashtagType = {
     id: number;
@@ -110,54 +111,70 @@ function AreaFeed() {
     return (
         <div className="AreaFeed">
             <div id="upper-container">
-                <button id="back-button" onClick={onClickBackButton}>
-                    Back
-                </button>
-                <button id="refresh-button" onClick={onClickRefreshButton}>
-                    Refresh
-                </button>
+                <div id="button-container">
+                    <button id="back-button" onClick={onClickBackButton}>
+                        ←
+                    </button>
+                    <button id="refresh-button" onClick={onClickRefreshButton}>
+                        ↻
+                    </button>
+                </div>
                 <div id="weather-container">
-                    <div id="weather-status">{weather.main}</div>
+                    {" "}
                     <div id="weather-temp">{weather.temp}&deg;C</div>
+                    <div id="weather-status">{weather.main}</div>
                 </div>
             </div>
             <Statistics allReports={allReports} />
             <div id="hashtag-container">
-                {top3Hashtag[0] && (
-                    <button
-                        id="hashtag1-button"
-                        onClick={() => onClickHashtagButton(top3Hashtag[0])}
-                    >
-                        {top3Hashtag[0]}
-                    </button>
-                )}
-                {top3Hashtag[1] && (
-                    <button
-                        id="hashtag2-button"
-                        onClick={() => onClickHashtagButton(top3Hashtag[1])}
-                    >
-                        {top3Hashtag[1]}
-                    </button>
-                )}
-                {top3Hashtag[2] && (
-                    <button
-                        id="hashtag3-button"
-                        onClick={() => onClickHashtagButton(top3Hashtag[2])}
-                    >
-                        {top3Hashtag[2]}
-                    </button>
-                )}
+                <div className="label">Recommended Hashtags</div>
+                <div id="hashtag-buttons">
+                    {top3Hashtag[0] && (
+                        <button
+                            id="hashtag1-button"
+                            className="hashtag"
+                            onClick={() => onClickHashtagButton(top3Hashtag[0])}
+                        >
+                            {"#" + top3Hashtag[0]}
+                        </button>
+                    )}
+                    {top3Hashtag[1] && (
+                        <button
+                            id="hashtag2-button"
+                            className="hashtag"
+                            onClick={() => onClickHashtagButton(top3Hashtag[1])}
+                        >
+                            {"#" + top3Hashtag[1]}
+                        </button>
+                    )}
+                    {top3Hashtag[2] && (
+                        <button
+                            id="hashtag3-button"
+                            className="hashtag"
+                            onClick={() => onClickHashtagButton(top3Hashtag[2])}
+                        >
+                            {"#" + top3Hashtag[2]}
+                        </button>
+                    )}
+                </div>
             </div>
             <div id="search-box-container">
-                <input
-                    id="search-box"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyPress={(e) => onSubmitSearchBox(e)}
-                />
-                <button id="only-photos-button" onClick={onSelectOnlyPhotos}>
-                    Only Photos
-                </button>
+                <div className="label">Posts</div>
+                <div id="search-container">
+                    <input
+                        id="search-box"
+                        value={searchQuery}
+                        placeholder={"🔍 Search"}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyPress={(e) => onSubmitSearchBox(e)}
+                    />
+                    <button
+                        id="only-photos-button"
+                        onClick={onSelectOnlyPhotos}
+                    >
+                        ◯ Only Photos
+                    </button>
+                </div>
             </div>
             <PostList
                 type={"Post"}
