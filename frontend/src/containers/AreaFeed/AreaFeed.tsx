@@ -21,12 +21,12 @@ export type PostType = {
     id: number;
     user: number;
     content: string;
-    image: string | null;  // image url
+    image: string | null; // image url
     latitude: number;
     longitude: number;
     created_at: string;
     reply_to: number | null; // id of the chained post
-    hashtags: Array<HashtagType>
+    hashtags: Array<HashtagType>;
 };
 
 function AreaFeed() {
@@ -36,7 +36,7 @@ function AreaFeed() {
     const [allPosts, setAllPosts] = useState<PostType[]>([]);
     const [queryPosts, setQueryPosts] = useState<PostType[]>([]);
     const [refresh, setRefresh] = useState<Boolean>(true);
-    const [top3Hashtag, setTop3Hashtag] = useState<string[]>([])
+    const [top3Hashtag, setTop3Hashtag] = useState<string[]>([]);
     const [weather, setWeather] = useState<WeatherType>({});
 
     useEffect(() => {
@@ -46,27 +46,26 @@ function AreaFeed() {
                 params: { latitude: 37.0, longitude: 127.0, radius: 143 }, // modify to redux
             })
             .then((response) => {
-                setAllPosts(response.data['posts']);
-                setQueryPosts(response.data['posts'])
-                setTop3Hashtag(response.data['top3_hashtags'])
+                setAllPosts(response.data["posts"]);
+                setQueryPosts(response.data["posts"]);
+                setTop3Hashtag(response.data["top3_hashtags"]);
             });
         // update WeatherAPI
-        const lat = 37.0
-        const lon = 127.0
+        const lat = 37.0;
+        const lon = 127.0;
         const api = {
             key: "c22114b304afd9d97329b0223da5bb01",
             base: "https://api.openweathermap.org/data/2.5/",
         };
         const url = `${api.base}weather?lat=${lat}&lon=${lon}&appid=${api.key}`;
-        axios.get(url)
-            .then((response) => {
-                const data = response.data;
-                setWeather({
-                    id: data.weather[0].id,
-                    temp: Math.round(data.main.temp - 273.15),
-                    main: data.weather[0].main,
-                });
-            })
+        axios.get(url).then((response) => {
+            const data = response.data;
+            setWeather({
+                id: data.weather[0].id,
+                temp: Math.round(data.main.temp - 273.15),
+                main: data.weather[0].main,
+            });
+        });
         // update Statistics
         axios
             .get("/report/", {
@@ -82,16 +81,26 @@ function AreaFeed() {
         navigate("/");
     };
     const onClickRefreshButton = () => {
-        setRefresh(true)
+        setRefresh(true);
     };
     const onSubmitSearchBox = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if(e.key === 'Enter'){
-            setQueryPosts(allPosts.filter((post: PostType) => post.content.includes(searchQuery)));
+        if (e.key === "Enter") {
+            setQueryPosts(
+                allPosts.filter((post: PostType) =>
+                    post.content.includes(searchQuery)
+                )
+            );
         }
     };
     const onClickHashtagButton = (hashtag: string) => {
         //TODO: queryPosts? allPosts?
-        setQueryPosts(allPosts.filter((post:PostType) => post.hashtags && post.hashtags.map(h => h.content).includes(hashtag)))
+        setQueryPosts(
+            allPosts.filter(
+                (post: PostType) =>
+                    post.hashtags &&
+                    post.hashtags.map((h) => h.content).includes(hashtag)
+            )
+        );
     };
     const onSelectOnlyPhotos = () => {
         setQueryPosts(allPosts.filter((post: PostType) => post.image));
@@ -108,25 +117,36 @@ function AreaFeed() {
                     Refresh
                 </button>
                 <div id="weather-container">
-                    <div id="weather-status">
-                        {weather.main}
-                    </div>
-                    <div id="weather-temp">
-                        {weather.temp}&deg;C
-                    </div>
+                    <div id="weather-status">{weather.main}</div>
+                    <div id="weather-temp">{weather.temp}&deg;C</div>
                 </div>
             </div>
-            <Statistics allReports={allReports}/>
+            <Statistics allReports={allReports} />
             <div id="hashtag-container">
-                {(top3Hashtag[0]) &&<button id="hashtag1-button" onClick={() =>onClickHashtagButton(top3Hashtag[0])}>
-                    {top3Hashtag[0]}
-                </button>}
-                {(top3Hashtag[1]) &&<button id="hashtag2-button" onClick={() =>onClickHashtagButton(top3Hashtag[1])}>
-                    {top3Hashtag[1]}
-                </button>}
-                {(top3Hashtag[2]) &&<button id="hashtag3-button" onClick={() =>onClickHashtagButton(top3Hashtag[2])}>
-                    {top3Hashtag[2]}
-                </button>}
+                {top3Hashtag[0] && (
+                    <button
+                        id="hashtag1-button"
+                        onClick={() => onClickHashtagButton(top3Hashtag[0])}
+                    >
+                        {top3Hashtag[0]}
+                    </button>
+                )}
+                {top3Hashtag[1] && (
+                    <button
+                        id="hashtag2-button"
+                        onClick={() => onClickHashtagButton(top3Hashtag[1])}
+                    >
+                        {top3Hashtag[1]}
+                    </button>
+                )}
+                {top3Hashtag[2] && (
+                    <button
+                        id="hashtag3-button"
+                        onClick={() => onClickHashtagButton(top3Hashtag[2])}
+                    >
+                        {top3Hashtag[2]}
+                    </button>
+                )}
             </div>
             <div id="search-box-container">
                 <input
