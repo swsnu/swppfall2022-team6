@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Map, MapMarker, Circle, CustomOverlayMap } from "react-kakao-maps-sdk";
-import SkimStatistics from "../Statistics/SkimStatistics";
+import SkimStatistics from "../SkimStatistics/SkimStatistics";
 
 
 type IProps = {
