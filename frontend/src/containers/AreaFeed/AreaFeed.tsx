@@ -61,7 +61,6 @@ function AreaFeed() {
         axios.get(url)
             .then((response) => {
                 const data = response.data;
-                console.log(data);
                 setWeather({
                     id: data.weather[0].id,
                     temp: Math.round(data.main.temp - 273.15),
