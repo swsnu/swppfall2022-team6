@@ -52,7 +52,10 @@ describe("<Statistics />", () => {
                 },
             ],
         });
-        render(<Statistics />);
+        const {container} = render(<Statistics />);
+        // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+        const barChart = container.getElementsByClassName('bar');
+        console.log(barChart);
         await waitFor(async () => await screen.findByLabelText("BarChart"));
         await waitFor(async () => await screen.findByText("PieChart"));
     });

@@ -71,6 +71,9 @@ describe("<SkimStatistics />", ()=>{
           },
       ],
   });
-  render(<SkimStatistics position={sampleCoord}/>);
+    const {container} = render(<SkimStatistics position={sampleCoord}/>);
+    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+    const barChart = container.getElementsByClassName('bar');
+    console.log(barChart);
   })
 })
