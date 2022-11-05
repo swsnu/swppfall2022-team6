@@ -108,6 +108,28 @@ function Post(post: postProps) {
                     </div>
                 </div>
             )}
+
+            {/* Show chain when it is a reply */}
+            {post.reply_to === null ? null : isChainOpen === false ? (
+                <button id="chain-toggle-button" onClick={clickToggleChain}>
+                    Show All
+                </button>
+            ) : (
+                <div id="chain-container">
+                    <div id="chained-posts">
+                        {" "}
+                        {post.reply_to === 0 ? null : renderChainedPosts()}
+                    </div>
+                    <div id="chain-toggle">
+                        <button
+                            id="chain-toggle-button"
+                            onClick={clickToggleChain}
+                        >
+                            Close All
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
