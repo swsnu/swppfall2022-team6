@@ -3,11 +3,11 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 0px 4px;
+  // padding: 0px 4px;
   margin: 10px 0;
   font-size: 20px;
   height: 25px;
-  width: 100%;
+  width: 95%;
 }
 
 #upper-container #mypage-button {
@@ -89,6 +89,22 @@
   color: #111
 }
 .search-result-box .search-result-pagination a:hover{
+  color: #aaa;
+}
+.search-result-box #result-close-container {
+  width: 99%;
+  // display: flex;
+  text-align: right;
+  position: absolute;
+  // padding: 10px;
+}
+.search-result-box #result-button-close{
+  border: none;
+  background: none;
+  color: #111;
+  font-size: 12px;
+}
+.search-result-box #result-button-close:hover{
   color: #aaa
 }
 

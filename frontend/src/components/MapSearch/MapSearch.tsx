@@ -84,6 +84,12 @@ const MapSearch = (props: IProps)=>{
     );
 
   }
+
+  const onClickResultClose = ()=>{
+    setSearchResponse(Response.zero_result);
+    setSearchResult([]);
+    setSearchPagination(undefined);
+  }
   const searchResultBox = () => {
       const pagination = searchPagination as kakao.maps.Pagination;
       const idxArray: number[] = range(
@@ -92,6 +98,11 @@ const MapSearch = (props: IProps)=>{
       );
       return (
           <div className="search-result-box" aria-label="Search Results">
+            <div id="result-close-container">
+                <button id="result-button-close" onClick={onClickResultClose}>
+                    <FontAwesomeIcon icon={faXmark} fontSize="20px"/>
+                </button>
+            </div>
               <ul className="search-result-list" aria-label="Search Result List Item">
                   {searchResult.map((value, idx) => {
                       return (
