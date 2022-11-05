@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import AreaFeed from "../AreaFeed/AreaFeed";
 import ReportModal from "../../components/ReportModal/ReportModal";
 import MapSearch from "../../components/MapSearch/MapSearch";
-import "./MainPage.css"
+import "./MainPage.scss"
 
 const marks = [
     { value: 0, label: "0km" },
