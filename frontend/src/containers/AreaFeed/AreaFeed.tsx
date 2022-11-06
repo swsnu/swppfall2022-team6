@@ -84,6 +84,7 @@ function AreaFeed() {
         setRefresh(true);
     };
     const onSubmitSearchBox = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        console.log("yes")
         if (e.key === "Enter") {
             setQueryPosts(
                 allPosts.filter((post: PostType) =>
@@ -105,7 +106,9 @@ function AreaFeed() {
     const onSelectOnlyPhotos = () => {
         setQueryPosts(allPosts.filter((post: PostType) => post.image));
     };
-    const postListCallback = () => {}; // axios.get again
+    const postListCallback = () => {
+        setRefresh(true)
+    }; // axios.get again
 
     return (
         <div className="AreaFeed">
