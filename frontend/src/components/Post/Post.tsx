@@ -29,7 +29,6 @@ function Post(post: postProps) {
                 .get(`/post/${post.reply_to}/`)
                 .then((response)=>{
                     setReplyAuthor(response.data["user"].user_name);
-                    console.log(response.data["user"])
                 })
         }
     }, []);
