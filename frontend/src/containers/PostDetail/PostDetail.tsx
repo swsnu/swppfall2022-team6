@@ -7,7 +7,9 @@ import { PostType } from "../AreaFeed/AreaFeed";
 import "./PostDetail.scss";
 
 function PostDetail() {
-    const postListCallback = () => {}; // axios.get again
+    const postListCallback = () => {
+        setRefresh(true)
+    }; // axios.get again
     const { id } = useParams();
     const navigate = useNavigate();
     const onClickBackButton = () => {
@@ -29,6 +31,8 @@ function PostDetail() {
         { user_name: "WeatherFairy", user_id: 1 },
         { user_name: "Toothfairy", user_id: 2 },
     ];
+    const [refresh, setRefresh] = useState<Boolean>(true);
+
 
     useEffect(() => {
         // update mainPost, replyPosts
@@ -36,7 +40,8 @@ function PostDetail() {
             setMainPost(response.data["post"]);
             setReplyPosts(response.data["replies"]);
         });
-    }, []);
+        setRefresh(false)
+    }, [refresh]);
 
     return (
         <div className="PostDetail">
