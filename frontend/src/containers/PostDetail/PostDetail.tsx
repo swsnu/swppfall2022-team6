@@ -8,7 +8,7 @@ import "./PostDetail.scss";
 
 function PostDetail() {
     const postListCallback = () => {
-        setRefresh(true)
+        setRefresh(true);
     }; // axios.get again
     const { id } = useParams();
     const navigate = useNavigate();
@@ -33,14 +33,13 @@ function PostDetail() {
     // ];
     const [refresh, setRefresh] = useState<Boolean>(true);
 
-
     useEffect(() => {
         // update mainPost, replyPosts
         axios.get(`/post/${id}/`).then((response) => {
             setMainPost(response.data["post"]);
             setReplyPosts(response.data["replies"]);
         });
-        setRefresh(false)
+        setRefresh(false);
     }, [refresh]);
 
     return (
@@ -84,7 +83,7 @@ function PostDetail() {
                     <div id="hashtag-container">
                         {mainPost.hashtags.map((hashtag, i) => (
                             <div key={`hashtag${i}`} className="hashtag">
-                                {hashtag.content}
+                                {"#" + hashtag.content}
                             </div>
                         ))}
                     </div>

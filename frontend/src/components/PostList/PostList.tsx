@@ -51,7 +51,7 @@ function PostList({
                                 location={post_location} //should come from map API
                                 created_at={post.created_at}
                                 reply_to_author={post.reply_to_author}
-                                image={""}
+                                image={post.image}
                                 clickPost={() => clickPostHandler(post)}
                                 isReplyList={replyTo}
                             />
