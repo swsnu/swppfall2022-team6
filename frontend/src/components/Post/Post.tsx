@@ -28,7 +28,8 @@ function Post(post: postProps) {
             axios
                 .get(`/post/${post.reply_to}/`)
                 .then((response)=>{
-                    setReplyAuthor(response.data.user_name)
+                    setReplyAuthor(response.data["user"].user_name);
+                    console.log(response.data["user"])
                 })
         }
     }, []);
@@ -37,7 +38,7 @@ function Post(post: postProps) {
             axios
                 .get(`/post/${post.reply_to}/`)
                 .then((response)=>{
-                    setChainedPosts(response.data)
+                    setChainedPosts([response.data["post"]])
                 })
             }
     }, [isChainOpen]);
@@ -66,8 +67,6 @@ function Post(post: postProps) {
         });
         return chain;
     };
-
-
     return (
         <div
             id="post-and-chain-container"

@@ -19,12 +19,6 @@ function PostList({
     const navigate = useNavigate();
     const [openPost, setOpenPost] = useState<boolean>(false);
 
-    // get user from backend with user_id
-    const users: { user_name: string; id: number }[] = [
-        { user_name: "WeatherFairy", id: 1 },
-        { user_name: "Toothfairy", id: 2 },
-    ];
-
     const post_location = "Bongcheon-dong, Gwanak-gu"; //should be implemented with Map API,
 
     const clickPostHandler = (post: PostType) => {
@@ -51,10 +45,8 @@ function PostList({
                             <Post
                                 key={post.id}
                                 id={post.id}
-                                user_name={
-                                    users.find((user) => user.id === post.user)!
-                                        .user_name
-                                }
+                                // TODO: user name from backend
+                                user_name={""}
                                 content={post.content}
                                 location={post_location} //should come from map API
                                 created_at={post.created_at}

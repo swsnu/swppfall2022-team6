@@ -103,11 +103,13 @@ class PostViewSet(viewsets.GenericViewSet):
         #     return Response(status=status.HTTP_401_UNAUTHORIZED)
         post = get_object_or_404(Post, pk=pk)
         post_info = self.get_serializer(post, many=False).data
+        user_info = {"user_name": post.user.username}
         replies = Post.objects.filter(reply_to=post)
         reply_info = self.get_serializer(replies, many=True).data
         data = {}
         data['post'] = post_info
         data['replies'] = reply_info
+        data['user'] = user_info
         return Response(
                 data,
                 status=status.HTTP_200_OK
