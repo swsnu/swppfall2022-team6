@@ -85,6 +85,7 @@ function AreaFeed() {
         setRefresh(true);
     };
     const onSubmitSearchBox = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        console.log("yes")
         if (e.key === "Enter") {
             setQueryPosts(
                 allPosts.filter((post: PostType) =>
