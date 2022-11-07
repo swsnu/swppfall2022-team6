@@ -33,11 +33,13 @@ function Post(post: postProps) {
         }
     }, []);
     useEffect(() => {
-        axios
-            .get(`/post/${post.reply_to}/`)
-            .then((response)=>{
-                setChainedPosts(response.data)
-            })
+        if(isChainOpen){
+            axios
+                .get(`/post/${post.reply_to}/`)
+                .then((response)=>{
+                    setChainedPosts(response.data)
+                })
+            }
     }, [isChainOpen]);
 
     const clickPostHandler = (post: PostType) => {
