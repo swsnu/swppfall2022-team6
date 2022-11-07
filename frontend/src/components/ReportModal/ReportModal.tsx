@@ -35,6 +35,7 @@ function ReportModal({ openReport, setOpenReport }: IProps) {
                     const formData = new FormData();
                     if (image) formData.append("image", image);
                     formData.append("content", content);
+                    formData.append("hashtags", "");
 
                     axios.post("/post/", formData, {
                         headers: {
@@ -54,7 +55,7 @@ function ReportModal({ openReport, setOpenReport }: IProps) {
         <div className={openReport ? "reportModal modal" : "modal"}>
             {openReport ? (
                 <section>
-                    <header style={{ display: "flex" }}>
+                    <header style={{ display: "flex", fontSize: "15px" }}>
                         Report
                         <button
                             data-testid="closeButton"
@@ -217,6 +218,7 @@ function ReportModal({ openReport, setOpenReport }: IProps) {
                                     margin="normal"
                                     value={content}
                                     maxRows={5}
+                                    spellCheck={false}
                                     onChange={(e) => setContent(e.target.value)}
                                 />
                             </div>

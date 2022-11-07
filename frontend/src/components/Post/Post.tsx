@@ -107,9 +107,7 @@ function Post(post: postProps) {
                 </button>
             ) : (
                 <div id="chain-container">
-                    <div id="chained-posts">
-                        {renderChainedPosts()}
-                    </div>
+                    <div id="chained-posts">{renderChainedPosts()}</div>
                     <div id="chain-toggle">
                         <button
                             id="chain-toggle-button"

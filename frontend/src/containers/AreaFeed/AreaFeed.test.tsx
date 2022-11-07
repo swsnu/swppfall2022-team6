@@ -69,7 +69,7 @@ describe("<AreaFeed />", () => {
                 {
                     id: 2,
                     user: 2,
-                    content: "학교는 많이 춥네요ㅠㅠ\n겉옷 챙기시는게 좋을 것 같아요!",
+                    content: "content1",
                     latitude: 37.44877599087201,
                     longitude: 126.95264777802309,
                     created_at: new Date().toLocaleDateString(),
@@ -94,7 +94,7 @@ describe("<AreaFeed />", () => {
                     id: 1,
                     user: 1,
                     content:
-                        "지금 설입은 맑긴 한데 바람이 많이 불어요\n겉옷을 안 챙겨 나왔는데 학교도 춥나요? 자연대 쪽에...",
+                        "content2",
                     latitude: 37.44877599087201,
                     longitude: 126.95264777802309,
                     created_at: new Date().toLocaleDateString(),
@@ -135,9 +135,9 @@ describe("<AreaFeed />", () => {
     it("should render withour errors", async() => {
         const { container } = render(<AreaFeed />);
         await waitFor(() => {expect(container).toBeTruthy() });
-        // await waitFor(() => screen.findByText("hashtag1"));
-        // //eslint-disable-next-line testing-library/no-debugging-utils
-        // screen.debug();
+        await waitFor(() => screen.findByText("hashtag1"));
+        //eslint-disable-next-line testing-library/no-debugging-utils
+        screen.debug();
     });
     it("should handle back button", async () => {
         render(<AreaFeed />);
@@ -157,15 +157,76 @@ describe("<AreaFeed />", () => {
         // //eslint-disable-next-line testing-library/no-debugging-utils
         // screen.debug();
     });
-    // it("should handle only Photos button", async () => {
-    //     const view = render(<AreaFeed />);
-    //     const photosBtn = screen.getByRole("button", { name: "Only Photos" });
-    //     // //eslint-disable-next-line testing-library/no-debugging-utils
-    //     // screen.debug();
-    //     fireEvent.click(photosBtn!);
-    //     await waitFor(() =>
-    //         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
-    //         expect(view.container.querySelector('#post-and-chain-container')).toHaveLength(0)
-    //     );
-    // });
+
+    it("should handle 3 hashtag button", async () => {
+        render(<AreaFeed />);
+        await waitFor(() => screen.findByText("hashtag1"));
+        const hashtag1Btn = screen.getByRole("button", { name: "hashtag1" });
+        const hashtag2Btn = screen.getByRole("button", { name: "hashtag2" });
+        const hashtag3Btn = screen.getByRole("button", { name: "hashtag3" });
+        fireEvent.click(hashtag1Btn!);
+        await waitFor(() =>
+            expect(screen.queryByText("WeatherFairy")).not.toBeInTheDocument()
+        );
+        await screen.findByText("Toothfairy");
+        fireEvent.click(hashtag2Btn!);
+        await waitFor(() =>
+            expect(screen.queryByText("WeatherFairy")).not.toBeInTheDocument()
+        );
+        await screen.findByText("Toothfairy");
+        fireEvent.click(hashtag3Btn!);
+        await waitFor(() =>
+            expect(screen.queryByText("WeatherFairy")).not.toBeInTheDocument()
+        );
+        await screen.findByText("Toothfairy");
+    });
+    it("should handle only Photos button", async () => {
+        render(<AreaFeed />);
+        const photosBtn = screen.getByRole("button", { name: "Only Photos" });
+        // //eslint-disable-next-line testing-library/no-debugging-utils
+        // screen.debug();
+        fireEvent.click(photosBtn!);
+        await waitFor(() =>
+            expect(screen.queryByText("WeatherFairy")).not.toBeInTheDocument()
+        );
+        await waitFor(() =>
+            expect(screen.queryByText("Toothfairy")).not.toBeInTheDocument()
+        );
+    });
+    it("should handle search-box container", async () => {
+        render(<AreaFeed />);
+        await waitFor(() => screen.findByText("hashtag1"));
+        // eslint-disable-next-line testing-library/no-node-access
+        const newSearchBox = document.getElementById("search-box");
+        if (newSearchBox){
+            fireEvent.change(newSearchBox, { target: { value: "t2" } });
+        };
+        await screen.findByDisplayValue('t2');
+        if (newSearchBox){
+            fireEvent.keyPress(newSearchBox, { key: 'Enter', keyCode: 13 });
+        };
+        await waitFor(() =>
+            expect(screen.queryByText("Toothfairy")).not.toBeInTheDocument()
+        );
+        await screen.findByText("WeatherFairy");
+    });
+    it("should handle faulty key press in search-box container", async () => {
+        render(<AreaFeed />);
+        await waitFor(() => screen.findByText("hashtag1"));
+        // eslint-disable-next-line testing-library/no-node-access
+        const newSearchBox = document.getElementById("search-box");
+        if (newSearchBox){
+            fireEvent.change(newSearchBox, { target: { value: "t2" } });
+        };
+        await screen.findByDisplayValue('t2');
+        if (newSearchBox){
+            fireEvent.keyPress(newSearchBox, {key: "0",
+            code: "Digit0",
+            keyCode: 48,
+            charCode: 48 });
+        }
+        await new Promise((r) => setTimeout(r, 2000));
+        await screen.findByText("Toothfairy");
+    });
+
 });
