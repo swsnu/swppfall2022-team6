@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PostType } from "../../containers/AreaFeed/AreaFeed";
 import axios from "axios";
@@ -22,26 +22,22 @@ function Post(post: postProps) {
     const navigate = useNavigate();
     // set chain toggle status
     const [isChainOpen, setChainOpen] = useState<boolean>(false);
-    const [replyingTo, setReplyAuthor]= useState<string>("");
+    const [replyingTo, setReplyAuthor] = useState<string>("");
     // get replied post
     const [chainedPosts, setChainedPosts] = useState<PostType[]>([]);
     useEffect(() => {
-        if (post.reply_to){
-            axios
-                .get(`/post/${post.reply_to}/`)
-                .then((response)=>{
-                    setReplyAuthor(response.data["user"].user_name);
-                })
+        if (post.reply_to) {
+            axios.get(`/post/${post.reply_to}/`).then((response) => {
+                setReplyAuthor(response.data["user"].user_name);
+            });
         }
     }, []);
     useEffect(() => {
-        if(isChainOpen){
-            axios
-                .get(`/post/${post.reply_to}/`)
-                .then((response)=>{
-                    setChainedPosts([response.data["post"]])
-                })
-            }
+        if (isChainOpen) {
+            axios.get(`/post/${post.reply_to}/`).then((response) => {
+                setChainedPosts([response.data["post"]]);
+            });
+        }
     }, [isChainOpen]);
 
     const clickPostHandler = (post: PostType) => {
@@ -61,7 +57,7 @@ function Post(post: postProps) {
                     location={"Location"} //should come from map API
                     created_at={post.created_at}
                     reply_to={post.reply_to}
-                    image={""}
+                    image={post.image ? post.image : ""}
                     clickPost={() => clickPostHandler(post)}
                     isReplyList={1}
                 />
@@ -146,41 +142,46 @@ function Post(post: postProps) {
                             id="time-and-location"
                             className="d-flex justify-content-start gap-1 fw-light fs-7"
                         >
-                            <div id="location">{post.location}</div>
+                            <div id="location" className="tldiv">
+                                {post.location}
+                            </div>
                             <div> . </div>
-                            <div id="timestamp">{post.created_at}</div>
+                            <div id="timestamp" className="tldiv">
+                                {post.created_at}
+                            </div>
                         </div>
                         <div
                             id="post-content-container"
                             className="d-flex justify-content-start gap-1 mt-2"
                         >
-                            <div
-                                id="post-content"
-                                className="text-start fw-normal"
-                            >
-                                {post.reply_to === null ? null : (
-                                    <span
-                                        id="post-reply-to"
-                                        className="text-primary"
-                                    >
-                                        @{replyingTo}{" "}
-                                    </span>
-                                )}
-                                <span id="post-text">{post.content}</span>
-                            </div>
-                            {post.image === "" ? null : (
-                                <div id="post-photo">
-                                    <img src={require(post.image)}></img>
+                            {post.content === "" ? null : (
+                                <div
+                                    id="post-content"
+                                    className="text-start fw-normal"
+                                >
+                                    {post.reply_to === null ? null : (
+                                        <span
+                                            id="post-reply-to"
+                                            className="text-primary"
+                                        >
+                                            @{replyingTo}{" "}
+                                        </span>
+                                    )}
+                                    <span id="post-text">{post.content}</span>
                                 </div>
                             )}
                         </div>
+                        {post.image === "" ? null : (
+                            <div id="post-photo">
+                                <img src={post.image} className="post-image" />
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
             {/* Show chain when it is a reply */}
-            {(post.isReplyList !== 0 || post.reply_to === null)
-            ? null 
-            : isChainOpen === false ? (
+            {post.isReplyList !== 0 ||
+            post.reply_to === null ? null : isChainOpen === false ? (
                 <div
                     id="chain-container"
                     className="p-2 d-flex justify-content-start"
@@ -188,7 +189,7 @@ function Post(post: postProps) {
                     <button
                         id="chain-toggle-button"
                         type="button"
-                        className="btn btn-link"
+                        className="btn btn-link text-decoration-none"
                         onClick={clickToggleChain}
                     >
                         Show All
@@ -204,7 +205,7 @@ function Post(post: postProps) {
                         <button
                             id="chain-toggle-button"
                             type="button"
-                            className="btn btn-link"
+                            className="btn btn-link text-decoration-none"
                             onClick={clickToggleChain}
                         >
                             Close All

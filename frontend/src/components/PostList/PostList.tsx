@@ -33,7 +33,7 @@ function PostList({
     };
 
     return (
-        <div id="PostList" className="mt-3 w-60 m-auto">
+        <div id="PostList" className="mt-3 w-95 m-auto">
             <div id="posts-container" className="d-flex flex-column gap-3 me-4">
                 {allPosts.map((post) => {
                     return (
@@ -46,12 +46,12 @@ function PostList({
                                 key={post.id}
                                 id={post.id}
                                 // TODO: user name from backend
-                                user_name={""}
+                                user_name={"Toothfairy"}
                                 content={post.content}
                                 location={post_location} //should come from map API
                                 created_at={post.created_at}
                                 reply_to={post.reply_to}
-                                image={""}
+                                image={post.image ? post.image : ""}
                                 clickPost={() => clickPostHandler(post)}
                                 isReplyList={replyTo}
                             />

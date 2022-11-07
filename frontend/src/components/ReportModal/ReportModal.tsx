@@ -72,7 +72,7 @@ function ReportModal({ openReport, setOpenReport }: IProps) {
                                 <input
                                     id="photo-input image"
                                     type="file"
-                                    accept="image/png, image/jpeg/"
+                                    accept="image/png, image/jpeg, image/jpg"
                                     onChange={handleImageChange}
                                     style={{
                                         paddingLeft: "75px",
