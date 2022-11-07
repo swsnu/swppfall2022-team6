@@ -126,7 +126,7 @@ function AreaFeed() {
                 </div>
             </div>
             <Statistics allReports={allReports} />
-            <div id="hashtag-container">
+            <div id="recommended-hashtag-container">
                 <div className="label">Recommended Hashtags</div>
                 <div id="hashtag-buttons">
                     {top3Hashtag[0] && (

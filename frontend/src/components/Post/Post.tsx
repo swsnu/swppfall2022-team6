@@ -89,7 +89,7 @@ function Post(post: postProps) {
                         : <span id="post-reply-to">
                             @{
                             users.find(
-                                (user) => user.user_id === post.reply_to
+                                (user) => user.user_id === 1
                             )!.user_name
                             } </span>
                         }
