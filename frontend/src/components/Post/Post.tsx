@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PostType } from "../../containers/AreaFeed/AreaFeed";
 import axios from "axios";
+import "./Post.scss";
 
 export interface postProps {
     id: number;
@@ -13,6 +14,7 @@ export interface postProps {
     reply_to: number | null; // id of the chained post
     clickPost?: React.MouseEventHandler<HTMLDivElement>;
     toggleChain?: () => void; // toggle chain open/close
+    isReplyList: number; // 0 when not, from replyTo in postlist
 }
 // get location from user lang, long
 
@@ -61,6 +63,7 @@ function Post(post: postProps) {
                     reply_to={post.reply_to}
                     image={""}
                     clickPost={() => clickPostHandler(post)}
+                    isReplyList={1}
                 />
             );
         });
@@ -175,7 +178,9 @@ function Post(post: postProps) {
                 </div>
             </div>
             {/* Show chain when it is a reply */}
-            {post.reply_to === null ? null : isChainOpen === false ? (
+            {(post.isReplyList !== 0 || post.reply_to === null)
+            ? null 
+            : isChainOpen === false ? (
                 <div
                     id="chain-container"
                     className="p-2 d-flex justify-content-start"

@@ -24,6 +24,7 @@ describe("<Post />", () => {
                   id = {1}
                   image={""}
                   reply_to={null}
+                  isReplyList={0}
                   />
                 }
             />
@@ -54,6 +55,7 @@ describe("<Post />", () => {
                     id = {1}
                     image={""}
                     reply_to={null}
+                    isReplyList={1}
                   />
                   }
             />
@@ -79,6 +81,7 @@ describe("<Post />", () => {
                   id = {1}
                   image={""}
                   reply_to={1}
+                  isReplyList={0}
                 />
                 }
             />
@@ -105,6 +108,7 @@ describe("<Post />", () => {
                 id = {1}
                 image={""}
                 reply_to={1}
+                isReplyList={0}
               />
               }
           />
@@ -129,6 +133,7 @@ describe("<Post />", () => {
                   id = {1}
                   image={""}
                   reply_to={1}
+                  isReplyList={0}
                   />
                 }
             />
@@ -162,6 +167,7 @@ describe("<Post />", () => {
                   id = {1}
                   image={""}
                   reply_to={1}
+                  isReplyList={0}
                   />
                 }
             />

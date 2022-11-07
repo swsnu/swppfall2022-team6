@@ -53,6 +53,7 @@ function PostList({
                                 reply_to={post.reply_to}
                                 image={""}
                                 clickPost={() => clickPostHandler(post)}
+                                isReplyList={replyTo}
                             />
                         </div>
                     );
