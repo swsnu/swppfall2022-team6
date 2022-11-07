@@ -48,7 +48,7 @@ describe("<Statistics />", () => {
     });
     it("should successfully get reports", async () => {
         const { container } = render(<Statistics allReports={data} />);
-        const barChart = container.getElementsByClassName("bar");
+        //const barChart = container.getElementsByClassName("bar");
         //console.log(barChart);
         //screen.getByText("BarChart");
         screen.getByText("PieChart");

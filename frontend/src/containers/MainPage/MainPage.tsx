@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBullhorn, faUser } from "@fortawesome/free-solid-svg-icons";
 
 import Map, { PositionType } from "./../../components/Map/Map";
-import AreaFeed from "../AreaFeed/AreaFeed";
 import ReportModal from "../../components/ReportModal/ReportModal";
 import MapSearch from "../../components/MapSearch/MapSearch";
 import "./MainPage.scss";
@@ -63,7 +62,7 @@ function MainPage() {
             (result, status) => {
                 console.log(result);
                 if (
-                    status == kakao.maps.services.Status.OK &&
+                    status === kakao.maps.services.Status.OK &&
                     !!result[0].address_name
                 ) {
                     setAddress(result[0].address_name);

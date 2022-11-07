@@ -7,14 +7,12 @@ from django.shortcuts import get_object_or_404
 #from django.shortcuts import redirect
 from rest_framework import status, viewsets
 from rest_framework.response import Response
-from rest_framework.generics import GenericAPIView
 from rest_framework.decorators import action
 from user.models import User
 from post.models import Post, PostHashtag
 from hashtag.models import Hashtag
 from .serializer import PostSerializer
 from haversine import haversine
-import numpy as np
 from collections import Counter
 
 #from rest_framework.decorators import action
@@ -35,7 +33,7 @@ class PostViewSet(viewsets.GenericViewSet):
         latitude=37.0, longitude=127.0, created_at=datetime.now(),
         reply_to=Post.objects.get(id=int(request.POST['replyTo']))
         if 'replyTo' in request.POST else None)
-        for hashtag in request.POST['hashtags'].strip().split(" "):
+        for hashtag in request.POST['hashtags'].strip().split(' '):
             h = Hashtag.objects.filter(content=hashtag).first()
             if h is None:
                 h = Hashtag.objects.create(content=hashtag)
@@ -79,7 +77,8 @@ class PostViewSet(viewsets.GenericViewSet):
 
         posts = all_posts.filter(id__in=ids).order_by('-created_at')
 
-        post_hashtags = [Hashtag.objects.filter(posthashtag__post=post).values() for post in posts if Hashtag.objects.filter(posthashtag__post=post)]
+        post_hashtags = [Hashtag.objects.filter(posthashtag__post=post).values()
+        for post in posts if Hashtag.objects.filter(posthashtag__post=post)]
         hashtags = []
         for hashtag_ls in post_hashtags:
             for hashtag in hashtag_ls:
@@ -101,9 +100,10 @@ class PostViewSet(viewsets.GenericViewSet):
     def retrieve(self, request, pk=None):
         # if not user.is_authenticated:
         #     return Response(status=status.HTTP_401_UNAUTHORIZED)
+        del request
         post = get_object_or_404(Post, pk=pk)
         post_info = self.get_serializer(post, many=False).data
-        user_info = {"user_name": post.user.username}
+        # user_info = {'user_name': post.user.username}
         replies = Post.objects.filter(reply_to=post)
         reply_info = self.get_serializer(replies, many=True).data
         data = {}
@@ -120,6 +120,7 @@ class PostViewSet(viewsets.GenericViewSet):
     def chain(self, request, pk=None):
         # if not user.is_authenticated:
         #     return Response(status=status.HTTP_401_UNAUTHORIZED)
+        del request
         post = get_object_or_404(Post, pk=pk)
         # Add chained posts in order
         chain = []

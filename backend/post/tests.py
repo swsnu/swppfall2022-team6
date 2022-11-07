@@ -5,6 +5,7 @@ from django.test import TestCase, Client
 from .models import Post, PostHashtag
 from user.models import User, Badge
 from hashtag.models import Hashtag
+from datetime import date
 
 class PostTestCase(TestCase):
     '''
@@ -24,6 +25,8 @@ class PostTestCase(TestCase):
             longitude=128.0
         )
         new_post.save()
+        new_post.created_at=date(2020, 10, 20)
+        new_post.save()
         new_post2 = Post(
             user=new_user,
             content='content',
@@ -32,6 +35,8 @@ class PostTestCase(TestCase):
             reply_to=new_post
         )
         new_post2.save()
+        new_post2.created_at=date(2020, 10, 21)
+        new_post2.save()
         new_hashtag = Hashtag(content='hashtag')
         new_hashtag.save()
         new_posthashtag = PostHashtag(post=new_post, hashtag=new_hashtag)
@@ -39,7 +44,8 @@ class PostTestCase(TestCase):
 
     def test_post(self):
         client = Client()
-        response = client.post('/post/', data={'content':'content'})
+        response = client.post('/post/',
+        data={'content':'content', 'hashtags':''})
 
         self.assertEqual(response.status_code, 201)
 
@@ -69,9 +75,11 @@ class PostTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(
             str(response.content, encoding='utf8'),
-            [{'id': 1, 'user': 1, 'content': 'content', 'image': None,
-            'latitude': 36.0, 'longitude': 128.0, 'reply_to': None,
-            'hashtags': [{'id': 1, 'content': 'hashtag'}]}]
+            {'posts': [{'id': 1, 'user_name': 'swpp', 'content': 'content',
+            'image': None,
+            'latitude': 36.0, 'longitude': 128.0, 'reply_to_author': None,
+            'hashtags': [{'content': 'hashtag', 'id': 1}],
+            'created_at':'2020-10-20T00:00:00'}], 'top3_hashtags': ['hashtag']}
         )
     # Error-prone test
     # def test_get_detail(self):
@@ -101,8 +109,9 @@ class PostTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(
             str(response.content, encoding='utf8'),
-            [{'id': 1, 'user': 1, 'content': 'content', 'image': None,
-            'latitude': 36.0, 'longitude': 128.0, 'reply_to': None,
-            'hashtags': [{'id': 1, 'content': 'hashtag'}]}]
+            [{'id': 1, 'user_name': 'swpp', 'content': 'content', 'image': None,
+            'latitude': 36.0, 'longitude': 128.0, 'reply_to_author': None,
+            'hashtags': [{'content': 'hashtag', 'id': 1}],
+            'created_at':'2020-10-20T00:00:00'}]
         )
         
