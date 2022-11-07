@@ -13,7 +13,7 @@
     font-weight: 700;
     line-height: 140%;
     margin: 0 auto;
-    width: 60%;
+    width: 95%;
     height: 5vh;
 }
 
@@ -33,6 +33,7 @@
     padding: 0px;
     gap: 6px;
     width: 50%;
+    font-size: 14px;
 }
 
 #back-button,
@@ -48,7 +49,7 @@
     flex-direction: column;
     justify-content: space-between;
     margin: 0 auto;
-    width: 60%;
+    width: 95%;
     font-family: "NanumGothic";
     font-style: normal;
     font-weight: 500;
@@ -63,7 +64,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 1%;
+    padding: 0;
     gap: 20px;
     width: 100%;
 }
@@ -72,7 +73,8 @@
     justify-content: start;
 }
 
-.label {
+.area-label {
+    width: 100%;
     text-align: start;
     margin: 1% 0;
 }

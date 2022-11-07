@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PostType } from "../../containers/AreaFeed/AreaFeed";
 import axios from "axios";
@@ -22,7 +22,7 @@ function Post(post: postProps) {
     const navigate = useNavigate();
     // set chain toggle status
     const [isChainOpen, setChainOpen] = useState<boolean>(false);
-    const [replyingTo, setReplyAuthor]= useState<string>("");
+    const [replyingTo, setReplyAuthor] = useState<string>("");
     // get replied post
     const [chainedPosts, setChainedPosts] = useState<PostType[]>([]);
     useEffect(() => {
@@ -52,7 +52,7 @@ function Post(post: postProps) {
                     location={"Location"} //should come from map API
                     created_at={post.created_at}
                     reply_to_author={post.reply_to_author}
-                    image={""}
+                    image={post.image ? post.image : ""}
                     clickPost={() => clickPostHandler(post)}
                     isReplyList={1}
                 />
@@ -137,34 +137,38 @@ function Post(post: postProps) {
                             id="time-and-location"
                             className="d-flex justify-content-start gap-1 fw-light fs-7"
                         >
-                            <div id="location">{post.location}</div>
+                            <div id="location" className="tldiv">
+                                {post.location}
+                            </div>
                             <div> . </div>
-                            <div id="timestamp">{new Date(post.created_at).toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'})}</div>
+                            <div id="timestamp" className="tldiv">{new Date(post.created_at).toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'})}</div>
                         </div>
                         <div
                             id="post-content-container"
                             className="d-flex justify-content-start gap-1 mt-2"
                         >
-                            <div
-                                id="post-content"
-                                className="text-start fw-normal"
-                            >
-                                {post.reply_to_author === null ? null : (
-                                    <span
-                                        id="post-reply-to"
-                                        className="text-primary"
-                                    >
-                                        @{post.reply_to_author}{" "}
-                                    </span>
-                                )}
-                                <span id="post-text">{post.content}</span>
-                            </div>
-                            {post.image === "" ? null : (
-                                <div id="post-photo">
-                                    <img src={require(post.image)}></img>
+                            {post.content === "" ? null : (
+                                <div
+                                    id="post-content"
+                                    className="text-start fw-normal"
+                                >
+                                    {post.reply_to_author === null ? null : (
+                                        <span
+                                            id="post-reply-to"
+                                            className="text-primary"
+                                        >
+                                            @{post.reply_to_author}{" "}
+                                        </span>
+                                    )}
+                                    <span id="post-text">{post.content}</span>
                                 </div>
                             )}
                         </div>
+                        {post.image === "" ? null : (
+                            <div id="post-photo">
+                                <img src={post.image} className="post-image" />
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -179,7 +183,7 @@ function Post(post: postProps) {
                     <button
                         id="chain-toggle-button"
                         type="button"
-                        className="btn btn-link"
+                        className="btn btn-link text-decoration-none"
                         onClick={clickToggleChain}
                     >
                         Show All
@@ -195,7 +199,7 @@ function Post(post: postProps) {
                         <button
                             id="chain-toggle-button"
                             type="button"
-                            className="btn btn-link"
+                            className="btn btn-link text-decoration-none"
                             onClick={clickToggleChain}
                         >
                             Close All

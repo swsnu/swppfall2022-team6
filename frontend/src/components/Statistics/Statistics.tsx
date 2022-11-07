@@ -198,6 +198,7 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
                 fill: "#33333",
                 whiteSpace: "pre-wrap",
                 height: "20vh",
+                width: "100%",
             }}
         >
             {allReports.length ? (

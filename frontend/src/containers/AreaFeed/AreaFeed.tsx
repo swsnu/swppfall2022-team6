@@ -41,7 +41,7 @@ function AreaFeed() {
     const [weather, setWeather] = useState<WeatherType>({});
 
     useEffect(() => {
-        if(refresh){
+        if (refresh) {
             // update PostList & Hashtags
             axios
                 .get("/post/", {
@@ -77,7 +77,7 @@ function AreaFeed() {
                     setAllReports(response.data);
                     setRefresh(false);
                 });
-            }
+        }
     }, [refresh]);
 
     const onClickBackButton = () => {
@@ -87,13 +87,14 @@ function AreaFeed() {
         setRefresh(true);
     };
     const onSubmitSearchBox = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        console.log("yes")
+        console.log("yes");
         if (e.key === "Enter") {
             setQueryPosts(
                 allPosts.filter((post: PostType) =>
                     post.content.includes(searchQuery)
                 )
             );
+            setSearchQuery("");
         }
     };
     const onClickHashtagButton = (hashtag: string) => {
@@ -107,7 +108,7 @@ function AreaFeed() {
         );
     };
     const onSelectOnlyPhotos = () => {
-        setQueryPosts(allPosts.filter((post: PostType) => post.image));
+        setQueryPosts(queryPosts.filter((post: PostType) => post.image));
     };
     const postListCallback = () => {
         setRefresh(true);
@@ -132,7 +133,7 @@ function AreaFeed() {
             </div>
             <Statistics allReports={allReports} />
             <div id="recommended-hashtag-container">
-                <div className="label">Recommended Hashtags</div>
+                <div className="area-label">Recommended Hashtags</div>
                 <div id="hashtag-buttons">
                     {top3Hashtag[0] && (
                         <button
@@ -164,7 +165,7 @@ function AreaFeed() {
                 </div>
             </div>
             <div id="search-box-container">
-                <div className="label">Posts</div>
+                <div className="area-label">Posts</div>
                 <div id="search-container">
                     <input
                         id="search-box"

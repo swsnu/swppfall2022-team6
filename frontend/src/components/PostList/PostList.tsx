@@ -33,7 +33,7 @@ function PostList({
     };
 
     return (
-        <div id="PostList" className="mt-3 w-60 m-auto">
+        <div id="PostList" className="mt-3 w-95 m-auto">
             <div id="posts-container" className="d-flex flex-column gap-3 me-4">
                 {allPosts.map((post) => {
                     return (
