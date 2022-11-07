@@ -6,6 +6,10 @@
     "dependencies": {
         "@emotion/react": "^11.10.4",
         "@emotion/styled": "^11.10.4",
+        "@fortawesome/fontawesome-svg-core": "^6.2.0",
+        "@fortawesome/free-regular-svg-icons": "^6.2.0",
+        "@fortawesome/free-solid-svg-icons": "^6.2.0",
+        "@fortawesome/react-fontawesome": "^0.2.0",
         "@mui/material": "^5.10.11",
         "@reduxjs/toolkit": "^1.8.6",
         "@testing-library/jest-dom": "^5.16.5",
@@ -72,10 +76,8 @@
             "!src/test-utils/*",
             "!src/reportWebVitals.js",
             "!src/components/NavigationBar/NavigationBar.tsx",
-            "!src/containers/AreaFeed/AreaFeed.tsx",
             "!src/containers/MyBadges/MyBadges.tsx",
             "!src/containers/MyPage/MyPage.tsx",
-            "!src/containers/PostDetail/PostDetail.tsx",
             "!src/containers/SignIn/SignIn.tsx",
             "!src/containers/SignUp/SignUp.tsx",
             "!src/store/index.ts"

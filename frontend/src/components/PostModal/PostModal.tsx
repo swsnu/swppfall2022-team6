@@ -20,6 +20,7 @@ function PostModal({
 }: IProps) {
     const [content, setContent] = useState<string>("");
     const [image, setImage] = useState<File>();
+    const [hashtags, setHashtags] = useState<string>("");
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -27,6 +28,7 @@ function PostModal({
             const formData = new FormData();
             if (image) formData.append("image", image);
             formData.append("content", content);
+            formData.append("hashtags", hashtags);
             if (type === "Reply")
                 formData.append("replyTo", replyTo.toString());
 
@@ -38,6 +40,7 @@ function PostModal({
                 })
                 .then(() => {
                     setContent("");
+                    setHashtags("");
                     postModalCallback();
                 });
         }
@@ -90,6 +93,25 @@ function PostModal({
                                     value={content}
                                     rows={5}
                                     onChange={(e) => setContent(e.target.value)}
+                                />
+                            </div>
+                            <div style={{ margin: "0px 50px" }}>
+                                <TextField
+                                    inputProps={{
+                                        "data-testid": "hashtagField",
+                                    }}
+                                    id="standard-basic"
+                                    variant="standard"
+                                    placeholder="#Hash #tags"
+                                    size="small"
+                                    multiline
+                                    fullWidth
+                                    margin="normal"
+                                    value={hashtags}
+                                    rows={1}
+                                    onChange={(e) =>
+                                        setHashtags(e.target.value)
+                                    }
                                 />
                             </div>
                             <p>

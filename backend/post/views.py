@@ -8,7 +8,8 @@ from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 from user.models import User
-from post.models import Post, Hashtag
+from post.models import Post, PostHashtag
+from hashtag.models import Hashtag
 from .serializer import PostSerializer
 from haversine import haversine
 import numpy as np
@@ -26,12 +27,17 @@ class PostViewSet(viewsets.GenericViewSet):
     # POST /post/
     @transaction.atomic
     def create(self, request):
-        Post.objects.create(user=User.objects.get(id=1),
+        post=Post.objects.create(user=User.objects.get(id=1),
         content=request.POST['content'],
         image=request.FILES['image'] if 'image' in request.FILES else None,
         latitude=37.0, longitude=127.0, created_at=datetime.now(),
         reply_to=Post.objects.get(id=int(request.POST['replyTo']))
         if 'replyTo' in request.POST else None)
+        for hashtag in request.POST['hashtags'].split(" "):
+            h = Hashtag.objects.filter(content=hashtag).first()
+            if h is None:
+                h = Hashtag.objects.create(content=hashtag)
+            PostHashtag.objects.create(post=post, hashtag=h)
         return Response('create post', status=status.HTTP_201_CREATED)
 
     # GET /post/
