@@ -116,6 +116,7 @@ const MapSearch = (props: IProps) => {
                                         lat: +value.y,
                                         lng: +value.x,
                                     });
+                                    onClickCloseBox();
                                 }}
                             >
                                 {value.place_name}
@@ -156,14 +157,14 @@ const MapSearch = (props: IProps) => {
                         {">"}
                     </a>
                 </div>
-                <div id="result-close-container">
+                {/* <div id="result-close-container">
                     <button
                         id="result-button-close"
                         onClick={onClickResultClose}
                     >
                         <FontAwesomeIcon icon={faXmark} fontSize="20px" />
                     </button>
-                </div>
+                </div> */}
             </div>
         );
     };
@@ -172,6 +173,14 @@ const MapSearch = (props: IProps) => {
         setSearchResult([]);
         setSearchQuery("");
         setSearchPagination(undefined);
+        setShowResults(false);
+    };
+    const onClickCloseBox = () => {
+        setSearchResponse(Response.zero_result);
+        setSearchResult([]);
+        // setSearchQuery("");
+        setSearchPagination(undefined);
+        setShowResults(false);
     };
     return (
         <div id="search-box-container" style={{ width: "95%" }}>
