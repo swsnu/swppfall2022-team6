@@ -30,13 +30,15 @@ function Post(post: postProps) {
     // get replied post
     const [chainedPosts, setChainedPosts] = useState<PostType[]>([]);
     useEffect(() => {
-        axios
-            .get(`/post/${post.id}/chain/`)
-            .then((response)=>{
-                setChainedPosts(response.data)
-            })
-    });
-    useEffect(() => {}, [isChainOpen]);
+        if(isChainOpen){
+            axios
+                .get(`/post/${post.id}/chain/`)
+                .then((response)=>{
+                    setChainedPosts(response.data)
+                })
+            }
+    }, [isChainOpen]);
+    // useEffect(() => {}, [isChainOpen]);
 
     const clickPostHandler = (post: PostType) => {
         navigate("/areafeed/" + post.id);
@@ -165,7 +167,7 @@ function Post(post: postProps) {
                                             users.find(
                                                 (user) =>
                                                     user.user_id ===
-                                                    post.reply_to
+                                                    1
                                             )!.user_name
                                         }{" "}
                                     </span>
