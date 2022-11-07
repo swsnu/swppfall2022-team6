@@ -1,0 +1,19 @@
+$primary: #3185E7;
+@import "../../../node_modules/bootstrap/scss/functions";
+
+$font-sizes: (
+    1: 1rem * 2.5,
+    2: 1rem * 2,
+    3: 1rem * 1.5,
+    4: 1rem * 1.25,
+    5: 1rem,
+    6: 1rem * 0.75,
+    7: 1rem * 0.85,
+    8: 1rem * 0.5,
+);
+@import "../../../node_modules/bootstrap/scss/bootstrap";
+@import url("https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap");
+:root {
+    --bs-body-font-family: 'Nanum Gothic', sans-serif; 
+}
+

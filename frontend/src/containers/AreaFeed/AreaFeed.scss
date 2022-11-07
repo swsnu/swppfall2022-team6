@@ -1,4 +1,10 @@
-#upper-container {
+.AreaFeed {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+
+#areafeed-upper-container {
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -8,6 +14,7 @@
     line-height: 140%;
     margin: 0 auto;
     width: 60%;
+    height: 5vh;
 }
 
 #button-container {
@@ -36,7 +43,7 @@
 }
 
 #search-box-container,
-#hashtag-container {
+#recommended-hashtag-container {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -48,6 +55,7 @@
     font-size: 14px;
     line-height: 140%;
     color: rgba(0, 0, 0, 0.75);
+    height: 7vh;
 }
 
 #search-container,
@@ -57,6 +65,7 @@
     justify-content: space-between;
     padding: 1%;
     gap: 20px;
+    width: 100%;
 }
 
 #hashtag-buttons {
@@ -79,6 +88,8 @@
     border-radius: 10px;
     border-color: #f5f5f5;
     width: 50%;
+    justify-content: flex-start;
+    align-items: flex-start;
 }
 
 #only-photos-button {
@@ -86,4 +97,10 @@
     justify-content: end;
     border: none;
     margin-right: 5%;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+#postlist-container {
+    height: calc(100% - 40vh);
 }

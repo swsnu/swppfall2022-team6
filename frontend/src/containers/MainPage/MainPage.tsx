@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBullhorn, faUser } from "@fortawesome/free-solid-svg-icons";
 
 import Map, { PositionType } from "./../../components/Map/Map";
 import AreaFeed from "../AreaFeed/AreaFeed";
 import ReportModal from "../../components/ReportModal/ReportModal";
 import MapSearch from "../../components/MapSearch/MapSearch";
-import "./MainPage.scss"
+import "./MainPage.scss";
 
 const marks = [
     { value: 0, label: "0km" },
@@ -35,17 +35,17 @@ function MainPage() {
     const navigate = useNavigate();
 
     const geocoder = new kakao.maps.services.Geocoder();
-    
-    useEffect(()=>{
+
+    useEffect(() => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
                 setMarkPosition({
-                    lat: position.coords.latitude, 
-                    lng: position.coords.longitude
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
                 });
                 setCurrPosition({
-                    lat: position.coords.latitude, 
-                    lng: position.coords.longitude
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
                 });
             });
         } else {
@@ -53,17 +53,21 @@ function MainPage() {
         }
     }, []);
 
-    useEffect(()=>{
+    useEffect(() => {
         geocoder.coord2RegionCode(
-            currPosition.lng, currPosition.lat, 
-          (result, status)=>{
-            console.log(result)
-            if(status == kakao.maps.services.Status.OK && !!result[0].address_name){
-              setAddress(result[0].address_name)
+            currPosition.lng,
+            currPosition.lat,
+            (result, status) => {
+                console.log(result);
+                if (
+                    status == kakao.maps.services.Status.OK &&
+                    !!result[0].address_name
+                ) {
+                    setAddress(result[0].address_name);
+                }
             }
-          } 
-        ); 
-      }, [currPosition])
+        );
+    }, [currPosition]);
 
     const onClickMyPageIcon = () => {
         navigate("/mypage");
@@ -80,15 +84,24 @@ function MainPage() {
 
     return (
         <div className="MainPage">
-            <div id="upper-container">
-                NowSee
+            <div id="main-upper-container">
+                <div id="mainimage-container">
+                    <img src={require("./Logo2.png")} id="logo2" />
+                </div>
+                {/* NowSee */}
                 <button id="mypage-button" onClick={onClickMyPageIcon}>
-                    <FontAwesomeIcon icon={faUser} size="2x"/>
+                    <FontAwesomeIcon icon={faUser} size="2x" />
                 </button>
             </div>
             <div id="main-container">
-                <MapSearch markPosition={markPosition} setMarkPosition={setMarkPosition}/>
+                <MapSearch
+                    markPosition={markPosition}
+                    setMarkPosition={setMarkPosition}
+                />
                 <div className="map-container">
+                    <div id="map-label">
+                        Select a location and find out real-time statistics
+                    </div>
                     <Map initPosition={markPosition} radius={radius} />
                 </div>
                 <div id="lower-map-container">
@@ -98,7 +111,7 @@ function MainPage() {
                             <Slider
                                 key="radius-slider"
                                 aria-label="Custom marks"
-                                defaultValue={radius}
+                                value={radius}
                                 step={2.5}
                                 min={0.01}
                                 getAriaValueText={(value: number): string => {
@@ -114,7 +127,10 @@ function MainPage() {
                         </Box>
                     </div>
                     <div className="findout-container">
-                        <button id="findout-button" onClick={onClickFindOutButton}>
+                        <button
+                            id="findout-button"
+                            onClick={onClickFindOutButton}
+                        >
                             {"Find out  >"}
                         </button>
                     </div>
