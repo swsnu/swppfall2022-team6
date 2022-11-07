@@ -84,16 +84,15 @@ function Post(post: postProps) {
                 </div>
                 <div id="post-content-container">
                     <div id="post-content">
-                        {post.reply_to === null ? null : (
-                            <span id="post-reply-to">
-                                @
-                                {
-                                    users.find(
-                                        (user) => user.user_id === post.reply_to
-                                    )!.user_name
-                                }{" "}
-                            </span>
-                        )}
+                        { post.reply_to === null
+                        ? null
+                        : <span id="post-reply-to">
+                            @{
+                            users.find(
+                                (user) => user.user_id === 1
+                            )!.user_name
+                            } </span>
+                        }
                         <span id="post-text">{post.content}</span>
                     </div>
                     <div id="post-photo">
