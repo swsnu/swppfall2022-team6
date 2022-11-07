@@ -13,6 +13,10 @@ function PostDetail() {
     const onClickBackButton = () => {
         navigate("/areafeed/");
     };
+    const users: { user_name: string; user_id: number }[] = [
+        { user_name: "WeatherFairy", user_id: 1 },
+        { user_name: "Toothfairy", user_id: 2 },
+    ];
     const [replyPosts, setReplyPosts] = useState<PostType[]>([
         {
             id: 2,
@@ -40,13 +44,15 @@ function PostDetail() {
     ]);
     //get id from backend
     const post = {
-        id: 2,
-        user_id: 2,
-        content: "지금 설입은 비 오는 중!",
+        id: 1,
+        user: 1,
+        content: "Original Post...",
         latitude: 37.44877599087201,
         longitude: 126.95264777802309,
-        time: new Date().toLocaleDateString(),
-        image: "img1.png",
+        created_at: new Date().toLocaleDateString(),
+        image: "/img2.png",
+        reply_to: null,
+        hashtags: [{ id: 1, content: "Sunny" },{ id: 2, content: "hashtag2" },{ id: 3, content: "hashtag3" },{ id: 4, content: "hashtag4" },{ id: 5, content: "hashtag5" }],
     }
     return (
         <div className="PostDetail">
@@ -60,12 +66,13 @@ function PostDetail() {
             <div id="main-post-container">
                 <div id="upper-post-container">
                     <div id="author-main-badge">
-                        <img src={'/logo192.png'} alt="sample" className="badge"/>
+                        <img src={'/logo192.png'} alt="sample"/>
                     </div>
                     <div id="author-container">
                         <div id="author-info">
                             <div id="author-name">
-                                WeatherFairy
+                                {users.find((user) => user.user_id === post.user)!
+                            .user_name}
                                 {/* Get user name from back */}
                             </div>
                             <div id="author-location">
@@ -81,15 +88,13 @@ function PostDetail() {
                 <div id="main-post-image">
                     {post.image === null
                     ? null
-                    : <img src={'/img2.png'} alt="sample" className="postimage"/>
+                    : <img src={post.image} alt="sample"/>
                     }
                 </div>
                 <div id="lower-post-container">
                     <div id="hashtag-container">
-                        <div id="hashtag1" className="hashtag">#hashtag1</div>
-                        <div id="hashtag2" className="hashtag">#hashtag2</div>
-                        <div id="hashtag3" className="hashtag">#hashtag3</div>
-                        {/* hashtags */}
+                        {post.hashtags.map((hashtag,i) =>
+                        <div key={`hashtag${i}`} className="hashtag">{hashtag.content}</div>)}
                     </div>
                 </div>
             </div>
