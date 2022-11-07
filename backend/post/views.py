@@ -3,10 +3,12 @@
 '''
 from datetime import datetime
 from django.db import transaction
+from django.shortcuts import get_object_or_404
 #from django.shortcuts import redirect
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
+from rest_framework.decorators import action
 from user.models import User
 from post.models import Post, PostHashtag
 from hashtag.models import Hashtag
@@ -90,60 +92,42 @@ class PostViewSet(viewsets.GenericViewSet):
         data['posts'] = self.get_serializer(posts, many=True).data
         data['top3_hashtags'] = hashtags
 
-
-        # hashtags = np.array([dict([post['hashtags']]) for post in posts if post['hashtags']], dtype = object)
-        # print(hashtags.ravel())
-        # hashtags = [hashtag['content'] for hashtag in hashtags]
-        # hashtag_count = Counter(hashtags)
-        # hashtag_count = hashtag_count.most_common[3]
-        # print(hashtag_count)
-
         return Response(
             data,
             status=status.HTTP_200_OK
         )
 
-class PostDetailView(GenericAPIView):
-    '''
-    post detail views
-    '''
-    serializer_class = PostSerializer
     # GET /post/:id/
-    def get(self, request, post_id):
+    def retrieve(self, request, pk=None):
         # if not user.is_authenticated:
         #     return Response(status=status.HTTP_401_UNAUTHORIZED)
-        if request.method == 'GET':
-            if Post.objects.filter(id=post_id).exists():
-                post = Post.objects.get(id=post_id)
-            else:
-                return Response(status=status.HTTP_404_NOT_FOUND)
-            return Response(
-                self.get_serializer(post, many=False).data,
+        post = get_object_or_404(Post, pk=pk)
+        post_info = self.get_serializer(post, many=False).data
+        replies = Post.objects.filter(reply_to=post)
+        reply_info = self.get_serializer(replies, many=True).data
+        data = {}
+        data['post'] = post_info
+        data['replies'] = reply_info
+        return Response(
+                data,
                 status=status.HTTP_200_OK
-            )
+        )
 
-class PostChainView(GenericAPIView):
-    '''
-    Post Chain Views
-    '''
-    serializer_class = PostSerializer
-    # GET /post/:id/chain
-    def get(self, request, post_id):
-        if request.method == 'GET':
-            # if not user.is_authenticated:
-            #     return Response(status=status.HTTP_401_UNAUTHORIZED)
-            if Post.objects.filter(id=post_id).exists():
-                post = Post.objects.get(id=post_id)
-            else:
-                return Response(status=status.HTTP_404_NOT_FOUND)
-            # Add chained posts in order
-            chain = []
-            reply_id = post.reply_to.id
-            while reply_id is not None:
-                reply_post = Post.objects.get(id=reply_id)
-                chain.append(reply_post)
-                reply_id = reply_post.reply_to
-            return Response(
-                self.get_serializer(chain, many=True).data,
-                status=status.HTTP_200_OK
-            )
+    # GET /post/:id/chain/
+    @transaction.atomic
+    @action(detail=True)
+    def chain(self, request, pk=None):
+        # if not user.is_authenticated:
+        #     return Response(status=status.HTTP_401_UNAUTHORIZED)
+        post = get_object_or_404(Post, pk=pk)
+        # Add chained posts in order
+        chain = []
+        reply_id = post.reply_to.id
+        while reply_id is not None:
+            reply_post = Post.objects.get(id=reply_id)
+            chain.append(reply_post)
+            reply_id = reply_post.reply_to
+        return Response(
+            self.get_serializer(chain, many=True).data,
+            status=status.HTTP_200_OK
+        )

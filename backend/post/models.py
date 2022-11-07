@@ -16,7 +16,7 @@ class Post(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
-    reply_to = models.ForeignKey('self', related_name='post', \
+    reply_to = models.ForeignKey('self', related_name='replypost', \
         on_delete=models.CASCADE, null=True)
 
     class Meta:

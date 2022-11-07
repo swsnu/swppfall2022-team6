@@ -85,6 +85,7 @@ function AreaFeed() {
         setRefresh(true);
     };
     const onSubmitSearchBox = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        console.log("yes")
         if (e.key === "Enter") {
             setQueryPosts(
                 allPosts.filter((post: PostType) =>
@@ -106,11 +107,13 @@ function AreaFeed() {
     const onSelectOnlyPhotos = () => {
         setQueryPosts(allPosts.filter((post: PostType) => post.image));
     };
-    const postListCallback = () => {}; // axios.get again
+    const postListCallback = () => {
+        setRefresh(true);
+    }; // axios.get again
 
     return (
         <div className="AreaFeed">
-            <div id="upper-container">
+            <div id="areafeed-upper-container">
                 <div id="button-container">
                     <button id="back-button" onClick={onClickBackButton}>
                         ←
@@ -126,7 +129,7 @@ function AreaFeed() {
                 </div>
             </div>
             <Statistics allReports={allReports} />
-            <div id="hashtag-container">
+            <div id="recommended-hashtag-container">
                 <div className="label">Recommended Hashtags</div>
                 <div id="hashtag-buttons">
                     {top3Hashtag[0] && (
