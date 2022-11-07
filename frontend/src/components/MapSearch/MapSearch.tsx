@@ -47,7 +47,7 @@ const range = (start: number, count: number) => {
     }
     return array;
 };
-const CustomSearchBar = styled(SearchBar)({
+export const CustomSearchBar = styled(SearchBar)({
     height: "38px",
     backgroundColor: "#F5F5F5",
     borderRadius: "12px",

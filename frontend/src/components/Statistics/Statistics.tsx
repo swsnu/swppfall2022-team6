@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import * as d3 from "d3";
 import { PieChart } from "react-minimal-pie-chart";
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 export interface ReportType {
     weather: string;
@@ -39,7 +42,7 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
         });
     }
 
-    const [w, h] = [400, 140];
+    const [w, h] = [350, 140];
     const barHeight = 15;
     const svgElement = barRef.current as SVGElement;
     // set the dimensions and margins of the graph
@@ -185,10 +188,12 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
     }, [maxIndex, allReports]);
 
     return (
-        <div
+        <Container
             id="statistics-container"
             style={{
                 display: "flex",
+                // flexDirection: "column",
+                alignItems: "center",
                 justifyContent: "space-around",
                 fontFamily: "NanumGothic",
                 fontStyle: "normal",
@@ -196,13 +201,13 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
                 lineHeight: "140%",
                 fontSize: "10px",
                 fill: "#33333",
-                whiteSpace: "pre-wrap",
-                height: "20vh",
-                width: "100%",
+                // whiteSpace: "pre-wrap",
+                // height: "20vh",
+                // width: "100%",
             }}
         >
             {allReports.length ? (
-                <div
+                <Row
                     style={{
                         margin: "20px",
                         width: "600px",
@@ -211,9 +216,10 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
                         justifyContent: "space-between",
                     }}
                 >
-                    <div
+                    <Col
+                        
                         id="piechart-container"
-                        style={{ width: "150px", height: "150px" }}
+                        style={{ width: "150px", height: "150px", padding: "10px"}}
                     >
                         <PieChart
                             data={[
@@ -263,16 +269,16 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
                             labelPosition={0}
                             viewBoxSize={[100, 100]}
                         />
-                    </div>
-                    <div className="bar-container">
+                    </Col>
+                    <Col md className="bar-container">
                         {/* @ts-ignore */}
                         <svg ref={barRef} aria-label="BarChart" />
-                    </div>
-                </div>
+                    </Col>
+                </Row>
             ) : (
                 <span>No Statistics!</span>
             )}
-        </div>
+        </Container>
     );
 }
 
