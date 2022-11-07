@@ -16,14 +16,14 @@ describe("<Post />", () => {
             <Route
                 path="/"
                 element={
-                  <Post 
+                  <Post
                   user_name={"User Name"}
                   content={"Post Content"}
                   location={"User Loc"}
                   created_at ={"Date and Time"}
                   id = {1}
                   image={""}
-                  reply_to={null}
+                  reply_to_author={null}
                   isReplyList={0}
                   />
                 }
@@ -31,8 +31,8 @@ describe("<Post />", () => {
           </Routes>
         </MemoryRouter>
       );
-      const username = screen.getByText("User Name"); 
-      const postContent = screen.getByText("Post Content"); 
+      const username = screen.getByText("User Name");
+      const postContent = screen.getByText("Post Content");
       const postLoc = screen.getByText("User Loc");
       const dtText = screen.getByText("Date and Time");
       expect(username).toBeInTheDocument();
@@ -47,14 +47,14 @@ describe("<Post />", () => {
               <Route
                   path="/"
                   element={
-                  <Post 
+                  <Post
                     user_name={"User Name"}
                     content={"Post Content"}
                     location={"User Loc"}
                     created_at ={"Date and Time"}
                     id = {1}
                     image={""}
-                    reply_to={null}
+                    reply_to_author={null}
                     isReplyList={1}
                   />
                   }
@@ -62,25 +62,25 @@ describe("<Post />", () => {
           </Routes>
         </MemoryRouter>
         );
-          const toggleChainButton = screen.queryAllByText("Show All"); 
+          const toggleChainButton = screen.queryAllByText("Show All");
           //The toggleChainButton should not be in the document when reply_to is 0
           expect(toggleChainButton).toHaveLength(0);
     });
     it("should render show all when there are replies, and chain is not open", () => {
-        render(        
+        render(
         <MemoryRouter>
           <Routes>
             <Route
                 path="/"
                 element={
-                <Post 
+                <Post
                   user_name={"User Name"}
                   content={"Post Content"}
                   location={"User Loc"}
                   created_at ={"Date and Time"}
                   id = {1}
                   image={""}
-                  reply_to={1}
+                  reply_to_author={"SWPP"}
                   isReplyList={0}
                 />
                 }
@@ -88,26 +88,26 @@ describe("<Post />", () => {
           </Routes>
         </MemoryRouter>
         );
-        const username = screen.getByText("User Name"); 
-        expect(username.classList.contains("reply_to")).not.toBe(null);
+        const username = screen.getByText("User Name");
+        expect(username.classList.contains("reply_to_author")).not.toBe(null);
         expect(username.classList.contains("chain_open")).toBe(false);
         screen.getByText("Show All");
     });
     it("should render author of reply in post", () => {
-      render(        
+      render(
       <MemoryRouter>
         <Routes>
           <Route
               path="/"
               element={
-              <Post 
+              <Post
                 user_name={"User Name"}
                 content={"Post Content"}
                 location={"User Loc"}
                 created_at ={"Date and Time"}
                 id = {1}
                 image={""}
-                reply_to={1}
+                reply_to_author={"SWPP"}
                 isReplyList={0}
               />
               }
@@ -117,22 +117,22 @@ describe("<Post />", () => {
       );
         const chainAuthorUsername = screen.getByText("@WeatherFairy");
         expect(chainAuthorUsername).toBeInTheDocument();
-  }); 
+  });
     it("should open the chain properly", () => {
-      render(        
+      render(
         <MemoryRouter>
           <Routes>
             <Route
                 path="/"
                 element={
-                <Post 
+                <Post
                   user_name={"User Name"}
                   content={"Post Content"}
                   location={"User Loc"}
                   created_at ={"Date and Time"}
                   id = {1}
                   image={""}
-                  reply_to={1}
+                  reply_to_author={"SWPP"}
                   isReplyList={0}
                   />
                 }
@@ -143,7 +143,7 @@ describe("<Post />", () => {
       const toggleChainButton = screen.getByText("Show All");
       fireEvent.click(toggleChainButton);
       // should edit after chain backend is implemented
-      const chainPostContent = screen.getByText("Original Post..."); 
+      const chainPostContent = screen.getByText("Original Post...");
       const chainPostLoc = screen.getByText("Location");
       const chainDtText = screen.getByText(new Date().toLocaleDateString());
       expect(chainPostContent).toBeInTheDocument();
@@ -153,20 +153,20 @@ describe("<Post />", () => {
       expect(newToggleChainButton).toBeInTheDocument();
     });
     it("should navigate to the post on click", () => {
-      render(        
+      render(
         <MemoryRouter>
           <Routes>
             <Route
                 path="/"
                 element={
-                <Post 
+                <Post
                   user_name={"User Name"}
                   content={"Post Content"}
                   location={"User Loc"}
                   created_at ={"Date and Time"}
                   id = {1}
                   image={""}
-                  reply_to={1}
+                  reply_to_author={"SWPP"}
                   isReplyList={0}
                   />
                 }

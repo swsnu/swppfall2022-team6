@@ -11,7 +11,7 @@ export interface postProps {
     image: string; // image url, "" if none
     location: string;
     created_at: string; // date & time string
-    reply_to: number | null; // id of the chained post
+    reply_to_author: string | null; // id of the chained post
     clickPost?: React.MouseEventHandler<HTMLDivElement>;
     toggleChain?: () => void; // toggle chain open/close
     isReplyList: number; // 0 when not, from replyTo in postlist
@@ -26,20 +26,11 @@ function Post(post: postProps) {
     // get replied post
     const [chainedPosts, setChainedPosts] = useState<PostType[]>([]);
     useEffect(() => {
-        if (post.reply_to){
-            axios
-                .get(`/post/${post.reply_to}/`)
-                .then((response)=>{
-                    setReplyAuthor(response.data["user"].user_name);
-                })
-        }
-    }, []);
-    useEffect(() => {
         if(isChainOpen){
             axios
-                .get(`/post/${post.reply_to}/`)
+                .get(`/post/${post.id}/chain/`)
                 .then((response)=>{
-                    setChainedPosts([response.data["post"]])
+                    setChainedPosts(response.data)
                 })
             }
     }, [isChainOpen]);
@@ -56,11 +47,11 @@ function Post(post: postProps) {
                 <Post
                     key={post.id}
                     id={post.id}
-                    user_name={replyingTo}
+                    user_name={post.user_name}
                     content={post.content}
                     location={"Location"} //should come from map API
                     created_at={post.created_at}
-                    reply_to={post.reply_to}
+                    reply_to_author={post.reply_to_author}
                     image={""}
                     clickPost={() => clickPostHandler(post)}
                     isReplyList={1}
@@ -148,7 +139,7 @@ function Post(post: postProps) {
                         >
                             <div id="location">{post.location}</div>
                             <div> . </div>
-                            <div id="timestamp">{post.created_at}</div>
+                            <div id="timestamp">{new Date(post.created_at).toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'})}</div>
                         </div>
                         <div
                             id="post-content-container"
@@ -158,12 +149,12 @@ function Post(post: postProps) {
                                 id="post-content"
                                 className="text-start fw-normal"
                             >
-                                {post.reply_to === null ? null : (
+                                {post.reply_to_author === null ? null : (
                                     <span
                                         id="post-reply-to"
                                         className="text-primary"
                                     >
-                                        @{replyingTo}{" "}
+                                        @{post.reply_to_author}{" "}
                                     </span>
                                 )}
                                 <span id="post-text">{post.content}</span>
@@ -178,8 +169,8 @@ function Post(post: postProps) {
                 </div>
             </div>
             {/* Show chain when it is a reply */}
-            {(post.isReplyList !== 0 || post.reply_to === null)
-            ? null 
+            {(post.isReplyList !== 0 || post.reply_to_author === null)
+            ? null
             : isChainOpen === false ? (
                 <div
                     id="chain-container"

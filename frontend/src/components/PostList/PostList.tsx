@@ -46,11 +46,11 @@ function PostList({
                                 key={post.id}
                                 id={post.id}
                                 // TODO: user name from backend
-                                user_name={""}
+                                user_name={post.user_name}
                                 content={post.content}
                                 location={post_location} //should come from map API
                                 created_at={post.created_at}
-                                reply_to={post.reply_to}
+                                reply_to_author={post.reply_to_author}
                                 image={""}
                                 clickPost={() => clickPostHandler(post)}
                                 isReplyList={replyTo}
