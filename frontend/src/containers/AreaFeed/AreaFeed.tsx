@@ -179,12 +179,14 @@ function AreaFeed() {
                     </button>
                 </div>
             </div>
-            <PostList
-                type={"Post"}
-                postListCallback={postListCallback}
-                replyTo={0}
-                allPosts={queryPosts}
-            />
+            <div id="postlist-container">
+                <PostList
+                    type={"Post"}
+                    postListCallback={postListCallback}
+                    replyTo={0}
+                    allPosts={queryPosts}
+                />
+            </div>
             <NavigationBar />
         </div>
     );
