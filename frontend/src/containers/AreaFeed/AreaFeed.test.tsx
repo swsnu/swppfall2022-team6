@@ -99,7 +99,7 @@ describe("<AreaFeed />", () => {
                     longitude: 126.95264777802309,
                     created_at: new Date().toLocaleDateString(),
                     image: "",
-                    reply_to: 0,
+                    reply_to: null,
                     hashtags: []
                 },
             ],
