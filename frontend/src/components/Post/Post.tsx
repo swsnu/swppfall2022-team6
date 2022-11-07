@@ -14,31 +14,35 @@ export interface postProps {
     reply_to: number | null; // id of the chained post
     clickPost?: React.MouseEventHandler<HTMLDivElement>;
     toggleChain?: () => void; // toggle chain open/close
+    isReplyList: number; // 0 when not, from replyTo in postlist
 }
 // get location from user lang, long
-
-// get user from backend with user_id
-const users: { user_name: string; user_id: number }[] = [
-    { user_name: "WeatherFairy", user_id: 1 },
-    { user_name: "Toothfairy", user_id: 2 },
-];
 
 function Post(post: postProps) {
     const navigate = useNavigate();
     // set chain toggle status
     const [isChainOpen, setChainOpen] = useState<boolean>(false);
+    const [replyingTo, setReplyAuthor]= useState<string>("");
     // get replied post
     const [chainedPosts, setChainedPosts] = useState<PostType[]>([]);
     useEffect(() => {
+        if (post.reply_to){
+            axios
+                .get(`/post/${post.reply_to}/`)
+                .then((response)=>{
+                    setReplyAuthor(response.data["user"].user_name);
+                })
+        }
+    }, []);
+    useEffect(() => {
         if(isChainOpen){
             axios
-                .get(`/post/${post.id}/chain/`)
+                .get(`/post/${post.reply_to}/`)
                 .then((response)=>{
-                    setChainedPosts(response.data)
+                    setChainedPosts([response.data["post"]])
                 })
             }
     }, [isChainOpen]);
-    // useEffect(() => {}, [isChainOpen]);
 
     const clickPostHandler = (post: PostType) => {
         navigate("/areafeed/" + post.id);
@@ -52,22 +56,19 @@ function Post(post: postProps) {
                 <Post
                     key={post.id}
                     id={post.id}
-                    user_name={
-                        users.find((user) => user.user_id === post.user)!
-                            .user_name
-                    }
+                    user_name={replyingTo}
                     content={post.content}
                     location={"Location"} //should come from map API
                     created_at={post.created_at}
                     reply_to={post.reply_to}
                     image={""}
                     clickPost={() => clickPostHandler(post)}
+                    isReplyList={1}
                 />
             );
         });
         return chain;
     };
-
     return (
         <div
             id="post-and-chain-container"
@@ -162,14 +163,7 @@ function Post(post: postProps) {
                                         id="post-reply-to"
                                         className="text-primary"
                                     >
-                                        @
-                                        {
-                                            users.find(
-                                                (user) =>
-                                                    user.user_id ===
-                                                    1
-                                            )!.user_name
-                                        }{" "}
+                                        @{replyingTo}{" "}
                                     </span>
                                 )}
                                 <span id="post-text">{post.content}</span>
@@ -184,7 +178,9 @@ function Post(post: postProps) {
                 </div>
             </div>
             {/* Show chain when it is a reply */}
-            {post.reply_to === null ? null : isChainOpen === false ? (
+            {(post.isReplyList !== 0 || post.reply_to === null)
+            ? null 
+            : isChainOpen === false ? (
                 <div
                     id="chain-container"
                     className="p-2 d-flex justify-content-start"
