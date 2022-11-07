@@ -70,15 +70,16 @@ function PostDetail() {
                     </div>
                 </div>
                 <div id="main-post-content">{mainPost.content}</div>
-                <div id="main-post-image">
-                    {mainPost.image === null ? null : (
+                {mainPost.image === null ? null : (
+                    <div id="main-post-image-div">
                         <img
+                            id="main-post-image"
                             src={mainPost.image}
                             alt="sample"
-                            style={{ height: "5vh", width: "auto" }}
+                            style={{ height: "30vh", width: "auto" }}
                         />
-                    )}
-                </div>
+                    </div>
+                )}
                 <div id="lower-post-container">
                     <div id="hashtag-container">
                         {mainPost.hashtags.map((hashtag, i) => (

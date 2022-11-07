@@ -35,7 +35,7 @@ class PostViewSet(viewsets.GenericViewSet):
         latitude=37.0, longitude=127.0, created_at=datetime.now(),
         reply_to=Post.objects.get(id=int(request.POST['replyTo']))
         if 'replyTo' in request.POST else None)
-        for hashtag in request.POST['hashtags'].split(" "):
+        for hashtag in request.POST['hashtags'].strip().split(" "):
             h = Hashtag.objects.filter(content=hashtag).first()
             if h is None:
                 h = Hashtag.objects.create(content=hashtag)
