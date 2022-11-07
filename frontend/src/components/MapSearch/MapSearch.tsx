@@ -1,18 +1,15 @@
 import React, { useState } from "react";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faXmark, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import SearchBar from "material-ui-search-bar";
-import CssBaseline from "@material-ui/core/CssBaseline";
+import ListGroup from 'react-bootstrap/ListGroup';
+import Pagination from 'react-bootstrap/Pagination';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { styled } from "@material-ui/core/styles";
 
 import { PositionType } from "../Map/Map";
 
-import "./MapSearch.scss";
-
-// import SearchIcon from "../../assets/search-svgrepo-com.svg";
+import "./MapSearch.scss"
 
 type IProps = {
     markPosition: PositionType;
@@ -50,6 +47,12 @@ const range = (start: number, count: number) => {
     }
     return array;
 };
+const CustomSearchBar = styled(SearchBar)({
+    height: "38px",
+    backgroundColor: "#F5F5F5",
+    borderRadius: "12px",
+    fontFamily: '"NanumGothic", sans-serif',
+});
 
 const MapSearch = (props: IProps) => {
     const { markPosition, setMarkPosition, showResults, setShowResults } = props;
@@ -61,6 +64,7 @@ const MapSearch = (props: IProps) => {
     const [searchPagination, setSearchPagination] = useState<
         kakao.maps.Pagination | undefined
     >(undefined);
+    const [activePage, setActivePage] = useState<number>(1);
 
     const onSubmitSearchBox = () => {
         const ps = new kakao.maps.services.Places();
@@ -103,61 +107,46 @@ const MapSearch = (props: IProps) => {
         );
         return (
             <div className="search-result-box" aria-label="Search Results">
-                <ul
+                <ListGroup
                     className="search-result-list"
                     aria-label="Search Result List Item"
                 >
                     {searchResult.map((value, idx) => {
                         return (
-                            <li
-                                key={idx+1}
+                            <ListGroup.Item 
+                                key={idx+1} 
                                 className="search-result"
                                 onClick={() => {
                                     setMarkPosition({
                                         lat: +value.y,
                                         lng: +value.x,
                                     });
-                                    onClickCloseBox();
+                                    setShowResults(false);
                                 }}
                             >
                                 {value.place_name}
-                            </li>
+                            </ListGroup.Item>
                         );
                     })}
-                </ul>
-                <div
+                </ListGroup>
+                <Pagination
                     className="search-result-pagination"
                     aria-label="Search Result Pagination"
                 >
-                    <a
-                        href="#"
-                        onClick={() => {
-                            pagination.gotoFirst();
-                        }}
-                    >
-                        {"< "}
-                    </a>
                     {idxArray.map((idx) => {
                         return (
-                            <a
-                                href="#"
+                            <Pagination.Item
                                 key={idx}
                                 className={idx === 1 ? "on idx" : "idx"}
                                 onClick={() => {
                                     pagination.gotoPage(idx);
+                                    setActivePage(idx+1);
                                 }}
-                            >{`${idx} `}</a>
+                                active={idx+1===activePage}
+                            >{`${idx}`}</Pagination.Item>
                         );
                     })}
-                    <a
-                        href="#"
-                        onClick={() => {
-                            pagination.gotoLast();
-                        }}
-                    >
-                        {">"}
-                    </a>
-                </div>
+                </Pagination>
             </div>
         );
     };
@@ -176,27 +165,19 @@ const MapSearch = (props: IProps) => {
     };
     return (
         <Container id="search-box-container">
-        <Row id="search-input-container">
-            {/* <GlobalStyles styles={{
-                ".mapsearch-searchbar": {
-                    "width": 500px;
-                    "height": "20px";
-                    background-color: #F5F5F5;
-                    border-radius: "12px";
-                }
-            }}/> */}
-            <CssBaseline />
-            <SearchBar
-                className="mapsearch-searchbar"
-                value={searchQuery}
-                onChange={(searchVal) => setSearchQuery(searchVal)}
-                onCancelSearch={() => onClickClose()}
-                onRequestSearch={()=>onSubmitSearchBox()}
-            />
-        </Row>
-        <Row>
-            {searchResponse === Response.success && searchResultBox()}
-        </Row>
+            <Row id="search-input-container">
+                <CustomSearchBar
+                    className="mapsearch-searchbar"
+                    value={searchQuery}
+                    onChange={(searchVal) => setSearchQuery(searchVal)}
+                    onCancelSearch={() => onClickClose()}
+                    onRequestSearch={()=>onSubmitSearchBox()}
+                    placeholder="Search (e.g. 서울대학교, 관악로 1)"
+                />
+            </Row>
+            <Row>
+                {(showResults && searchResponse === Response.success) && searchResultBox()}
+            </Row>
       </Container>
     );
 }

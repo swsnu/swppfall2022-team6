@@ -1,11 +1,9 @@
 $main-color: #3185E7;
 $sub-color: #EDF9FF;
+$small-text: 12px;
 
-.col {
-  border: 1px solid black;
-}
-.row {
-  background-color: #eee;
+#MainPage {
+    font-size: $small-text;
 }
 #main-upper-container{
   margin-top: 20px;
@@ -13,6 +11,10 @@ $sub-color: #EDF9FF;
 }
 #main-logo-container{
   text-align: left;
+}
+#main-logo-container img {
+  width: 100px;
+  object-fit: cover;
 }
 #main-upper-container{
   text-align: right; 
@@ -23,15 +25,19 @@ $sub-color: #EDF9FF;
   border: 0;
   background: none;
   color: #C5E8FC;
-  // text-align: right;
+  font-size: 15px;
 }
 #main-description {
   margin-top: 10px;
   margin-bottom: 5px;
-  text-align: center;
+  text-align: left;
+}
+#main-map-container {
+  border-radius: 12px;
 }
 #main-radius-slider-container {
   padding-top: 10px;
+  text-align: left;
 }
 #findout-container {
   display: flex;
@@ -60,7 +66,7 @@ $sub-color: #EDF9FF;
   background-color: rgba(0, 0, 0, 0);
 }
 #main-curr-location-container {
-  margin-top: 20px;
+  margin-top: 15px;
   display: flex;
   justify-content: center;
 }
