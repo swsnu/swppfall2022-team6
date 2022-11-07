@@ -117,8 +117,13 @@ class PostDetailView(GenericAPIView):
                 post = Post.objects.get(id=post_id)
             else:
                 return Response(status=status.HTTP_404_NOT_FOUND)
+            data = {}
+            replies = Post.objects.filter(id=post.reply_to.id).order_by('-created_at')
+            data['post'] = self.get_serializer(post, many=False).data
+            data['replies'] = self.get_serializer(replies, many=True).data
+            print(data)
             return Response(
-                self.get_serializer(post, many=False).data,
+                data,
                 status=status.HTTP_200_OK
             )
 
