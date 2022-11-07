@@ -139,7 +139,7 @@ function Post(post: postProps) {
                         >
                             <div id="location">{post.location}</div>
                             <div> . </div>
-                            <div id="timestamp">{post.created_at}</div>
+                            <div id="timestamp">{new Date(post.created_at).toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'})}</div>
                         </div>
                         <div
                             id="post-content-container"
