@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Button } from "react-bootstrap";
 import { PostType } from "../../containers/AreaFeed/AreaFeed";
 import "./Post.scss";
 
@@ -81,7 +80,7 @@ function Post(post: postProps) {
             <div id="post-container" 
             className="p-2"
             onClick={post.clickPost}>
-                <Container id="main-post-container"
+                <div id="main-post-div"
                 className="d-flex justify-content-start">
                     <div id="user-main-badge">
                         <svg width="50" height="50" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -100,7 +99,7 @@ function Post(post: postProps) {
                         </defs>
                         </svg>
                     </div>
-                    <Container id="post-right-container"
+                    <div id="post-right-container"
                     className="d-flex flex-column">
                         <div id="user-name"
                         className="d-flex justify-content-start gap-1 fw-bold fs-5-5">
@@ -133,12 +132,12 @@ function Post(post: postProps) {
                                 <img src={post.image}></img>
                             </div>}
                         </div>
-                    </Container>
-                </Container>
+                    </div>
+                </div>
             </div>
             {/* Show chain when it is a reply */}
             {post.reply_to === null ? null : isChainOpen === false ? (
-                <Container id="chain-container" 
+                <div id="chain-container" 
                 className="p-2 d-flex justify-content-start">
                     <button id="chain-toggle-button" 
                     type="button"
@@ -146,14 +145,14 @@ function Post(post: postProps) {
                     onClick={clickToggleChain}>
                         Show All
                     </button>
-                </Container>
+                </div>
             ) : (
-                <Container id="chain-container"
+                <div id="chain-container"
                 className="p-2">
                     <div id="chained-posts">
                         {renderChainedPosts()}
                     </div>
-                    <Container id="chain-toggle"
+                    <div id="chain-toggle"
                     className="p-2 d-flex justify-content-start">
                         <button
                             id="chain-toggle-button"
@@ -163,8 +162,8 @@ function Post(post: postProps) {
                         >
                             Close All
                         </button>
-                    </Container>
-                </Container>
+                    </div>
+                </div>
             )}
         </div>
     );

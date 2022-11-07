@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Button } from "react-bootstrap";
 import { PostType } from "../../containers/AreaFeed/AreaFeed";
 import Post from "../Post/Post";
 import PostModal from "../PostModal/PostModal";
@@ -40,11 +39,11 @@ function PostList({
     };
 
     return (
-        <div id="PostList" className="mt-3 w-60 m-auto">
-            <div id="posts-container" className="d-flex flex-column gap-3 me-4">
+        <div id="PostList" className="mh-60 mt-3 w-60 m-auto">
+            <div id="posts-container" className="d-flex flex-column gap-3 me-4 mh-100 overflow-scroll">
                 {allPosts.map((post) => {
                     return (
-                        <Container 
+                        <div 
                         key={post.id}
                         id="post-and-chain-container" 
                         className="border border-1 rounded-5 p-2">
@@ -62,7 +61,7 @@ function PostList({
                             image={""}
                             clickPost={() => clickPostHandler(post)}
                             />
-                        </Container>
+                        </div>
                     );
                 })}
             </div>

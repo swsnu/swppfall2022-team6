@@ -11,7 +11,6 @@ $custom-sizes: (
 );
 // Merge the maps
 $utilities: map-merge($utilities, $custom-sizes);
-$utilities: map-remove($utilities, "margin");
 
 $custom-margin: (
   "margin": (
@@ -21,6 +20,21 @@ $custom-margin: (
       values: map-merge($spacers, (auto: 0 auto))
     ),
 );
-$utilities: map-merge($utilities, $custom-margin);
 
+$custom-max-height: (
+  "max-height": (
+      property: max-height,
+      class: mh,
+      values: (
+        100: 100%,
+        70: 70%,
+        60: 60%
+        )
+    ),
+);
+
+$utilities: map-merge($utilities, $custom-margin);
+$utilities: map-merge($utilities, $custom-max-height);
 @import "../../../node_modules/bootstrap/scss/bootstrap";
+$utilities: map-remove($utilities, "margin");
+$utilities: map-remove($utilities, "max-height");
