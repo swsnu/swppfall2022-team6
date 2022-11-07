@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Container, Button } from "react-bootstrap";
 import { PostType } from "../../containers/AreaFeed/AreaFeed";
 import Post from "../Post/Post";
 import PostModal from "../PostModal/PostModal";
+import "./PostList.scss";
 
 function PostList({
     type,
@@ -38,33 +40,38 @@ function PostList({
     };
 
     return (
-        <div id="PostList">
-            <div id="PostsContainer">
-                <div id="posts">
-                    {allPosts.map((post) => {
-                        return (
+        <div id="PostList" className="mt-3 w-60 m-auto">
+            <div id="posts-container" className="d-flex flex-column gap-3 me-4">
+                {allPosts.map((post) => {
+                    return (
+                        <Container 
+                        key={post.id}
+                        id="post-and-chain-container" 
+                        className="border border-1 rounded-5 p-2">
                             <Post
-                                key={post.id}
-                                id={post.id}
-                                user_name={
-                                    users.find((user) => user.id === post.user)!
-                                        .user_name
-                                }
-                                content={post.content}
-                                location={post_location} //should come from map API
-                                created_at={post.created_at}
-                                reply_to={post.reply_to}
-                                image={""}
-                                clickPost={() => clickPostHandler(post)}
-                                // toggleChain={} for chain open/close w useState
+                            key={post.id}
+                            id={post.id}
+                            user_name={
+                                users.find((user) => user.id === post.user)!
+                                    .user_name
+                            }
+                            content={post.content}
+                            location={post_location} //should come from map API
+                            created_at={post.created_at}
+                            reply_to={post.reply_to}
+                            image={""}
+                            clickPost={() => clickPostHandler(post)}
                             />
-                        );
-                    })}
-                </div>
+                        </Container>
+                    );
+                })}
             </div>
             {type === "Mypage" ? null : (
                 <div>
-                    <button id="add-post-button" onClick={onClickAddPostButton}>
+                    <button id="add-post-button" 
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={onClickAddPostButton}>
                         Add {type}
                     </button>
                     <PostModal

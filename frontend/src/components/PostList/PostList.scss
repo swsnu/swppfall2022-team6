@@ -1,0 +1,26 @@
+@import "../../../node_modules/bootstrap/scss/bootstrap";
+
+$custom-sizes: (
+  "custom-size": (
+    property: width,
+      class: w,
+      values: (
+        60: 60%,
+      )
+  ),
+);
+// Merge the maps
+$utilities: map-merge($utilities, $custom-sizes);
+$utilities: map-remove($utilities, "margin");
+
+$custom-margin: (
+  "margin": (
+      responsive: true,
+      property: margin,
+      class: m,
+      values: map-merge($spacers, (auto: 0 auto))
+    ),
+);
+$utilities: map-merge($utilities, $custom-margin);
+
+@import "../../../node_modules/bootstrap/scss/bootstrap";
