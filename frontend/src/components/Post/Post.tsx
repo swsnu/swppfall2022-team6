@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PostType } from "../../containers/AreaFeed/AreaFeed";
+import axios from "axios";
 
 export interface postProps {
     id: number;
@@ -26,23 +27,14 @@ function Post(post: postProps) {
     // set chain toggle status
     const [isChainOpen, setChainOpen] = useState<boolean>(false);
     // get replied post
-    const [chainedPosts, setChainedPosts] = useState<PostType[]>([
-        {
-            id: 1,
-            user: 1,
-            content: "Original Post...",
-            latitude: 37.44877599087201,
-            longitude: 126.95264777802309,
-            created_at: new Date().toLocaleDateString(),
-            image: "",
-            reply_to: null,
-            hashtags: [{ id: 1, content: "Sunny" }],
-        },
-    ]);
-    // useEffect(() => {
-    //     // setChainedPosts();
-    //     // call chain from backend
-    // })
+    const [chainedPosts, setChainedPosts] = useState<PostType[]>([]);
+    useEffect(() => {
+        axios
+            .get(`/post/${post.id}/chain/`)
+            .then((response)=>{
+                setChainedPosts(response.data)
+            })
+    });
     useEffect(() => {}, [isChainOpen]);
 
     const clickPostHandler = (post: PostType) => {
