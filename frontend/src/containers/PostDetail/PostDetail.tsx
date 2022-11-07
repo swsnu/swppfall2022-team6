@@ -17,7 +17,7 @@ function PostDetail() {
     };
     const [mainPost, setMainPost] = useState<PostType>({
         id: 1,
-        user: 1,
+        user_name: "swpp",
         content: "Default Original Post...",
         latitude: 37.44877599087201,
         longitude: 126.95264777802309,
@@ -27,10 +27,10 @@ function PostDetail() {
         hashtags: [],
     });
     const [replyPosts, setReplyPosts] = useState<PostType[]>([]);
-    const users: { user_name: string; user_id: number }[] = [
-        { user_name: "WeatherFairy", user_id: 1 },
-        { user_name: "Toothfairy", user_id: 2 },
-    ];
+    // const users: { user_name: string; user_id: number }[] = [
+    //     { user_name: "WeatherFairy", user_id: 1 },
+    //     { user_name: "Toothfairy", user_id: 2 },
+    // ];
     const [refresh, setRefresh] = useState<Boolean>(true);
 
 
@@ -60,11 +60,7 @@ function PostDetail() {
                     <div id="author-container">
                         <div id="author-info">
                             <div id="author-name">
-                                {
-                                    users.find(
-                                        (user) => user.user_id === mainPost.user
-                                    )!.user_name
-                                }
+                                {mainPost.user_name}
                                 {/* Get user name from back */}
                             </div>
                             <div id="author-location">

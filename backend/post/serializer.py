@@ -12,12 +12,13 @@ class PostSerializer(serializers.ModelSerializer):
     '''
     image = serializers.ImageField(use_url=True)
     hashtags = serializers.SerializerMethodField()
+    user_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
         fields = (
             'id',
-            'user',
+            'user_name',
             'content',
             'image',
             'latitude',
@@ -29,3 +30,5 @@ class PostSerializer(serializers.ModelSerializer):
     def get_hashtags(self, post):
         hashtags = Hashtag.objects.filter(posthashtag__post=post)
         return HashtagSerializer(hashtags, many=True).data
+    def get_user_name(self, post):
+        return post.user.username

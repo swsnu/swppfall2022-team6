@@ -109,7 +109,6 @@ class PostViewSet(viewsets.GenericViewSet):
         data = {}
         data['post'] = post_info
         data['replies'] = reply_info
-        data['user'] = user_info
         return Response(
                 data,
                 status=status.HTTP_200_OK

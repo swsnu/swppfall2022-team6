@@ -20,7 +20,7 @@ type WeatherType = {
 
 export type PostType = {
     id: number;
-    user: number;
+    user_name: string;
     content: string;
     image: string; // image url
     latitude: number;

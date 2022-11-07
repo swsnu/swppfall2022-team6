@@ -30,7 +30,7 @@ function Post(post: postProps) {
             axios
                 .get(`/post/${post.reply_to}/`)
                 .then((response)=>{
-                    setReplyAuthor(response.data["user"].user_name);
+                    setReplyAuthor(response.data["post"].user_name);
                 })
         }
     }, []);
@@ -179,7 +179,7 @@ function Post(post: postProps) {
             </div>
             {/* Show chain when it is a reply */}
             {(post.isReplyList !== 0 || post.reply_to === null)
-            ? null 
+            ? null
             : isChainOpen === false ? (
                 <div
                     id="chain-container"

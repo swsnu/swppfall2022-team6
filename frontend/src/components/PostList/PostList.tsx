@@ -46,7 +46,7 @@ function PostList({
                                 key={post.id}
                                 id={post.id}
                                 // TODO: user name from backend
-                                user_name={""}
+                                user_name={post.user_name}
                                 content={post.content}
                                 location={post_location} //should come from map API
                                 created_at={post.created_at}
