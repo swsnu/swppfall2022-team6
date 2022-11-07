@@ -111,26 +111,36 @@ function Post(post: postProps) {
                             <div> . </div>
                             <div id="timestamp">{post.created_at}</div>
                         </div>
-                        <div id="post-content-container"
-                        className="d-flex justify-content-start gap-1 mt-2">
-                            <div id="post-content" className="text-start fw-normal">
-                                { post.reply_to === null
-                                ? null
-                                : <span id="post-reply-to"
-                                   className="text-primary">
-                                    @{
-                                    users.find(
-                                        (user) => user.user_id === post.reply_to
-                                    )!.user_name
-                                    } </span>
-                                }
+                        <div
+                            id="post-content-container"
+                            className="d-flex justify-content-start gap-1 mt-2"
+                        >
+                            <div
+                                id="post-content"
+                                className="text-start fw-normal"
+                            >
+                                {post.reply_to === null ? null : (
+                                    <span
+                                        id="post-reply-to"
+                                        className="text-primary"
+                                    >
+                                        @
+                                        {
+                                            users.find(
+                                                (user) =>
+                                                    user.user_id ===
+                                                    post.reply_to
+                                            )!.user_name
+                                        }{" "}
+                                    </span>
+                                )}
                                 <span id="post-text">{post.content}</span>
                             </div>
-                            {post.image === ""
-                            ? null
-                            : <div id="post-photo">
-                                <img src={post.image}></img>
-                            </div>}
+                            {post.image === "" ? null : (
+                                <div id="post-photo">
+                                    <img src={require(post.image)}></img>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -147,13 +157,12 @@ function Post(post: postProps) {
                     </button>
                 </div>
             ) : (
-                <div id="chain-container"
-                className="p-2">
-                    <div id="chained-posts">
-                        {renderChainedPosts()}
-                    </div>
-                    <div id="chain-toggle"
-                    className="p-2 d-flex justify-content-start">
+                <div id="chain-container" className="p-2">
+                    <div id="chained-posts">{renderChainedPosts()}</div>
+                    <div
+                        id="chain-toggle"
+                        className="p-2 d-flex justify-content-start"
+                    >
                         <button
                             id="chain-toggle-button"
                             type="button"

@@ -32,5 +32,6 @@ __pycache__
 **-env/
 
 #photos
+#/backend/media
 /backend/post/static
 /backend/db.sqlite3

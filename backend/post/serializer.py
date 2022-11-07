@@ -10,6 +10,7 @@ class PostSerializer(serializers.ModelSerializer):
     '''
         PostSerializer
     '''
+    image = serializers.ImageField(use_url=True)
     hashtags = serializers.SerializerMethodField()
 
     class Meta:

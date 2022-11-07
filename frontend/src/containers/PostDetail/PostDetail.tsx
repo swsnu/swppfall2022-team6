@@ -1,56 +1,99 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import PostList from "../../components/PostList/PostList";
 import { PostType } from "../AreaFeed/AreaFeed";
+import "./PostDetail.scss";
 
 function PostDetail() {
     const postListCallback = () => {}; // axios.get again
     const { id } = useParams();
-    const [allPosts, setAllPosts] = useState<PostType[]>([
-        {
-            id: 2,
-            user: 2,
-            content: "학교는 많이 춥네요ㅠㅠ\n겉옷 챙기시는게 좋을 것 같아요!",
-            latitude: 37.44877599087201,
-            longitude: 126.95264777802309,
-            created_at: new Date().toLocaleDateString(),
-            reply_to: 1,
-            image: "",
-            hashtags: []
-        },
-        {
-            id: 1,
-            user: 1,
-            content:
-                "지금 설입은 맑긴 한데 바람이 많이 불어요\n겉옷을 안 챙겨 나왔는데 학교도 춥나요? 자연대 쪽에...",
-            latitude: 37.44877599087201,
-            longitude: 126.95264777802309,
-            created_at: new Date().toLocaleDateString(),
-            image: "",
-            reply_to: 0,
-            hashtags: []
-        },
-    ]);
+    const navigate = useNavigate();
+    const onClickBackButton = () => {
+        navigate("/areafeed/");
+    };
+    const [mainPost, setMainPost] = useState<PostType>({
+        id: 1,
+        user: 1,
+        content: "Default Original Post...",
+        latitude: 37.44877599087201,
+        longitude: 126.95264777802309,
+        created_at: new Date().toLocaleDateString(),
+        image: "/media/2022/11/07/screenshot.png",
+        reply_to: null,
+        hashtags: [],
+    });
+    const [replyPosts, setReplyPosts] = useState<PostType[]>([]);
+    const users: { user_name: string; user_id: number }[] = [
+        { user_name: "WeatherFairy", user_id: 1 },
+        { user_name: "Toothfairy", user_id: 2 },
+    ];
+
+    useEffect(() => {
+        // update mainPost, replyPosts
+        axios.get(`/post/${id}/`).then((response) => {
+            setMainPost(response.data["post"]);
+            setReplyPosts(response.data["replies"]);
+        });
+    }, []);
+
     return (
         <div className="PostDetail">
             <div id="upper-container">
-                {/* back button */}
+                <div id="page-header">
+                    <button id="back-button" onClick={onClickBackButton}>
+                        ←
+                    </button>
+                </div>
             </div>
-            <div id="post-container">
-
-            </div>
-            <div id="lower-post-container">
-                <div id=""></div>
-                <div id="hashtag-container">
-
+            <div id="main-post-container">
+                <div id="upper-post-container">
+                    <div id="author-main-badge">
+                        <img src={"/logo192.png"} alt="sample" />
+                    </div>
+                    <div id="author-container">
+                        <div id="author-info">
+                            <div id="author-name">
+                                {
+                                    users.find(
+                                        (user) => user.user_id === mainPost.user
+                                    )!.user_name
+                                }
+                                {/* Get user name from back */}
+                            </div>
+                            <div id="author-location">
+                                Bongcheon-dong, Gwankak-gu
+                                {/* Get address */}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="main-post-content">{mainPost.content}</div>
+                <div id="main-post-image">
+                    {mainPost.image === null ? null : (
+                        <img
+                            src={mainPost.image}
+                            alt="sample"
+                            style={{ height: "5vh", width: "auto" }}
+                        />
+                    )}
+                </div>
+                <div id="lower-post-container">
+                    <div id="hashtag-container">
+                        {mainPost.hashtags.map((hashtag, i) => (
+                            <div key={`hashtag${i}`} className="hashtag">
+                                {hashtag.content}
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
             <PostList
                 type={"Reply"}
                 postListCallback={postListCallback}
                 replyTo={Number(id)}
-                allPosts={allPosts}
+                allPosts={replyPosts}
             />
             <NavigationBar />
         </div>

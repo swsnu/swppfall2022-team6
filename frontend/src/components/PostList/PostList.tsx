@@ -66,11 +66,13 @@ function PostList({
                 })}
             </div>
             {type === "Mypage" ? null : (
-                <div>
-                    <button id="add-post-button" 
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={onClickAddPostButton}>
+                <div id="postlist-modal-container">
+                    <button
+                        id="add-post-button"
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={onClickAddPostButton}
+                    >
                         Add {type}
                     </button>
                     <PostModal
