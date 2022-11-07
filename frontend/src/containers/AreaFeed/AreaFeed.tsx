@@ -41,41 +41,43 @@ function AreaFeed() {
     const [weather, setWeather] = useState<WeatherType>({});
 
     useEffect(() => {
-        // update PostList & Hashtags
-        axios
-            .get("/post/", {
-                params: { latitude: 37.0, longitude: 127.0, radius: 143 }, // modify to redux
-            })
-            .then((response) => {
-                setAllPosts(response.data["posts"]);
-                setQueryPosts(response.data["posts"]);
-                setTop3Hashtag(response.data["top3_hashtags"]);
+        if(refresh){
+            // update PostList & Hashtags
+            axios
+                .get("/post/", {
+                    params: { latitude: 37.0, longitude: 127.0, radius: 143 }, // modify to redux
+                })
+                .then((response) => {
+                    setAllPosts(response.data["posts"]);
+                    setQueryPosts(response.data["posts"]);
+                    setTop3Hashtag(response.data["top3_hashtags"]);
+                });
+            // update WeatherAPI
+            const lat = 37.0;
+            const lon = 127.0;
+            const api = {
+                key: "c22114b304afd9d97329b0223da5bb01",
+                base: "https://api.openweathermap.org/data/2.5/",
+            };
+            const url = `${api.base}weather?lat=${lat}&lon=${lon}&appid=${api.key}`;
+            axios.get(url).then((response) => {
+                const data = response.data;
+                setWeather({
+                    id: data.weather[0].id,
+                    temp: Math.round(data.main.temp - 273.15),
+                    main: data.weather[0].main,
+                });
             });
-        // update WeatherAPI
-        const lat = 37.0;
-        const lon = 127.0;
-        const api = {
-            key: "c22114b304afd9d97329b0223da5bb01",
-            base: "https://api.openweathermap.org/data/2.5/",
-        };
-        const url = `${api.base}weather?lat=${lat}&lon=${lon}&appid=${api.key}`;
-        axios.get(url).then((response) => {
-            const data = response.data;
-            setWeather({
-                id: data.weather[0].id,
-                temp: Math.round(data.main.temp - 273.15),
-                main: data.weather[0].main,
-            });
-        });
-        // update Statistics
-        axios
-            .get("/report/", {
-                params: { latitude: 30, longitude: 30, radius: 2 }, // modify to redux
-            })
-            .then((response) => {
-                setAllReports(response.data);
-                setRefresh(false);
-            });
+            // update Statistics
+            axios
+                .get("/report/", {
+                    params: { latitude: 30, longitude: 30, radius: 2 }, // modify to redux
+                })
+                .then((response) => {
+                    setAllReports(response.data);
+                    setRefresh(false);
+                });
+            }
     }, [refresh]);
 
     const onClickBackButton = () => {
