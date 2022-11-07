@@ -182,7 +182,7 @@ function Post(post: postProps) {
                             </div>
                             {post.image === "" ? null : (
                                 <div id="post-photo">
-                                    <img src={post.image}></img>
+                                    <img src={require(post.image)}></img>
                                 </div>
                             )}
                         </div>

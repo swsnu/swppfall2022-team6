@@ -19,6 +19,8 @@ from rest_framework.routers import SimpleRouter
 from post.views import PostViewSet
 from report.views import ReportViewSet
 from hashtag.views import HashtagViewSet
+from django.conf import settings
+from django.conf.urls.static import static
 
 router = SimpleRouter()
 router.register('report', ReportViewSet, basename='report')
@@ -29,4 +31,4 @@ urlpatterns = [
     path('', include('user.urls')),
     path('', include((router.urls))),
     path('admin/', admin.site.urls),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
