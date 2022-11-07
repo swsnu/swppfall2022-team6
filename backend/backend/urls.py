@@ -15,12 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from rest_framework.routers import SimpleRouter
 from post.views import PostViewSet
 from report.views import ReportViewSet
 from hashtag.views import HashtagViewSet
-from django.conf import settings
-from django.conf.urls.static import static
 
 router = SimpleRouter()
 router.register('report', ReportViewSet, basename='report')

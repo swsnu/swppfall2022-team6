@@ -110,4 +110,17 @@ describe("<PostModal />", () => {
         fireEvent.change(textField, { target: { value: "TEXT" } });
         await waitFor(() => screen.findByText("TEXT"));
     });
+    it("should change hashtag properly", async () => {
+        render(
+            <PostModal
+                openPost={true}
+                setOpenPost={jest.fn()}
+                postModalCallback={jest.fn()}
+                type={"Post"}
+                replyTo={0}
+            />
+        );
+        const textField = screen.getByTestId("hashtagField");
+        fireEvent.change(textField, { target: { value: "TEXT" } });
+    });
 });
