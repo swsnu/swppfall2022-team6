@@ -26,7 +26,7 @@ export type PostType = {
     latitude: number;
     longitude: number;
     created_at: string;
-    reply_to: number | null; // id of the chained post
+    reply_to_author: string | null; // id of the chained post
     hashtags: Array<HashtagType>;
 };
 

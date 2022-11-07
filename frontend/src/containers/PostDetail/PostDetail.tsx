@@ -23,7 +23,7 @@ function PostDetail() {
         longitude: 126.95264777802309,
         created_at: new Date().toLocaleDateString(),
         image: "/media/2022/11/07/screenshot.png",
-        reply_to: null,
+        reply_to_author: null,
         hashtags: [],
     });
     const [replyPosts, setReplyPosts] = useState<PostType[]>([]);

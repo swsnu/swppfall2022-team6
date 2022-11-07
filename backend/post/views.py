@@ -123,12 +123,11 @@ class PostViewSet(viewsets.GenericViewSet):
         post = get_object_or_404(Post, pk=pk)
         # Add chained posts in order
         chain = []
-        if post.reply_to:
+        while post.reply_to:
             reply_id = post.reply_to.id
-            while reply_id is not None:
-                reply_post = Post.objects.get(id=reply_id)
-                chain.append(reply_post)
-                reply_id = reply_post.reply_to
+            reply_post = Post.objects.get(id=reply_id)
+            chain.append(reply_post)
+            post = reply_post
         return Response(
             self.get_serializer(chain, many=True).data,
             status=status.HTTP_200_OK

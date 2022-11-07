@@ -41,7 +41,7 @@ describe("<PostList />", () => {
                                         latitude: 37.44877599087201,
                                         longitude: 126.95264777802309,
                                         created_at: new Date().toLocaleDateString(),
-                                        reply_to: 1,
+                                        reply_to_author: "SWPP",
                                         image: "",
                                         hashtags: []
                                     },
@@ -54,7 +54,7 @@ describe("<PostList />", () => {
                                         longitude: 126.95264777802309,
                                         created_at: new Date().toLocaleDateString(),
                                         image: "",
-                                        reply_to: null,
+                                        reply_to_author: "SWPP",
                                         hashtags: []
                                     },
                                 ]}
