@@ -126,13 +126,14 @@
 
 .radius-slider-container {
     padding: 4px;
-    width: 200px;
+    width: 50%;
+    max-width: 300px;
     display: flex;
     flex-direction: column;
 }
 
 .radius-slider-container p {
-    width: 115px;
+    width: 50%;
     height: 11px;
 
     font-family: "NanumGothic";
@@ -164,8 +165,10 @@
     justify-content: center;
     align-items: center;
     gap: 2px;
-    width: 130px;
-    height: 30px;
+    width: 30%;
+    max-width: 100px;
+    height: 4vh;
+    margin-right: 10px;
 
     /* Dark Blue */
 
@@ -201,6 +204,7 @@
 }
 #bottom-container span {
     text-align: left;
+    padding-left: 4px;
 }
 
 #bottom-container #report-button {
@@ -208,13 +212,16 @@
     background-color: #3185e7;
     color: white;
     border-radius: 15px;
-    height: 42px;
+    height: 5vh;
     font-family: "NanumGothic", sans-serif;
     font-weight: 900;
     font-size: 16px;
     display: flex;
     justify-content: space-around;
     align-items: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 95%;
 }
 
 #map-label {

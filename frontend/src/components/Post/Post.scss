@@ -24,7 +24,14 @@ $font-sizes: (
 
 .tldiv {
     margin-left: 5px;
-    font-size: 10px;
+}
+
+#location,
+#timestamp {
+    font-size: 8px;
+}
+#post-reply-to {
+    font-size: 14px;
 }
 
 #post-photo {

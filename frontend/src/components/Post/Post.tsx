@@ -26,13 +26,11 @@ function Post(post: postProps) {
     // get replied post
     const [chainedPosts, setChainedPosts] = useState<PostType[]>([]);
     useEffect(() => {
-        if(isChainOpen){
-            axios
-                .get(`/post/${post.id}/chain/`)
-                .then((response)=>{
-                    setChainedPosts(response.data)
-                })
-            }
+        if (isChainOpen) {
+            axios.get(`/post/${post.id}/chain/`).then((response) => {
+                setChainedPosts(response.data);
+            });
+        }
     }, [isChainOpen]);
 
     const clickPostHandler = (post: PostType) => {
@@ -61,10 +59,7 @@ function Post(post: postProps) {
         return chain;
     };
     return (
-        <div
-            id="post-and-chain-container"
-            className="d-flex flex-column gap-3 "
-        >
+        <div id="post-and-chain-container" className="d-flex flex-column ">
             <div id="post-container" className="p-2" onClick={post.clickPost}>
                 <div
                     id="main-post-div"
@@ -141,7 +136,22 @@ function Post(post: postProps) {
                                 {post.location}
                             </div>
                             <div> . </div>
-                            <div id="timestamp" className="tldiv">{new Date(post.created_at).toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'})}</div>
+                            <div
+                                id="timestamp"
+                                className="tldiv"
+                                style={{ fontSize: "3px" }}
+                            >
+                                {new Date(post.created_at).toLocaleDateString(
+                                    "ko-KR",
+                                    {
+                                        year: "numeric",
+                                        month: "2-digit",
+                                        day: "2-digit",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                    }
+                                )}
+                            </div>
                         </div>
                         <div
                             id="post-content-container"
@@ -173,9 +183,8 @@ function Post(post: postProps) {
                 </div>
             </div>
             {/* Show chain when it is a reply */}
-            {(post.isReplyList !== 0 || post.reply_to_author === null)
-            ? null
-            : isChainOpen === false ? (
+            {post.isReplyList !== 0 ||
+            post.reply_to_author === null ? null : isChainOpen === false ? (
                 <div
                     id="chain-container"
                     className="p-2 d-flex justify-content-start"

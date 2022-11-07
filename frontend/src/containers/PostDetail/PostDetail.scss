@@ -7,7 +7,8 @@
     font-weight: 700;
     line-height: 140%;
     margin: 0 auto;
-    width: 60%;
+    width: 100%;
+    padding-bottom: 5vh;
 }
 
 #page-header {
@@ -19,13 +20,13 @@
     width: 100%;
 }
 
-#back-button{
+#back-button {
     background-color: transparent;
     border: none;
     font-size: 30px;
 }
 
-#main-post-container{
+#main-post-container {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -35,58 +36,10 @@
     font-weight: 700;
     line-height: 140%;
     margin: 0 auto;
-    width: 60%;
+    width: 95%;
 }
 
-#upper-post-container{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    width: 80%;
-    gap: 10px
-}
-
-#author-main-badge{
-    width: 10%;
-}
-
-#author-container{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    width: 80%;
-}
-
-#author-info{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    width: 100%;
-}
-
-#author-name{
-    font-family: "NanumGothic";
-    font-weight: bold;
-    font-size: 14px;
-}
-
-#main-post-content{
-    display: flex;
-    width: 80%;
-    font-size: 14px;
-    font-weight: 100;
-    padding: 10px;
-}
-
-#main-post-image{
-    display: flex;
-    width: 80%;
-}
-
-#lower-post-container{
+#upper-post-container {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -95,7 +48,56 @@
     gap: 10px;
 }
 
-#hashtag-container{
+#author-main-badge {
+    width: 10%;
+}
+
+#author-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 80%;
+}
+
+#author-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+}
+
+#author-name {
+    font-family: "NanumGothic";
+    font-weight: bold;
+    font-size: 14px;
+}
+
+#main-post-content {
+    display: flex;
+    width: 80%;
+    font-size: 14px;
+    font-weight: 100;
+    padding: 10px;
+}
+
+#main-post-image-div {
+    display: flex;
+    width: 80%;
+    border: 1px solid;
+}
+
+#lower-post-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 80%;
+    gap: 10px;
+}
+
+#hashtag-container {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -110,11 +112,14 @@
     line-height: 140%;
 }
 
-img{
+img {
     object-fit: contain;
     width: 100%;
-    border-radius: 25px
+    border-radius: 25px;
 }
 
-
-
+#main-post-image {
+    object-fit: scale-down;
+    max-width: 100%;
+    border-radius: 25px;
+}

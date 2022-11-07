@@ -89,7 +89,7 @@ function MainPage() {
         <div className="MainPage">
             <div id="main-upper-container" onClick={()=>setShowResults(false)}>
                 <div id="mainimage-container">
-                    <img src={Logo} id="logo" />
+                    <img src={Logo} id="logo2" />
                 </div>
                 {/* NowSee */}
                 <button id="mypage-button" onClick={onClickMyPageIcon}>
