@@ -1,8 +1,16 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-// import { faSquare } from "@fortawesome/free-regular-svg-icons";
+import SearchBar from "material-ui-search-bar";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 import { PositionType } from "../Map/Map";
+
+import "./MapSearch.scss";
 
 // import SearchIcon from "../../assets/search-svgrepo-com.svg";
 
@@ -48,14 +56,13 @@ const MapSearch = (props: IProps) => {
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [searchResponse, setSearchResponse] = useState<string>(
         Response.zero_result
-    );
+    )
     const [searchResult, setSearchResult] = useState<SearchResult[]>([]);
     const [searchPagination, setSearchPagination] = useState<
         kakao.maps.Pagination | undefined
     >(undefined);
 
-    const onSubmitSearchBox = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key !== "Enter") return;
+    const onSubmitSearchBox = () => {
         const ps = new kakao.maps.services.Places();
         ps.keywordSearch(
             searchQuery,
@@ -88,12 +95,6 @@ const MapSearch = (props: IProps) => {
         );
     };
 
-    const onClickResultClose = () => {
-        setSearchResponse(Response.zero_result);
-        setSearchResult([]);
-        setSearchPagination(undefined);
-        setShowResults(false);
-    };
     const searchResultBox = () => {
         const pagination = searchPagination as kakao.maps.Pagination;
         const idxArray: number[] = range(
@@ -157,14 +158,6 @@ const MapSearch = (props: IProps) => {
                         {">"}
                     </a>
                 </div>
-                {/* <div id="result-close-container">
-                    <button
-                        id="result-button-close"
-                        onClick={onClickResultClose}
-                    >
-                        <FontAwesomeIcon icon={faXmark} fontSize="20px" />
-                    </button>
-                </div> */}
             </div>
         );
     };
@@ -178,31 +171,34 @@ const MapSearch = (props: IProps) => {
     const onClickCloseBox = () => {
         setSearchResponse(Response.zero_result);
         setSearchResult([]);
-        // setSearchQuery("");
         setSearchPagination(undefined);
         setShowResults(false);
     };
     return (
-        <div id="search-box-container" style={{ width: "95%" }}>
-            <div id="search-input-container">
-                {/* @ts-ignore */}
-                <FontAwesomeIcon icon={faMagnifyingGlass} size="2x" />
-                <input
-                    id="search-box"
-                    value={searchQuery}
-                    placeholder="Search (e.g. 서울대학교, 관악로 1)"
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyDown={(e) => {
-                        onSubmitSearchBox(e);
-                    }}
-                />
-                <button id="button-close" onClick={onClickClose}>
-                    <FontAwesomeIcon icon={faXmark} size="2x" />
-                </button>
-            </div>
-            {showResults && searchResponse === Response.success && searchResultBox()}
-        </div>
+        <Container id="search-box-container">
+        <Row id="search-input-container">
+            {/* <GlobalStyles styles={{
+                ".mapsearch-searchbar": {
+                    "width": 500px;
+                    "height": "20px";
+                    background-color: #F5F5F5;
+                    border-radius: "12px";
+                }
+            }}/> */}
+            <CssBaseline />
+            <SearchBar
+                className="mapsearch-searchbar"
+                value={searchQuery}
+                onChange={(searchVal) => setSearchQuery(searchVal)}
+                onCancelSearch={() => onClickClose()}
+                onRequestSearch={()=>onSubmitSearchBox()}
+            />
+        </Row>
+        <Row>
+            {searchResponse === Response.success && searchResultBox()}
+        </Row>
+      </Container>
     );
-};
+}
 
 export default MapSearch;
