@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import axios from "axios";
+
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import SearchBar from "material-ui-search-bar";
+import { styled } from "@material-ui/core/styles";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRotateLeft, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Statistics from "../../components/Statistics/Statistics";
-import { useNavigate } from "react-router-dom";
 import PostList from "../../components/PostList/PostList";
 import { ReportType } from "../../components/Statistics/Statistics";
-import axios from "axios";
 import "./AreaFeed.scss";
 
 export type HashtagType = {
@@ -29,6 +39,15 @@ export type PostType = {
     reply_to_author: string | null; // id of the chained post
     hashtags: Array<HashtagType>;
 };
+
+export const CustomSearchBar = styled(SearchBar)({
+    height: "25px",
+    backgroundColor: "#F5F5F5",
+    borderRadius: "10px",
+    fontFamily: '"NanumGothic", sans-serif',
+    fontSize: "10px",
+});
+
 
 function AreaFeed() {
     const [searchQuery, setSearchQuery] = useState<string>("");
@@ -86,17 +105,17 @@ function AreaFeed() {
     const onClickRefreshButton = () => {
         setRefresh(true);
     };
-    const onSubmitSearchBox = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const onSubmitSearchBox = () => {
         console.log("yes");
-        if (e.key === "Enter") {
-            setQueryPosts(
-                allPosts.filter((post: PostType) =>
-                    post.content.includes(searchQuery)
-                )
-            );
-            setSearchQuery("");
-        }
+        setQueryPosts(
+            allPosts.filter((post: PostType) =>
+                post.content.includes(searchQuery)
+            )
+        );
     };
+    const onClickClose = ()=>{
+        setSearchQuery("");
+    }
     const onClickHashtagButton = (hashtag: string) => {
         //TODO: queryPosts? allPosts?
         setQueryPosts(
@@ -115,83 +134,86 @@ function AreaFeed() {
     }; // axios.get again
 
     return (
-        <div className="AreaFeed">
-            <div id="areafeed-upper-container">
-                <div id="button-container">
+        <Container className="AreaFeed">
+            <Row id="areafeed-upper-container">
+                <Col id="button-container">
                     <button id="back-button" onClick={onClickBackButton}>
-                        ←
+                        <FontAwesomeIcon icon={faChevronLeft} />
                     </button>
                     <button id="refresh-button" onClick={onClickRefreshButton}>
-                        ↻
+                        <FontAwesomeIcon icon={faRotateLeft} />
                     </button>
-                </div>
-                <div id="weather-container">
+                </Col>
+                <Col id="weather-container">
                     {" "}
                     <div id="weather-temp">{weather.temp}&deg;C</div>
                     <div id="weather-status">{weather.main}</div>
-                </div>
-            </div>
-            <Statistics allReports={allReports} />
-            <div id="recommended-hashtag-container">
-                <div className="area-label">Recommended Hashtags</div>
-                <div id="hashtag-buttons">
-                    {top3Hashtag[0] && (
+                </Col>
+            </Row>
+            <Row>
+                <Statistics allReports={allReports} />
+            </Row>
+            <Row id="recommended-hashtag-container">
+                <Row className="area-label">Recommended Hashtags</Row>
+                <Row id="hashtag-buttons" xs="auto">
+                    {
+                        top3Hashtag.map((item, i)=>{
+                            return(
+                                <Col key={i}>
+                                    <button
+                                        id={`hashtag${i}-button`}
+                                        className="hashtag"
+                                        onClick={() => onClickHashtagButton(item)}
+                                    >
+                                        {"#" + item}
+                                    </button>
+                                </Col>
+                            )
+                        })
+                    }
+                    
+                </Row>
+            </Row>
+            <Row id="search-box-container">
+                <Row className="area-label">Posts</Row>
+                <Row id="search-container">
+                    <Col>
+                        {/* <input
+                            id="search-box"
+                            value={searchQuery}
+                            placeholder={"🔍 Search"}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyPress={(e) => onSubmitSearchBox(e)}
+                        /> */}
+                        <CustomSearchBar
+                            className="mapsearch-searchbar"
+                            value={searchQuery}
+                            onChange={(searchVal) => setSearchQuery(searchVal)}
+                            onCancelSearch={() => onClickClose()}
+                            onRequestSearch={()=>onSubmitSearchBox()}
+                            placeholder=""
+                        />
+                    </Col>
+                    <Col>
                         <button
-                            id="hashtag1-button"
-                            className="hashtag"
-                            onClick={() => onClickHashtagButton(top3Hashtag[0])}
+                            id="only-photos-button"
+                            onClick={onSelectOnlyPhotos}
                         >
-                            {"#" + top3Hashtag[0]}
+                            ◯ Only Photos
                         </button>
-                    )}
-                    {top3Hashtag[1] && (
-                        <button
-                            id="hashtag2-button"
-                            className="hashtag"
-                            onClick={() => onClickHashtagButton(top3Hashtag[1])}
-                        >
-                            {"#" + top3Hashtag[1]}
-                        </button>
-                    )}
-                    {top3Hashtag[2] && (
-                        <button
-                            id="hashtag3-button"
-                            className="hashtag"
-                            onClick={() => onClickHashtagButton(top3Hashtag[2])}
-                        >
-                            {"#" + top3Hashtag[2]}
-                        </button>
-                    )}
-                </div>
-            </div>
-            <div id="search-box-container">
-                <div className="area-label">Posts</div>
-                <div id="search-container">
-                    <input
-                        id="search-box"
-                        value={searchQuery}
-                        placeholder={"🔍 Search"}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onKeyPress={(e) => onSubmitSearchBox(e)}
-                    />
-                    <button
-                        id="only-photos-button"
-                        onClick={onSelectOnlyPhotos}
-                    >
-                        ◯ Only Photos
-                    </button>
-                </div>
-            </div>
-            <div id="postlist-container">
+                    </Col>
+                </Row>
+            </Row>
+            <Row id="postlist-container">
                 <PostList
                     type={"Post"}
                     postListCallback={postListCallback}
                     replyTo={0}
                     allPosts={queryPosts}
                 />
-            </div>
+            </Row>
             <NavigationBar />
-        </div>
+        </Container>
     );
 }
 

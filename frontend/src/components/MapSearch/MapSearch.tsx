@@ -1,10 +1,15 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-// import { faSquare } from "@fortawesome/free-regular-svg-icons";
+
+import SearchBar from "material-ui-search-bar";
+import ListGroup from 'react-bootstrap/ListGroup';
+import Pagination from 'react-bootstrap/Pagination';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import { styled } from "@material-ui/core/styles";
+
 import { PositionType } from "../Map/Map";
 
-// import SearchIcon from "../../assets/search-svgrepo-com.svg";
+import "./MapSearch.scss"
 
 type IProps = {
     markPosition: PositionType;
@@ -42,20 +47,26 @@ const range = (start: number, count: number) => {
     }
     return array;
 };
+export const CustomSearchBar = styled(SearchBar)({
+    height: "38px",
+    backgroundColor: "#F5F5F5",
+    borderRadius: "12px",
+    fontFamily: '"NanumGothic", sans-serif',
+});
 
 const MapSearch = (props: IProps) => {
     const { markPosition, setMarkPosition, showResults, setShowResults } = props;
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [searchResponse, setSearchResponse] = useState<string>(
         Response.zero_result
-    );
+    )
     const [searchResult, setSearchResult] = useState<SearchResult[]>([]);
     const [searchPagination, setSearchPagination] = useState<
         kakao.maps.Pagination | undefined
     >(undefined);
+    const [activePage, setActivePage] = useState<number>(1);
 
-    const onSubmitSearchBox = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key !== "Enter") return;
+    const onSubmitSearchBox = () => {
         const ps = new kakao.maps.services.Places();
         ps.keywordSearch(
             searchQuery,
@@ -88,12 +99,6 @@ const MapSearch = (props: IProps) => {
         );
     };
 
-    const onClickResultClose = () => {
-        setSearchResponse(Response.zero_result);
-        setSearchResult([]);
-        setSearchPagination(undefined);
-        setShowResults(false);
-    };
     const searchResultBox = () => {
         const pagination = searchPagination as kakao.maps.Pagination;
         const idxArray: number[] = range(
@@ -102,69 +107,46 @@ const MapSearch = (props: IProps) => {
         );
         return (
             <div className="search-result-box" aria-label="Search Results">
-                <ul
+                <ListGroup
                     className="search-result-list"
                     aria-label="Search Result List Item"
                 >
                     {searchResult.map((value, idx) => {
                         return (
-                            <li
-                                key={idx+1}
+                            <ListGroup.Item 
+                                key={idx+1} 
                                 className="search-result"
                                 onClick={() => {
                                     setMarkPosition({
                                         lat: +value.y,
                                         lng: +value.x,
                                     });
-                                    onClickCloseBox();
+                                    setShowResults(false);
                                 }}
                             >
                                 {value.place_name}
-                            </li>
+                            </ListGroup.Item>
                         );
                     })}
-                </ul>
-                <div
+                </ListGroup>
+                <Pagination
                     className="search-result-pagination"
                     aria-label="Search Result Pagination"
                 >
-                    <a
-                        href="#"
-                        onClick={() => {
-                            pagination.gotoFirst();
-                        }}
-                    >
-                        {"< "}
-                    </a>
                     {idxArray.map((idx) => {
                         return (
-                            <a
-                                href="#"
+                            <Pagination.Item
                                 key={idx}
                                 className={idx === 1 ? "on idx" : "idx"}
                                 onClick={() => {
                                     pagination.gotoPage(idx);
+                                    setActivePage(idx+1);
                                 }}
-                            >{`${idx} `}</a>
+                                active={idx+1===activePage}
+                            >{`${idx}`}</Pagination.Item>
                         );
                     })}
-                    <a
-                        href="#"
-                        onClick={() => {
-                            pagination.gotoLast();
-                        }}
-                    >
-                        {">"}
-                    </a>
-                </div>
-                {/* <div id="result-close-container">
-                    <button
-                        id="result-button-close"
-                        onClick={onClickResultClose}
-                    >
-                        <FontAwesomeIcon icon={faXmark} fontSize="20px" />
-                    </button>
-                </div> */}
+                </Pagination>
             </div>
         );
     };
@@ -178,31 +160,26 @@ const MapSearch = (props: IProps) => {
     const onClickCloseBox = () => {
         setSearchResponse(Response.zero_result);
         setSearchResult([]);
-        // setSearchQuery("");
         setSearchPagination(undefined);
         setShowResults(false);
     };
     return (
-        <div id="search-box-container" style={{ width: "95%" }}>
-            <div id="search-input-container">
-                {/* @ts-ignore */}
-                <FontAwesomeIcon icon={faMagnifyingGlass} size="2x" />
-                <input
-                    id="search-box"
+        <Container id="search-box-container">
+            <Row id="search-input-container">
+                <CustomSearchBar
+                    className="mapsearch-searchbar"
                     value={searchQuery}
+                    onChange={(searchVal) => setSearchQuery(searchVal)}
+                    onCancelSearch={() => onClickClose()}
+                    onRequestSearch={()=>onSubmitSearchBox()}
                     placeholder="Search (e.g. 서울대학교, 관악로 1)"
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyDown={(e) => {
-                        onSubmitSearchBox(e);
-                    }}
                 />
-                <button id="button-close" onClick={onClickClose}>
-                    <FontAwesomeIcon icon={faXmark} size="2x" />
-                </button>
-            </div>
-            {showResults && searchResponse === Response.success && searchResultBox()}
-        </div>
+            </Row>
+            <Row>
+                {(showResults && searchResponse === Response.success) && searchResultBox()}
+            </Row>
+      </Container>
     );
-};
+}
 
 export default MapSearch;

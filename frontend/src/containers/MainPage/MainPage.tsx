@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBullhorn, faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 
 import Map, { PositionType } from "./../../components/Map/Map";
 import ReportModal from "../../components/ReportModal/ReportModal";
@@ -85,35 +90,38 @@ function MainPage() {
     };
 
     return (
-        <div className="MainPage">
-            <div id="main-upper-container" onClick={()=>setShowResults(false)}>
-                <div id="mainimage-container">
-                    <img src={Logo} id="logo2" />
-                </div>
-                {/* NowSee */}
-                <button id="mypage-button" onClick={onClickMyPageIcon}>
-                    <FontAwesomeIcon icon={faUser} size="2x" />
-                </button>
-            </div>
-            <div id="main-container">
-                <div id="main-mapsearch-container" onClick={()=>setShowResults(true)}>
-                    <MapSearch
-                        markPosition={markPosition}
-                        setMarkPosition={setMarkPosition}
-                        showResults={showResults}
-                        setShowResults={setShowResults}
-                    />
-                </div>
-                <div className="map-container" onClick={()=>setShowResults(false)}>
-                    <div id="map-label">
-                        Select a location and find out real-time statistics
-                    </div>
-                    <Map initPosition={markPosition} radius={radius} />
-                </div>
-                <div id="lower-map-container" onClick={()=>setShowResults(false)}>
-                    <div className="radius-slider-container">
+        <Container id="MainPage" >
+            <Row id="main-upper-container"  onClick={()=>setShowResults(false)}>
+                <Col id="main-logo-container">
+                    <img src={Logo}/>
+                </Col>
+                <Col id="main-mypage-button-container">
+                    <button id="mypage-button" onClick={onClickMyPageIcon}>
+                        <FontAwesomeIcon icon={faUser} size="2x"/>
+                    </button>
+                </Col>
+            </Row>
+            <Row id="main-map-search-container" >
+                <MapSearch 
+                    markPosition={markPosition} 
+                    setMarkPosition={setMarkPosition} 
+                    showResults={showResults}
+                    setShowResults={setShowResults}
+                />
+            </Row>
+            <Row id="main-description"  onClick={()=>setShowResults(false)}>
+                <span>Select a location and find out real-time statistics</span>
+            </Row>
+            <Row id="main-map-container"  onClick={()=>setShowResults(false)}>
+                <Map initPosition={markPosition} radius={radius} />
+            </Row>
+            <Row id="main-radius-slider-container"  onClick={()=>setShowResults(false)}>
+                <Col>
+                    <Row id="main-change-radius">
                         <p>Change Radius</p>
-                        <Box sx={{ width: 300 }} id="radius-slider">
+                    </Row>
+                    <Row id="main-radius-slider-content">
+                        <Box sx={{ width: 200 }} id="radius-slider">
                             <Slider
                                 key="radius-slider"
                                 aria-label="Custom marks"
@@ -131,29 +139,27 @@ function MainPage() {
                                 marks={marks}
                             />
                         </Box>
-                    </div>
-                    <div className="findout-container">
-                        <button
-                            id="findout-button"
-                            onClick={onClickFindOutButton}
-                        >
-                            {"Find out  >"}
-                        </button>
-                    </div>
-                </div>
-                <div id="bottom-container" onClick={()=>setShowResults(false)}>
-                    <span>{`Current location: ${address}`}</span>
-                    <button id="report-button" onClick={onClickReportButton}>
-                        <span>Report!</span>
-                        {/* <FontAwesomeIcon icon={faBullhorn}/> */}
-                    </button>
-                </div>
-            </div>
+                    </Row>
+                </Col>
+                <Col id="findout-container"  onClick={()=>setShowResults(false)}>
+                    <Button id="findout-button" onClick={onClickFindOutButton} type="button">
+                        <span>{"Find out  >"}</span>
+                    </Button>
+                </Col>
+            </Row>
+            <Row id="main-curr-location-container"  onClick={()=>setShowResults(false)}>
+                <span>{`Current location: ${address}`}</span>
+            </Row>
+            <Row id="main-report-button-container"  onClick={()=>setShowResults(false)}>
+                <Button id="report-button" onClick={onClickReportButton} type="button">
+                    Report!
+                </Button>
+            </Row>
             <ReportModal
                 openReport={openReport}
                 setOpenReport={setOpenReport}
             />
-        </div>
+        </Container>
     );
 }
 

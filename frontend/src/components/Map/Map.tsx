@@ -27,7 +27,7 @@ function MapComponent(props: IProps) {
         <Map
             id="map"
             center={centerPosition}
-            style={{ width: "95%", height: "60vh" }}
+            style={{ width: "100%", height: "60vh" }}
             level={5}
             onClick={(_t, mouseEvent) => {
                 setMarkerPosition({
