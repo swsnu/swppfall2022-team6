@@ -84,8 +84,10 @@ function MainPage() {
 
     return (
         <div className="MainPage">
-            <div id="upper-container">
-                <img src={require("./Logo2.png")} id="logo2" />
+            <div id="main-upper-container">
+                <div id="mainimage-container">
+                    <img src={require("./Logo2.png")} id="logo2" />
+                </div>
                 {/* NowSee */}
                 <button id="mypage-button" onClick={onClickMyPageIcon}>
                     <FontAwesomeIcon icon={faUser} size="2x" />
