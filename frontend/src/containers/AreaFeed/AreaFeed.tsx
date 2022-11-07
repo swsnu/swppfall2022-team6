@@ -90,7 +90,7 @@ function AreaFeed() {
             // update Statistics
             axios
                 .get("/report/", {
-                    params: { latitude: 30, longitude: 30, radius: 2 }, // modify to redux
+                    params: { latitude: 37, longitude: 127, radius: 143 }, // modify to redux
                 })
                 .then((response) => {
                     setAllReports(response.data);
