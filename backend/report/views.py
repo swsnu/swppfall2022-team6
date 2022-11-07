@@ -25,7 +25,7 @@ class ReportViewSet(viewsets.GenericViewSet):
         wind_degree=req_data['wind_degree'],
         happy_degree=req_data['happy_degree'],
         humidity_degree=req_data['humidity_degree'],
-        latitude=30.0, longitude=30.0, created_at=datetime.now())
+        latitude=37.0, longitude=127.0, created_at=datetime.now())
         return Response('create report', status=status.HTTP_201_CREATED)
 
     # GET /report/
