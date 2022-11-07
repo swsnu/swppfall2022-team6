@@ -9,6 +9,8 @@ import { PositionType } from "../Map/Map";
 type IProps = {
     markPosition: PositionType;
     setMarkPosition: React.Dispatch<React.SetStateAction<PositionType>>;
+    showResults: boolean;
+    setShowResults: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const Response = {
     success: "SUCCESS",
@@ -42,7 +44,7 @@ const range = (start: number, count: number) => {
 };
 
 const MapSearch = (props: IProps) => {
-    const { markPosition, setMarkPosition } = props;
+    const { markPosition, setMarkPosition, showResults, setShowResults } = props;
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [searchResponse, setSearchResponse] = useState<string>(
         Response.zero_result
@@ -63,16 +65,19 @@ const MapSearch = (props: IProps) => {
                     setSearchResponse(Response.success);
                     setSearchResult(data);
                     setSearchPagination(pagination);
+                    setShowResults(true);
                     return;
                 } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
                     alert("검색 결과가 존재하지 않습니다.");
                     setSearchResponse(Response.zero_result);
                     setSearchResult([]);
+                    setShowResults(false);
                     return;
                 } else if (status === kakao.maps.services.Status.ERROR) {
                     alert("검색 결과 중 오류가 발생했습니다.");
                     setSearchResponse(Response.error);
                     setSearchResult([]);
+                    setShowResults(false);
                     return;
                 }
             },
@@ -87,6 +92,7 @@ const MapSearch = (props: IProps) => {
         setSearchResponse(Response.zero_result);
         setSearchResult([]);
         setSearchPagination(undefined);
+        setShowResults(false);
     };
     const searchResultBox = () => {
         const pagination = searchPagination as kakao.maps.Pagination;
@@ -96,14 +102,6 @@ const MapSearch = (props: IProps) => {
         );
         return (
             <div className="search-result-box" aria-label="Search Results">
-                <div id="result-close-container">
-                    <button
-                        id="result-button-close"
-                        onClick={onClickResultClose}
-                    >
-                        <FontAwesomeIcon icon={faXmark} fontSize="20px" />
-                    </button>
-                </div>
                 <ul
                     className="search-result-list"
                     aria-label="Search Result List Item"
@@ -111,7 +109,7 @@ const MapSearch = (props: IProps) => {
                     {searchResult.map((value, idx) => {
                         return (
                             <li
-                                key={idx}
+                                key={idx+1}
                                 className="search-result"
                                 onClick={() => {
                                     setMarkPosition({
@@ -158,6 +156,14 @@ const MapSearch = (props: IProps) => {
                         {">"}
                     </a>
                 </div>
+                <div id="result-close-container">
+                    <button
+                        id="result-button-close"
+                        onClick={onClickResultClose}
+                    >
+                        <FontAwesomeIcon icon={faXmark} fontSize="20px" />
+                    </button>
+                </div>
             </div>
         );
     };
@@ -185,7 +191,7 @@ const MapSearch = (props: IProps) => {
                     <FontAwesomeIcon icon={faXmark} size="2x" />
                 </button>
             </div>
-            {searchResponse === Response.success && searchResultBox()}
+            {showResults && searchResponse === Response.success && searchResultBox()}
         </div>
     );
 };

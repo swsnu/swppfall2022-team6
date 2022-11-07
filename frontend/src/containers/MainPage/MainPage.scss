@@ -73,6 +73,7 @@
     position: absolute;
     background-color: white;
     width: 80%;
+    height: 430px;
     border-radius: 10px;
     padding: 5px;
     filter: drop-shadow(10px 10px 4px rgba(0, 0, 0, 0.2));
@@ -84,7 +85,7 @@
     line-height: 200%;
 }
 .search-result-box .search-result-list li:hover {
-    background-color: #ddd;
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 .search-result-box .search-result-pagination a {
@@ -102,6 +103,7 @@
     // display: flex;
     text-align: right;
     position: absolute;
+    z-index: -1;
     // padding: 10px;
 }
 .search-result-box #result-button-close {
@@ -109,6 +111,7 @@
     background: none;
     color: #111;
     font-size: 12px;
+    z-index: 20;
 }
 .search-result-box #result-button-close:hover {
     color: #aaa;

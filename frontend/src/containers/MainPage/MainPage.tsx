@@ -10,6 +10,8 @@ import AreaFeed from "../AreaFeed/AreaFeed";
 import ReportModal from "../../components/ReportModal/ReportModal";
 import MapSearch from "../../components/MapSearch/MapSearch";
 import "./MainPage.scss";
+// @ts-ignore
+import Logo from "./Logo.svg"
 
 const marks = [
     { value: 0, label: "0km" },
@@ -32,6 +34,7 @@ function MainPage() {
     const [currPosition, setCurrPosition] =
         useState<PositionType>(initMarkPosition);
     const [address, setAddress] = useState<string>("");
+    const [showResults, setShowResults] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const geocoder = new kakao.maps.services.Geocoder();
@@ -84,9 +87,9 @@ function MainPage() {
 
     return (
         <div className="MainPage">
-            <div id="main-upper-container">
+            <div id="main-upper-container" onClick={()=>setShowResults(false)}>
                 <div id="mainimage-container">
-                    <img src={require("./Logo2.png")} id="logo2" />
+                    <img src={Logo} id="logo" />
                 </div>
                 {/* NowSee */}
                 <button id="mypage-button" onClick={onClickMyPageIcon}>
@@ -94,17 +97,21 @@ function MainPage() {
                 </button>
             </div>
             <div id="main-container">
-                <MapSearch
-                    markPosition={markPosition}
-                    setMarkPosition={setMarkPosition}
-                />
-                <div className="map-container">
+                <div id="main-mapsearch-container" onClick={()=>setShowResults(true)}>
+                    <MapSearch
+                        markPosition={markPosition}
+                        setMarkPosition={setMarkPosition}
+                        showResults={showResults}
+                        setShowResults={setShowResults}
+                    />
+                </div>
+                <div className="map-container" onClick={()=>setShowResults(false)}>
                     <div id="map-label">
                         Select a location and find out real-time statistics
                     </div>
                     <Map initPosition={markPosition} radius={radius} />
                 </div>
-                <div id="lower-map-container">
+                <div id="lower-map-container" onClick={()=>setShowResults(false)}>
                     <div className="radius-slider-container">
                         <p>Change Radius</p>
                         <Box sx={{ width: 300 }} id="radius-slider">
@@ -135,7 +142,7 @@ function MainPage() {
                         </button>
                     </div>
                 </div>
-                <div id="bottom-container">
+                <div id="bottom-container" onClick={()=>setShowResults(false)}>
                     <span>{`Current location: ${address}`}</span>
                     <button id="report-button" onClick={onClickReportButton}>
                         <span>Report!</span>
