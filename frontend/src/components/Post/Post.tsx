@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PostType } from "../../containers/AreaFeed/AreaFeed";
 import axios from "axios";
-import "./Post.scss";
 
 export interface postProps {
     id: number;
@@ -17,28 +16,29 @@ export interface postProps {
 }
 // get location from user lang, long
 
-// get user from backend with user_id
-const users: { user_name: string; user_id: number }[] = [
-    { user_name: "WeatherFairy", user_id: 1 },
-    { user_name: "Toothfairy", user_id: 2 },
-];
-
 function Post(post: postProps) {
     const navigate = useNavigate();
     // set chain toggle status
     const [isChainOpen, setChainOpen] = useState<boolean>(false);
+    const [replyingTo, setReplyAuthor]= useState<string>("");
     // get replied post
     const [chainedPosts, setChainedPosts] = useState<PostType[]>([]);
     useEffect(() => {
-        if(isChainOpen){
+        if (post.reply_to){
             axios
-                .get(`/post/${post.id}/chain/`)
+                .get(`/post/${post.reply_to}/`)
                 .then((response)=>{
-                    setChainedPosts(response.data)
+                    setReplyAuthor(response.data.user_name)
                 })
-            }
+        }
+    }, []);
+    useEffect(() => {
+        axios
+            .get(`/post/${post.reply_to}/`)
+            .then((response)=>{
+                setChainedPosts(response.data)
+            })
     }, [isChainOpen]);
-    // useEffect(() => {}, [isChainOpen]);
 
     const clickPostHandler = (post: PostType) => {
         navigate("/areafeed/" + post.id);
@@ -52,10 +52,7 @@ function Post(post: postProps) {
                 <Post
                     key={post.id}
                     id={post.id}
-                    user_name={
-                        users.find((user) => user.user_id === post.user)!
-                            .user_name
-                    }
+                    user_name={replyingTo}
                     content={post.content}
                     location={"Location"} //should come from map API
                     created_at={post.created_at}
@@ -67,6 +64,7 @@ function Post(post: postProps) {
         });
         return chain;
     };
+
 
     return (
         <div
@@ -162,14 +160,7 @@ function Post(post: postProps) {
                                         id="post-reply-to"
                                         className="text-primary"
                                     >
-                                        @
-                                        {
-                                            users.find(
-                                                (user) =>
-                                                    user.user_id ===
-                                                    1
-                                            )!.user_name
-                                        }{" "}
+                                        @{replyingTo}{" "}
                                     </span>
                                 )}
                                 <span id="post-text">{post.content}</span>
