@@ -28,10 +28,10 @@
 #hashtag-buttons {
     margin-top: 5px;
 }
-.hashtag {
-    background: #f5f5f5;
-    border-radius: 4px;
-    border-width: 0em;
+.hashtag-buttons-group button {
+    background: #f8f8f8;
+    border-radius: 0px;
+    border: none;
 }
 #search-box-container {
     font-family: "NanumGothic";
@@ -49,6 +49,7 @@
     margin-top: 5px;
     font-family: "NanumGothic";
     font-size: 10px;
+    height: 30px;
 }
 #only-photos-button-container {
     padding-top: 5px;
@@ -56,11 +57,16 @@
 }
 #only-photos-button {
     background: none;
-    justify-content: end;
+    display: flex;
+    // justify-content: space-around;
+    gap: 20px;
     border: none;
     margin-right: 5%;
-    justify-content: flex-end;
-    align-items: flex-end;
+    font-weight: 700;
+    font-size: 13px;
+    align-items: center;
+    // justify-content: flex-end;
+    // align-items: flex-end;
 }
 
 .area-label {

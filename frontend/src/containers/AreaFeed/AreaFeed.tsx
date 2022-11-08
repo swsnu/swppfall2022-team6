@@ -8,6 +8,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import SearchBar from "material-ui-search-bar";
 import { styled } from "@material-ui/core/styles";
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import Switch from "react-switch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateLeft, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
@@ -41,13 +43,20 @@ export type PostType = {
 };
 
 export const CustomSearchBar = styled(SearchBar)({
-    height: "25px",
     backgroundColor: "#F5F5F5",
     borderRadius: "10px",
     fontFamily: '"NanumGothic", sans-serif',
     fontSize: "10px",
 });
 
+const CustomToggleButtonGroup = styled(ToggleButtonGroup)({
+    display: "flex",
+    gap: "10px",
+    fontFamily: '"NanumGothic", sans-serif',
+    fontSize: "10px",
+    height: "25px",
+    borderRadius: "0px",
+});
 
 function AreaFeed() {
     const [searchQuery, setSearchQuery] = useState<string>("");
@@ -58,6 +67,8 @@ function AreaFeed() {
     const [refresh, setRefresh] = useState<Boolean>(true);
     const [top3Hashtag, setTop3Hashtag] = useState<string[]>([]);
     const [weather, setWeather] = useState<WeatherType>({});
+    const [selectTag, setSelectTag] = useState<string|undefined>(undefined)
+    const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false)
 
     useEffect(() => {
         if (refresh) {
@@ -99,6 +110,21 @@ function AreaFeed() {
         }
     }, [refresh]);
 
+    useEffect(()=>{
+        if(selectTag){
+            setQueryPosts(
+                allPosts.filter(
+                    (post: PostType) =>
+                        post.hashtags &&
+                        post.hashtags.map((h) => h.content).includes(selectTag)
+                )
+            );
+        }
+        else {
+            setQueryPosts(allPosts);
+        }
+    }, [selectTag])
+
     const onClickBackButton = () => {
         navigate("/");
     };
@@ -116,22 +142,39 @@ function AreaFeed() {
     const onClickClose = ()=>{
         setSearchQuery("");
     }
-    const onClickHashtagButton = (hashtag: string) => {
+    const onClickHashtagButton = () => {
         //TODO: queryPosts? allPosts?
-        setQueryPosts(
-            allPosts.filter(
-                (post: PostType) =>
-                    post.hashtags &&
-                    post.hashtags.map((h) => h.content).includes(hashtag)
-            )
-        );
+        if(selectTag){
+            setQueryPosts(
+                allPosts.filter(
+                    (post: PostType) =>
+                        post.hashtags &&
+                        post.hashtags.map((h) => h.content).includes(selectTag)
+                )
+            );
+        }
+        else {
+            setQueryPosts(allPosts);
+        }
     };
     const onSelectOnlyPhotos = () => {
-        setQueryPosts(queryPosts.filter((post: PostType) => post.image));
+        if(onlyPhoto){
+            setQueryPosts(allPosts);
+            setOnlyPhoto(false)
+        }
+        else {
+            setQueryPosts(queryPosts.filter((post: PostType) => post.image));
+            setOnlyPhoto(true)
+        }
     };
     const postListCallback = () => {
         setRefresh(true);
     }; // axios.get again
+
+    const handleToggleTag = (e: React.MouseEvent<HTMLElement>, value: string)=>{
+        if(value===selectTag) setSelectTag(undefined);
+        else setSelectTag(value);
+    }
 
     return (
         <Container className="AreaFeed">
@@ -157,19 +200,25 @@ function AreaFeed() {
                 <Row className="area-label">Recommended Hashtags</Row>
                 <Row id="hashtag-buttons" xs="auto">
                     {
-                        top3Hashtag.map((item, i)=>{
+                        <CustomToggleButtonGroup 
+                            value={selectTag}
+                            exclusive
+                            onChange={handleToggleTag}
+                            className="hashtag-buttons-group"
+                        >
+                        {top3Hashtag.map((item, i)=>{
                             return(
-                                <div key={i}>
-                                    <button
-                                        id={`hashtag${i}-button`}
+                                    <ToggleButton
+                                        key={i}
+                                        value={item}
                                         className="hashtag"
-                                        onClick={() => onClickHashtagButton(item)}
+                                        // onClick={() => onClickHashtagButton()}
                                     >
                                         {"#" + item}
-                                    </button>
-                                </div>
+                                    </ToggleButton>
                             )
-                        })
+                        })}
+                        </CustomToggleButtonGroup>
                     }
                     
                 </Row>
@@ -187,13 +236,22 @@ function AreaFeed() {
                             placeholder=""
                         />
                     </Col>
-                    <Col md={2} id="only-photos-button-container">
-                        <button
+                    <Col md={3} id="only-photos-button-container">
+                        <div
                             id="only-photos-button"
-                            onClick={onSelectOnlyPhotos}
                         >
-                            ◯ Only Photos
-                        </button>
+                            <Switch 
+                                onChange={onSelectOnlyPhotos} 
+                                checked={onlyPhoto}
+                                onColor="#3185e7"
+                                checkedIcon={false}
+                                uncheckedIcon={false}
+                                height={20}
+                                width={40}
+                                boxShadow="0 0 2px 2px #999"
+                            /> 
+                            <span> Only Photos</span>
+                        </div>
                     </Col>
                 </Row>
             </Row>
