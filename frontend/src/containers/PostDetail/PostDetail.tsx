@@ -77,18 +77,41 @@ function PostDetail() {
                     </div>
                     <div id="author-container">
                         <div id="author-info">
-                            <div id="author-name">
+                            <div id="author-name" className="fw-bolder fs-5 mb-1">
                                 {mainPost.user_name}
                                 {/* Get user name from back */}
                             </div>
-                            <div id="author-location">
-                                Bongcheon-dong, Gwankak-gu
-                                {/* Get address */}
+                            <div
+                                id="time-and-location"
+                                className="d-flex justify-content-start fw-light gap-1 fs-7 mt-1"
+                            >
+                                <div id="author-location"
+                                style={{ fontSize: "11px"}}>
+                                    관악구 봉천동
+                                    {/* Get address */}
+                                </div>
+                                <div>.</div>
+                                <div
+                                    id="timestamp"
+                                    className="tldiv"
+                                    style={{ fontSize: "11px"}}>
+                                    {new Date(mainPost.created_at).toLocaleDateString(
+                                        "ko-KR",
+                                        {
+                                            year: "numeric",
+                                            month: "2-digit",
+                                            day: "2-digit",
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        }
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div id="main-post-content">{mainPost.content}</div>
+                <div id="main-post-content"
+                className="text-start">{mainPost.content}</div>
                 {mainPost.image === null ? null : (
                     <div id="main-post-image-div">
                         <img
@@ -109,21 +132,24 @@ function PostDetail() {
                     </div>
                 </div>
             </div>
-            <div
-                style={{
-                    width: "100%",
-                    textAlign: "start",
-                    padding: "0 20px",
-                }}
-            >
-                Replies
+            <div id="reply-posts-container"
+            className="">
+                <div id=""
+                    style={{
+                        width: "100%",
+                        textAlign: "start",
+                        padding: "0 20px",
+                    }}>
+                    Replies
+                </div>
+                <PostList
+                    type={"Reply"}
+                    postListCallback={postListCallback}
+                    replyTo={Number(id)}
+                    allPosts={replyPosts}
+                />
             </div>
-            <PostList
-                type={"Reply"}
-                postListCallback={postListCallback}
-                replyTo={Number(id)}
-                allPosts={replyPosts}
-            />
+            
             <NavigationBar />
         </div>
     );
