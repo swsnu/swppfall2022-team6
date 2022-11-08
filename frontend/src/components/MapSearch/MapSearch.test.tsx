@@ -17,6 +17,7 @@ const renderComponent = () => {
       setMarkPosition={setStateMock} 
       showResults={false} 
       setShowResults={setStateMock}
+      setIsOpen={setStateMock}
     />
   );
   return(view);

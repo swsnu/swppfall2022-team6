@@ -18,7 +18,7 @@ describe("<Map />", () => {
     });
     it("should render withour errors", () => {
         const { container } = render(
-            <Map initPosition={initMarkPosition} radius={25} />
+            <Map initPosition={initMarkPosition} radius={25} isOpen={true} setIsOpen={jest.fn()}/>
         );
         expect(container).toBeTruthy();
     });

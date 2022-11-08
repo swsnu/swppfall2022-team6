@@ -39,6 +39,7 @@ function MainPage() {
         useState<PositionType>(initMarkPosition);
     const [address, setAddress] = useState<string>("");
     const [showResults, setShowResults] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const geocoder = new kakao.maps.services.Geocoder();
@@ -107,13 +108,19 @@ function MainPage() {
                     setMarkPosition={setMarkPosition} 
                     showResults={showResults}
                     setShowResults={setShowResults}
+                    setIsOpen={setIsOpen}
                 />
             </Row>
             <Row id="main-description"  onClick={()=>setShowResults(false)}>
                 <span>Select a location and find out real-time statistics</span>
             </Row>
             <Row id="main-map-container"  onClick={()=>setShowResults(false)}>
-                <Map initPosition={markPosition} radius={radius} />
+                <Map 
+                    initPosition={markPosition} 
+                    radius={radius} 
+                    isOpen={isOpen}
+                    setIsOpen={setIsOpen}
+                />
             </Row>
             <Row id="main-radius-slider-container"  onClick={()=>setShowResults(false)}>
                 <Col>

@@ -5,6 +5,8 @@ import SkimStatistics from "../SkimStatistics/SkimStatistics";
 type IProps = {
     initPosition: PositionType;
     radius?: number;
+    isOpen: boolean;
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type PositionType = {
@@ -13,12 +15,12 @@ export type PositionType = {
 };
 
 function MapComponent(props: IProps) {
-    const { initPosition, radius } = props;
+    const { initPosition, radius, isOpen, setIsOpen } = props;
     const [markerPosition, setMarkerPosition] =
         useState<PositionType>(initPosition);
     const [centerPosition, setCenterPosition] =
         useState<PositionType>(initPosition);
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    // const [isOpen, setIsOpen] = useState<boolean>(false);
     useEffect(() => {
         setMarkerPosition(initPosition);
         setCenterPosition(initPosition);

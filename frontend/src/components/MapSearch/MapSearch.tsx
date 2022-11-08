@@ -16,6 +16,7 @@ type IProps = {
     setMarkPosition: React.Dispatch<React.SetStateAction<PositionType>>;
     showResults: boolean;
     setShowResults: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const Response = {
     success: "SUCCESS",
@@ -55,7 +56,7 @@ export const CustomSearchBar = styled(SearchBar)({
 });
 
 const MapSearch = (props: IProps) => {
-    const { markPosition, setMarkPosition, showResults, setShowResults } = props;
+    const { markPosition, setMarkPosition, showResults, setShowResults, setIsOpen } = props;
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [searchResponse, setSearchResponse] = useState<string>(
         Response.zero_result
@@ -77,6 +78,7 @@ const MapSearch = (props: IProps) => {
                     setSearchResult(data);
                     setSearchPagination(pagination);
                     setShowResults(true);
+                    setIsOpen(false);
                     return;
                 } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
                     alert("검색 결과가 존재하지 않습니다.");
