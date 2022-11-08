@@ -25,7 +25,7 @@ export type HashtagType = {
 };
 
 type WeatherType = {
-    id?: number;
+    icon?: string;
     temp?: number;
     main?: string;
 };
@@ -59,17 +59,15 @@ const CustomToggleButtonGroup = styled(ToggleButtonGroup)({
 });
 
 function AreaFeed() {
-    const [searchQuery, setSearchQuery] = useState<string>("");
-    const navigate = useNavigate();
     const [allReports, setAllReports] = useState<ReportType[]>([]);
     const [allPosts, setAllPosts] = useState<PostType[]>([]);
     const [queryPosts, setQueryPosts] = useState<PostType[]>([]);
     const [refresh, setRefresh] = useState<Boolean>(true);
     const [top3Hashtag, setTop3Hashtag] = useState<string[]>([]);
     const [weather, setWeather] = useState<WeatherType>({});
-    const [selectTag, setSelectTag] = useState<string|undefined>(undefined)
-    const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false)
-
+    const [selectTag, setSelectTag] = useState<string|undefined>(undefined);
+    const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false);
+    const navigate = useNavigate();
     useEffect(() => {
         if (refresh) {
             // update PostList & Hashtags
@@ -93,7 +91,7 @@ function AreaFeed() {
             axios.get(url).then((response) => {
                 const data = response.data;
                 setWeather({
-                    id: data.weather[0].id,
+                    icon: data.weather[0].icon,
                     temp: Math.round(data.main.temp - 273.15),
                     main: data.weather[0].main,
                 });
@@ -131,18 +129,7 @@ function AreaFeed() {
     const onClickRefreshButton = () => {
         setRefresh(true);
     };
-    const onSubmitSearchBox = () => {
-        console.log("yes");
-        setQueryPosts(
-            allPosts.filter((post: PostType) =>
-                post.content.includes(searchQuery)
-            )
-        );
-    };
-    const onClickClose = ()=>{
-        setSearchQuery("");
-    }
-    const onClickHashtagButton = () => {
+    const onClickHashtagButton = (hashtag: string) => {
         //TODO: queryPosts? allPosts?
         if(selectTag){
             setQueryPosts(
@@ -175,6 +162,63 @@ function AreaFeed() {
         if(value===selectTag) setSelectTag(undefined);
         else setSelectTag(value);
     }
+    const AreaFeedPosts = () => {
+        const [searchQuery, setSearchQuery] = useState<string>("");
+        const onSubmitSearchBox = () => {
+            setQueryPosts(
+                allPosts.filter((post: PostType) =>
+                    post.content.includes(searchQuery)
+                )
+            );
+        };
+        const onClickClose = ()=>{
+            setSearchQuery("");
+        }
+        return(
+        <div>
+            <Row id="search-box-container">
+                <Row className="area-label">Posts</Row>
+                <Row id="search-container">
+                    <Col md={6}>
+                        <CustomSearchBar
+                            className="search-box"
+                            value={searchQuery}
+                            onChange={(searchVal) => setSearchQuery(searchVal)}
+                            onCancelSearch={() => onClickClose()}
+                            onRequestSearch={()=>onSubmitSearchBox()}
+                            placeholder=""
+                        />
+                    </Col>
+                    <Col md={3} id="only-photos-button-container">
+                        <div
+                            id="only-photos-button"
+                        >
+                            <Switch
+                                onChange={onSelectOnlyPhotos}
+                                checked={onlyPhoto}
+                                onColor="#3185e7"
+                                checkedIcon={false}
+                                uncheckedIcon={false}
+                                height={20}
+                                width={40}
+                                boxShadow="0 0 2px 2px #999"
+                            />
+                            <span> Only Photos</span>
+                        </div>
+                    </Col>
+                </Row>
+            </Row>
+            <Row id="postlist-container">
+                <PostList
+                    type={"Post"}
+                    postListCallback={postListCallback}
+                    replyTo={0}
+                    allPosts={queryPosts}
+                />
+            </Row>;
+        </div>
+        )
+    }
 
     return (
         <Container className="AreaFeed">
@@ -200,7 +244,7 @@ function AreaFeed() {
                 <Row className="area-label">Recommended Hashtags</Row>
                 <Row id="hashtag-buttons" xs="auto">
                     {
-                        <CustomToggleButtonGroup 
+                        <CustomToggleButtonGroup
                             value={selectTag}
                             exclusive
                             onChange={handleToggleTag}
@@ -220,49 +264,10 @@ function AreaFeed() {
                         })}
                         </CustomToggleButtonGroup>
                     }
-                    
+
                 </Row>
             </Row>
-            <Row id="search-box-container">
-                <Row className="area-label">Posts</Row>
-                <Row id="search-container">
-                    <Col md={6}>
-                        <CustomSearchBar
-                            className="search-box"
-                            value={searchQuery}
-                            onChange={(searchVal) => setSearchQuery(searchVal)}
-                            onCancelSearch={() => onClickClose()}
-                            onRequestSearch={()=>onSubmitSearchBox()}
-                            placeholder=""
-                        />
-                    </Col>
-                    <Col md={3} id="only-photos-button-container">
-                        <div
-                            id="only-photos-button"
-                        >
-                            <Switch 
-                                onChange={onSelectOnlyPhotos} 
-                                checked={onlyPhoto}
-                                onColor="#3185e7"
-                                checkedIcon={false}
-                                uncheckedIcon={false}
-                                height={20}
-                                width={40}
-                                boxShadow="0 0 2px 2px #999"
-                            /> 
-                            <span> Only Photos</span>
-                        </div>
-                    </Col>
-                </Row>
-            </Row>
-            <Row id="postlist-container">
-                <PostList
-                    type={"Post"}
-                    postListCallback={postListCallback}
-                    replyTo={0}
-                    allPosts={queryPosts}
-                />
-            </Row>
+            <AreaFeedPosts></AreaFeedPosts>
             <NavigationBar />
         </Container>
     );
