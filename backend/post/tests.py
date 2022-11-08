@@ -114,4 +114,24 @@ class PostTestCase(TestCase):
             'hashtags': [{'content': 'hashtag', 'id': 1}],
             'created_at':'2020-10-20T00:00:00'}]
         )
+
+    def test_retrieve(self):
+        client = Client()
+        response = client.get('/post/4/')
+        self.assertEqual(response.status_code, 404)
+        response = client.get('/post/1/')
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(
+            str(response.content, encoding='utf8'),
+            {'post':{'id': 1, 'user_name': 'swpp', 'content': 'content',
+            'image': None,
+            'latitude': 36.0, 'longitude': 128.0, 'reply_to_author': None,
+            'hashtags': [{'content': 'hashtag', 'id': 1}],
+            'created_at':'2020-10-20T00:00:00'},
+            'replies':[{'id': 2, 'user_name': 'swpp', 'content': 'content',
+            'image': None,
+            'latitude': 5.0, 'longitude': 12.0, 'reply_to_author': 'swpp',
+            'hashtags': [],
+            'created_at':'2020-10-21T00:00:00'}]}
+        )
         
