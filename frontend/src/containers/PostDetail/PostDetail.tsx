@@ -95,6 +95,15 @@ function PostDetail() {
                     </div>
                 </div>
             </div>
+            <div
+                style={{
+                    width: "100%",
+                    textAlign: "start",
+                    padding: "0 20px",
+                }}
+            >
+                Replies
+            </div>
             <PostList
                 type={"Reply"}
                 postListCallback={postListCallback}

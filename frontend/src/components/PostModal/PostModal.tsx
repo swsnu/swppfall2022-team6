@@ -92,6 +92,7 @@ function PostModal({
                                     margin="normal"
                                     value={content}
                                     rows={5}
+                                    spellCheck={false}
                                     onChange={(e) => setContent(e.target.value)}
                                 />
                             </div>
@@ -108,6 +109,7 @@ function PostModal({
                                     fullWidth
                                     margin="normal"
                                     value={hashtags}
+                                    spellCheck={false}
                                     rows={1}
                                     onChange={(e) =>
                                         setHashtags(e.target.value)
