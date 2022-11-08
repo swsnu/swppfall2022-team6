@@ -90,7 +90,7 @@ function AreaFeed() {
             // update Statistics
             axios
                 .get("/report/", {
-                    params: { latitude: 30, longitude: 30, radius: 2 }, // modify to redux
+                    params: { latitude: 37, longitude: 127, radius: 143 }, // modify to redux
                 })
                 .then((response) => {
                     setAllReports(response.data);
@@ -159,7 +159,7 @@ function AreaFeed() {
                     {
                         top3Hashtag.map((item, i)=>{
                             return(
-                                <Col key={i}>
+                                <div key={i}>
                                     <button
                                         id={`hashtag${i}-button`}
                                         className="hashtag"
@@ -167,7 +167,7 @@ function AreaFeed() {
                                     >
                                         {"#" + item}
                                     </button>
-                                </Col>
+                                </div>
                             )
                         })
                     }
@@ -177,16 +177,9 @@ function AreaFeed() {
             <Row id="search-box-container">
                 <Row className="area-label">Posts</Row>
                 <Row id="search-container">
-                    <Col>
-                        {/* <input
-                            id="search-box"
-                            value={searchQuery}
-                            placeholder={"🔍 Search"}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onKeyPress={(e) => onSubmitSearchBox(e)}
-                        /> */}
+                    <Col md={6}>
                         <CustomSearchBar
-                            className="mapsearch-searchbar"
+                            className="search-box"
                             value={searchQuery}
                             onChange={(searchVal) => setSearchQuery(searchVal)}
                             onCancelSearch={() => onClickClose()}
@@ -194,7 +187,7 @@ function AreaFeed() {
                             placeholder=""
                         />
                     </Col>
-                    <Col>
+                    <Col md={2} id="only-photos-button-container">
                         <button
                             id="only-photos-button"
                             onClick={onSelectOnlyPhotos}

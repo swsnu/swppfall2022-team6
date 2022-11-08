@@ -16,7 +16,10 @@ $font-sizes: (
 :root {
     --bs-body-font-family: "Nanum Gothic", sans-serif;
 }
-
+#post-and-chain-container {
+    border: 1px solid #F5F5F5;
+    border-radius: 20px;
+}
 #post-text {
     padding-left: 5px;
     font-size: 14px;
@@ -48,4 +51,8 @@ $font-sizes: (
 #user-name {
     margin-left: 5px;
     font-size: 14px;
+}
+
+#chain-toggle-button {
+    font-size: 12px;
 }

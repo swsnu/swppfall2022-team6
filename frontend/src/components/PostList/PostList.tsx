@@ -1,5 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 import { PostType } from "../../containers/AreaFeed/AreaFeed";
 import Post from "../Post/Post";
 import PostModal from "../PostModal/PostModal";
@@ -19,7 +24,7 @@ function PostList({
     const navigate = useNavigate();
     const [openPost, setOpenPost] = useState<boolean>(false);
 
-    const post_location = "Bongcheon-dong, Gwanak-gu"; //should be implemented with Map API,
+    const post_location = "관악구 봉천동"; //should be implemented with Map API,
 
     const clickPostHandler = (post: PostType) => {
         navigate("/areafeed/" + post.id);
@@ -33,14 +38,14 @@ function PostList({
     };
 
     return (
-        <div id="PostList" className="mt-3 w-95 m-auto">
+        <Container id="PostList" className="mt-3 w-95 m-auto">
             <div id="posts-container" className="d-flex flex-column gap-3 me-4">
                 {allPosts.map((post) => {
                     return (
-                        <div
+                        <Row
                             key={post.id}
-                            id="post-and-chain-container"
-                            className="border border-1 rounded-5 p-2"
+                            className="post-and-chain-container"
+                            // className="border border-1 rounded-5 p-2"
                         >
                             <Post
                                 key={post.id}
@@ -55,7 +60,7 @@ function PostList({
                                 clickPost={() => clickPostHandler(post)}
                                 isReplyList={replyTo}
                             />
-                        </div>
+                        </Row>
                     );
                 })}
             </div>
@@ -64,7 +69,7 @@ function PostList({
                     <button
                         id="add-post-button"
                         type="button"
-                        className="btn btn-primary"
+                        // className="btn btn-primary"
                         onClick={onClickAddPostButton}
                     >
                         Add {type}
@@ -78,7 +83,7 @@ function PostList({
                     />
                 </div>
             )}
-        </div>
+        </Container>
     );
 }
 

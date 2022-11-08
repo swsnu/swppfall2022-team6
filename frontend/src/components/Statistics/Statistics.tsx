@@ -21,6 +21,26 @@ export interface dataType {
 
 const labels = ["Sunny", "Cloudy", "Rain", "Snow"];
 
+const PieLabel = ({ x, y, dx, dy, dataEntry }: { x:number, y:number, dx:number, dy:number, dataEntry:any })=>{
+    return(
+        <text
+            x={x}
+            y={y}
+            dx={dx}
+            dy={dy}
+            dominant-baseline="central"
+            text-anchor="middle"
+        >
+            <tspan x={x} y={y-5} dx={dx} dy={dy}
+                style={{fontSize: '25px'}}
+            >{dataEntry.title}</tspan><br/>
+            <tspan x={x} y={y+13} dx={dx} dy={dy}
+                style={{fontSize: '13px'}}
+            >{Math.ceil(dataEntry.percentage) + '%'}</tspan>
+        </text>
+    )
+}
+
 function Statistics({ allReports }: { allReports: ReportType[] }) {
     const [maxIndex, setMaxIndex] = useState<number>(0);
     const [reportPerc, setReportPerc] = useState<number[]>([0, 0, 0, 0]);
@@ -224,28 +244,28 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
                         <PieChart
                             data={[
                                 {
-                                    title: "☀️ Sunny",
+                                    title: "☀️",
                                     value: allReports.filter(
                                         (report) => report.weather === "Sunny"
                                     ).length,
                                     color: "#FBD679",
                                 },
                                 {
-                                    title: "☁️ Cloudy",
+                                    title: "☁️",
                                     value: allReports.filter(
                                         (report) => report.weather === "Cloudy"
                                     ).length,
                                     color: "#C18BEC",
                                 },
                                 {
-                                    title: "☔ Rain",
+                                    title: "☔",
                                     value: allReports.filter(
                                         (report) => report.weather === "Rain"
                                     ).length,
                                     color: "#C5E8FC",
                                 },
                                 {
-                                    title: "❄️ Snow",
+                                    title: "❄️",
                                     value: allReports.filter(
                                         (report) => report.weather === "Snow"
                                     ).length,
@@ -256,16 +276,24 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
                             background="#f3f3f3"
                             lengthAngle={360}
                             animate
-                            label={({ dataEntry, dataIndex }) =>
-                                dataIndex === maxIndex
-                                    ? dataEntry.title +
-                                      "\n" +
-                                      Math.ceil(
-                                          dataEntry.percentage
-                                      ).toString() +
-                                      "%"
-                                    : ""
+                            label={({ x, y, dx, dy, dataEntry, dataIndex }) =>
+                                    dataIndex === maxIndex? 
+                                    // dataEntry.title +
+                                    //     "\n" +
+                                    //     Math.ceil(
+                                    //         dataEntry.percentage
+                                    //     ).toString() +
+                                    //     "%"
+                                    <PieLabel 
+                                        x={x} y={y} dx={dx} dy={dy}
+                                        dataEntry={dataEntry}
+                                    />: ""
                             }
+                            labelStyle={{
+                                fontFamily: "NanumGothic",
+                                fontSize: '18px',
+                                color: 'rgba(0,0,0,0.75)'
+                           }}
                             labelPosition={0}
                             viewBoxSize={[100, 100]}
                         />

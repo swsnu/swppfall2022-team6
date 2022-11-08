@@ -1,29 +1,9 @@
-.AreaFeed {
-    display: flex;
-    flex-flow: column;
-    height: 100%;
-}
-
-#areafeed-upper-container {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    font-family: NanumGothic, serif;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 140%;
-    margin: 0 auto;
-    width: 95%;
-    height: 5vh;
-}
-
 #button-container {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
     padding: 0px;
     gap: 6px;
-    width: 50%;
 }
 
 #weather-container {
@@ -32,7 +12,6 @@
     align-items: flex-end;
     padding: 0px;
     gap: 6px;
-    width: 50%;
     font-size: 14px;
 }
 
@@ -42,60 +21,41 @@
     border: none;
     font-size: 20px;
 }
-
-#search-box-container,
 #recommended-hashtag-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin: 0 auto;
-    width: 95%;
-    font-family: "NanumGothic";
-    font-style: normal;
+    margin-top: 10px;
     font-weight: 500;
-    font-size: 14px;
-    line-height: 140%;
-    color: rgba(0, 0, 0, 0.75);
-    height: 7vh;
 }
-
-#search-container,
 #hashtag-buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 0;
-    gap: 20px;
-    width: 100%;
+    margin-top: 5px;
 }
-
-#hashtag-buttons {
-    justify-content: start;
-}
-
-.area-label {
-    width: 100%;
-    text-align: start;
-    margin: 1% 0;
-}
-
 .hashtag {
     background: #f5f5f5;
     border-radius: 4px;
     border-width: 0em;
 }
-
-#search-box {
-    background: #f5f5f5;
-    border-radius: 10px;
-    border-color: #f5f5f5;
-    width: 50%;
-    justify-content: flex-start;
-    align-items: flex-start;
+#search-box-container {
+    font-family: "NanumGothic";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 140%;
+    color: rgba(0, 0, 0, 0.75);
+    margin-top: 15px;
 }
 
+#search-box-container .search-box {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    font-family: "NanumGothic";
+    font-size: 10px;
+}
+#only-photos-button-container {
+    padding-top: 5px;
+    text-align: left;
+}
 #only-photos-button {
-    background-color: transparent;
+    background: none;
     justify-content: end;
     border: none;
     margin-right: 5%;
@@ -103,6 +63,6 @@
     align-items: flex-end;
 }
 
-#postlist-container {
-    height: calc(100% - 40vh);
+.area-label {
+    margin-left: 3px;
 }

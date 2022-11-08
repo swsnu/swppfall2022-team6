@@ -15,7 +15,6 @@ export interface ReportType {
 }
 const labels = ["Sunny", "Cloudy", "Rain", "Snow"];
 
-//! GET bug는 해결. 다만 첫 렌더링 시 maxIndex label, value를 안보여줌
 export const SmallStatistics = () => {
     const [allReports, setAllReports] = useState<ReportType[]>([]);
     const [maxIndex, setMaxIndex] = useState<number>(0);
@@ -37,7 +36,7 @@ export const SmallStatistics = () => {
             range: reportPerc[i],
         });
     }
-    const [w, h] = [400, 140];
+    const [w, h] = [350, 140];
     const barHeight = 15;
     const svgElement = svgRef.current as SVGElement;
     // set the dimensions and margins of the graph
@@ -80,8 +79,7 @@ export const SmallStatistics = () => {
         .attr("width", x(5))
         .attr("fill", "#EDF9FF");
 
-    const bar = svg
-        .selectAll(".bar-data")
+    svg.selectAll(".bar-data")
         .data(data)
         .enter()
         .append("rect")
@@ -148,7 +146,7 @@ export const SmallStatistics = () => {
     useEffect(() => {
         axios
             .get("/report/", {
-                params: { latitude: 30, longitude: 30, radius: 2 }, // modify to redux
+                params: { latitude: 37.0, longitude: 127.0, radius: 143 }, // modify to redux
             })
             .then((response) => {
                 setAllReports(response.data);
@@ -157,7 +155,7 @@ export const SmallStatistics = () => {
 
     useEffect(() => {
         const lenArray: number[] = [0, 0, 0, 0];
-        allReports.forEach((report) => {
+        Array.from(allReports).forEach((report) => {
             if (report.weather === "Sunny") lenArray[0]++;
             else if (report.weather === "Cloudy") lenArray[1]++;
             else if (report.weather === "Rain") lenArray[2]++;
@@ -189,7 +187,7 @@ export const SmallStatistics = () => {
                 ) / allReports.length,
             ]);
         }
-    }, [maxIndex]);
+    }, [maxIndex, allReports]);
 
     return (
         <div className="stats-container">
@@ -211,8 +209,7 @@ const Address = (props: AddressIProps) => {
         geocoder.coord2RegionCode(
             position.lng,
             position.lat,
-            (result, status) => {
-                console.log(result);
+            (result, status) => { 
                 if (
                     status == kakao.maps.services.Status.OK &&
                     !!result[0].address_name
