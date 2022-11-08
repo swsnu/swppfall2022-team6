@@ -103,9 +103,9 @@ function MainPage() {
                 </Col>
             </Row>
             <Row id="main-map-search-container" >
-                <MapSearch 
-                    markPosition={markPosition} 
-                    setMarkPosition={setMarkPosition} 
+                <MapSearch
+                    markPosition={markPosition}
+                    setMarkPosition={setMarkPosition}
                     showResults={showResults}
                     setShowResults={setShowResults}
                     setIsOpen={setIsOpen}
