@@ -1,9 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import PostList from "../../components/PostList/PostList";
 import { PostType } from "../AreaFeed/AreaFeed";
+
 import "./PostDetail.scss";
 
 function PostDetail() {
@@ -47,7 +52,7 @@ function PostDetail() {
             <div id="upper-container">
                 <div id="page-header">
                     <button id="back-button" onClick={onClickBackButton}>
-                        ←
+                        <FontAwesomeIcon icon={faChevronLeft} />
                     </button>
                 </div>
             </div>
