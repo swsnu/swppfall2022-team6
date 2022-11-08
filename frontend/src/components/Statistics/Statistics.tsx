@@ -224,7 +224,7 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
                         <PieChart
                             data={[
                                 {
-                                    title: "☀️ Sunny",
+                                    title: "☀️",
                                     value: allReports.filter(
                                         (report) => report.weather === "Sunny"
                                     ).length,
