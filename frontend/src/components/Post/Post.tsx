@@ -130,7 +130,7 @@ function Post(post: postProps) {
                         </div>
                         <div
                             id="time-and-location"
-                            className="d-flex justify-content-start gap-1 fw-light fs-7"
+                            className="d-flex justify-content-start gap-1 fw-light fs-7 mt-1"
                         >
                             <div id="location" className="tldiv">
                                 {post.location}
@@ -159,7 +159,7 @@ function Post(post: postProps) {
                             {post.content === "" ? null : (
                                 <div
                                     id="post-content"
-                                    className="text-start fw-normal">
+                                    className="text-start fw-normal ms-2">
                                     {post.reply_to_author === null ? null : (
                                         <span
                                             id="post-reply-to"
