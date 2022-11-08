@@ -73,7 +73,7 @@ function PostDetail() {
             <div id="main-post-container">
                 <div id="upper-post-container">
                     <div id="author-main-badge">
-                        <img src={mapbadges(mainPost.user_name)} alt="sample" />
+                        <img src={mapbadges(mainPost.user_name)} alt="sample" style={{ height: "5vh", width: "auto" }}/>
                     </div>
                     <div id="author-container">
                         <div id="author-info">
