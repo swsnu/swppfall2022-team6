@@ -88,7 +88,7 @@ function Post(post: postProps) {
                     </div>
                     <div
                         id="post-right-container"
-                        className="d-flex flex-column"
+                        className="d-flex flex-column ms-1 align-items-start"
                     >
                         <div
                             id="user-name"
@@ -140,7 +140,7 @@ function Post(post: postProps) {
                             )}
                         </div>
                         {post.image === "" ? null : (
-                            <div id="post-photo">
+                            <div id="post-photo" className="ms-3">
                                 <img src={post.image} className="post-image" />
                             </div>
                         )}
