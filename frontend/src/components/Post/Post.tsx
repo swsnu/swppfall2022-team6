@@ -60,7 +60,7 @@ function Post(post: postProps) {
     };
     return (
         <div id="post-and-chain-container" className="d-flex flex-column ">
-            <div id="post-container" className="p-2" onClick={post.clickPost}>
+            <div id="post-container" className="p-1 mt-2 ms-2" onClick={post.clickPost}>
                 <div
                     id="main-post-div"
                     className="d-flex justify-content-start"
@@ -155,18 +155,15 @@ function Post(post: postProps) {
                         </div>
                         <div
                             id="post-content-container"
-                            className="d-flex justify-content-start gap-1 mt-2"
-                        >
+                            className="d-flex justify-content-start gap-1 mt-2">
                             {post.content === "" ? null : (
                                 <div
                                     id="post-content"
-                                    className="text-start fw-normal"
-                                >
+                                    className="text-start fw-normal">
                                     {post.reply_to_author === null ? null : (
                                         <span
                                             id="post-reply-to"
-                                            className="text-primary"
-                                        >
+                                            className="text-primary">
                                             @{post.reply_to_author}{" "}
                                         </span>
                                     )}
@@ -187,7 +184,7 @@ function Post(post: postProps) {
             post.reply_to_author === null ? null : isChainOpen === false ? (
                 <div
                     id="chain-container"
-                    className="p-2 d-flex justify-content-start"
+                    className="p-1 d-flex justify-content-start"
                 >
                     <button
                         id="chain-toggle-button"
@@ -199,18 +196,18 @@ function Post(post: postProps) {
                     </button>
                 </div>
             ) : (
-                <div id="chain-container" className="p-2">
-                    <div id="chained-posts">{renderChainedPosts()}</div>
+                <div id="chain-container" className="p-1">
+                    <div id="chained-posts" className="d-flex flex-column gap-2">
+                        {renderChainedPosts()}
+                    </div>
                     <div
                         id="chain-toggle"
-                        className="p-2 d-flex justify-content-start"
-                    >
+                        className="p-2 d-flex justify-content-start">
                         <button
                             id="chain-toggle-button"
                             type="button"
                             className="btn btn-link text-decoration-none"
-                            onClick={clickToggleChain}
-                        >
+                            onClick={clickToggleChain}>
                             Close All
                         </button>
                     </div>
