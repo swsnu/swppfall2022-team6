@@ -23,7 +23,7 @@ export type HashtagType = {
 };
 
 type WeatherType = {
-    id?: number;
+    icon?: string;
     temp?: number;
     main?: string;
 };
@@ -50,15 +50,13 @@ export const CustomSearchBar = styled(SearchBar)({
 
 
 function AreaFeed() {
-    const [searchQuery, setSearchQuery] = useState<string>("");
-    const navigate = useNavigate();
     const [allReports, setAllReports] = useState<ReportType[]>([]);
     const [allPosts, setAllPosts] = useState<PostType[]>([]);
     const [queryPosts, setQueryPosts] = useState<PostType[]>([]);
     const [refresh, setRefresh] = useState<Boolean>(true);
     const [top3Hashtag, setTop3Hashtag] = useState<string[]>([]);
     const [weather, setWeather] = useState<WeatherType>({});
-
+    const navigate = useNavigate();
     useEffect(() => {
         if (refresh) {
             // update PostList & Hashtags
@@ -82,7 +80,7 @@ function AreaFeed() {
             axios.get(url).then((response) => {
                 const data = response.data;
                 setWeather({
-                    id: data.weather[0].id,
+                    icon: data.weather[0].icon,
                     temp: Math.round(data.main.temp - 273.15),
                     main: data.weather[0].main,
                 });
@@ -105,17 +103,6 @@ function AreaFeed() {
     const onClickRefreshButton = () => {
         setRefresh(true);
     };
-    const onSubmitSearchBox = () => {
-        console.log("yes");
-        setQueryPosts(
-            allPosts.filter((post: PostType) =>
-                post.content.includes(searchQuery)
-            )
-        );
-    };
-    const onClickClose = ()=>{
-        setSearchQuery("");
-    }
     const onClickHashtagButton = (hashtag: string) => {
         //TODO: queryPosts? allPosts?
         setQueryPosts(
@@ -133,47 +120,20 @@ function AreaFeed() {
         setRefresh(true);
     }; // axios.get again
 
-    return (
-        <Container className="AreaFeed">
-            <Row id="areafeed-upper-container">
-                <Col id="button-container">
-                    <button id="back-button" onClick={onClickBackButton}>
-                        <FontAwesomeIcon icon={faChevronLeft} />
-                    </button>
-                    <button id="refresh-button" onClick={onClickRefreshButton}>
-                        <FontAwesomeIcon icon={faRotateLeft} />
-                    </button>
-                </Col>
-                <Col id="weather-container">
-                    {" "}
-                    <div id="weather-temp">{weather.temp}&deg;C</div>
-                    <div id="weather-status">{weather.main}</div>
-                </Col>
-            </Row>
-            <Row>
-                <Statistics allReports={allReports} />
-            </Row>
-            <Row id="recommended-hashtag-container">
-                <Row className="area-label">Recommended Hashtags</Row>
-                <Row id="hashtag-buttons" xs="auto">
-                    {
-                        top3Hashtag.map((item, i)=>{
-                            return(
-                                <div key={i}>
-                                    <button
-                                        id={`hashtag${i}-button`}
-                                        className="hashtag"
-                                        onClick={() => onClickHashtagButton(item)}
-                                    >
-                                        {"#" + item}
-                                    </button>
-                                </div>
-                            )
-                        })
-                    }
-                    
-                </Row>
-            </Row>
+    const AreaFeedPosts = () => {
+        const [searchQuery, setSearchQuery] = useState<string>("");
+        const onSubmitSearchBox = () => {
+            setQueryPosts(
+                allPosts.filter((post: PostType) =>
+                    post.content.includes(searchQuery)
+                )
+            );
+        };
+        const onClickClose = ()=>{
+            setSearchQuery("");
+        }
+        return(
+        <div>
             <Row id="search-box-container">
                 <Row className="area-label">Posts</Row>
                 <Row id="search-container">
@@ -204,7 +164,58 @@ function AreaFeed() {
                     replyTo={0}
                     allPosts={queryPosts}
                 />
+            </Row>;
+        </div>
+        )
+    }
+
+    return (
+        <Container className="AreaFeed">
+            <Row id="areafeed-upper-container">
+                <Col id="button-container">
+                    <button id="back-button" onClick={onClickBackButton}>
+                        <FontAwesomeIcon icon={faChevronLeft} />
+                    </button>
+                    <button id="refresh-button" onClick={onClickRefreshButton}>
+                        <FontAwesomeIcon icon={faRotateLeft} />
+                    </button>
+                </Col>
+                <Col id="weather-container">
+                    {" "}
+                    <Row id="upper-weather-container">
+                        <img src={`http://openweathermap.org/img/w/${weather.icon}.png`} className="weather-icon" />
+                    </Row>
+                    <Row id="lower-weather-container">
+                        <div id="weather-temp">{weather.temp}&deg;C</div>
+                        <div id="weather-status">{weather.main}</div>
+                    </Row>
+                </Col>
             </Row>
+            <Row>
+                <Statistics allReports={allReports} />
+            </Row>
+            <Row id="recommended-hashtag-container">
+                <Row className="area-label">Recommended Hashtags</Row>
+                <Row id="hashtag-buttons" xs="auto">
+                    {
+                        top3Hashtag.map((item, i)=>{
+                            return(
+                                <div key={i}>
+                                    <button
+                                        id={`hashtag${i}-button`}
+                                        className="hashtag"
+                                        onClick={() => onClickHashtagButton(item)}
+                                    >
+                                        {"#" + item}
+                                    </button>
+                                </div>
+                            )
+                        })
+                    }
+
+                </Row>
+            </Row>
+            <AreaFeedPosts></AreaFeedPosts>
             <NavigationBar />
         </Container>
     );
