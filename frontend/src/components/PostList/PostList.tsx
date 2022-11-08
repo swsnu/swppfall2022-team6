@@ -44,7 +44,7 @@ function PostList({
                     return (
                         <Row
                             key={post.id}
-                            className="post-and-chain-container"
+                            className="post-and-chain-container ms-0"
                             // className="border border-1 rounded-5 p-2"
                         >
                             <Post
