@@ -85,6 +85,7 @@
 #main-post-image-div {
     display: flex;
     width: 80%;
+    justify-content: center;
     //border: 1px solid;
 }
 
@@ -116,10 +117,25 @@ img {
     object-fit: contain;
     width: 100%;
     border-radius: 25px;
+
 }
 
 #main-post-image {
     object-fit: scale-down;
     max-width: 100%;
     border-radius: 25px;
+}
+
+#reply-posts-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    font-family: NanumGothic, serif;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 140%;
+    margin: 0 auto;
+    width: 80%;
+    padding-bottom: 5vh;
 }
