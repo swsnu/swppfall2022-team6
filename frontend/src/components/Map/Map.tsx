@@ -40,7 +40,10 @@ function MapComponent(props: IProps) {
             {markerPosition && (
                 <MapMarker
                     position={markerPosition}
-                    onClick={() => setIsOpen(true)}
+                    onClick={() => {
+                        setIsOpen(true);
+                        setCenterPosition(markerPosition);
+                    }}
                 />
             )}
             {isOpen && (
