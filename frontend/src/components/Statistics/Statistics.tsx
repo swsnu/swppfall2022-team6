@@ -28,8 +28,8 @@ const PieLabel = ({ x, y, dx, dy, dataEntry }: { x:number, y:number, dx:number, 
             y={y}
             dx={dx}
             dy={dy}
-            dominant-baseline="central"
-            text-anchor="middle"
+            dominantBaseline="central"
+            textAnchor="middle"
         >
             <tspan x={x} y={y-5} dx={dx} dy={dy}
                 style={{fontSize: '25px'}}
@@ -284,7 +284,7 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
                                     //         dataEntry.percentage
                                     //     ).toString() +
                                     //     "%"
-                                    <PieLabel 
+                                    <PieLabel key={dataIndex}
                                         x={x} y={y} dx={dx} dy={dy}
                                         dataEntry={dataEntry}
                                     />: ""
