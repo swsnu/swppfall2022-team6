@@ -99,7 +99,7 @@
   "pk": 7,
   "fields": {
     "user": 1,
-    "weather": "cloudy",
+    "weather": "Cloudy",
     "weather_degree": 3,
     "wind_degree": 2,
     "happy_degree": 4,
@@ -115,7 +115,7 @@
   "pk": 8,
   "fields": {
     "user": 1,
-    "weather": "cloudy",
+    "weather": "Snow",
     "weather_degree": 2,
     "wind_degree": 2,
     "happy_degree": 3,
