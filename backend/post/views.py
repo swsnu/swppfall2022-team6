@@ -33,11 +33,12 @@ class PostViewSet(viewsets.GenericViewSet):
         latitude=37.0, longitude=127.0, created_at=datetime.now(),
         reply_to=Post.objects.get(id=int(request.POST['replyTo']))
         if 'replyTo' in request.POST else None)
-        for hashtag in request.POST['hashtags'].strip().split(' '):
-            h = Hashtag.objects.filter(content=hashtag).first()
-            if h is None:
-                h = Hashtag.objects.create(content=hashtag)
-            PostHashtag.objects.create(post=post, hashtag=h)
+        if request.POST['hashtags'] != '':
+            for hashtag in request.POST['hashtags'].strip().split(' '):
+                h = Hashtag.objects.filter(content=hashtag).first()
+                if h is None:
+                    h = Hashtag.objects.create(content=hashtag)
+                PostHashtag.objects.create(post=post, hashtag=h)
         return Response('create post', status=status.HTTP_201_CREATED)
 
     # GET /post/
