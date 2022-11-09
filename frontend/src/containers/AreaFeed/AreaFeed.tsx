@@ -239,7 +239,7 @@ function AreaFeed() {
                                         key={i}
                                         value={item}
                                         className="hashtag"
-                                        // onClick={() => onClickHashtagButton()}
+                                        style={{textTransform: 'none'}}
                                     >
                                         {"#" + item}
                                     </ToggleButton>
