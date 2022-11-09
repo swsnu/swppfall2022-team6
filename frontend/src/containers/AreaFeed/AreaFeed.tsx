@@ -109,19 +109,19 @@ function AreaFeed() {
     }, [refresh]);
 
     useEffect(()=>{
+        let resultPosts = allPosts;
+        if(onlyPhoto){
+            resultPosts = resultPosts.filter((post: PostType) => post.image);
+        }
         if(selectTag){
-            setQueryPosts(
-                allPosts.filter(
+            resultPosts = resultPosts.filter(
                     (post: PostType) =>
                         post.hashtags &&
                         post.hashtags.map((h) => h.content).includes(selectTag)
-                )
             );
         }
-        else {
-            setQueryPosts(allPosts);
-        }
-    }, [selectTag])
+        setQueryPosts(resultPosts);
+    }, [selectTag, onlyPhoto])
 
     const onClickBackButton = () => {
         navigate("/");
@@ -129,30 +129,8 @@ function AreaFeed() {
     const onClickRefreshButton = () => {
         setRefresh(true);
     };
-    const onClickHashtagButton = (hashtag: string) => {
-        //TODO: queryPosts? allPosts?
-        if(selectTag){
-            setQueryPosts(
-                allPosts.filter(
-                    (post: PostType) =>
-                        post.hashtags &&
-                        post.hashtags.map((h) => h.content).includes(selectTag)
-                )
-            );
-        }
-        else {
-            setQueryPosts(allPosts);
-        }
-    };
     const onSelectOnlyPhotos = () => {
-        if(onlyPhoto){
-            setQueryPosts(allPosts);
-            setOnlyPhoto(false)
-        }
-        else {
-            setQueryPosts(queryPosts.filter((post: PostType) => post.image));
-            setOnlyPhoto(true)
-        }
+        setOnlyPhoto(!onlyPhoto)
     };
     const postListCallback = () => {
         setRefresh(true);
