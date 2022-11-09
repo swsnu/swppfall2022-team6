@@ -35,6 +35,7 @@ class PostViewSet(viewsets.GenericViewSet):
         if 'replyTo' in request.POST else None)
         if request.POST['hashtags'] != '':
             for hashtag in request.POST['hashtags'].strip().split(' '):
+                hashtag = hashtag.lstrip('#')
                 h = Hashtag.objects.filter(content=hashtag).first()
                 if h is None:
                     h = Hashtag.objects.create(content=hashtag)

@@ -71,7 +71,7 @@ function PostModal({
                                 <input
                                     id="photo-input image"
                                     type="file"
-                                    accept="image/png, image/jpeg/"
+                                    accept="image/png, image/jpeg, image/jpg"
                                     onChange={handleImageChange}
                                     style={{
                                         paddingLeft: "75px",
@@ -105,7 +105,6 @@ function PostModal({
                                     variant="standard"
                                     placeholder="#Hash #tags"
                                     size="small"
-                                    multiline
                                     fullWidth
                                     margin="normal"
                                     value={hashtags}
