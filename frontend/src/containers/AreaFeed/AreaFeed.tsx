@@ -211,8 +211,13 @@ function AreaFeed() {
                 </Col>
                 <Col id="weather-container">
                     {" "}
-                    <div id="weather-temp">{weather.temp}&deg;C</div>
-                    <div id="weather-status">{weather.main}</div>
+                    <Row id="upper-weather-container">
+                        <img src={`http://openweathermap.org/img/w/${weather.icon}.png`} className="weather-icon" />
+                    </Row>
+                    <Row id="lower-weather-container">
+                        <div id="weather-temp">{weather.temp}&deg;C</div>
+                        <div id="weather-status">{weather.main}</div>
+                    </Row>
                 </Col>
             </Row>
             <Row>
