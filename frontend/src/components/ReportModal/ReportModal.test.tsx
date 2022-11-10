@@ -94,4 +94,7 @@ describe("<ReportModal />", () => {
         fireEvent.change(textField, { target: { value: "TEXT" } });
         await waitFor(() => screen.findByText("TEXT"));
     });
+    it("should show nothing if openReport is false", async () => {
+        render(<ReportModal openReport={false} setOpenReport={jest.fn()} />);
+    });
 });

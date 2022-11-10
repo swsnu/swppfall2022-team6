@@ -16,7 +16,7 @@ class Badge(models.Model):
 
 class User(AbstractUser):
     radius = models.FloatField(default=0)
-    main_badge = models.OneToOneField(Badge, related_name='user', \
+    main_badge = models.ForeignKey(Badge, related_name='user', \
         on_delete=models.CASCADE)
 
     class Meta:

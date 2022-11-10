@@ -1,0 +1,197 @@
+[
+    {
+        "model": "post.post",
+        "pk": 1,
+        "fields": {
+            "user": 2,
+            "content": "오늘 302동 날씨 어때요?",
+            "image": "",
+            "latitude": 37.44877599087201,
+            "longitude": 126.95264777802309,
+            "created_at": "2022-11-09T09:06:28.196",
+            "reply_to": null
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 2,
+        "fields": {
+            "user": 3,
+            "content": "어제보단 덜 추운데 추워요",
+            "image": "",
+            "latitude": 37.44877599087201,
+            "longitude": 126.95264777802309,
+            "created_at": "2022-11-09T09:06:43.624",
+            "reply_to": 1
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 3,
+        "fields": {
+            "user": 4,
+            "content": "패딩 입고 나올걸 후회중",
+            "image": "",
+            "latitude": 37.44877599087201,
+            "longitude": 126.95264777802309,
+            "created_at": "2022-11-09T09:10:56.021",
+            "reply_to": 1
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 4,
+        "fields": {
+            "user": 5,
+            "content": "그래도 흐린데 비는 안와서 다행",
+            "image": "",
+            "latitude": 37.44877599087201,
+            "longitude": 126.95264777802309,
+            "created_at": "2022-11-09T10:16:04.749",
+            "reply_to": 1
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 5,
+        "fields": {
+            "user": 5,
+            "content": "나도ㅋㅋㅋ",
+            "image": "",
+            "latitude": 37.44877599087201,
+            "longitude": 126.95264777802309,
+            "created_at": "2022-11-09T10:16:29.791",
+            "reply_to": 3
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 6,
+        "fields": {
+            "user": 3,
+            "content": "강아지랑 산책하는 중! 쌀쌀하지만 햇빛은 좋다ㅎㅎ",
+            "image": "/dog.jpg",
+            "latitude": 37.52266185818156,
+            "longitude": 126.9398633812787,
+            "created_at": "2022-11-09T10:26:41.559",
+            "reply_to": null
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 7,
+        "fields": {
+            "user": 4,
+            "content": "조깅중인데 오늘 하늘 예쁘다",
+            "image": "/sky.jpg",
+            "latitude": 37.52266185818156,
+            "longitude": 126.9398633812787,
+            "created_at": "2022-11-09T10:30:24.223",
+            "reply_to": null
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 8,
+        "fields": {
+            "user": 5,
+            "content": "오늘 이렇게 입으면 많이 추울까요?",
+            "image": "/clothes.jpg",
+            "latitude": 37.44877599087201,
+            "longitude": 126.95264777802309,
+            "created_at": "2022-11-09T10:43:46.132",
+            "reply_to": null
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 9,
+        "fields": {
+            "user": 2,
+            "content": "붕어빵 먹고싶은 날씨다",
+            "image": "",
+            "latitude": 37.44877599087201,
+            "longitude": 126.95264777802309,
+            "created_at": "2022-11-09T10:46:56.854",
+            "reply_to": null
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 10,
+        "fields": {
+            "user": 3,
+            "content": "오늘 우산 필요할까요",
+            "image": "",
+            "latitude": 37.44877599087201,
+            "longitude": 126.95264777802309,
+            "created_at": "2022-11-09T11:01:05.882",
+            "reply_to": null
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 11,
+        "fields": {
+            "user": 4,
+            "content": "비 안올것 같아요",
+            "image": "",
+            "latitude": 37.44877599087201,
+            "longitude": 126.95264777802309,
+            "created_at": "2022-11-09T11:12:05.189",
+            "reply_to": 10
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 12,
+        "fields": {
+            "user": 2,
+            "content": "롱패딩 출현",
+            "image": "",
+            "latitude": 37.47921259676618,
+            "longitude": 126.95374785602736,
+            "created_at": "2022-11-09T11:13:05.189",
+            "reply_to": null
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 13,
+        "fields": {
+            "user": 3,
+            "content": "설입도 추운데 학교는 더춥다",
+            "image": "",
+            "latitude": 37.44877599087201,
+            "longitude": 126.95264777802309,
+            "created_at": "2022-11-09T11:14:05.189",
+            "reply_to": null
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 14,
+        "fields": {
+            "user": 4,
+            "content": "좀 추울 것 같아요...",
+            "image": "",
+            "latitude": 37.44877599087201,
+            "longitude": 126.95264777802309,
+            "created_at": "2022-11-09T11:15:46.132",
+            "reply_to": 8
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 15,
+        "fields": {
+            "user": 3,
+            "content": "ㄴㄴ ㄱㅊ 나 오늘 저렇게 입음",
+            "image": "",
+            "latitude": 37.44877599087201,
+            "longitude": 126.95264777802309,
+            "created_at": "2022-11-09T11:43:46.132",
+            "reply_to": 14
+        }
+    }
+]

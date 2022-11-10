@@ -1,0 +1,102 @@
+[
+{
+  "model": "user.user",
+  "pk": 1,
+  "fields": {
+    "password": "admin",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "iluvswpp",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2022-11-03T06:08:03.723",
+    "radius": 0.0,
+    "main_badge": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 2,
+  "fields": {
+    "password": "admin",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "kmy",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2022-11-05T03:30:03.231",
+    "radius": 0.0,
+    "main_badge": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 3,
+  "fields": {
+    "password": "admin",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "msy",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2022-11-08T02:58:16.015",
+    "radius": 0.0,
+    "main_badge": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 4,
+  "fields": {
+    "password": "admin",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "lys",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2022-11-08T02:58:35.206",
+    "radius": 0.0,
+    "main_badge": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 5,
+  "fields": {
+    "password": "admin",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "ice",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2022-11-08T02:58:35.206",
+    "radius": 0.0,
+    "main_badge": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]

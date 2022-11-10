@@ -20,6 +20,7 @@ function PostModal({
 }: IProps) {
     const [content, setContent] = useState<string>("");
     const [image, setImage] = useState<File>();
+    const [hashtags, setHashtags] = useState<string>("");
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -27,6 +28,7 @@ function PostModal({
             const formData = new FormData();
             if (image) formData.append("image", image);
             formData.append("content", content);
+            formData.append("hashtags", hashtags);
             if (type === "Reply")
                 formData.append("replyTo", replyTo.toString());
 
@@ -36,7 +38,11 @@ function PostModal({
                         "Content-Type": "multipart/form-data",
                     },
                 })
-                .then(() => postModalCallback());
+                .then(() => {
+                    setContent("");
+                    setHashtags("");
+                    postModalCallback();
+                });
         }
     };
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,7 +71,7 @@ function PostModal({
                                 <input
                                     id="photo-input image"
                                     type="file"
-                                    accept="image/png, image/jpeg/"
+                                    accept="image/png, image/jpeg, image/jpg"
                                     onChange={handleImageChange}
                                     style={{
                                         paddingLeft: "75px",
@@ -86,7 +92,27 @@ function PostModal({
                                     margin="normal"
                                     value={content}
                                     rows={5}
+                                    spellCheck={false}
                                     onChange={(e) => setContent(e.target.value)}
+                                />
+                            </div>
+                            <div style={{ margin: "0px 50px" }}>
+                                <TextField
+                                    inputProps={{
+                                        "data-testid": "hashtagField",
+                                    }}
+                                    id="standard-basic"
+                                    variant="standard"
+                                    placeholder="#Hash #tags"
+                                    size="small"
+                                    fullWidth
+                                    margin="normal"
+                                    value={hashtags}
+                                    spellCheck={false}
+                                    rows={1}
+                                    onChange={(e) =>
+                                        setHashtags(e.target.value)
+                                    }
                                 />
                             </div>
                             <p>

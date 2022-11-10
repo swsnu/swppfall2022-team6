@@ -1,0 +1,37 @@
+[
+{
+  "model": "hashtag.hashtag",
+  "pk": 1,
+  "fields": {
+    "content": "윗공대"
+  }
+},
+{
+  "model": "hashtag.hashtag",
+  "pk": 2,
+  "fields": {
+    "content": "ootd"
+  }
+},
+{
+  "model": "hashtag.hashtag",
+  "pk": 3,
+  "fields": {
+    "content": "비"
+  }
+},
+{
+  "model": "hashtag.hashtag",
+  "pk": 4,
+  "fields": {
+    "content": "하늘"
+  }
+},
+{
+  "model": "hashtag.hashtag",
+  "pk": 5,
+  "fields": {
+    "content": "산책"
+  }
+}
+]

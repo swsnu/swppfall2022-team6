@@ -1,0 +1,95 @@
+#button-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 6px;
+}
+
+#weather-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 0px;
+    gap: 6px;
+    font-size: 14px;
+}
+#upper-weather-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+.weather-icon{
+    height: 28px;
+    width: auto;
+}
+#lower-weather-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+#weather-temp,
+#weather-status{
+    display: flex;
+    align-items: flex-end;
+}
+
+#back-button,
+#refresh-button {
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+}
+#recommended-hashtag-container {
+    margin-top: 10px;
+    font-weight: 500;
+}
+#hashtag-buttons {
+    margin-top: 5px;
+}
+.hashtag-buttons-group button {
+    background: #f8f8f8;
+    border-radius: 0px;
+    border: none;
+}
+#search-box-container {
+    font-family: "NanumGothic";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 140%;
+    color: rgba(0, 0, 0, 0.75);
+    margin-top: 15px;
+}
+
+#search-box-container .search-box {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    font-family: "NanumGothic";
+    font-size: 10px;
+    height: 30px;
+}
+#only-photos-button-container {
+    padding-top: 5px;
+    text-align: left;
+}
+#only-photos-button {
+    background: none;
+    display: flex;
+    // justify-content: space-around;
+    gap: 20px;
+    border: none;
+    margin-right: 5%;
+    font-weight: 700;
+    font-size: 13px;
+    align-items: center;
+    // justify-content: flex-end;
+    // align-items: flex-end;
+}
+
+.area-label {
+    margin-left: 3px;
+}

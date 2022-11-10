@@ -1,0 +1,20 @@
+.skim-stats {
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+  font-family: 'NanumGothic', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.75);
+  text-align: left;
+}
+
+.skim-stats:after {
+  content:""; 
+  position: absolute; 
+  left: 45%;
+  bottom: -5%; 
+  border-left: 20px solid transparent; 
+  border-right: 20px solid transparent; 
+  border-top: 30px solid white;
+}
