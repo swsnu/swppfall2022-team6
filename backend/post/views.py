@@ -9,17 +9,10 @@ from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from user.models import User
-<<<<<<< HEAD
-from post.models import Post, Hashtag
-from .serializer import PostSerializer
-from haversine import haversine
-import numpy as np
-=======
 from post.models import Post, PostHashtag
 from hashtag.models import Hashtag
 from .serializer import PostSerializer
 from haversine import haversine
->>>>>>> 8fd93acf02608c82f7f6d13beb80207b05122ba3
 from collections import Counter
 
 #from rest_framework.decorators import action
@@ -86,12 +79,8 @@ class PostViewSet(viewsets.GenericViewSet):
 
         posts = all_posts.filter(id__in=ids).order_by('-created_at')
 
-<<<<<<< HEAD
-        post_hashtags = [Hashtag.objects.filter(posthashtag__post=post).values() for post in posts if Hashtag.objects.filter(posthashtag__post=post)]
-=======
         post_hashtags = [Hashtag.objects.filter(posthashtag__post=post).values()
         for post in posts if Hashtag.objects.filter(posthashtag__post=post)]
->>>>>>> 8fd93acf02608c82f7f6d13beb80207b05122ba3
         hashtags = []
         for hashtag_ls in post_hashtags:
             for hashtag in hashtag_ls:
@@ -103,17 +92,6 @@ class PostViewSet(viewsets.GenericViewSet):
         data = {}
         data['posts'] = self.get_serializer(posts, many=True).data
         data['top3_hashtags'] = hashtags
-<<<<<<< HEAD
-
-
-        # hashtags = np.array([dict([post['hashtags']]) for post in posts if post['hashtags']], dtype = object)
-        # print(hashtags.ravel())
-        # hashtags = [hashtag['content'] for hashtag in hashtags]
-        # hashtag_count = Counter(hashtags)
-        # hashtag_count = hashtag_count.most_common[3]
-        # print(hashtag_count)
-=======
->>>>>>> 8fd93acf02608c82f7f6d13beb80207b05122ba3
 
         return Response(
             data,
