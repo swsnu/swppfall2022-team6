@@ -7,7 +7,7 @@ jest.mock("react-router", () => ({
     ...jest.requireActual("react-router"),
     useNavigate: () => mockNavigate,
 }));
-console.log=jest.fn();
+console.log = jest.fn();
 
 // const mockGeolocation = {
 //   getCurrentPosition: jest.fn(),
@@ -54,21 +54,21 @@ describe("<MainPage />", () => {
     });
     it("should get current location if navigator avaliable", async () => {
         const mockGeolocation = {
-          ...navigator.geolocation,
-          getCurrentPosition: jest.fn().mockImplementation((success) =>
-            Promise.resolve(
-              success({
-                coords: {
-                  latitude: 10,
-                  longitude: 10
-                }
-              })
-            )
-          )
+            ...navigator.geolocation,
+            getCurrentPosition: jest.fn().mockImplementation((success) =>
+                Promise.resolve(
+                    success({
+                        coords: {
+                            latitude: 10,
+                            longitude: 10,
+                        },
+                    })
+                )
+            ),
         };
-          // @ts-ignore
+        // @ts-ignore
         navigator.geolocation = mockGeolocation;
-        const spy = jest.spyOn(navigator.geolocation, 'getCurrentPosition');
+        const spy = jest.spyOn(navigator.geolocation, "getCurrentPosition");
 
         render(<MainPage />);
         expect(spy).toHaveBeenCalled();

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PostType } from "../../containers/AreaFeed/AreaFeed";
+import axios from "axios";
+import "./Post.scss";
 
 export interface postProps {
     id: number;
@@ -9,42 +11,41 @@ export interface postProps {
     image: string; // image url, "" if none
     location: string;
     created_at: string; // date & time string
-    reply_to: number | null; // id of the chained post
+    reply_to_author: string | null; // id of the chained post
     clickPost?: React.MouseEventHandler<HTMLDivElement>;
     toggleChain?: () => void; // toggle chain open/close
+    isReplyList: number; // 0 when not, from replyTo in postlist
 }
 // get location from user lang, long
-
-// get user from backend with user_id
-const users: { user_name: string; user_id: number }[] = [
-    { user_name: "WeatherFairy", user_id: 1 },
-    { user_name: "Toothfairy", user_id: 2 },
-];
 
 function Post(post: postProps) {
     const navigate = useNavigate();
     // set chain toggle status
     const [isChainOpen, setChainOpen] = useState<boolean>(false);
+    //const [replyingTo, setReplyAuthor] = useState<string>("");
     // get replied post
-    const [chainedPosts, setChainedPosts] = useState<PostType[]>([
-        {
-            id: 1,
-            user: 1,
-            content: "Original Post...",
-            latitude: 37.44877599087201,
-            longitude: 126.95264777802309,
-            created_at: new Date().toLocaleDateString(),
-            image: "",
-            reply_to: null,
-            hashtags: [{ id: 1, content: "Sunny" }],
-        },
-    ]);
-    // useEffect(() => {
-    //     // setChainedPosts();
-    //     // call chain from backend
-    // })
-    useEffect(() => {}, [isChainOpen]);
-
+    const [chainedPosts, setChainedPosts] = useState<PostType[]>([]);
+    useEffect(() => {
+        if (isChainOpen) {
+            axios.get(`/post/${post.id}/chain/`).then((response) => {
+                setChainedPosts(response.data);
+            });
+        }
+    }, [isChainOpen]);
+    // TODO: get image from backend
+    const mapbadges = (author_name: string) => {
+        if (author_name == "kmy"){
+            return "/badge2.svg";
+        }else if(author_name == "msy"){
+            return "/badge3.svg";
+        }else if(author_name == "lys"){
+            return "/badge4.svg";
+        }else if(author_name == "ice"){
+            return "/badge5.svg";
+        }else{
+            return "/badge1.svg";
+        }
+    }
     const clickPostHandler = (post: PostType) => {
         navigate("/areafeed/" + post.id);
     };
@@ -57,74 +58,124 @@ function Post(post: postProps) {
                 <Post
                     key={post.id}
                     id={post.id}
-                    user_name={
-                        users.find((user) => user.user_id === post.user)!
-                            .user_name
-                    }
+                    user_name={post.user_name}
                     content={post.content}
                     location={"Location"} //should come from map API
                     created_at={post.created_at}
-                    reply_to={post.reply_to}
-                    image={""}
+                    reply_to_author={post.reply_to_author}
+                    image={post.image ? post.image : ""}
                     clickPost={() => clickPostHandler(post)}
+                    isReplyList={1}
                 />
             );
         });
         return chain;
     };
-
     return (
-        <div id="post-and-chain-container">
-            <div id="post-container" onClick={post.clickPost}>
-                <div id="user-container">
-                    <div id="user-main-badge"></div>
-                    <div id="user-name">{post.user_name}</div>
-                    <div id="location">{post.location}</div>
-                    <div id="timestamp">{post.created_at}</div>
-                </div>
-                <div id="post-content-container">
-                    <div id="post-text">{post.content}</div>
-                    <div id="post-photo"></div>
+        <div id="post-and-chain-container" className="d-flex flex-column ">
+            <div id="post-container" className="p-1 mt-2 ms-2" onClick={post.clickPost}>
+                <div
+                    id="main-post-div"
+                    className="d-flex justify-content-start"
+                >
+                    <div id="user-main-badge">
+                        <img
+                            id="badge-image"
+                            src={mapbadges(post.user_name)}
+                            alt="sample"
+                            style={{ height: "5vh", width: "auto" }}
+                        />
+                    </div>
+                    <div
+                        id="post-right-container"
+                        className="d-flex flex-column ms-1 align-items-start"
+                    >
+                        <div
+                            id="user-name"
+                            className="d-flex justify-content-start gap-1 fw-bold fs-5-5"
+                        >
+                            {post.user_name}
+                        </div>
+                        <div
+                            id="time-and-location"
+                            className="d-flex justify-content-start gap-1 fw-light fs-7 mt-1"
+                        >
+                            <div id="location" className="tldiv">
+                                {post.location}
+                            </div>
+                            <div> . </div>
+                            <div
+                                id="timestamp"
+                                className="tldiv"
+                                style={{ fontSize: "3px" }}
+                            >
+                                {new Date(post.created_at).toLocaleDateString(
+                                    "ko-KR",
+                                    {
+                                        year: "numeric",
+                                        month: "2-digit",
+                                        day: "2-digit",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                    }
+                                )}
+                            </div>
+                        </div>
+                        <div
+                            id="post-content-container"
+                            className="d-flex justify-content-start gap-1 mt-2">
+                            {post.content === "" ? null : (
+                                <div
+                                    id="post-content"
+                                    className="text-start fw-normal ms-2">
+                                    {post.reply_to_author === null ? null : (
+                                        <span
+                                            id="post-reply-to"
+                                            className="text-primary">
+                                            @{post.reply_to_author}{" "}
+                                        </span>
+                                    )}
+                                    <span id="post-text">{post.content}</span>
+                                </div>
+                            )}
+                        </div>
+                        {post.image === "" ? null : (
+                            <div id="post-photo" className="ms-3">
+                                <img src={post.image} className="post-image" />
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
             {/* Show chain when it is a reply */}
-            {post.reply_to === null ? null : isChainOpen === false ? (
-                <button id="chain-toggle-button" onClick={clickToggleChain}>
-                    Show All
-                </button>
-            ) : (
-                <div id="chain-container">
-                    <div id="chained-posts">
-                        {" "}
-                        {post.reply_to === 0 ? null : renderChainedPosts()}
-                    </div>
-                    <div id="chain-toggle">
-                        <button
-                            id="chain-toggle-button"
-                            onClick={clickToggleChain}
-                        >
-                            Close All
-                        </button>
-                    </div>
+            {post.isReplyList !== 0 ||
+            post.reply_to_author === null ? null : isChainOpen === false ? (
+                <div
+                    id="chain-container"
+                    className="p-1 d-flex justify-content-start"
+                >
+                    <button
+                        id="chain-toggle-button"
+                        type="button"
+                        className="btn btn-link text-decoration-none"
+                        onClick={clickToggleChain}
+                    >
+                        Show All
+                    </button>
                 </div>
-            )}
-
-            {/* Show chain when it is a reply */}
-            {post.reply_to === null ? null : isChainOpen === false ? (
-                <button id="chain-toggle-button" onClick={clickToggleChain}>
-                    Show All
-                </button>
             ) : (
-                <div id="chain-container">
-                    <div id="chained-posts">
-                        {" "}
-                        {post.reply_to === 0 ? null : renderChainedPosts()}
+                <div id="chain-container" className="p-1">
+                    <div id="chained-posts" className="d-flex flex-column gap-2">
+                        {renderChainedPosts()}
                     </div>
-                    <div id="chain-toggle">
+                    <div
+                        id="chain-toggle"
+                        className="p-2 d-flex justify-content-start">
                         <button
                             id="chain-toggle-button"
-                            onClick={clickToggleChain}
-                        >
+                            type="button"
+                            className="btn btn-link text-decoration-none"
+                            onClick={clickToggleChain}>
                             Close All
                         </button>
                     </div>

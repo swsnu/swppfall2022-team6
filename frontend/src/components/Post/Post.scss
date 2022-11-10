@@ -1,0 +1,60 @@
+$primary: #3185e7;
+@import "../../../node_modules/bootstrap/scss/functions";
+
+$font-sizes: (
+    1: 1rem * 2.5,
+    2: 1rem * 2,
+    3: 1rem * 1.5,
+    4: 1rem * 1.25,
+    5: 1rem,
+    6: 1rem * 0.75,
+    7: 1rem * 0.85,
+    8: 1rem * 0.5,
+);
+@import "../../../node_modules/bootstrap/scss/bootstrap";
+@import url("https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap");
+:root {
+    --bs-body-font-family: "Nanum Gothic", sans-serif;
+}
+#post-and-chain-container {
+    border: 1px solid #F5F5F5;
+    border-radius: 20px;
+    max-width: 97%;
+}
+#post-text {
+    padding-left: 5px;
+    font-size: 14px;
+}
+
+.tldiv {
+    margin-left: 5px;
+}
+
+#location,
+#timestamp {
+    font-size: 8px;
+}
+#post-reply-to {
+    font-size: 14px;
+}
+
+#post-photo {
+    margin-left: 5px;
+    margin-top: 4px;
+    margin-bottom: 0;
+}
+
+.post-image {
+    max-height: 10vh;
+    border-radius: 10%;
+
+}
+
+#user-name {
+    margin-left: 5px;
+    font-size: 14px;
+}
+
+#chain-toggle-button {
+    font-size: 12px;
+}

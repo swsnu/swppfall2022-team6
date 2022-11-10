@@ -1,57 +1,155 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import PostList from "../../components/PostList/PostList";
 import { PostType } from "../AreaFeed/AreaFeed";
 
+import "./PostDetail.scss";
+
 function PostDetail() {
-    const postListCallback = () => {}; // axios.get again
+    const postListCallback = () => {
+        setRefresh(true);
+    }; // axios.get again
     const { id } = useParams();
-    const [allPosts, setAllPosts] = useState<PostType[]>([
-        {
-            id: 2,
-            user: 2,
-            content: "학교는 많이 춥네요ㅠㅠ\n겉옷 챙기시는게 좋을 것 같아요!",
-            latitude: 37.44877599087201,
-            longitude: 126.95264777802309,
-            created_at: new Date().toLocaleDateString(),
-            reply_to: 1,
-            image: "",
-            hashtags: []
-        },
-        {
-            id: 1,
-            user: 1,
-            content:
-                "지금 설입은 맑긴 한데 바람이 많이 불어요\n겉옷을 안 챙겨 나왔는데 학교도 춥나요? 자연대 쪽에...",
-            latitude: 37.44877599087201,
-            longitude: 126.95264777802309,
-            created_at: new Date().toLocaleDateString(),
-            image: "",
-            reply_to: 0,
-            hashtags: []
-        },
-    ]);
+    const navigate = useNavigate();
+    const onClickBackButton = () => {
+        navigate("/areafeed/");
+    };
+    // TODO: get image from backend
+    const mapbadges = (author_name: string) => {
+        if (author_name == "kmy"){
+            return "/badge2.svg";
+        }else if(author_name == "msy"){
+            return "/badge3.svg";
+        }else if(author_name == "lys"){
+            return "/badge4.svg";
+        }else if(author_name == "ice"){
+            return "/badge5.svg";
+        }else{
+            return "/badge1.svg";
+        }
+    }
+    const [mainPost, setMainPost] = useState<PostType>({
+        id: 1,
+        user_name: "swpp",
+        content: "Default Original Post...",
+        latitude: 37.44877599087201,
+        longitude: 126.95264777802309,
+        created_at: new Date().toLocaleDateString(),
+        image: "/media/2022/11/07/screenshot.png",
+        reply_to_author: null,
+        hashtags: [],
+    });
+    const [replyPosts, setReplyPosts] = useState<PostType[]>([]);
+    // const users: { user_name: string; user_id: number }[] = [
+    //     { user_name: "WeatherFairy", user_id: 1 },
+    //     { user_name: "Toothfairy", user_id: 2 },
+    // ];
+    const [refresh, setRefresh] = useState<Boolean>(true);
+
+    useEffect(() => {
+        // update mainPost, replyPosts
+        axios.get(`/post/${id}/`).then((response) => {
+            setMainPost(response.data["post"]);
+            setReplyPosts(response.data["replies"]);
+        });
+        setRefresh(false);
+    }, [refresh]);
+
     return (
         <div className="PostDetail">
             <div id="upper-container">
-                {/* back button */}
-            </div>
-            <div id="post-container">
-
-            </div>
-            <div id="lower-post-container">
-                <div id=""></div>
-                <div id="hashtag-container">
-
+                <div id="page-header">
+                    <button id="back-button" onClick={onClickBackButton}>
+                        <FontAwesomeIcon icon={faChevronLeft} />
+                    </button>
                 </div>
             </div>
-            <PostList
-                type={"Reply"}
-                postListCallback={postListCallback}
-                replyTo={Number(id)}
-                allPosts={allPosts}
-            />
+            <div id="main-post-container">
+                <div id="upper-post-container">
+                    <div id="author-main-badge">
+                        <img src={mapbadges(mainPost.user_name)} alt="sample" style={{ height: "5vh", width: "auto" }}/>
+                    </div>
+                    <div id="author-container">
+                        <div id="author-info">
+                            <div id="author-name" className="fw-bolder fs-5 mb-1">
+                                {mainPost.user_name}
+                                {/* Get user name from back */}
+                            </div>
+                            <div
+                                id="time-and-location"
+                                className="d-flex justify-content-start fw-light gap-1 fs-7 mt-1"
+                            >
+                                <div id="author-location"
+                                style={{ fontSize: "11px"}}>
+                                    관악구 봉천동
+                                    {/* Get address */}
+                                </div>
+                                <div>.</div>
+                                <div
+                                    id="timestamp"
+                                    className="tldiv"
+                                    style={{ fontSize: "11px"}}>
+                                    {new Date(mainPost.created_at).toLocaleDateString(
+                                        "ko-KR",
+                                        {
+                                            year: "numeric",
+                                            month: "2-digit",
+                                            day: "2-digit",
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        }
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="main-post-content"
+                className="text-start">{mainPost.content}</div>
+                {mainPost.image === null ? null : (
+                    <div id="main-post-image-div">
+                        <img
+                            id="main-post-image"
+                            src={mainPost.image}
+                            alt="sample"
+                            style={{ height: "30vh", width: "auto" }}
+                        />
+                    </div>
+                )}
+                <div id="lower-post-container">
+                    <div id="hashtag-container">
+                        {mainPost.hashtags.map((hashtag, i) => (
+                            <div key={`hashtag${i}`} className="hashtag">
+                                {"#" + hashtag.content}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            <div id="reply-posts-container"
+            className="">
+                <div id=""
+                    style={{
+                        width: "100%",
+                        textAlign: "start",
+                        padding: "0 20px",
+                    }}>
+                    Replies
+                </div>
+                <PostList
+                    type={"Reply"}
+                    postListCallback={postListCallback}
+                    replyTo={Number(id)}
+                    allPosts={replyPosts}
+                />
+            </div>
+            
             <NavigationBar />
         </div>
     );

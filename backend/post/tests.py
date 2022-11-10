@@ -5,6 +5,7 @@ from django.test import TestCase, Client
 from .models import Post, PostHashtag
 from user.models import User, Badge
 from hashtag.models import Hashtag
+from datetime import date
 
 class PostTestCase(TestCase):
     '''
@@ -24,6 +25,8 @@ class PostTestCase(TestCase):
             longitude=128.0
         )
         new_post.save()
+        new_post.created_at=date(2020, 10, 20)
+        new_post.save()
         new_post2 = Post(
             user=new_user,
             content='content',
@@ -32,6 +35,8 @@ class PostTestCase(TestCase):
             reply_to=new_post
         )
         new_post2.save()
+        new_post2.created_at=date(2020, 10, 21)
+        new_post2.save()
         new_hashtag = Hashtag(content='hashtag')
         new_hashtag.save()
         new_posthashtag = PostHashtag(post=new_post, hashtag=new_hashtag)
@@ -39,7 +44,8 @@ class PostTestCase(TestCase):
 
     def test_post(self):
         client = Client()
-        response = client.post('/post/', data={'content':'content'})
+        response = client.post('/post/',
+        data={'content':'content', 'hashtags':''})
 
         self.assertEqual(response.status_code, 201)
 
@@ -69,22 +75,31 @@ class PostTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(
             str(response.content, encoding='utf8'),
-            [{'id': 1, 'user': 1, 'content': 'content', 'image': None,
-            'latitude': 36.0, 'longitude': 128.0, 'reply_to': None,
-            'hashtags': [{'id': 1, 'content': 'hashtag'}]}]
+            {'posts': [{'id': 1, 'user_name': 'swpp', 'content': 'content',
+            'image': None,
+            'latitude': 36.0, 'longitude': 128.0, 'reply_to_author': None,
+            'hashtags': [{'content': 'hashtag', 'id': 1}],
+            'created_at':'2020-10-20T00:00:00'}], 'top3_hashtags': ['hashtag']}
         )
-    def test_get_detail(self):
-        client = Client()
-        response = client.get('/post/4/')
-        self.assertEqual(response.status_code, 404)
-        response = client.get('/post/1/')
-        self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(
-            str(response.content, encoding='utf8'),
-            {'id': 1, 'user': 1, 'content': 'content', 'image': None,
-            'latitude': 36.0, 'longitude': 128.0, 'reply_to': None,
-            'hashtags': [{'id': 1, 'content': 'hashtag'}]}
-        )
+    # Error-prone test
+    # def test_get_detail(self):
+    #     client = Client()
+    #     response = client.get('/post/4/')
+    #     self.assertEqual(response.status_code, 404)
+    #     response = client.get('/post/2/')
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertJSONEqual(
+    #         str(response.content, encoding='utf8'),
+    #         {'post':
+    #             {'id': 2, 'user': 1, 'content': 'content', 'image': None,
+    #             'latitude': 5.0, 'longitude': 12.0, 'reply_to': None,
+    #             'hashtags': None},
+    #          'replies':
+    #             [{'id': 1, 'user': 1, 'content': 'content', 'image': None,
+    #             'latitude': 36.0, 'longitude': 128.0, 'reply_to': 1,
+    #             'hashtags': [{'id': 1, 'content': 'hashtag'}]}]
+    #         }
+    #     )
 
     def test_get_chain(self):
         client = Client()
@@ -94,8 +109,29 @@ class PostTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(
             str(response.content, encoding='utf8'),
-            [{'id': 1, 'user': 1, 'content': 'content', 'image': None,
-            'latitude': 36.0, 'longitude': 128.0, 'reply_to': None,
-            'hashtags': [{'id': 1, 'content': 'hashtag'}]}]
+            [{'id': 1, 'user_name': 'swpp', 'content': 'content', 'image': None,
+            'latitude': 36.0, 'longitude': 128.0, 'reply_to_author': None,
+            'hashtags': [{'content': 'hashtag', 'id': 1}],
+            'created_at':'2020-10-20T00:00:00'}]
+        )
+
+    def test_retrieve(self):
+        client = Client()
+        response = client.get('/post/4/')
+        self.assertEqual(response.status_code, 404)
+        response = client.get('/post/1/')
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(
+            str(response.content, encoding='utf8'),
+            {'post':{'id': 1, 'user_name': 'swpp', 'content': 'content',
+            'image': None,
+            'latitude': 36.0, 'longitude': 128.0, 'reply_to_author': None,
+            'hashtags': [{'content': 'hashtag', 'id': 1}],
+            'created_at':'2020-10-20T00:00:00'},
+            'replies':[{'id': 2, 'user_name': 'swpp', 'content': 'content',
+            'image': None,
+            'latitude': 5.0, 'longitude': 12.0, 'reply_to_author': 'swpp',
+            'hashtags': [],
+            'created_at':'2020-10-21T00:00:00'}]}
         )
         

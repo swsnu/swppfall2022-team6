@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+
 import { PostType } from "../../containers/AreaFeed/AreaFeed";
 import Post from "../Post/Post";
 import PostModal from "../PostModal/PostModal";
+import "./PostList.scss";
 
 function PostList({
     type,
@@ -18,13 +24,7 @@ function PostList({
     const navigate = useNavigate();
     const [openPost, setOpenPost] = useState<boolean>(false);
 
-    // get user from backend with user_id
-    const users: { user_name: string; id: number }[] = [
-        { user_name: "WeatherFairy", id: 1 },
-        { user_name: "Toothfairy", id: 2 },
-    ];
-
-    const post_location = "Bongcheon-dong, Gwanak-gu"; //should be implemented with Map API,
+    const post_location = "관악구 봉천동"; //should be implemented with Map API,
 
     const clickPostHandler = (post: PostType) => {
         navigate("/areafeed/" + post.id);
@@ -38,33 +38,40 @@ function PostList({
     };
 
     return (
-        <div id="PostList">
-            <div id="PostsContainer">
-                <div id="posts">
-                    {allPosts.map((post) => {
-                        return (
+        <Container id="PostList" className="mt-3 w-95 m-auto">
+            <div id="posts-container" className="d-flex flex-column gap-3 me-4">
+                {allPosts.map((post) => {
+                    return (
+                        <Row
+                            key={post.id}
+                            className="post-and-chain-container ms-0"
+                            // className="border border-1 rounded-5 p-2"
+                        >
                             <Post
                                 key={post.id}
                                 id={post.id}
-                                user_name={
-                                    users.find((user) => user.id === post.user)!
-                                        .user_name
-                                }
+                                // TODO: user name from backend
+                                user_name={post.user_name}
                                 content={post.content}
                                 location={post_location} //should come from map API
                                 created_at={post.created_at}
-                                reply_to={post.reply_to}
-                                image={""}
+                                reply_to_author={post.reply_to_author}
+                                image={post.image}
                                 clickPost={() => clickPostHandler(post)}
-                                // toggleChain={} for chain open/close w useState
+                                isReplyList={replyTo}
                             />
-                        );
-                    })}
-                </div>
+                        </Row>
+                    );
+                })}
             </div>
             {type === "Mypage" ? null : (
-                <div>
-                    <button id="add-post-button" onClick={onClickAddPostButton}>
+                <div id="postlist-modal-container">
+                    <button
+                        id="add-post-button"
+                        type="button"
+                        // className="btn btn-primary"
+                        onClick={onClickAddPostButton}
+                    >
                         Add {type}
                     </button>
                     <PostModal
@@ -76,7 +83,7 @@ function PostList({
                     />
                 </div>
             )}
-        </div>
+        </Container>
     );
 }
 

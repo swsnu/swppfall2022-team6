@@ -1,0 +1,11 @@
+[
+{
+  "model": "user.badge",
+  "pk": 1,
+  "fields": {
+    "title": "test badge",
+    "stage": null,
+    "image": "/EditPic.svg"
+  }
+}
+]
