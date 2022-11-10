@@ -45,7 +45,7 @@ class PostTestCase(TestCase):
     def test_post(self):
         client = Client()
         response = client.post('/post/',
-        data={'content':'content', 'hashtags':''})
+        data={'content':'content', 'hashtags':'hi'})
 
         self.assertEqual(response.status_code, 201)
 
