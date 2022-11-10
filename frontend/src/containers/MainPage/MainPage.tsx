@@ -66,7 +66,6 @@ function MainPage() {
             currPosition.lng,
             currPosition.lat,
             (result, status) => {
-                console.log(result);
                 if (
                     status === kakao.maps.services.Status.OK &&
                     !!result[0].address_name
@@ -92,13 +91,16 @@ function MainPage() {
 
     return (
         <Container id="MainPage" >
-            <Row id="main-upper-container"  onClick={()=>setShowResults(false)}>
+            <Row id="main-upper-container" aria-label="background" onClick={()=>setShowResults(false)}>
                 <Col id="main-logo-container">
                     <img src={Logo}/>
                 </Col>
                 <Col id="main-mypage-button-container">
-                    <button id="mypage-button" onClick={onClickMyPageIcon}>
-                        <FontAwesomeIcon icon={faUser} size="2x"/>
+                    <button 
+                        id="mypage-button" 
+                        onClick={onClickMyPageIcon}
+                    >
+                        <FontAwesomeIcon icon={faUser} size="2x" aria-label="mypage-button"/>
                     </button>
                 </Col>
             </Row>
@@ -111,10 +113,10 @@ function MainPage() {
                     setIsOpen={setIsOpen}
                 />
             </Row>
-            <Row id="main-description"  onClick={()=>setShowResults(false)}>
+            <Row id="main-description" aria-label="background" onClick={()=>setShowResults(false)}>
                 <span>Select a location and find out real-time statistics</span>
             </Row>
-            <Row id="main-map-container"  onClick={()=>setShowResults(false)}>
+            <Row id="main-map-container"  aria-label="background" onClick={()=>setShowResults(false)}>
                 <Map 
                     initPosition={markPosition} 
                     radius={radius} 
@@ -122,7 +124,7 @@ function MainPage() {
                     setIsOpen={setIsOpen}
                 />
             </Row>
-            <Row id="main-radius-slider-container"  onClick={()=>setShowResults(false)}>
+            <Row id="main-radius-slider-container" aria-label="background" onClick={()=>setShowResults(false)}>
                 <Col>
                     <Row id="main-change-radius">
                         <p>Change Radius</p>
@@ -148,16 +150,20 @@ function MainPage() {
                         </Box>
                     </Row>
                 </Col>
-                <Col id="findout-container"  onClick={()=>setShowResults(false)}>
-                    <Button id="findout-button" onClick={onClickFindOutButton} type="button">
-                        <span>{"Find out  >"}</span>
+                <Col id="findout-container" aria-label="background" onClick={()=>setShowResults(false)}>
+                    <Button 
+                        id="findout-button" 
+                        onClick={onClickFindOutButton} 
+                        type="button"
+                    >
+                        <span aria-label="findout-button">{"Find out  >"}</span>
                     </Button>
                 </Col>
             </Row>
-            <Row id="main-curr-location-container"  onClick={()=>setShowResults(false)}>
+            <Row id="main-curr-location-container" aria-label="background" onClick={()=>setShowResults(false)}>
                 <span>{`Current location: ${address}`}</span>
             </Row>
-            <Row id="main-report-button-container"  onClick={()=>setShowResults(false)}>
+            <Row id="main-report-button-container" aria-label="background" onClick={()=>setShowResults(false)}>
                 <Button id="report-button" onClick={onClickReportButton} type="button">
                     Report!
                 </Button>
