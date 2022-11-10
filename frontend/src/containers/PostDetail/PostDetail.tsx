@@ -20,20 +20,8 @@ function PostDetail() {
     const onClickBackButton = () => {
         navigate("/areafeed/");
     };
-    // TODO: get image from backend
-    const mapbadges = (author_name: string) => {
-        if (author_name == "kmy"){
-            return "/badge2.svg";
-        }else if(author_name == "msy"){
-            return "/badge3.svg";
-        }else if(author_name == "lys"){
-            return "/badge4.svg";
-        }else if(author_name == "ice"){
-            return "/badge5.svg";
-        }else{
-            return "/badge1.svg";
-        }
-    }
+    // TODO: get badge image from backend
+
     const [mainPost, setMainPost] = useState<PostType>({
         id: 1,
         user_name: "swpp",
@@ -65,7 +53,9 @@ function PostDetail() {
         <div className="PostDetail">
             <div id="upper-container">
                 <div id="page-header">
-                    <button id="back-button" onClick={onClickBackButton}>
+                    <button id="back-button" 
+                    aria-label='back'
+                    onClick={onClickBackButton}>
                         <FontAwesomeIcon icon={faChevronLeft} />
                     </button>
                 </div>
@@ -73,7 +63,7 @@ function PostDetail() {
             <div id="main-post-container">
                 <div id="upper-post-container">
                     <div id="author-main-badge">
-                        <img src={mapbadges(mainPost.user_name)} alt="sample" style={{ height: "5vh", width: "auto" }}/>
+                        <img src={"sample"} style={{ height: "5vh", width: "auto" }}/>
                     </div>
                     <div id="author-container">
                         <div id="author-info">
@@ -149,7 +139,6 @@ function PostDetail() {
                     allPosts={replyPosts}
                 />
             </div>
-            
             <NavigationBar />
         </div>
     );
