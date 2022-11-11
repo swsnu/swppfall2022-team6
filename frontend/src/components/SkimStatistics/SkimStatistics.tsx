@@ -197,7 +197,7 @@ export const SmallStatistics = () => {
     );
 };
 
-interface AddressIProps {
+export interface AddressIProps {
     position: PositionType;
 }
 
@@ -209,9 +209,9 @@ const Address = (props: AddressIProps) => {
         geocoder.coord2RegionCode(
             position.lng,
             position.lat,
-            (result, status) => { 
+            (result, status) => {
                 if (
-                    status == kakao.maps.services.Status.OK &&
+                    status === kakao.maps.services.Status.OK &&
                     !!result[0].address_name
                 ) {
                     setAddress(result[0].address_name);

@@ -1,6 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { postProps } from "../Post/Post";
 import { IProps } from "../PostModal/PostModal";
 import PostList from "./PostList";
 
@@ -54,7 +53,34 @@ describe("<PostList />", () => {
                                 type={"Post"}
                                 postListCallback={jest.fn()}
                                 replyTo={0}
-                                allPosts={[]}
+                                allPosts={[
+                                    {
+                                        id: 2,
+                                        user_name: "SWPP2",
+                                        content:
+                                            "학교는 많이 춥네요ㅠㅠ\n겉옷 챙기시는게 좋을 것 같아요!",
+                                        latitude: 37.44877599087201,
+                                        longitude: 126.95264777802309,
+                                        created_at:
+                                            new Date().toLocaleDateString(),
+                                        reply_to_author: "SWPP",
+                                        image: "",
+                                        hashtags: [],
+                                    },
+                                    {
+                                        id: 1,
+                                        user_name: "SWPP",
+                                        content:
+                                            "지금 설입은 맑긴 한데 바람이 많이 불어요\n겉옷을 안 챙겨 나왔는데 학교도 춥나요? 자연대 쪽에...",
+                                        latitude: 37.44877599087201,
+                                        longitude: 126.95264777802309,
+                                        created_at:
+                                            new Date().toLocaleDateString(),
+                                        image: "",
+                                        reply_to_author: "SWPP",
+                                        hashtags: [],
+                                    },
+                                ]}
                             />
                         }
                     />
