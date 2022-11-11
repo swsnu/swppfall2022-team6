@@ -1,5 +1,5 @@
-$main-color: #3185E7;
-$sub-color: #EDF9FF;
+$main-color: #3185e7;
+$sub-color: #edf9ff;
 // .col {
 //   border: 1px solid black;
 // }
@@ -8,33 +8,33 @@ $sub-color: #EDF9FF;
 // }
 
 .search-box-container {
-  // display: flex;
-  text-align: center;
+    // display: flex;
+    text-align: center;
 }
 
 .search-result-box {
-  z-index: 5;
-  position: absolute;
-  top: 110px;
-  left: 0;
-  background-color: white;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.1));
+    z-index: 5;
+    position: absolute;
+    top: 110px;
+    left: 0;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.1));
 }
 .search-result-box .search-result-list {
-  width: 100%;
-  border: none;
+    width: 100%;
+    border: none;
 }
-.search-result-box .search-result{
-  font-size: 12px;
-  height: 30px;
-  font-family: "NanumGothic", sans-serif;
+.search-result-box .search-result {
+    font-size: 12px;
+    height: 30px;
+    font-family: "NanumGothic", sans-serif;
 }
 
-.search-result-pagination idx {
-  background-color: $main-color;
-  color: $main-color;
+.search-result-pagination .idx {
+    background-color: $main-color;
+    color: $main-color;
 }

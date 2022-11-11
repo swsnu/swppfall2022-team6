@@ -98,6 +98,7 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    const x = d3.scaleLinear().domain([0, 5.5]).range([0, width]);
     const y = d3
         .scalePoint()
         .range([0, height])
@@ -105,23 +106,21 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
 
     // .padding(.1)
 
-    const x = d3.scaleLinear().domain([0, 5.5]).range([0, width]);
-
     svg.selectAll(".bar-background")
         .data(data)
         .enter()
         .append("rect")
         .attr("class", "bar")
-        .attr("rx", barHeight / 2)
         .attr("ry", barHeight / 2)
+        .attr("rx", barHeight / 2)
         //@ts-ignore
+        .attr("x", x(0))
+        .attr("width", x(5))
+        .attr("height", barHeight)
         .attr("y", (d) => {
             //@ts-ignore
             return y(d.weather) + (y.bandwidth() - barHeight) / 2;
         })
-        .attr("height", barHeight)
-        .attr("x", x(0))
-        .attr("width", x(5))
         .attr("fill", "#EDF9FF");
 
     const bar = svg
@@ -135,27 +134,27 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
         //   (update)=>update.attr("class", "bar"),
         //   (exit)=>exit.remove()
         // )
-        .attr("rx", barHeight / 2)
-        .attr("ry", barHeight / 2)
-        //@ts-ignore
         .attr("y", (d) => {
             //@ts-ignore
             return y(d.weather) + (y.bandwidth() - barHeight) / 2;
         })
+        .attr("ry", barHeight / 2)
         .attr("x", x(0))
+        .attr("rx", barHeight / 2)
+        //@ts-ignore
         .attr("height", barHeight)
+        .attr("width", 0)
         .attr("x", (d) => {
             return x(0);
         })
-        .attr("width", 0)
         .transition()
         .duration(750)
         .delay(function (d, i) {
             return i * 150;
         })
         //@ts-ignores
-        .attr("width", (d) => x(d.range))
         .attr("fill", "#3185E7")
+        .attr("width", (d) => x(d.range))
         .attr("border", 0);
 
     // label은 다음에 찾아보는걸로..
@@ -173,28 +172,28 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
         .text((d) => {
             return Math.round(d.range * 20) + "%";
         })
-        .style("text-anchor", "middle")
-        .style("font-family", "NanumGothic")
-        .style("font-family", "sans-serif")
-        .style("font-weight", "700")
+        .style("color", "rgba(0,0,0,50%)")
         .style("font-size", "15px")
-        .style("color", "rgba(0,0,0,50%)");
+        .style("font-weight", "700")
+        .style("font-family", "sans-serif")
+        .style("font-family", "NanumGothic")
+        .style("text-anchor", "middle");
 
     svg.append("g")
         .call(d3.axisLeft(y))
         .style("stroke-width", 0)
+        .style("font-weight", "700")
         .style("font-family", "NanumGothic")
         .style("font-family", "sans-serif")
-        .style("font-weight", "700")
-        .style("font-size", "15px")
-        .style("color", "rgba(0,0,0,75%)");
+        .style("color", "rgba(0,0,0,75%)")
+        .style("font-size", "15px");
 
     useEffect(() => {
         const lenArray: number[] = [0, 0, 0, 0];
         allReports.forEach((report) => {
             if (report.weather === "Sunny") lenArray[0]++;
-            else if (report.weather === "Cloudy") lenArray[1]++;
             else if (report.weather === "Rain") lenArray[2]++;
+            else if (report.weather === "Cloudy") lenArray[1]++;
             else lenArray[3]++;
         });
         setMaxIndex(lenArray.indexOf(Math.max(...lenArray)));

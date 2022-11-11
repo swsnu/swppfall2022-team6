@@ -3,19 +3,19 @@ import { useNavigate } from "react-router-dom";
 
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
 
 import Map, { PositionType } from "./../../components/Map/Map";
 import ReportModal from "../../components/ReportModal/ReportModal";
 import MapSearch from "../../components/MapSearch/MapSearch";
 import "./MainPage.scss";
 // @ts-ignore
-import Logo from "./Logo.svg"
+import Logo from "./Logo.svg";
 
 const marks = [
     { value: 0, label: "0km" },
@@ -90,21 +90,26 @@ function MainPage() {
     };
 
     return (
-        <Container id="MainPage" >
-            <Row id="main-upper-container" aria-label="background" onClick={()=>setShowResults(false)}>
+        <Container id="MainPage">
+            <Row
+                id="main-upper-container"
+                aria-label="background"
+                onClick={() => setShowResults(false)}
+            >
                 <Col id="main-logo-container">
-                    <img src={Logo}/>
+                    <img src={Logo} />
                 </Col>
                 <Col id="main-mypage-button-container">
-                    <button 
-                        id="mypage-button" 
-                        onClick={onClickMyPageIcon}
-                    >
-                        <FontAwesomeIcon icon={faUser} size="2x" aria-label="mypage-button"/>
+                    <button id="mypage-button" onClick={onClickMyPageIcon}>
+                        <FontAwesomeIcon
+                            icon={faUser}
+                            size="2x"
+                            aria-label="mypage-button"
+                        />
                     </button>
                 </Col>
             </Row>
-            <Row id="main-map-search-container" >
+            <Row id="main-map-search-container">
                 <MapSearch
                     markPosition={markPosition}
                     setMarkPosition={setMarkPosition}
@@ -113,18 +118,30 @@ function MainPage() {
                     setIsOpen={setIsOpen}
                 />
             </Row>
-            <Row id="main-description" aria-label="background" onClick={()=>setShowResults(false)}>
+            <Row
+                id="main-description"
+                aria-label="background"
+                onClick={() => setShowResults(false)}
+            >
                 <span>Select a location and find out real-time statistics</span>
             </Row>
-            <Row id="main-map-container"  aria-label="background" onClick={()=>setShowResults(false)}>
-                <Map 
-                    initPosition={markPosition} 
-                    radius={radius} 
+            <Row
+                id="main-map-container"
+                aria-label="background"
+                onClick={() => setShowResults(false)}
+            >
+                <Map
+                    initPosition={markPosition}
+                    radius={radius}
                     isOpen={isOpen}
                     setIsOpen={setIsOpen}
                 />
             </Row>
-            <Row id="main-radius-slider-container" aria-label="background" onClick={()=>setShowResults(false)}>
+            <Row
+                id="main-radius-slider-container"
+                aria-label="background"
+                onClick={() => setShowResults(false)}
+            >
                 <Col>
                     <Row id="main-change-radius">
                         <p>Change Radius</p>
@@ -150,21 +167,37 @@ function MainPage() {
                         </Box>
                     </Row>
                 </Col>
-                <Col id="findout-container" aria-label="background" onClick={()=>setShowResults(false)}>
-                    <Button 
-                        id="findout-button" 
-                        onClick={onClickFindOutButton} 
+                <Col
+                    id="findout-container"
+                    aria-label="background"
+                    onClick={() => setShowResults(false)}
+                >
+                    <Button
+                        id="findout-button"
+                        onClick={onClickFindOutButton}
                         type="button"
                     >
                         <span aria-label="findout-button">{"Find out  >"}</span>
                     </Button>
                 </Col>
             </Row>
-            <Row id="main-curr-location-container" aria-label="background" onClick={()=>setShowResults(false)}>
+            <Row
+                id="main-curr-location-container"
+                aria-label="background"
+                onClick={() => setShowResults(false)}
+            >
                 <span>{`Current location: ${address}`}</span>
             </Row>
-            <Row id="main-report-button-container" aria-label="background" onClick={()=>setShowResults(false)}>
-                <Button id="report-button" onClick={onClickReportButton} type="button">
+            <Row
+                id="main-report-button-container"
+                aria-label="background"
+                onClick={() => setShowResults(false)}
+            >
+                <Button
+                    id="report-button"
+                    onClick={onClickReportButton}
+                    type="button"
+                >
                     Report!
                 </Button>
             </Row>
