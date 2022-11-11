@@ -82,19 +82,20 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
     }
 
     const [w, h] = [350, 140];
-    const barHeight = 15;
-    const svgElement = barRef.current as SVGElement;
     // set the dimensions and margins of the graph
     const margin = { top: 20, right: 20, bottom: 30, left: 90 },
         width = w - margin.left - margin.right,
         height = h - margin.top - margin.bottom;
 
+    const svgElement = barRef.current as SVGElement;
+    const barHeight = 15;
+
     // append the svg object to the body of the page
     const svg = d3
         .select(svgElement)
         .call((g) => g.select("g").remove())
-        .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
+        .attr("width", width + margin.left + margin.right)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -163,30 +164,30 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
         .enter()
         .append("text")
         .attr("class", "label")
+        .attr("x", x(5.5))
         //@ts-ignore
         .attr("y", function (d) {
             //@ts-ignore
             return y(d.weather) + (y.bandwidth() + 10) / 2;
         })
-        .attr("x", x(5.5))
         .text((d) => {
             return Math.round(d.range * 20) + "%";
         })
-        .style("color", "rgba(0,0,0,50%)")
-        .style("font-size", "15px")
         .style("font-weight", "700")
+        .style("font-size", "15px")
+        .style("color", "rgba(0,0,0,50%)")
         .style("font-family", "sans-serif")
         .style("font-family", "NanumGothic")
         .style("text-anchor", "middle");
 
     svg.append("g")
         .call(d3.axisLeft(y))
-        .style("stroke-width", 0)
         .style("font-weight", "700")
+        .style("stroke-width", 0)
         .style("font-family", "NanumGothic")
         .style("font-family", "sans-serif")
-        .style("color", "rgba(0,0,0,75%)")
-        .style("font-size", "15px");
+        .style("font-size", "15px")
+        .style("color", "rgba(0,0,0,75%)");
 
     useEffect(() => {
         const lenArray: number[] = [0, 0, 0, 0];
@@ -201,27 +202,30 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
 
     useEffect(() => {
         if (allReports.length) {
-            setReportPerc([
+            const perc1 =
                 allReports
                     .filter((report) => report.weather === labels[maxIndex])
                     .map((report) => report.weather_degree)
                     .reduce((a: number, b: number) => a + b, 0) /
-                    allReports.filter(
-                        (report) => report.weather === labels[maxIndex]
-                    ).length,
+                allReports.filter(
+                    (report) => report.weather === labels[maxIndex]
+                ).length;
+            const perc2 =
                 allReports.reduce(
                     (a: number, b: ReportType) => a + b.wind_degree,
                     0
-                ) / allReports.length,
+                ) / allReports.length;
+            const perc3 =
                 allReports.reduce(
                     (a: number, b: ReportType) => a + b.happy_degree,
                     0
-                ) / allReports.length,
+                ) / allReports.length;
+            const perc4 =
                 allReports.reduce(
                     (a: number, b: ReportType) => a + b.humidity_degree,
                     0
-                ) / allReports.length,
-            ]);
+                ) / allReports.length;
+            setReportPerc([perc1, perc2, perc3, perc4]);
         }
     }, [maxIndex, allReports]);
 
