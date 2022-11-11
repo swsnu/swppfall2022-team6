@@ -41,7 +41,7 @@ function MapComponent(props: IProps) {
         <Map
             id="map"
             center={centerPosition}
-            style={{ width: "100%", height: "60vh", borderRadius: "12px"}}
+            style={{ width: "100%", height: "60vh", borderRadius: "12px" }}
             level={5}
             onClick={(_t, mouseEvent) => {
                 setMarkerPosition({
@@ -84,7 +84,7 @@ function MapComponent(props: IProps) {
                 />
             )}
             {isOpen && (
-                <CustomOverlayMap 
+                <CustomOverlayMap
                     position={markerPosition}
                     xAnchor={0.587}
                     yAnchor={1.075}
