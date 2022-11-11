@@ -20,7 +20,7 @@
     justify-content: flex-end;
     align-items: flex-end;
 }
-.weather-icon{
+.weather-icon {
     height: 28px;
     width: auto;
 }
@@ -31,7 +31,7 @@
     align-items: flex-end;
 }
 #weather-temp,
-#weather-status{
+#weather-status {
     display: flex;
     align-items: flex-end;
 }
@@ -55,7 +55,7 @@
     border: none;
 }
 #search-box-container {
-    font-family: "NanumGothic";
+    font-family: "NanumGothic", serif;
     font-style: normal;
     font-weight: 500;
     font-size: 10px;
@@ -68,7 +68,7 @@
     display: flex;
     align-items: center;
     margin-top: 5px;
-    font-family: "NanumGothic";
+    font-family: "NanumGothic", serif;
     font-size: 10px;
     height: 30px;
 }
