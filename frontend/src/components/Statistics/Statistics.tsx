@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import * as d3 from "d3";
 import { PieChart } from "react-minimal-pie-chart";
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 export interface ReportType {
     weather: string;
@@ -21,8 +21,20 @@ export interface dataType {
 
 const labels = ["Sunny", "Cloudy", "Rain", "Snow"];
 
-const PieLabel = ({ x, y, dx, dy, dataEntry }: { x:number, y:number, dx:number, dy:number, dataEntry:any })=>{
-    return(
+const PieLabel = ({
+    x,
+    y,
+    dx,
+    dy,
+    dataEntry,
+}: {
+    x: number;
+    y: number;
+    dx: number;
+    dy: number;
+    dataEntry: any;
+}) => {
+    return (
         <text
             x={x}
             y={y}
@@ -31,15 +43,22 @@ const PieLabel = ({ x, y, dx, dy, dataEntry }: { x:number, y:number, dx:number, 
             dominantBaseline="central"
             textAnchor="middle"
         >
-            <tspan x={x} y={y-5} dx={dx} dy={dy}
-                style={{fontSize: '25px'}}
-            >{dataEntry.title}</tspan><br/>
-            <tspan x={x} y={y+13} dx={dx} dy={dy}
-                style={{fontSize: '13px'}}
-            >{Math.ceil(dataEntry.percentage) + '%'}</tspan>
+            <tspan x={x} y={y - 5} dx={dx} dy={dy} style={{ fontSize: "25px" }}>
+                {dataEntry.title}
+            </tspan>
+            <br />
+            <tspan
+                x={x}
+                y={y + 13}
+                dx={dx}
+                dy={dy}
+                style={{ fontSize: "13px" }}
+            >
+                {Math.ceil(dataEntry.percentage) + "%"}
+            </tspan>
         </text>
-    )
-}
+    );
+};
 
 function Statistics({ allReports }: { allReports: ReportType[] }) {
     const [maxIndex, setMaxIndex] = useState<number>(0);
@@ -237,9 +256,12 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
                     }}
                 >
                     <Col
-                        
                         id="piechart-container"
-                        style={{ width: "150px", height: "150px", padding: "10px"}}
+                        style={{
+                            width: "150px",
+                            height: "150px",
+                            padding: "10px",
+                        }}
                     >
                         <PieChart
                             data={[
@@ -277,30 +299,37 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
                             lengthAngle={360}
                             animate
                             label={({ x, y, dx, dy, dataEntry, dataIndex }) =>
-                                    dataIndex === maxIndex? 
+                                dataIndex === maxIndex ? (
                                     // dataEntry.title +
                                     //     "\n" +
                                     //     Math.ceil(
                                     //         dataEntry.percentage
                                     //     ).toString() +
                                     //     "%"
-                                    <PieLabel key={dataIndex}
-                                        x={x} y={y} dx={dx} dy={dy}
+                                    <PieLabel
+                                        key={dataIndex}
+                                        x={x}
+                                        y={y}
+                                        dx={dx}
+                                        dy={dy}
                                         dataEntry={dataEntry}
-                                    />: ""
+                                    />
+                                ) : (
+                                    ""
+                                )
                             }
                             labelStyle={{
                                 fontFamily: "NanumGothic",
-                                fontSize: '18px',
-                                color: 'rgba(0,0,0,0.75)'
-                           }}
+                                fontSize: "18px",
+                                color: "rgba(0,0,0,0.75)",
+                            }}
                             labelPosition={0}
                             viewBoxSize={[100, 100]}
                         />
                     </Col>
                     <Col md className="bar-container">
                         {/* @ts-ignore */}
-                        <svg ref={barRef} aria-label="BarChart" />
+                        <svg ref={barRef} />
                     </Col>
                 </Row>
             ) : (
