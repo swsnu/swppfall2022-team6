@@ -1,16 +1,8 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { act } from "react-dom/test-utils";
 import axios from "axios";
 import "jest-canvas-mock";
 import AreaFeed from "./AreaFeed";
-import PostList from "../../components/PostList/PostList";
-import { MemoryRouter, Route, Routes } from "react-router";
-import { postProps } from "../../components/Post/Post";
-import {PostType} from "./AreaFeed";
-import { formControlUnstyledClasses } from "@mui/base";
-import { wait } from "@testing-library/user-event/dist/utils";
 import { IProps } from "../../components/PostModal/PostModal";
-
 
 jest.mock("react-chartjs-2", () => ({
     Bar: () => <div>BarChart</div>,
@@ -23,7 +15,7 @@ jest.mock("react-router", () => ({
     ...jest.requireActual("react-router"),
     useNavigate: () => mockNavigate,
 }));
-jest.mock("axios")
+jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 jest.mock("../../components/PostModal/PostModal", () => (props: IProps) => (
@@ -98,72 +90,71 @@ describe("<AreaFeed />", () => {
                         {
                             id: 3,
                             content: "hashtag3",
-                        }
-                    ]
+                        },
+                    ],
                 },
                 {
                     id: 1,
                     user_name: "user2",
-                    content:
-                        "content2",
+                    content: "content2",
                     latitude: 37.44877599087201,
                     longitude: 126.95264777802309,
                     created_at: new Date().toLocaleDateString(),
                     image: "/logo192.png",
                     reply_to_author: null,
-                    hashtags: []
+                    hashtags: [],
                 },
             ],
-            top3_hashtags: [
-                "hashtag1",
-                "hashtag2",
-                "hashtag3",
-            ]
+            top3_hashtags: ["hashtag1", "hashtag2", "hashtag3"],
         };
 
-        const weather ={
-            weather: [{id: 800, main: 'Clear', description: 'clear sky', icon: '01d'}],
+        const weather = {
+            weather: [
+                {
+                    id: 800,
+                    main: "Clear",
+                    description: "clear sky",
+                    icon: "01d",
+                },
+            ],
             main: {
-                temp: 283.76
-            }
+                temp: 283.76,
+            },
         };
 
         mockedAxios.get.mockImplementation((url: string) => {
             switch (true) {
-                case url.includes('/post/'):
-                    return Promise.resolve({data: post})
-                case url.includes('/report/'):
-                    return Promise.resolve({data: report})
-                case url.includes('https://api.openweathermap.org/data/2.5/'):
-                    return Promise.resolve({data: weather})
+                case url.includes("/post/"):
+                    return Promise.resolve({ data: post });
+                case url.includes("/report/"):
+                    return Promise.resolve({ data: report });
+                case url.includes("https://api.openweathermap.org/data/2.5/"):
+                    return Promise.resolve({ data: weather });
                 default:
-                return Promise.reject(new Error('not found'))
+                    return Promise.reject(new Error("not found"));
             }
-        })
-
+        });
     });
 
-    it("should render withour errors", async() => {
+    it("should render withour errors", async () => {
         const { container } = render(<AreaFeed />);
-        await waitFor(() => {expect(container).toBeTruthy() });
+        await waitFor(() => {
+            expect(container).toBeTruthy();
+        });
     });
     it("should handle back button", async () => {
         const view = render(<AreaFeed />);
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
-        const backBtn = view.container.querySelector('#back-button');
+        const backBtn = view.container.querySelector("#back-button");
         fireEvent.click(backBtn!);
-        await waitFor(() =>
-            expect(mockNavigate).toHaveBeenCalledWith(`/`)
-        );
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith(`/`));
     });
     it("should handle refresh button", async () => {
         const view = render(<AreaFeed />);
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
-        const refreshBtn = view.container.querySelector('#refresh-button');
+        const refreshBtn = view.container.querySelector("#refresh-button");
         fireEvent.click(refreshBtn!);
-        await waitFor(() =>
-            expect(mockedAxios.get).toHaveBeenCalled()
-        );
+        await waitFor(() => expect(mockedAxios.get).toHaveBeenCalled());
     });
 
     it("should handle hashtag togglebutton", async () => {
@@ -179,7 +170,7 @@ describe("<AreaFeed />", () => {
     it("should handle only Photos button", async () => {
         render(<AreaFeed />);
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
-        const photosBtn = screen.getByRole('switch');
+        const photosBtn = screen.getByRole("switch");
         fireEvent.click(photosBtn!);
         await waitFor(() =>
             expect(screen.queryByText("user1")).not.toBeInTheDocument()
@@ -188,16 +179,18 @@ describe("<AreaFeed />", () => {
     });
 
     it("should handle search", async () => {
-        const {container} = render(<AreaFeed />);
+        const { container } = render(<AreaFeed />);
         await screen.findByText("#hashtag1");
         // eslint-disable-next-line testing-library/no-node-access
-        const newSearchBox = screen.getByRole('textbox');
-        if (newSearchBox){
+        const newSearchBox = screen.getByRole("textbox");
+        if (newSearchBox) {
             fireEvent.change(newSearchBox, { target: { value: "t2" } });
-        };
-        await screen.findByDisplayValue('t2');
+        }
+        await screen.findByDisplayValue("t2");
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
-        const searchIcon = container.getElementsByClassName("MuiButtonBase-root MuiIconButton-root ForwardRef-iconButton-49 ForwardRef-searchIconButton-51")[0];
+        const searchIcon = container.getElementsByClassName(
+            "MuiButtonBase-root MuiIconButton-root ForwardRef-iconButton-49 ForwardRef-searchIconButton-51"
+        )[0];
         fireEvent.click(searchIcon!);
         await waitFor(() =>
             expect(screen.queryByText("user1")).not.toBeInTheDocument()
@@ -213,10 +206,8 @@ describe("<AreaFeed />", () => {
         const modalButton = screen.getByTestId("spyModal");
         fireEvent.click(modalButton);
         // refresh -> re-render
-        await waitFor(() =>
-            expect(mockedAxios.get).toHaveBeenCalledTimes(6)
-        );
-    })
+        await waitFor(() => expect(mockedAxios.get).toHaveBeenCalledTimes(6));
+    });
 
     // it("should handle close search", async () => {
     //     const {container} = render(<AreaFeed />);
@@ -231,5 +222,4 @@ describe("<AreaFeed />", () => {
     //         expect(screen.getByRole('textbox')).toHaveValue("")
     //     );
     // });
-
 });

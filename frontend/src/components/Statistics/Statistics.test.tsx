@@ -1,7 +1,6 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Statistics from "./Statistics";
-import axios from "axios";
 import React from "react";
 
 jest.mock("react-minimal-pie-chart", () => ({
@@ -47,7 +46,7 @@ describe("<Statistics />", () => {
         jest.clearAllMocks();
     });
     it("should successfully get reports", async () => {
-        const { container } = render(<Statistics allReports={data} />);
+        render(<Statistics allReports={data} />);
         //const barChart = container.getElementsByClassName("bar");
         //console.log(barChart);
         //screen.getByText("BarChart");
