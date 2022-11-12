@@ -25,11 +25,7 @@ class PostSerializer(serializers.ModelSerializer):
             'latitude',
             'longitude',
             'created_at',
-<<<<<<< HEAD
-            'reply_to',
-=======
             'reply_to_author',
->>>>>>> 8fd93acf02608c82f7f6d13beb80207b05122ba3
             'hashtags',
         )
     def get_hashtags(self, post):
