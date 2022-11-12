@@ -73,7 +73,7 @@ const MapSearch = (props: IProps) => {
             searchQuery,
             (data, status, pagination) => {
                 if (status === kakao.maps.services.Status.OK) {
-                    // console.log(data);
+                    console.log("검색 중");
                     setSearchResponse(Response.success);
                     setSearchResult(data);
                     setSearchPagination(pagination);
@@ -101,7 +101,7 @@ const MapSearch = (props: IProps) => {
         );
     };
 
-    const searchResultBox = () => {
+    const SearchResultBox = () => {
         const pagination = searchPagination as kakao.maps.Pagination;
         const idxArray: number[] = range(
             1,
@@ -159,12 +159,6 @@ const MapSearch = (props: IProps) => {
         setSearchPagination(undefined);
         setShowResults(false);
     };
-    const onClickCloseBox = () => {
-        setSearchResponse(Response.zero_result);
-        setSearchResult([]);
-        setSearchPagination(undefined);
-        setShowResults(false);
-    };
     return (
         <Container id="search-box-container">
             <Row id="search-input-container">
@@ -178,7 +172,7 @@ const MapSearch = (props: IProps) => {
                 />
             </Row>
             <Row>
-                {(showResults && searchResponse === Response.success) && searchResultBox()}
+                {(showResults && searchResponse === Response.success)? <SearchResultBox />: null}
             </Row>
       </Container>
     );
