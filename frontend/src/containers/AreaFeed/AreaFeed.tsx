@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import { fetchPosts, addPost, PostType, selectPost } from "../../store/slices/post";
+import { fetchPosts, PostType, selectPost } from "../../store/slices/post";
 import { fetchTop3Hashtags, selectHashtag } from "../../store/slices/hashtag";
-import { fetchReports, selectReport } from "../../store/slices/report";
+import { fetchReports } from "../../store/slices/report";
 import { AppDispatch } from "../../store";
 
 import axios from "axios";
@@ -54,7 +54,6 @@ const CustomToggleButtonGroup = styled(ToggleButtonGroup)({
 function AreaFeed() {
     const postState = useSelector(selectPost);
     const hashtagState = useSelector(selectHashtag);
-    const reportState = useSelector(selectReport);
     const positionState = useSelector(selectPosition);
     const userState = useSelector(selectUser);
 

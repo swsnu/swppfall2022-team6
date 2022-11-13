@@ -31,11 +31,6 @@ const marks = [
     { value: 100, label: "4km" },
 ];
 
-// const initMarkerPosition: PositionType = {
-//     lat: 37.44877599087201,
-//     lng: 126.95264777802309,
-// }; // 서울대 중심
-
 function MainPage() {
     const userState = useSelector(selectUser);
     const positionState = useSelector(selectPosition);
@@ -219,6 +214,7 @@ function MainPage() {
                 </Button>
             </Row>
             <ReportModal
+                currPosition={currPosition}
                 openReport={openReport}
                 setOpenReport={setOpenReport}
             />
