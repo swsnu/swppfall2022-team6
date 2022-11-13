@@ -73,9 +73,10 @@ class PostViewSet(viewsets.GenericViewSet):
         coordinate = (float(latitude),float(longitude))
         # TODO: filter by created_at
         all_posts = Post.objects.all()
-        ids = [post.id for post in all_posts
-            if haversine(coordinate, (post.latitude, post.longitude))
-            <= float(radius)]
+        # ids = [post.id for post in all_posts
+        #     if haversine(coordinate, (post.latitude, post.longitude))
+        #     <= float(radius)]
+        ids = [post.id for post in all_posts]
 
         posts = all_posts.filter(id__in=ids).order_by('-created_at')
 
