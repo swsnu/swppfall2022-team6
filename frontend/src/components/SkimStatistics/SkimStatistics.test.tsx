@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import axios from "axios";
-import { PositionType } from "../Map/Map";
+import { PositionType } from "../../store/slices/position";
 import SkimStatistics, { SmallStatistics } from "./SkimStatistics";
 
 const sampleCoord: PositionType = {
@@ -76,7 +76,7 @@ describe("<SkimStatistics />", () => {
                 },
             ],
         });
-        render(<SkimStatistics position={sampleCoord} />);
+        render(<SkimStatistics position={sampleCoord} radius={2}/>);
         await screen.findByText("☀️ Sunny");
     });
     it("should render SmallStatistics", async () => {
@@ -116,7 +116,7 @@ describe("<SkimStatistics />", () => {
                 },
             ],
         });
-        render(<SmallStatistics />);
+        render(<SmallStatistics position={sampleCoord} radius={2}/>);
         await screen.findByText("☀️ Sunny");
     });
 });
