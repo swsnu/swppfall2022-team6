@@ -22,11 +22,11 @@ import { faRotateLeft, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Statistics from "../../components/Statistics/Statistics";
 import PostList from "../../components/PostList/PostList";
-import { ReportType } from "../../components/Statistics/Statistics";
 
 import "./AreaFeed.scss";
-import { editPosition, selectPosition } from "../../store/slices/position";
+import { PositionType, selectPosition } from "../../store/slices/position";
 import { selectUser, UserType } from "../../store/slices/user";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 
 type WeatherType = {
@@ -58,7 +58,7 @@ function AreaFeed() {
     const positionState = useSelector(selectPosition);
     const userState = useSelector(selectUser);
 
-    const [queryPosts, setQueryPosts] = useState<PostType[]>([]);
+    const [queryPosts, setQueryPosts] = useState<PostType[]>(postState.posts);
     const [refresh, setRefresh] = useState<Boolean>(true);
     const [weather, setWeather] = useState<WeatherType>({});
     const [selectTag, setSelectTag] = useState<string|undefined>(undefined);
@@ -68,19 +68,29 @@ function AreaFeed() {
     const navigate = useNavigate();
 
     const fetchData = async () => {
-        await dispatch(editPosition({lat: 37.0, lng: 127.0}));
         const user = userState.currUser as UserType;
+        let position: PositionType;
+        const savedPosition = localStorage.getItem("position")
+        if(savedPosition){
+            position = JSON.parse(savedPosition);
+        } else {
+            position = positionState.position;
+        }
+        // const position = JSON.parse(localStorage.getItem("position"));
         await dispatch(fetchPosts({
-             ...positionState.position, radius: user.radius 
-            }));
+            ...position, radius: user.radius 
+        })).then(unwrapResult)
+            .then((result) => {
+                setQueryPosts(result);
+            });
         await dispatch(fetchTop3Hashtags({
-            ...positionState.position, radius: user.radius 
-           }));
+            ...position, radius: user.radius 
+        }));
         await dispatch(fetchReports({
-            ...positionState.position, radius: user.radius 
-           }));
+            ...position, radius: user.radius 
+        }));
         
-        const {lat, lng} = positionState.position;
+        const {lat, lng} = position;
         const api = {
             key: "c22114b304afd9d97329b0223da5bb01",
             base: "https://api.openweathermap.org/data/2.5/",
@@ -94,7 +104,6 @@ function AreaFeed() {
                 main: data.weather[0].main,
             });
         });
-        setQueryPosts(postState.posts);
         setRefresh(false);
     }
 
@@ -144,7 +153,7 @@ function AreaFeed() {
                     post.content.includes(searchQuery)
                 )
             );
-        };
+        };   
         const onClickClose = ()=>{
             setSearchQuery("");
         }
@@ -217,7 +226,7 @@ function AreaFeed() {
                 </Col>
             </Row>
             <Row>
-                <Statistics allReports={reportState.reports} />
+                <Statistics />
             </Row>
             <Row id="recommended-hashtag-container">
                 <Row className="area-label">Recommended Hashtags</Row>
