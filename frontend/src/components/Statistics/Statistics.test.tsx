@@ -46,14 +46,14 @@ describe("<Statistics />", () => {
         jest.clearAllMocks();
     });
     it("should successfully get reports", async () => {
-        render(<Statistics allReports={data} />);
+        render(<Statistics />);
         //const barChart = container.getElementsByClassName("bar");
         //console.log(barChart);
         //screen.getByText("BarChart");
         screen.getByText("PieChart");
     });
     it("should not show anything if no reports", async () => {
-        render(<Statistics allReports={[]} />);
+        render(<Statistics />);
         screen.getByText("No Statistics!");
     });
 });
