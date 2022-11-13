@@ -18,8 +18,8 @@ export const hashtagSlice = createSlice({
   name: "hashtag",
   initialState,
   reducers: {
-    addHashtag: (state, action: PayloadAction<{ hashtag: HashtagType }>) => {
-      const newHashtag = {...action.payload.hashtag};
+    addHashtag: (state, action: PayloadAction<HashtagType>) => {
+      const newHashtag = {...action.payload};
       state.hashtags.push(newHashtag);
     },
   },
@@ -63,8 +63,9 @@ export const fetchHashtag = createAsyncThunk(
 );
 export const addHashtag = createAsyncThunk(
   "hashtag/addHashtag",
-  async(data) => {
-    const response = await axios.post("/hashtag/", data);
+  async(data, {dispatch}) => {
+    const response = await axios.post<HashtagType>("/hashtag/", data);
+    dispatch(hashtagActions.addHashtag(response.data))
     return response.data;
   }
 );

@@ -20,8 +20,8 @@ export const reportSlice = createSlice({
   name: "report",
   initialState,
   reducers: {
-    addReport: (state, action: PayloadAction<{ report: ReportType }>) => {
-      const newReport = {...action.payload.report};
+    addReport: (state, action: PayloadAction<ReportType>) => {
+      const newReport = {...action.payload};
       state.reports.push(newReport);
     },
   },
@@ -48,8 +48,9 @@ export const fetchReports = createAsyncThunk(
 
 export const addReport = createAsyncThunk(
   "report/addReport",
-  async(data) => {
-    const response = await axios.post("/report/", data);
+  async(data, {dispatch}) => {
+    const response = await axios.post<ReportType>("/report/", data);
+    dispatch(reportActions.addReport(response.data))
     return response.data;
   }
 );

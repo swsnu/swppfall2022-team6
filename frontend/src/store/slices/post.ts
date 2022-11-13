@@ -15,7 +15,9 @@ export type PostType = {
   hashtags: Array<HashtagType>;
 };
 
-export interface PostState { posts: PostType[];}
+export interface PostState { 
+  posts: PostType[];
+}
 const initialState: PostState = {
   posts: [],
 }; 
@@ -24,8 +26,8 @@ export const postSlice = createSlice({
   name: "post",
   initialState,
   reducers: {
-    addPost: (state, action: PayloadAction<{ post: PostType }>) => {
-      const newPost = {...action.payload.post};
+    addPost: (state, action: PayloadAction<PostType>) => {
+      const newPost = {...action.payload};
       state.posts.push(newPost);
     },
   },
@@ -49,7 +51,6 @@ export const fetchPosts = createAsyncThunk(
     return response.data["posts"];
   }
 );
-
 export const fetchPost = createAsyncThunk(
   "post/fetchPost", 
   async (data: {id:number, lat:number, lng:number, radius:number}) => {
@@ -60,10 +61,18 @@ export const fetchPost = createAsyncThunk(
     return response.data;
   }
 );
+export const fetchChainedPost = createAsyncThunk(
+  "post/fetchChainedPost", 
+  async (id:number) => {
+    const response = await axios.get<PostType[]>(`/post/${id}/chain/`);
+    return response.data;
+  }
+);
 export const addPost = createAsyncThunk(
   "post/addPost",
-  async(data) => {
+  async(data, {dispatch}) => {
     const response = await axios.post("/post/", data);
+    dispatch(postActions.addPost(response.data))
     return response.data;
   }
 );

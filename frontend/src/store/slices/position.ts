@@ -8,28 +8,32 @@ export interface PositionType {
 
 export interface PositionState { position: PositionType;}
 const initialState: PositionState = {
-  position: {lat: 37.0, lng: 127.0}
+  position: {
+    lat: 37.44877599087201,
+    lng: 126.95264777802309,
+  }
 }; 
 
 export const positionSlice = createSlice({
   name: "position",
   initialState,
   reducers: {
-    editPosition: (state, action: PayloadAction<{ position: PositionType }>) => {
-      const newPosition = {...action.payload.position};
+    setPosition: (state, action: PayloadAction<PositionType>) => {
+      const newPosition = {...action.payload};
       state.position = newPosition;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(editPosition.fulfilled, (state, action) => {
+    builder.addCase(setPosition.fulfilled, (state, action) => {
       state.position = action.payload;
     });
   }
 });
 
-export const editPosition = createAsyncThunk(
-  "position/fetchPosition", 
-  async (data: PositionType) => {
+export const setPosition = createAsyncThunk(
+  "position/setPosition", 
+  async (data: PositionType, {dispatch}) => {
+    dispatch(positionActions.setPosition(data))
     return data;
   }
 );
