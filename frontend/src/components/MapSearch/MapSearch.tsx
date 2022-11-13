@@ -7,13 +7,13 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { styled } from "@material-ui/core/styles";
 
-import { PositionType } from "../Map/Map";
+import { PositionType } from "../../store/slices/position";
 
 import "./MapSearch.scss"
 
 type IProps = {
-    markPosition: PositionType;
-    setMarkPosition: React.Dispatch<React.SetStateAction<PositionType>>;
+    markerPosition: PositionType;
+    setMarkerPosition: React.Dispatch<React.SetStateAction<PositionType>>;
     showResults: boolean;
     setShowResults: React.Dispatch<React.SetStateAction<boolean>>;
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -56,7 +56,7 @@ export const CustomSearchBar = styled(SearchBar)({
 });
 
 const MapSearch = (props: IProps) => {
-    const { markPosition, setMarkPosition, showResults, setShowResults, setIsOpen } = props;
+    const { markerPosition, setMarkerPosition, showResults, setShowResults, setIsOpen } = props;
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [searchResponse, setSearchResponse] = useState<string>(
         Response.zero_result
@@ -95,8 +95,8 @@ const MapSearch = (props: IProps) => {
                 }
             },
             {
-                x: markPosition["lng"],
-                y: markPosition["lat"],
+                x: markerPosition["lng"],
+                y: markerPosition["lat"],
             }
         );
     };
@@ -119,7 +119,7 @@ const MapSearch = (props: IProps) => {
                                 key={idx+1} 
                                 className="search-result"
                                 onClick={() => {
-                                    setMarkPosition({
+                                    setMarkerPosition({
                                         lat: +value.y,
                                         lng: +value.x,
                                     });

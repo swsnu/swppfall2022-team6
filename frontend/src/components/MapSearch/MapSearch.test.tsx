@@ -14,8 +14,8 @@ jest.mock("react-router", ()=>({
 const renderComponent = () => {
   const view = render (
     <MapSearch 
-      markPosition={{lat:0, lng:0}} 
-      setMarkPosition={setStateMock} 
+      markerPosition={{lat:0, lng:0}} 
+      setMarkerPosition={setStateMock} 
       showResults={false} 
       setShowResults={setStateMock}
       setIsOpen={setStateMock}
