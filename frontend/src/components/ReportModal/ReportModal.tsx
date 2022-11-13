@@ -3,13 +3,22 @@ import React, { useState } from "react";
 import "./ReportModal.scss";
 import { useNavigate } from "react-router-dom";
 import { Slider, TextField } from "@mui/material";
+import { PositionType } from "../../store/slices/position";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../../store";
+import { selectUser } from "../../store/slices/user";
+import { addReport } from "../../store/slices/report";
+import { addPost } from "../../store/slices/post";
 
 interface IProps {
+    currPosition: PositionType;
     openReport: boolean;
     setOpenReport: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function ReportModal({ openReport, setOpenReport }: IProps) {
+function ReportModal({ currPosition, openReport, setOpenReport }: IProps) {
+    const userState = useSelector(selectUser);
+
     const [content, setContent] = useState<string>("");
     const [image, setImage] = useState<File>();
     const [weather, setWeather] = useState<number>(0);
@@ -17,34 +26,33 @@ function ReportModal({ openReport, setOpenReport }: IProps) {
     const [windDegree, setWindDegree] = useState<number>(0);
     const [happyDegree, setHappyDegree] = useState<number>(0);
     const [humidityDegree, setHumidityDegree] = useState<number>(0);
+
+    const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const data = {
+            user_id: userState.currUser?.id ?? 1,
             weather: ["Sunny", "Cloudy", "Rain", "Snow"][weather],
             weather_degree: weatherDegree,
             wind_degree: windDegree,
             happy_degree: happyDegree,
             humidity_degree: humidityDegree,
+            latitude: currPosition.lat,
+            longitude: currPosition.lng,
         };
-        axios
-            .post("/report/", data)
-            .then(() => {
-                if (image || content) {
-                    const formData = new FormData();
-                    if (image) formData.append("image", image);
-                    formData.append("content", content);
-                    formData.append("hashtags", "");
-
-                    axios.post("/post/", formData, {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                        },
-                    });
-                }
-            })
-            .then(() => navigate("/areafeed/"));
+        //@ts-ignore
+        await dispatch(addReport(data)); //! 왜 0개의 인수,,,?
+        if(image || content) {
+            const formData = new FormData();
+            if (image) formData.append("image", image);
+            formData.append("content", content);
+            formData.append("hashtags", "");
+            //@ts-ignore
+            await dispatch(addPost(formData));
+        }
+        navigate("/areafeed/");
     };
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();

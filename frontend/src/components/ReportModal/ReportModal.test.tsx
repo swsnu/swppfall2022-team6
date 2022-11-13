@@ -17,7 +17,7 @@ describe("<ReportModal />", () => {
     });
     it("should handle form submit properly", async () => {
         axios.post = jest.fn().mockResolvedValue({});
-        render(<ReportModal openReport={true} setOpenReport={jest.fn()} />);
+        render(<ReportModal currPosition={{lat:0, lng:0}} openReport={true} setOpenReport={jest.fn()} />);
         const submitButton = screen.getByText("Submit!");
         fireEvent.click(submitButton);
         await waitFor(() => {
@@ -27,7 +27,7 @@ describe("<ReportModal />", () => {
     it("should change photo properly", async () => {
         axios.post = jest.fn().mockResolvedValue({});
         const file = new File(["TEST"], "test.png", { type: "image/png" });
-        render(<ReportModal openReport={true} setOpenReport={jest.fn()} />);
+        render(<ReportModal currPosition={{lat:0, lng:0}} openReport={true} setOpenReport={jest.fn()} />);
         const fileUploader = screen.getByTestId("fileUploader");
         fireEvent.change(fileUploader, { target: { files: null } });
         userEvent.upload(fileUploader, file);
@@ -39,7 +39,7 @@ describe("<ReportModal />", () => {
     });
     it("should submit content if only exists", async () => {
         axios.post = jest.fn().mockResolvedValue({});
-        render(<ReportModal openReport={true} setOpenReport={jest.fn()} />);
+        render(<ReportModal currPosition={{lat:0, lng:0}} openReport={true} setOpenReport={jest.fn()} />);
         const textField = screen.getByTestId("textField");
         fireEvent.change(textField, { target: { value: "TEXT" } });
         const submitButton = screen.getByText("Submit!");
@@ -50,12 +50,12 @@ describe("<ReportModal />", () => {
     });
     it("should close modal properly", async () => {
         axios.post = jest.fn().mockResolvedValue({});
-        render(<ReportModal openReport={true} setOpenReport={jest.fn()} />);
+        render(<ReportModal currPosition={{lat:0, lng:0}} openReport={true} setOpenReport={jest.fn()} />);
         const closeButton = screen.getByTestId("closeButton");
         fireEvent.click(closeButton);
     });
     it("should select weather properly", async () => {
-        render(<ReportModal openReport={true} setOpenReport={jest.fn()} />);
+        render(<ReportModal currPosition={{lat:0, lng:0}} openReport={true} setOpenReport={jest.fn()} />);
         const sunnyButton = screen.getByText("☀️ Sunny");
         fireEvent.click(sunnyButton);
         await waitFor(() => {
@@ -78,7 +78,7 @@ describe("<ReportModal />", () => {
         });
     });
     it("should change slider properly", async () => {
-        render(<ReportModal openReport={true} setOpenReport={jest.fn()} />);
+        render(<ReportModal currPosition={{lat:0, lng:0}} openReport={true} setOpenReport={jest.fn()} />);
         const weatherSlider = screen.getByLabelText("weather_degree");
         fireEvent.change(weatherSlider, { target: { value: 1 } });
         const windSlider = screen.getByLabelText("wind_degree");
@@ -89,12 +89,12 @@ describe("<ReportModal />", () => {
         fireEvent.change(humiditySlider, { target: { value: 4 } });
     });
     it("should change textfield properly", async () => {
-        render(<ReportModal openReport={true} setOpenReport={jest.fn()} />);
+        render(<ReportModal currPosition={{lat:0, lng:0}} openReport={true} setOpenReport={jest.fn()} />);
         const textField = screen.getByTestId("textField");
         fireEvent.change(textField, { target: { value: "TEXT" } });
         await waitFor(() => screen.findByText("TEXT"));
     });
     it("should show nothing if openReport is false", async () => {
-        render(<ReportModal openReport={false} setOpenReport={jest.fn()} />);
+        render(<ReportModal currPosition={{lat:0, lng:0}} openReport={false} setOpenReport={jest.fn()} />);
     });
 });

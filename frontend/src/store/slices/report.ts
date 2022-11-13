@@ -3,12 +3,16 @@ import { AppDispatch, RootState } from "..";
 import axios from 'axios';
 
 export interface ReportType {
+  id: number;
+  user_name: string;
   weather: string;
   weather_degree: number;
   wind_degree: number;
   happy_degree: number;
   humidity_degree: number;
-  time: string;
+  latitude: number;
+  longitude: number;
+  created_at: string;
 }
 
 export interface ReportState { reports: ReportType[];}

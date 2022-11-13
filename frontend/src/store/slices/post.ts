@@ -71,7 +71,11 @@ export const fetchChainedPost = createAsyncThunk(
 export const addPost = createAsyncThunk(
   "post/addPost",
   async(data, {dispatch}) => {
-    const response = await axios.post("/post/", data);
+    const response = await axios.post("/post/", data,  {
+      headers: {
+          "Content-Type": "multipart/form-data",
+      }
+    });
     dispatch(postActions.addPost(response.data))
     return response.data;
   }
