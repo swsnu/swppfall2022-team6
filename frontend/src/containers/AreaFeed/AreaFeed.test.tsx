@@ -3,6 +3,9 @@ import axios from "axios";
 import "jest-canvas-mock";
 import AreaFeed from "./AreaFeed";
 import { IProps } from "../../components/PostModal/PostModal";
+import { Provider } from "react-redux";
+import { mockStore } from "../../test-utils/mock";
+import { MemoryRouter, Route, Routes } from "react-router";
 
 jest.mock("react-chartjs-2", () => ({
     Bar: () => <div>BarChart</div>,
@@ -15,6 +18,12 @@ jest.mock("react-router", () => ({
     ...jest.requireActual("react-router"),
     useNavigate: () => mockNavigate,
 }));
+// const mockDispatch = jest.fn();
+// jest.mock("react-redux", ()=>({
+//   ...jest.requireActual("react-redux"),
+//   useDispatch: ()=>mockDispatch,
+console.error = jest.fn();
+// }));
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
@@ -29,85 +38,9 @@ jest.mock("../../components/PostModal/PostModal", () => (props: IProps) => (
 ));
 
 describe("<AreaFeed />", () => {
+    let areaFeedJSX: JSX.Element;
     beforeEach(() => {
         jest.clearAllMocks();
-
-        const report = [
-            {
-                weather: "Sunny",
-                weather_degree: 2,
-                wind_degree: 1,
-                happy_degree: 2,
-                humidity_degree: 5,
-                time: "",
-            },
-            {
-                weather: "Cloudy",
-                weather_degree: 2,
-                wind_degree: 1,
-                happy_degree: 2,
-                humidity_degree: 5,
-                time: "",
-            },
-            {
-                weather: "Rain",
-                weather_degree: 2,
-                wind_degree: 1,
-                happy_degree: 2,
-                humidity_degree: 5,
-                time: "",
-            },
-            {
-                weather: "Snow",
-                weather_degree: 2,
-                wind_degree: 1,
-                happy_degree: 2,
-                humidity_degree: 5,
-                time: "",
-            },
-        ];
-
-        const post = {
-            posts: [
-                {
-                    id: 2,
-                    user_name: "user1",
-                    content: "content1",
-                    latitude: 37.44877599087201,
-                    longitude: 126.95264777802309,
-                    created_at: new Date().toLocaleDateString(),
-                    reply_to_author: 1,
-                    image: "",
-                    hashtags: [
-                        {
-                            id: 1,
-                            content: "hashtag1",
-                        },
-                        {
-                            id: 2,
-                            content: "hashtag2",
-                        },
-                        {
-                            id: 3,
-                            content: "hashtag3",
-                        },
-                    ],
-                },
-                {
-                    id: 1,
-                    user_name: "user2",
-                    content: "content2",
-                    latitude: 37.44877599087201,
-                    longitude: 126.95264777802309,
-                    created_at: new Date().toLocaleDateString(),
-                    image: "/logo192.png",
-                    reply_to_author: null,
-                    hashtags: [],
-                },
-            ],
-            top3_hashtags: ["hashtag1", "hashtag2", "hashtag3"],
-        };
-
         const weather = {
             weather: [
                 {
@@ -121,13 +54,24 @@ describe("<AreaFeed />", () => {
                 temp: 283.76,
             },
         };
-
+        areaFeedJSX = (
+            <Provider store={mockStore}>
+                <MemoryRouter>
+                    <Routes>
+                        <Route path="/" element={<AreaFeed/>}/>
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        )
         mockedAxios.get.mockImplementation((url: string) => {
             switch (true) {
                 case url.includes("/post/"):
-                    return Promise.resolve({ data: post });
+                    return Promise.resolve({ data: {
+                        posts: mockStore.getState().posts.posts,
+                        top3_hashtags: mockStore.getState().hashtags.top3 
+                    }});
                 case url.includes("/report/"):
-                    return Promise.resolve({ data: report });
+                    return Promise.resolve({ data: mockStore.getState().reports.reports });
                 case url.includes("https://api.openweathermap.org/data/2.5/"):
                     return Promise.resolve({ data: weather });
                 default:
@@ -137,20 +81,20 @@ describe("<AreaFeed />", () => {
     });
 
     it("should render withour errors", async () => {
-        const { container } = render(<AreaFeed />);
+        const { container } = render(areaFeedJSX);
         await waitFor(() => {
             expect(container).toBeTruthy();
         });
     });
     it("should handle back button", async () => {
-        const view = render(<AreaFeed />);
+        const view = render(areaFeedJSX);
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const backBtn = view.container.querySelector("#back-button");
         fireEvent.click(backBtn!);
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith(`/`));
     });
     it("should handle refresh button", async () => {
-        const view = render(<AreaFeed />);
+        const view = render(areaFeedJSX);
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const refreshBtn = view.container.querySelector("#refresh-button");
         fireEvent.click(refreshBtn!);
@@ -158,7 +102,7 @@ describe("<AreaFeed />", () => {
     });
 
     it("should handle hashtag togglebutton", async () => {
-        render(<AreaFeed />);
+        render(areaFeedJSX);
         await waitFor(() => screen.findByText("#hashtag1"));
         // eslint-disable-next-line testing-library/await-async-query
         const hashtag1Btn = screen.findByText("#hashtag1");
@@ -168,7 +112,7 @@ describe("<AreaFeed />", () => {
         );
     });
     it("should handle only Photos button", async () => {
-        render(<AreaFeed />);
+        render(areaFeedJSX);
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const photosBtn = screen.getByRole("switch");
         fireEvent.click(photosBtn!);
@@ -179,13 +123,9 @@ describe("<AreaFeed />", () => {
     });
 
     it("should handle search", async () => {
-        const { container } = render(<AreaFeed />);
-        await screen.findByText("#hashtag1");
-        // eslint-disable-next-line testing-library/no-node-access
+        const { container } = render(areaFeedJSX);
         const newSearchBox = screen.getByRole("textbox");
-        if (newSearchBox) {
-            fireEvent.change(newSearchBox, { target: { value: "t2" } });
-        }
+        fireEvent.change(newSearchBox, { target: { value: "t2" } });
         await screen.findByDisplayValue("t2");
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const searchIcon = container.getElementsByClassName(
@@ -199,14 +139,14 @@ describe("<AreaFeed />", () => {
     });
 
     it("should handle postlistcallback after adding post", async () => {
-        render(<AreaFeed />);
+        render(areaFeedJSX);
         await waitFor(() => screen.findByText("user1"));
         const addPostButton = screen.getByText("Add Post");
         fireEvent.click(addPostButton!);
         const modalButton = screen.getByTestId("spyModal");
         fireEvent.click(modalButton);
         // refresh -> re-render
-        await waitFor(() => expect(mockedAxios.get).toHaveBeenCalledTimes(6));
+        await waitFor(() => expect(mockedAxios.get).toHaveBeenCalledTimes(8));
     });
 
     // it("should handle close search", async () => {

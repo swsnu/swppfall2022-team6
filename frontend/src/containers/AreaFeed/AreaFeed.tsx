@@ -75,20 +75,6 @@ function AreaFeed() {
         } else {
             position = positionState.position;
         }
-        // const position = JSON.parse(localStorage.getItem("position"));
-        await dispatch(fetchPosts({
-            ...position, radius: user.radius 
-        })).then(unwrapResult)
-            .then((result) => {
-                setQueryPosts(result);
-            });
-        await dispatch(fetchTop3Hashtags({
-            ...position, radius: user.radius 
-        }));
-        await dispatch(fetchReports({
-            ...position, radius: user.radius 
-        }));
-        
         const {lat, lng} = position;
         const api = {
             key: "c22114b304afd9d97329b0223da5bb01",
@@ -104,6 +90,18 @@ function AreaFeed() {
             });
         });
         setRefresh(false);
+
+        const queryPostPromise = dispatch(fetchPosts({
+            ...position, radius: user.radius 
+        }))
+        const postData = (await queryPostPromise).payload as PostType[];
+        setQueryPosts(postData);
+        await dispatch(fetchTop3Hashtags({
+            ...position, radius: user.radius 
+        }));
+        await dispatch(fetchReports({
+            ...position, radius: user.radius 
+        }));
     }
 
     useEffect(() => {   
