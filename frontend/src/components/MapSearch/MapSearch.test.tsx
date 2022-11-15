@@ -1,5 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { act } from 'react-dom/test-utils';
+import { Provider } from "react-redux";
+import { mockStore } from "../../test-utils/mock";
+import { MemoryRouter, Route, Routes } from "react-router";
 import MapSearch from "./MapSearch";
 import {mockSearchResultData} from "../../test-utils/mock";
 
@@ -13,13 +15,22 @@ jest.mock("react-router", ()=>({
 
 const renderComponent = () => {
   const view = render (
-    <MapSearch 
-      markerPosition={{lat:0, lng:0}} 
-      setMarkerPosition={setStateMock} 
-      showResults={false} 
-      setShowResults={setStateMock}
-      setIsOpen={setStateMock}
-    />
+    <Provider store={mockStore}>
+          <MemoryRouter>
+              <Routes>
+                  <Route path="/" element={
+                  <MapSearch 
+                    markerPosition={{lat:0, lng:0}} 
+                    setMarkerPosition={setStateMock} 
+                    showResults={false} 
+                    setShowResults={setStateMock}
+                    setIsOpen={setStateMock}
+                  />
+                }/>
+              </Routes>
+          </MemoryRouter>
+      </Provider>
+    
   );
   return(view);
 }
