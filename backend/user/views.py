@@ -1,10 +1,12 @@
 '''
     user views
 '''
-from django.contrib.auth import get_user_model #, login, logout
+from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.db import transaction
+from .serializer import UserSerializer
 #from django.shortcuts import redirect
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, permissions
+from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.generics import GenericAPIView
@@ -17,24 +19,47 @@ class UserSignUpView(GenericAPIView):
 
     # POST /user/signup/
     def post(self, request):
-        del request
+        body = request.data
+
+        email = body.get('email')
+        password = body.get('password')
+        username = body.get('username')
+        user = User.objects.create_user(email=email, password=password, username=username)
         return Response("signup", status=status.HTTP_201_CREATED)
 
 
 class UserLoginView(GenericAPIView):
+    serializer_class = UserSerializer
+    permission_classes = (permissions.AllowAny, )
 
     # POST /user/signin/
     def post(self, request):
-        del request
-        return Response("signin", status=status.HTTP_200_OK)
+        email = request.data.get('email')
+        password = request.data.get('password')
+
+        if not email:
+            return Response({'error': 'email missing'}, status=status.HTTP_400_BAD_REQUEST)
+        if not password:
+            return Response({'error': 'password missing'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = authenticate(request, email=email, password=password)
+        if user:
+            login(request, user)
+            data = self.get_serializer(user).data
+            token, created = Token.objects.get_or_create(user=user)
+            data['token'] = token.key
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({'error': 'email or password wrong'}, status=status.HTTP_403_FORBIDDEN)
 
 
 class UserLogoutView(GenericAPIView):
+    permission_classes = (permissions.IsAuthenticated, )
 
     # POST /user/signout/
     def post(self, request):
-        del request
-        return Response("signout", status=status.HTTP_200_OK)
+        request.user.auth_token.delete()
+        logout(request)
+        return Response(status=status.HTTP_200_OK)
 
 
 class UserViewSet(viewsets.GenericViewSet):

@@ -15,9 +15,10 @@ class Badge(models.Model):
 
 
 class User(AbstractUser):
+    email = models.EmailField(unique=True)
     radius = models.FloatField(default=0)
     main_badge = models.ForeignKey(Badge, related_name='user', \
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE, default=1)
 
     class Meta:
         db_table = 'user'

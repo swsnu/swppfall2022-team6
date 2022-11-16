@@ -29,7 +29,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-AUTH_USER_MODEL = 'user.User'
+AUTH_USER_MODEL = "user.User"
+AUTHENTICATION_BACKENDS = ["user.backends.CustomUserModelBackend"]
 
 
 # Application definition
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'post.apps.PostConfig',
     'hashtag.apps.HashtagConfig',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
