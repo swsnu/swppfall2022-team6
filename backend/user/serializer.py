@@ -1,9 +1,45 @@
 '''
     user serializer
 '''
+from django.contrib.auth import authenticate
 from rest_framework import serializers
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from rest_framework.authtoken.models import Token
 from .models import User, Badge
+
+class LogInSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(read_only=True)
+    password = serializers.CharField(max_length=68, write_only=True)
+    email = serializers.EmailField()
+    tokens = serializers.SerializerMethodField()
+
+    def get_tokens(self, obj):
+        user =  User.objects.get(username=obj['username'])
+        return {
+            'refresh': user.tokens()['refresh'],
+            'access': user.tokens()['access']
+        }
+
+    class Meta:
+        model = User
+        fields = ['username', 'password', 'email', 'tokens',]
+
+    def validate(self, attrs):
+        email = attrs.get('email', '')
+        password = attrs.get('password', '')
+        user = authenticate(email=email, password=password)
+
+        if not user:
+            raise AuthenticationFailed('invalid credentials, try again')
+        if not user.is_active:
+            raise AuthenticationFailed('user not active')
+
+        return {
+            'username': user.username,
+            'email': user.email,
+            'tokens': user.tokens
+        }
 
 class UserSerializer(serializers.ModelSerializer):
     '''

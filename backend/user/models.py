@@ -3,6 +3,7 @@
 '''
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class Badge(models.Model):
@@ -20,6 +21,13 @@ class User(AbstractUser):
     main_badge = models.ForeignKey(Badge, related_name='user', \
         on_delete=models.CASCADE, default=1)
 
+    # 유저의 토큰을 생성할 때 사용합니다.
+    def tokens(self):
+        refresh = RefreshToken.for_user(self)
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token)
+        }
     class Meta:
         db_table = 'user'
 

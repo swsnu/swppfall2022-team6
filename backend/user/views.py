@@ -3,7 +3,8 @@
 '''
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.db import transaction
-from .serializer import UserSerializer
+from django.http import JsonResponse
+from .serializer import LogInSerializer, UserSerializer
 #from django.shortcuts import redirect
 from rest_framework import status, viewsets, permissions
 from rest_framework.response import Response
@@ -34,28 +35,15 @@ class UserLoginView(GenericAPIView):
     '''
         user login view
     '''
-    serializer_class = UserSerializer
+    serializer_class = LogInSerializer
     permission_classes = (permissions.AllowAny, )
 
     # POST /user/signin/
     def post(self, request):
-        email = request.data.get('email')
-        password = request.data.get('password')
-
-        if not email:
-            return Response({'error': 'email missing'}, \
-                status=status.HTTP_400_BAD_REQUEST)
-        if not password:
-            return Response({'error': 'password missing'}, \
-                status=status.HTTP_400_BAD_REQUEST)
-
-        user = authenticate(request, email=email, password=password)
-        if user:
-            login(request, user)
-            data = self.get_serializer(user).data
-            return Response(data, status=status.HTTP_200_OK)
-        return Response({'error': 'email or password wrong'}, \
-            status=status.HTTP_403_FORBIDDEN)
+        serializer = self.serializer_class(data=request.data)
+        print(serializer)
+        serializer.is_valid(raise_exception=True)
+        return JsonResponse(data=serializer.data, status=status.HTTP_200_OK)
 
 
 class UserLogoutView(GenericAPIView):
