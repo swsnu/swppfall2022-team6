@@ -1,10 +1,10 @@
 '''
     user views
 '''
+from django.conf import settings
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.db import transaction
-from django.http import JsonResponse
-from .serializer import LogInSerializer, UserSerializer
+from .serializer import LogInSerializer, LogOutSerializer, UserSerializer
 #from django.shortcuts import redirect
 from rest_framework import status, viewsets, permissions
 from rest_framework.response import Response
@@ -41,22 +41,33 @@ class UserLoginView(GenericAPIView):
     # POST /user/signin/
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        print(serializer)
         serializer.is_valid(raise_exception=True)
-        return JsonResponse(data=serializer.data, status=status.HTTP_200_OK)
-
+        access_token = serializer.data["tokens"]["access"]
+        refresh_token = serializer.data["tokens"]["refresh"]
+        data = { "msg" : "login success", "username": serializer.data["username"] }
+        res = Response(data, status=status.HTTP_200_OK)
+        res.set_cookie('access_token', value=access_token, httponly=True)
+        res.set_cookie('refresh_token', value=refresh_token, httponly=True)
+        return res
 
 class UserLogoutView(GenericAPIView):
     '''
         user logout view
     '''
+    serializer_class = LogOutSerializer
     permission_classes = (permissions.IsAuthenticated, )
 
     # POST /user/signout/
     def post(self, request):
-        request.user.auth_token.delete()
-        logout(request)
-        return Response(status=status.HTTP_200_OK)
+        refresh_token = { "refresh" : request.COOKIES.get(settings.SIMPLE_JWT['REFRESH_TOKEN'])}
+        serializer = self.serializer_class(data = refresh_token)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        data = { "msg": "logout success" }
+        res = Response(data, status=status.HTTP_200_OK)
+        res.delete_cookie('access_token')
+        res.delete_cookie('refresh_token')
+        return res
 
 
 class UserViewSet(viewsets.GenericViewSet):
