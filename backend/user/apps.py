@@ -1,5 +1,5 @@
 '''
-    uer apps
+    user apps
 '''
 from django.apps import AppConfig
 

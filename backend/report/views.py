@@ -27,8 +27,8 @@ class ReportViewSet(viewsets.GenericViewSet):
         wind_degree=req_data['wind_degree'],
         happy_degree=req_data['happy_degree'],
         humidity_degree=req_data['humidity_degree'],
-        latitude=req_data['latitude'], 
-        longitude=req_data['longitude'], 
+        latitude=req_data['latitude'],
+        longitude=req_data['longitude'],
         created_at=datetime.now()
         )
         return Response('create report', status=status.HTTP_201_CREATED)
@@ -65,7 +65,7 @@ class ReportViewSet(viewsets.GenericViewSet):
         reports = all_reports.filter(id__in=ids).order_by('-created_at')
 
         data = self.get_serializer(reports, many=True).data
-        
+
         # ret_reports = [{'weather': report.weather,
         # 'weather_degree': report.weather_degree,
         # 'wind_degree': report.wind_degree,
