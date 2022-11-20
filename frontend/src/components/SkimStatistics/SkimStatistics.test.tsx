@@ -76,7 +76,7 @@ describe("<SkimStatistics />", () => {
                 },
             ],
         });
-        render(<SkimStatistics position={sampleCoord} radius={2}/>);
+        render(<SkimStatistics position={sampleCoord} radius={2} />);
         await screen.findByText("☀️ Sunny");
     });
     it("should render SmallStatistics", async () => {
@@ -116,7 +116,7 @@ describe("<SkimStatistics />", () => {
                 },
             ],
         });
-        render(<SmallStatistics position={sampleCoord} radius={2}/>);
+        render(<SmallStatistics position={sampleCoord} radius={2} />);
         await screen.findByText("☀️ Sunny");
     });
 });
