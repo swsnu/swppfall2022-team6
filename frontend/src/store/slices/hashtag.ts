@@ -56,14 +56,14 @@ export const fetchTop3Hashtags = createAsyncThunk(
 );
 export const fetchHashtag = createAsyncThunk(
   "hashtag/fetchHashtag", 
-  async (id) => {
+  async (id:number) => {
     const response = await axios.get<HashtagType[]>(`/hashtag/${id}/`);
     return response.data;
   }
 );
 export const addHashtag = createAsyncThunk(
   "hashtag/addHashtag",
-  async(data, {dispatch}) => {
+  async(data:HashtagType, {dispatch}) => {
     const response = await axios.post<HashtagType>("/hashtag/", data);
     dispatch(hashtagActions.addHashtag(response.data))
     return response.data;

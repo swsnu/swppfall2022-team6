@@ -33,7 +33,7 @@ function ReportModal({ currPosition, openReport, setOpenReport }: IProps) {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const data = {
-            user_id: userState.currUser?.id ?? 1,
+            user_id: userState.currUser?.id,
             weather: ["Sunny", "Cloudy", "Rain", "Snow"][weather],
             weather_degree: weatherDegree,
             wind_degree: windDegree,
@@ -44,7 +44,7 @@ function ReportModal({ currPosition, openReport, setOpenReport }: IProps) {
         };
         //@ts-ignore
         await dispatch(addReport(data)); //! 왜 0개의 인수,,,?
-        if(image || content) {
+        if (image || content) {
             const formData = new FormData();
             if (image) formData.append("image", image);
             formData.append("content", content);

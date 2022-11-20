@@ -52,7 +52,7 @@ export const fetchReports = createAsyncThunk(
 
 export const addReport = createAsyncThunk(
   "report/addReport",
-  async(data, {dispatch}) => {
+  async(data:ReportType, {dispatch}) => {
     const response = await axios.post<ReportType>("/report/", data);
     dispatch(reportActions.addReport(response.data))
     return response.data;

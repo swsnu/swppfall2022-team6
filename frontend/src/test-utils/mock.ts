@@ -97,9 +97,9 @@ const stubPostInitialState: PostState = {
 const stubReportInitialState: ReportState = {
   reports: [
     {id: 1, user_name: "user1", weather: "Sunny", weather_degree: 3, wind_degree: 2, happy_degree: 2, humidity_degree: 4, latitude: 0, longitude: 0, created_at: "2022-11-20T8:43:28UTC+9"},
-    {id: 2, user_name: "user1", weather: "Sunny", weather_degree: 3, wind_degree: 2, happy_degree: 2, humidity_degree: 4, latitude: 0, longitude: 0, created_at: "2022-11-20T9:43:28UTC+9"},
-    {id: 3, user_name: "user4", weather: "Sunny", weather_degree: 3, wind_degree: 2, happy_degree: 2, humidity_degree: 4, latitude: 0, longitude: 0, created_at: "2022-11-20T10:43:28UTC+9"},
-    {id: 4, user_name: "user3", weather: "Sunny", weather_degree: 3, wind_degree: 2, happy_degree: 2, humidity_degree: 4, latitude: 0, longitude: 0, created_at: "2022-11-20T11:43:28UTC+9"},
+    {id: 2, user_name: "user1", weather: "Cloudy", weather_degree: 3, wind_degree: 2, happy_degree: 2, humidity_degree: 4, latitude: 0, longitude: 0, created_at: "2022-11-20T9:43:28UTC+9"},
+    {id: 3, user_name: "user4", weather: "Rain", weather_degree: 3, wind_degree: 2, happy_degree: 2, humidity_degree: 4, latitude: 0, longitude: 0, created_at: "2022-11-20T10:43:28UTC+9"},
+    {id: 4, user_name: "user3", weather: "Snow", weather_degree: 3, wind_degree: 2, happy_degree: 2, humidity_degree: 4, latitude: 0, longitude: 0, created_at: "2022-11-20T11:43:28UTC+9"},
   ]
 }
 const stubPositionInitialState: PositionState = {

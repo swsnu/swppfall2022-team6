@@ -2,58 +2,69 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Statistics from "./Statistics";
 import React from "react";
+import { getMockStore, mockStore } from "../../test-utils/mock";
+import { Provider } from "react-redux";
+import { ReportState } from "../../store/slices/report";
 
 jest.mock("react-minimal-pie-chart", () => ({
-    PieChart: () => <div>PieChart</div>,
+    PieChart: ({
+        label,
+    }: {
+        label: ({
+            x,
+            y,
+            dx,
+            dy,
+            dataEntry,
+            dataIndex,
+        }: {
+            x: number;
+            y: number;
+            dx: number;
+            dy: number;
+            dataEntry: any;
+            dataIndex: number;
+        }) => React.SVGProps<SVGTextElement> | string;
+    }) => <div>PieChart</div>,
 }));
 
 describe("<Statistics />", () => {
-    const data = [
-        {
-            weather: "Sunny",
-            weather_degree: 2,
-            wind_degree: 1,
-            happy_degree: 2,
-            humidity_degree: 5,
-            time: "",
-        },
-        {
-            weather: "Cloudy",
-            weather_degree: 2,
-            wind_degree: 1,
-            happy_degree: 2,
-            humidity_degree: 5,
-            time: "",
-        },
-        {
-            weather: "Rain",
-            weather_degree: 2,
-            wind_degree: 1,
-            happy_degree: 2,
-            humidity_degree: 5,
-            time: "",
-        },
-        {
-            weather: "Snow",
-            weather_degree: 2,
-            wind_degree: 1,
-            happy_degree: 2,
-            humidity_degree: 5,
-            time: "",
-        },
-    ];
     beforeEach(() => {
         jest.clearAllMocks();
     });
     it("should successfully get reports", async () => {
-        render(<Statistics />);
-        //const barChart = container.getElementsByClassName("bar");
-        //console.log(barChart);
-        //screen.getByText("BarChart");
+        render(
+            <Provider store={mockStore}>
+                <Statistics />
+            </Provider>
+        );
         screen.getByText("PieChart");
     });
     it("should not show anything if no reports", async () => {
-        render(<Statistics />);
+        const mymockStore = getMockStore({
+            users: { users: [], currUser: null },
+            posts: {
+                posts: [],
+            },
+            reports: {
+                reports: [],
+            },
+            hashtags: {
+                hashtags: [],
+                top3: [],
+            },
+            positions: {
+                position: {
+                    lat: 37.44877599087201,
+                    lng: 126.95264777802309,
+                },
+            },
+        });
+        render(
+            <Provider store={mymockStore}>
+                <Statistics />
+            </Provider>
+        );
         screen.getByText("No Statistics!");
     });
 });

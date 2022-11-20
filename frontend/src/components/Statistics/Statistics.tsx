@@ -251,6 +251,7 @@ function Statistics() {
                         justifyContent: "space-between",
                     }}
                 >
+                    <Col>{reportState.reports.length}</Col>
                     <Col
                         id="piechart-container"
                         style={{
