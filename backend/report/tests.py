@@ -18,24 +18,43 @@ class ReportTestCase(TestCase):
         badge = Badge.objects.create()
         User.objects.create_user(username='swpp', password='iluvswpp',
         main_badge_id=badge.id)
-        response = client.post('/report/', json.dumps({'weather':'Sunny',
-        'weather_degree':1, 'wind_degree':2, 'happy_degree':3,
-        'humidity_degree':4}), content_type='application/json')
+        response = client.post('/report/', json.dumps({
+            'weather':'Sunny',
+            'weather_degree':1,
+            'wind_degree':2,
+            'happy_degree':3,
+            'humidity_degree':4,
+            'latitude': 30,
+            'longitude': 30,
+        }), content_type='application/json')
 
         self.assertEqual(response.status_code, 201)
 
     def test_get(self):
         badge = Badge.objects.create()
-        user = User.objects.create_user(username='swpp', password='iluvswpp',
-        main_badge_id=badge.id)
-        new_report = Report.objects.create(user=user, weather=0,
-        weather_degree=1,
-        wind_degree=2, happy_degree=3, humidity_degree=4, latitude=30.0,
-        longitude=30.0, created_at=datetime.now())
+        user = User.objects.create_user(
+            username='swpp',
+            password='iluvswpp',
+            main_badge_id=badge.id
+        )
+        new_report = Report.objects.create(
+            user=user,
+            weather=0,
+            weather_degree=1,
+            wind_degree=2,
+            happy_degree=3,
+            humidity_degree=4,
+            latitude=30.0,
+            longitude=30.0,
+            created_at=datetime.now()
+        )
         new_report.save()
         client = Client()
-        response = client.get('/report/', {'latitude':30, 'longitude':30,
-        'radius':2})
+        response = client.get('/report/', {
+            'latitude':30,
+            'longitude':30,
+            'radius':2
+        })
 
         self.assertEqual(response.status_code, 200)
         self.assertIn('4', response.content.decode())
