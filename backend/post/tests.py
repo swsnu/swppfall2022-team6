@@ -94,7 +94,10 @@ class PostTestCase(TestCase):
         self.assertEqual(posts[1]['latitude'], 36.0)
         self.assertEqual(posts[1]['longitude'], 128.0)
         self.assertEqual(posts[1]['reply_to_author'], None)
-        self.assertEqual(posts[1]['hashtags'], [{'id': 1, 'content': 'hashtag'}])
+        self.assertEqual(
+            posts[1]['hashtags'],
+            [{'id': 1, 'content': 'hashtag'}]
+        )
         self.assertIsNotNone(posts[1]['created_at'])
 
         self.assertEqual(top3hashtags, ['hashtag'])
@@ -148,11 +151,11 @@ class PostTestCase(TestCase):
         self.assertEqual(response.status_code, 404)
         response = client.get('/post/1/')
         self.assertEqual(response.status_code, 200)
-        
+
         data = response.json()
         self.assertJSONEqual(
             str(response.content, encoding='utf8'),
-            {  
+            {
                 'post':{
                     'id': 1,
                     'user_name': 'swpp',
@@ -171,7 +174,7 @@ class PostTestCase(TestCase):
                     'image': None,
                     'latitude': 5.0,
                     'longitude': 12.0,
-                    'created_at': data['replies'][0]['created_at'], 
+                    'created_at': data['replies'][0]['created_at'],
                     'reply_to_author': 'swpp',
                     'hashtags': [],
                     }]
