@@ -12,7 +12,7 @@ from user.models import User
 from post.models import Post, PostHashtag
 from hashtag.models import Hashtag
 from .serializer import PostSerializer
-from haversine import haversine
+# from haversine import haversine
 from collections import Counter
 
 #from rest_framework.decorators import action
@@ -70,7 +70,7 @@ class PostViewSet(viewsets.GenericViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        coordinate = (float(latitude),float(longitude))
+        # coordinate = (float(latitude),float(longitude))
         # TODO: filter by created_at
         all_posts = Post.objects.all()
         # ids = [post.id for post in all_posts
