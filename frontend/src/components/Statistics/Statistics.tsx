@@ -4,16 +4,8 @@ import { PieChart } from "react-minimal-pie-chart";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-
-export interface ReportType {
-    weather: string;
-    weather_degree: number;
-    wind_degree: number;
-    happy_degree: number;
-    humidity_degree: number;
-    time: string;
-}
-
+import { ReportType, selectReport } from "../../store/slices/report";
+import { useSelector } from "react-redux";
 export interface dataType {
     weather: string;
     range: number;
@@ -60,7 +52,8 @@ const PieLabel = ({
     );
 };
 
-function Statistics({ allReports }: { allReports: ReportType[] }) {
+function Statistics() {
+    const reportState = useSelector(selectReport);
     const [maxIndex, setMaxIndex] = useState<number>(0);
     const [reportPerc, setReportPerc] = useState<number[]>([0, 0, 0, 0]);
 
@@ -191,43 +184,43 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
 
     useEffect(() => {
         const lenArray: number[] = [0, 0, 0, 0];
-        allReports.forEach((report) => {
+        reportState.reports.forEach((report) => {
             if (report.weather === "Sunny") lenArray[0]++;
             else if (report.weather === "Rain") lenArray[2]++;
             else if (report.weather === "Cloudy") lenArray[1]++;
             else lenArray[3]++;
         });
         setMaxIndex(lenArray.indexOf(Math.max(...lenArray)));
-    }, [allReports]);
+    }, [reportState.reports]);
 
     useEffect(() => {
-        if (allReports.length) {
+        if (reportState.reports.length) {
             const perc1 =
-                allReports
+                reportState.reports
                     .filter((report) => report.weather === labels[maxIndex])
                     .map((report) => report.weather_degree)
                     .reduce((a: number, b: number) => a + b, 0) /
-                allReports.filter(
+                reportState.reports.filter(
                     (report) => report.weather === labels[maxIndex]
                 ).length;
             const perc2 =
-                allReports.reduce(
+                reportState.reports.reduce(
                     (a: number, b: ReportType) => a + b.wind_degree,
                     0
-                ) / allReports.length;
+                ) / reportState.reports.length;
             const perc3 =
-                allReports.reduce(
+                reportState.reports.reduce(
                     (a: number, b: ReportType) => a + b.happy_degree,
                     0
-                ) / allReports.length;
+                ) / reportState.reports.length;
             const perc4 =
-                allReports.reduce(
+                reportState.reports.reduce(
                     (a: number, b: ReportType) => a + b.humidity_degree,
                     0
-                ) / allReports.length;
+                ) / reportState.reports.length;
             setReportPerc([perc1, perc2, perc3, perc4]);
         }
-    }, [maxIndex, allReports]);
+    }, [maxIndex, reportState.reports]);
 
     return (
         <Container
@@ -248,7 +241,7 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
                 // width: "100%",
             }}
         >
-            {allReports.length ? (
+            {reportState.reports.length ? (
                 <Row
                     style={{
                         margin: "20px",
@@ -258,6 +251,7 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
                         justifyContent: "space-between",
                     }}
                 >
+                    <Col>{reportState.reports.length}</Col>
                     <Col
                         id="piechart-container"
                         style={{
@@ -270,28 +264,28 @@ function Statistics({ allReports }: { allReports: ReportType[] }) {
                             data={[
                                 {
                                     title: "☀️",
-                                    value: allReports.filter(
+                                    value: reportState.reports.filter(
                                         (report) => report.weather === "Sunny"
                                     ).length,
                                     color: "#FBD679",
                                 },
                                 {
                                     title: "☁️",
-                                    value: allReports.filter(
+                                    value: reportState.reports.filter(
                                         (report) => report.weather === "Cloudy"
                                     ).length,
                                     color: "#C18BEC",
                                 },
                                 {
                                     title: "☔",
-                                    value: allReports.filter(
+                                    value: reportState.reports.filter(
                                         (report) => report.weather === "Rain"
                                     ).length,
                                     color: "#C5E8FC",
                                 },
                                 {
                                     title: "❄️",
-                                    value: allReports.filter(
+                                    value: reportState.reports.filter(
                                         (report) => report.weather === "Snow"
                                     ).length,
                                     color: "#F5F5F5",

@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+
+import { fetchPosts, PostType, selectPost } from "../../store/slices/post";
+import { fetchTop3Hashtags, selectHashtag } from "../../store/slices/hashtag";
+import { fetchReports } from "../../store/slices/report";
+import { AppDispatch } from "../../store";
 
 import axios from "axios";
 
@@ -16,30 +22,17 @@ import { faRotateLeft, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Statistics from "../../components/Statistics/Statistics";
 import PostList from "../../components/PostList/PostList";
-import { ReportType } from "../../components/Statistics/Statistics";
-import "./AreaFeed.scss";
 
-export type HashtagType = {
-    id: number;
-    content: string;
-};
+import "./AreaFeed.scss";
+import { PositionType, selectPosition } from "../../store/slices/position";
+import { selectUser, UserType } from "../../store/slices/user";
+import { unwrapResult } from "@reduxjs/toolkit";
+
 
 type WeatherType = {
     icon?: string;
     temp?: number;
     main?: string;
-};
-
-export type PostType = {
-    id: number;
-    user_name: string;
-    content: string;
-    image: string; // image url
-    latitude: number;
-    longitude: number;
-    created_at: string;
-    reply_to_author: string | null; // id of the chained post
-    hashtags: Array<HashtagType>;
 };
 
 export const CustomSearchBar = styled(SearchBar)({
@@ -59,57 +52,66 @@ const CustomToggleButtonGroup = styled(ToggleButtonGroup)({
 });
 
 function AreaFeed() {
-    const [allReports, setAllReports] = useState<ReportType[]>([]);
-    const [allPosts, setAllPosts] = useState<PostType[]>([]);
-    const [queryPosts, setQueryPosts] = useState<PostType[]>([]);
+    const postState = useSelector(selectPost);
+    const hashtagState = useSelector(selectHashtag);
+    const positionState = useSelector(selectPosition);
+    const userState = useSelector(selectUser);
+
+    const [queryPosts, setQueryPosts] = useState<PostType[]>(postState.posts);
     const [refresh, setRefresh] = useState<Boolean>(true);
-    const [top3Hashtag, setTop3Hashtag] = useState<string[]>([]);
     const [weather, setWeather] = useState<WeatherType>({});
     const [selectTag, setSelectTag] = useState<string|undefined>(undefined);
     const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false);
+    
+    const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
-    useEffect(() => {
-        if (refresh) {
-            // update PostList & Hashtags
-            axios
-                .get("/post/", {
-                    params: { latitude: 37.0, longitude: 127.0, radius: 143 }, // modify to redux
-                })
-                .then((response) => {
-                    setAllPosts(response.data["posts"]);
-                    setQueryPosts(response.data["posts"]);
-                    setTop3Hashtag(response.data["top3_hashtags"]);
-                });
-            // update WeatherAPI
-            const lat = 37.0;
-            const lon = 127.0;
-            const api = {
-                key: "c22114b304afd9d97329b0223da5bb01",
-                base: "https://api.openweathermap.org/data/2.5/",
-            };
-            const url = `${api.base}weather?lat=${lat}&lon=${lon}&appid=${api.key}`;
-            axios.get(url).then((response) => {
-                const data = response.data;
-                setWeather({
-                    icon: data.weather[0].icon,
-                    temp: Math.round(data.main.temp - 273.15),
-                    main: data.weather[0].main,
-                });
+
+    const fetchData = async () => {
+        const user = userState.currUser as UserType;
+        let position: PositionType;
+        const savedPosition = localStorage.getItem("position")
+        if(savedPosition){
+            position = JSON.parse(savedPosition);
+        } else {
+            position = positionState.position;
+        }
+        const {lat, lng} = position;
+        const api = {
+            key: "c22114b304afd9d97329b0223da5bb01",
+            base: "https://api.openweathermap.org/data/2.5/",
+        };
+        const url = `${api.base}weather?lat=${lat}&lon=${lng}&appid=${api.key}`;
+        await axios.get(url).then((response) => {
+            const data = response.data;
+            setWeather({
+                icon: data.weather[0].icon,
+                temp: Math.round(data.main.temp - 273.15),
+                main: data.weather[0].main,
             });
-            // update Statistics
-            axios
-                .get("/report/", {
-                    params: { latitude: 37, longitude: 127, radius: 143 }, // modify to redux
-                })
-                .then((response) => {
-                    setAllReports(response.data);
-                    setRefresh(false);
-                });
+        });
+        setRefresh(false);
+
+        const queryPostPromise = dispatch(fetchPosts({
+            ...position, radius: user.radius 
+        }))
+        const postData = (await queryPostPromise).payload as PostType[];
+        setQueryPosts(postData);
+        await dispatch(fetchTop3Hashtags({
+            ...position, radius: user.radius 
+        }));
+        await dispatch(fetchReports({
+            ...position, radius: user.radius 
+        }));
+    }
+
+    useEffect(() => {   
+        if (refresh) {
+            fetchData();
         }
     }, [refresh]);
 
     useEffect(()=>{
-        let resultPosts = allPosts;
+        let resultPosts = postState.posts;
         if(onlyPhoto){
             resultPosts = resultPosts.filter((post: PostType) => post.image);
         }
@@ -144,11 +146,11 @@ function AreaFeed() {
         const [searchQuery, setSearchQuery] = useState<string>("");
         const onSubmitSearchBox = () => {
             setQueryPosts(
-                allPosts.filter((post: PostType) =>
+                postState.posts.filter((post: PostType) =>
                     post.content.includes(searchQuery)
                 )
             );
-        };
+        };   
         const onClickClose = ()=>{
             setSearchQuery("");
         }
@@ -221,7 +223,7 @@ function AreaFeed() {
                 </Col>
             </Row>
             <Row>
-                <Statistics allReports={allReports} />
+                <Statistics />
             </Row>
             <Row id="recommended-hashtag-container">
                 <Row className="area-label">Recommended Hashtags</Row>
@@ -233,7 +235,7 @@ function AreaFeed() {
                             onChange={handleToggleTag}
                             className="hashtag-buttons-group"
                         >
-                        {top3Hashtag.map((item, i)=>{
+                        {hashtagState.top3.map((item, i)=>{
                             return(
                                     <ToggleButton
                                         key={i}

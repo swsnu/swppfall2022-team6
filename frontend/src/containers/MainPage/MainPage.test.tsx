@@ -1,5 +1,8 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import "jest-canvas-mock";
+import { Provider } from "react-redux";
+import { mockStore } from "../../test-utils/mock";
+import { MemoryRouter, Route, Routes } from "react-router";
 import MainPage from "./MainPage";
 
 const mockNavigate = jest.fn();
@@ -26,6 +29,7 @@ const kakao = {
   };
 
 describe("<MainPage />", () => {
+    let mainPageJSX: JSX.Element;
     beforeEach(() => {
         const mockCoord2RegionCode = jest.fn((lng, lat, callback)=>callback(
             [{
@@ -38,9 +42,19 @@ describe("<MainPage />", () => {
         (kakao.maps.services.Geocoder as jest.Mock).mockReturnValue({
             coord2RegionCode: mockCoord2RegionCode,
         });
+
+        mainPageJSX = (
+            <Provider store={mockStore}>
+                <MemoryRouter>
+                    <Routes>
+                        <Route path="/" element={<MainPage/>}/>
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        )
     });
     it("should render without errors", () => {
-        const { container } = render(<MainPage />);
+        const { container } = render(mainPageJSX);
         expect(container).toBeTruthy();
     });
     it("should not set address if kakao API error", () => {
@@ -53,10 +67,10 @@ describe("<MainPage />", () => {
         (kakao.maps.services.Geocoder as jest.Mock).mockReturnValue({
             coord2RegionCode: mockCoord2RegionCodeError,
         });
-        render(<MainPage />);
+        render(mainPageJSX);
     });
     it("should handle MyPage button", async () => {
-        render(<MainPage />);
+        render(mainPageJSX);
         const myPageBtn = screen.getByLabelText("mypage-button");
         fireEvent.click(myPageBtn!);
         await waitFor(() =>
@@ -64,7 +78,7 @@ describe("<MainPage />", () => {
         );
     });
     it("should handle findout button", async () => {
-        render(<MainPage />);
+        render(mainPageJSX);
         const findoutBtn = screen.getByLabelText("findout-button");
         fireEvent.click(findoutBtn!);
         await waitFor(() =>
@@ -72,13 +86,13 @@ describe("<MainPage />", () => {
         );
     });
     it("should handle report button", async () => {
-        render(<MainPage />);
+        render(mainPageJSX);
         console.error = jest.fn();
         const reportBtn = screen.getByRole("button", { name: "Report!" });
         fireEvent.click(reportBtn!);
     });
     it("should close search result if background clicked", async () => {
-        render(<MainPage />);
+        render(mainPageJSX);
         console.error = jest.fn();
         const backGrounds = screen.getAllByLabelText("background");
         for(let i=0; i<backGrounds.length; i++){
@@ -86,7 +100,7 @@ describe("<MainPage />", () => {
         }
     });
     it("should change slider properly", async () => {
-        render(<MainPage />);
+        render(mainPageJSX);
         const weatherSlider = screen.getByLabelText("Custom marks");
         fireEvent.change(weatherSlider, { target: { value: 1 } });
     });
@@ -108,7 +122,7 @@ describe("<MainPage />", () => {
         navigator.geolocation = mockGeolocation;
         const spy = jest.spyOn(navigator.geolocation, "getCurrentPosition");
 
-        render(<MainPage />);
+        render(mainPageJSX);
         expect(spy).toHaveBeenCalled();
     });
 });

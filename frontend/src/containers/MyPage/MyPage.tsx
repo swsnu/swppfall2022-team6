@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PostList from "../../components/PostList/PostList";
-import { PostType } from "../AreaFeed/AreaFeed";
+import { PostType } from "../../store/slices/post";
 
 function MyPage() {
     const navigate = useNavigate();

@@ -1,5 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import axios from "axios";
+import { Provider } from "react-redux";
+import { mockStore } from "../../test-utils/mock";
 import { MemoryRouter, Route, Routes } from "react-router";
 import Post from "./Post";
 
@@ -10,11 +12,12 @@ jest.mock("react-router", () => ({
 }));
 
 describe("<Post />", () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
-    it("should render without errors", () => {
-        render(
+    let postJSX = (
+            {image, reply_to_author}
+            :{image:string, reply_to_author:string|null}
+            = {image:"", reply_to_author:null}
+        )=>(
+        <Provider store={mockStore}>
             <MemoryRouter>
                 <Routes>
                     <Route
@@ -26,8 +29,8 @@ describe("<Post />", () => {
                                 location={"User Loc"}
                                 created_at={"2020-10-20 10:20:30"}
                                 id={1}
-                                image={""}
-                                reply_to_author={null}
+                                image={image}
+                                reply_to_author={reply_to_author}
                                 isReplyList={0}
                                 clickPost={jest.fn()}
                                 toggleChain={jest.fn()}
@@ -36,7 +39,13 @@ describe("<Post />", () => {
                     />
                 </Routes>
             </MemoryRouter>
-        );
+        </Provider>
+    );
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+    it("should render without errors", () => {
+        render(postJSX());
         const username = screen.getByText("User Name");
         const postContent = screen.getByText("Post Content");
         const postLoc = screen.getByText("User Loc");
@@ -47,80 +56,20 @@ describe("<Post />", () => {
         expect(dtText).toBeInTheDocument();
     });
     it("should not render toggleChainButton when there are no replies", () => {
-        render(
-            <MemoryRouter>
-                <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            <Post
-                                user_name={"User Name"}
-                                content={"Post Content"}
-                                location={"User Loc"}
-                                created_at={"2020-10-20 10:20:30"}
-                                id={1}
-                                image={""}
-                                reply_to_author={null}
-                                isReplyList={1}
-                            />
-                        }
-                    />
-                </Routes>
-            </MemoryRouter>
-        );
+        render(postJSX());
         const toggleChainButton = screen.queryAllByText("Show All");
         //The toggleChainButton should not be in the document when reply_to is 0
         expect(toggleChainButton).toHaveLength(0);
     });
     it("should render show all when there are replies, and chain is not open", () => {
-        render(
-            <MemoryRouter>
-                <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            <Post
-                                user_name={"User Name"}
-                                content={"Post Content"}
-                                location={"User Loc"}
-                                created_at={"2020-10-20 10:20:30"}
-                                id={1}
-                                image={""}
-                                reply_to_author={"SWPP"}
-                                isReplyList={0}
-                            />
-                        }
-                    />
-                </Routes>
-            </MemoryRouter>
-        );
+        render(postJSX({image:"", reply_to_author:"SWPP"}));
         const username = screen.getByText("User Name");
         expect(username.classList.contains("reply_to_author")).not.toBe(null);
         expect(username.classList.contains("chain_open")).toBe(false);
         screen.getByText("Show All");
     });
     it("should render author of reply in post", () => {
-        render(
-            <MemoryRouter>
-                <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            <Post
-                                user_name={"User Name"}
-                                content={"Post Content"}
-                                location={"User Loc"}
-                                created_at={"2020-10-20 10:20:30"}
-                                id={1}
-                                image={""}
-                                reply_to_author={"SWPP"}
-                                isReplyList={0}
-                            />
-                        }
-                    />
-                </Routes>
-            </MemoryRouter>
-        );
+        render(postJSX({image:"", reply_to_author:"SWPP"}));
         const chainAuthorUsername = screen.getByText("@SWPP");
         expect(chainAuthorUsername).toBeInTheDocument();
     });
@@ -142,27 +91,7 @@ describe("<Post />", () => {
                 ],
             });
         });
-        render(
-            <MemoryRouter>
-                <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            <Post
-                                user_name={"User Name"}
-                                content={"Post Content"}
-                                location={"User Loc"}
-                                created_at={"2020-10-20 10:20:30"}
-                                id={1}
-                                image={"hi"}
-                                reply_to_author={"SWPP"}
-                                isReplyList={0}
-                            />
-                        }
-                    />
-                </Routes>
-            </MemoryRouter>
-        );
+        render(postJSX({image:"hi", reply_to_author:"SWPP"}));
         // const toggleChainButton = await waitFor(() =>
         //     screen.getByText("Show All")
         // );
@@ -199,27 +128,7 @@ describe("<Post />", () => {
                 ],
             });
         });
-        render(
-            <MemoryRouter>
-                <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            <Post
-                                user_name={"User Name"}
-                                content={"Post Content"}
-                                location={"User Loc"}
-                                created_at={"2020-10-20 10:20:30"}
-                                id={1}
-                                image={"hi"}
-                                reply_to_author={"SWPP"}
-                                isReplyList={0}
-                            />
-                        }
-                    />
-                </Routes>
-            </MemoryRouter>
-        );
+        render(postJSX({image:"hi", reply_to_author:"SWPP"}));
         const toggleChainButton = await screen.findByText("Show All");
         fireEvent.click(toggleChainButton);
         expect(axios.get).toHaveBeenCalled();

@@ -22,13 +22,10 @@ $font-sizes: (
     max-width: 97%;
 }
 #post-text {
-    padding-left: 5px;
+    // padding-left: 5px;
     font-size: 14px;
 }
 
-.tldiv {
-    margin-left: 5px;
-}
 
 #location,
 #timestamp {
@@ -51,10 +48,22 @@ $font-sizes: (
 }
 
 #user-name {
-    margin-left: 5px;
     font-size: 14px;
 }
 
 #chain-toggle-button {
     font-size: 12px;
+}
+#main-post-div{
+    display: flex;
+    flex-direction: row;
+}
+.badge-image{
+    height: auto;
+    width: 20px;
+}
+
+#user-main-badge{
+    height: 60px;
+    width: 60px;
 }

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
-import { PostType } from "../../containers/AreaFeed/AreaFeed";
+import { PostType } from "../../store/slices/post";
 import Post from "../Post/Post";
 import PostModal from "../PostModal/PostModal";
 import "./PostList.scss";

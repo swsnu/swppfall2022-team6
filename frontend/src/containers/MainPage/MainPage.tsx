@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+
+import { setPosition, PositionType, selectPosition } from "../../store/slices/position";
+import { selectUser, setRadius, UserType } from "../../store/slices/user";
+import { AppDispatch } from "../../store";
 
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
@@ -10,9 +15,10 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 
-import Map, { PositionType } from "./../../components/Map/Map";
+import Map from "./../../components/Map/Map";
 import ReportModal from "../../components/ReportModal/ReportModal";
 import MapSearch from "../../components/MapSearch/MapSearch";
+
 import "./MainPage.scss";
 // @ts-ignore
 import Logo from "./Logo.svg";
@@ -25,29 +31,30 @@ const marks = [
     { value: 100, label: "4km" },
 ];
 
-const initMarkPosition: PositionType = {
-    lat: 37.44877599087201,
-    lng: 126.95264777802309,
-}; // 서울대 중심
-
 function MainPage() {
-    const [radius, setRadius] = useState<number>(50);
+    const userState = useSelector(selectUser);
+    const positionState = useSelector(selectPosition);
+
+    const currUser = userState.currUser as UserType;
+    const [currRadius, setCurrRadius] = useState<number>(currUser.radius*25);
     const [openReport, setOpenReport] = useState<boolean>(false);
-    const [markPosition, setMarkPosition] =
-        useState<PositionType>(initMarkPosition);
+    const [markerPosition, setMarkerPosition] =
+        useState<PositionType>(positionState.position);
     const [currPosition, setCurrPosition] =
-        useState<PositionType>(initMarkPosition);
+        useState<PositionType>(positionState.position);
     const [address, setAddress] = useState<string>("");
     const [showResults, setShowResults] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
+
     const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
 
     const geocoder = new kakao.maps.services.Geocoder();
 
     useEffect(() => {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                setMarkPosition({
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                setMarkerPosition({
                     lat: position.coords.latitude,
                     lng: position.coords.longitude,
                 });
@@ -80,9 +87,13 @@ function MainPage() {
         navigate("/mypage");
     };
     const onChangeMapRadius = (event: Event, newValue: number | number[]) => {
-        setRadius(newValue as number);
+        setCurrRadius(newValue as number);
     };
-    const onClickFindOutButton = () => {
+    const onClickFindOutButton = async () => {
+        const radiusKm = currRadius/25;
+        await dispatch(setRadius({user: currUser, radius: radiusKm})); //! type mismatch error,, why?
+        await dispatch(setPosition(markerPosition));
+        localStorage.setItem("position", JSON.stringify(markerPosition));
         navigate("/areafeed");
     };
     const onClickReportButton = () => {
@@ -111,8 +122,8 @@ function MainPage() {
             </Row>
             <Row id="main-map-search-container">
                 <MapSearch
-                    markPosition={markPosition}
-                    setMarkPosition={setMarkPosition}
+                    markerPosition={markerPosition}
+                    setMarkerPosition={setMarkerPosition}
                     showResults={showResults}
                     setShowResults={setShowResults}
                     setIsOpen={setIsOpen}
@@ -131,8 +142,9 @@ function MainPage() {
                 onClick={() => setShowResults(false)}
             >
                 <Map
-                    initPosition={markPosition}
-                    radius={radius}
+                    markerPosition={markerPosition}
+                    setMarkerPosition={setMarkerPosition}
+                    radius={currRadius}
                     isOpen={isOpen}
                     setIsOpen={setIsOpen}
                 />
@@ -151,7 +163,7 @@ function MainPage() {
                             <Slider
                                 key="radius-slider"
                                 aria-label="Custom marks"
-                                value={radius}
+                                value={currRadius}
                                 step={2.5}
                                 min={0.01}
                                 getAriaValueText={(value: number): string => {
@@ -202,6 +214,7 @@ function MainPage() {
                 </Button>
             </Row>
             <ReportModal
+                currPosition={currPosition}
                 openReport={openReport}
                 setOpenReport={setOpenReport}
             />

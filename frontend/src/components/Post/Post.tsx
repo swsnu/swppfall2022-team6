@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PostType } from "../../containers/AreaFeed/AreaFeed";
-import axios from "axios";
-import "./Post.scss";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { useDispatch, useSelector } from "react-redux";
 
+import { fetchChainedPost, PostType, selectPost } from "../../store/slices/post";
+import { AppDispatch } from "../../store";
+
+import "./Post.scss";
 export interface postProps {
     id: number;
     user_name: string;
@@ -19,17 +22,23 @@ export interface postProps {
 // get location from user lang, long
 
 function Post(post: postProps) {
-    const navigate = useNavigate();
+    const postState = useSelector(selectPost);
+
     // set chain toggle status
     const [isChainOpen, setChainOpen] = useState<boolean>(false);
-    //const [replyingTo, setReplyAuthor] = useState<string>("");
     // get replied post
     const [chainedPosts, setChainedPosts] = useState<PostType[]>([]);
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
+
     useEffect(() => {
         if (isChainOpen) {
-            axios.get(`/post/${post.id}/chain/`).then((response) => {
-                setChainedPosts(response.data);
-            });
+            dispatch(fetchChainedPost(post.id))
+                .then(unwrapResult)
+                .then((result) => {
+                    setChainedPosts(result);
+                });
         }
     }, [isChainOpen]);
     // TODO: get image from backend
@@ -84,7 +93,7 @@ function Post(post: postProps) {
                 >
                     <div id="user-main-badge">
                         <img
-                            id="badge-image"
+                            className="badge-image"
                             src={"/badge1.svg"}
                             alt="sample"
                             style={{ height: "5vh", width: "auto" }}

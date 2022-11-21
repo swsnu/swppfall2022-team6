@@ -7,7 +7,7 @@ import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import PostList from "../../components/PostList/PostList";
-import { PostType } from "../AreaFeed/AreaFeed";
+import { PostType } from "../../store/slices/post";
 
 import "./PostDetail.scss";
 

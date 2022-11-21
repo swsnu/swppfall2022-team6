@@ -2,6 +2,9 @@ import axios from "axios";
 import React, { useState } from "react";
 import "./PostModal.scss";
 import { TextField } from "@mui/material";
+import { addPost } from "../../store/slices/post";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store";
 
 export interface IProps {
     openPost: boolean;
@@ -21,28 +24,22 @@ function PostModal({
     const [content, setContent] = useState<string>("");
     const [image, setImage] = useState<File>();
     const [hashtags, setHashtags] = useState<string>("");
+    const dispatch = useDispatch<AppDispatch>();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (image || content) {
+        if(image || content) {
             const formData = new FormData();
             if (image) formData.append("image", image);
             formData.append("content", content);
             formData.append("hashtags", hashtags);
             if (type === "Reply")
-                formData.append("replyTo", replyTo.toString());
-
-            axios
-                .post("/post/", formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                })
-                .then(() => {
-                    setContent("");
-                    setHashtags("");
-                    postModalCallback();
-                });
+            formData.append("replyTo", replyTo.toString());
+            //@ts-ignore
+            await dispatch(addPost(formData));
+            setContent("");
+            setHashtags("");
+            postModalCallback();
         }
     };
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

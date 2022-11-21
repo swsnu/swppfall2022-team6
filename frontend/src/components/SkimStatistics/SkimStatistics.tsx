@@ -1,25 +1,27 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as d3 from "d3";
 import axios from "axios";
-import { PositionType } from "../Map/Map";
+import { PositionType } from "../../store/slices/position";
 import { dataType } from "../Statistics/Statistics";
 import "./SkimStatistics.scss";
+import { fetchReports, ReportType, selectReport } from "../../store/slices/report";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../../store";
 
-export interface ReportType {
-    weather: string;
-    weather_degree: number;
-    wind_degree: number;
-    happy_degree: number;
-    humidity_degree: number;
-    time: string;
+export interface IProps {
+    position: PositionType;
+    radius: number;
 }
 const labels = ["Sunny", "Cloudy", "Rain", "Snow"];
 
-export const SmallStatistics = () => {
-    const [allReports, setAllReports] = useState<ReportType[]>([]);
+export const SmallStatistics = (props: IProps) => {
+    const {position, radius} = props;
+    const reportState = useSelector(selectReport);
+    // const [allReports, setAllReports] = useState<ReportType[]>([]);
     const [maxIndex, setMaxIndex] = useState<number>(0);
     const [reportPerc, setReportPerc] = useState<number[]>([0, 0, 0, 0]);
 
+    const dispatch = useDispatch<AppDispatch>();
     const svgRef = useRef<SVGElement>();
 
     const displaylabels = [
@@ -144,50 +146,46 @@ export const SmallStatistics = () => {
         .style("color", "rgba(0,0,0,75%)");
 
     useEffect(() => {
-        axios
-            .get("/report/", {
-                params: { latitude: 37.0, longitude: 127.0, radius: 143 }, // modify to redux
-            })
-            .then((response) => {
-                setAllReports(response.data);
-            });
+        dispatch(fetchReports({
+            ...position, radius,
+        }));
     }, []);
 
     useEffect(() => {
         const lenArray: number[] = [0, 0, 0, 0];
-        Array.from(allReports).forEach((report) => {
+        Array.from(reportState.reports).forEach((report) => {
             if (report.weather === "Sunny") lenArray[0]++;
             else if (report.weather === "Cloudy") lenArray[1]++;
             else if (report.weather === "Rain") lenArray[2]++;
             else lenArray[3]++;
         });
         setMaxIndex(lenArray.indexOf(Math.max(...lenArray)));
-    }, [allReports]);
+    }, [reportState.reports]);
     useEffect(() => {
-        if (allReports.length) {
+        if (reportState.reports.length) {
             setReportPerc([
-                allReports
+                reportState.reports
                     .filter((report) => report.weather === labels[maxIndex])
                     .map((report) => report.weather_degree)
                     .reduce((a: number, b: number) => a + b, 0) /
-                    allReports.filter(
+                    reportState.reports.filter(
                         (report) => report.weather === labels[maxIndex]
                     ).length,
-                allReports.reduce(
+                reportState.reports.reduce(
                     (a: number, b: ReportType) => a + b.wind_degree,
                     0
-                ) / allReports.length,
-                allReports.reduce(
+                ) / reportState.reports.length,
+                reportState.reports.reduce(
                     (a: number, b: ReportType) => a + b.happy_degree,
                     0
-                ) / allReports.length,
-                allReports.reduce(
+                ) / reportState.reports.length,
+                reportState.reports.reduce(
                     (a: number, b: ReportType) => a + b.humidity_degree,
                     0
-                ) / allReports.length,
+                ) / reportState.reports.length,
             ]);
         }
-    }, [maxIndex, allReports]);
+    }, [maxIndex, reportState.reports]);
 
     return (
         <div className="stats-container">
@@ -197,12 +195,8 @@ export const SmallStatistics = () => {
     );
 };
 
-export interface AddressIProps {
-    position: PositionType;
-}
 
-const Address = (props: AddressIProps) => {
-    const { position } = props;
+const Address = ({position}:{position: PositionType}) => {
     const geocoder = new kakao.maps.services.Geocoder();
     const [address, setAddress] = useState<string>("");
     useEffect(() => {
@@ -227,11 +221,11 @@ const Address = (props: AddressIProps) => {
     );
 };
 
-const SkimStatistics = (props: AddressIProps) => {
+const SkimStatistics = (props: IProps) => {
     return (
         <div className="skim-stats">
             <Address position={props.position} />
-            <SmallStatistics />
+            <SmallStatistics position={props.position} radius={props.radius}/>
         </div>
     );
 };

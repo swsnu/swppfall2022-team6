@@ -1,6 +1,8 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import axios from "axios";
-import React from "react";
+import { Provider } from "react-redux";
+import { mockStore } from "../../test-utils/mock";
+import { MemoryRouter, Route, Routes } from "react-router";
 import PostDetail from "./PostDetail";
 
 const mockNavigate = jest.fn();
@@ -10,6 +12,15 @@ jest.mock("react-router", () => ({
 }));
 
 describe("<PostDetail />", () => {
+    let postDetailJSX = (
+        <Provider store={mockStore}>
+                <MemoryRouter>
+                    <Routes>
+                        <Route path="/" element={<PostDetail/>}/>
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+    )
     beforeEach(() => {
         jest.clearAllMocks();
         jest.spyOn(axios, "get").mockImplementation(() => {
@@ -44,13 +55,13 @@ describe("<PostDetail />", () => {
         });
     });
     it("should render without errors", async () => {
-        const { container } = render(<PostDetail />);
+        const { container } = render(postDetailJSX);
         await waitFor(() => {
             expect(container).toBeTruthy();
         });
     });
     it("should handle back button", async () => {
-        render(<PostDetail />);
+        render(postDetailJSX);
         const backButton = await screen.findByRole("button", { name: "back" });
         fireEvent.click(backButton!);
         expect(mockNavigate).toHaveBeenCalled();
@@ -86,7 +97,7 @@ describe("<PostDetail />", () => {
                 },
             });
         });
-        render(<PostDetail />);
+        render(postDetailJSX);
         const openModalButton = await screen.findByText("Add Reply");
         fireEvent.click(openModalButton);
         const textField = screen.getByTestId("textField");
@@ -98,7 +109,7 @@ describe("<PostDetail />", () => {
         expect(newReply).toBeInTheDocument();
     });
     it("should map hashtags", async () => {
-        render(<PostDetail />);
+        render(postDetailJSX);
         await waitFor(() => {
             const hashtag = screen.getByText("#HASHTAG");
             expect(hashtag).toBeInTheDocument();
