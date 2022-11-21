@@ -12,20 +12,25 @@ export interface UserType {
   main_badge: number|null;
 }
 export interface UserState { users: UserType[]; currUser: UserType|null; }
-const initialState: UserState = { users: [], currUser: { //TODO: should change to null
-  id: 100,
-  email: "team6@swpp.com",
-  password: "team6",
-  username: "team6",
-  logged_in: true,
-  radius: 2,
-  main_badge: null,
+const initialState: UserState = { 
+  users: [{
+    id: 100,
+    email: "team6@swpp.com",
+    password: "team6",
+    username: "team6",
+    logged_in: true,
+    radius: 2,
+    main_badge: null,
+  }], 
+  currUser: { //TODO: should change to null
+    id: 100,
+    email: "team6@swpp.com",
+    password: "team6",
+    username: "team6",
+    logged_in: true,
+    radius: 2,
+    main_badge: null,
 } }; 
-
-export type LoginFormType = {
-  username: UserType["username"];
-  password: UserType["password"];
-};
 
 //@ts-ignore
 const userSlice = createSlice({ //! userSlice type?
@@ -38,9 +43,14 @@ const userSlice = createSlice({ //! userSlice type?
     setLogout: (state, _action) => {
       state.currUser = null;
     },
-    setRadius: (state, action: PayloadAction<number>) =>{
-      if(state.currUser)
-        state.currUser.radius = action.payload;
+    setRadius: (state, action: PayloadAction<{user: UserType, radius: number}>) =>{
+      const targetUser = state.users.find(user=>user.id===action.payload.user.id)
+      console.log("user at reducer")
+      console.log(action.payload.user)
+      if(targetUser){
+        console.log('Target exists')
+        targetUser.radius = action.payload.radius;
+      }
     }
   },
   extraReducers: (builder) => {
@@ -59,14 +69,14 @@ export const fetchUsers = createAsyncThunk(
 export const setLogin = createAsyncThunk(
   "user/setLogin",
   async (user: UserType, { dispatch }) => {
-    const response = await axios.put(`/user/${user.id}/`, {...user, logged_in:true});
+    const response = await axios.post("/user/signin/", {id: user.id});
     dispatch(userActions.setLogin(response.data))
   }
 );
 export const setLogout = createAsyncThunk(
   "user/setLogout",
   async (user: UserType, { dispatch }) => {
-    const response = await axios.put(`/user/${user.id}/`, {...user, logged_in:false});
+    await axios.post("/user/signout/", {id: user.id});
     dispatch(userActions.setLogout({}));
   }
 );
@@ -74,8 +84,8 @@ export const setRadius = createAsyncThunk(
   "user/setRadius",
   async (data: {user: UserType, radius: number}, { dispatch }) => {
     const {user, radius} = data;
-    await axios.put(`/user/${user.id}/`, {...user, radius: radius})
-    dispatch(userActions.setRadius(radius));
+    await axios.put(`/user/${user.id}/`, {radius: radius})
+    dispatch(userActions.setRadius({user, radius}));
   }
 );
 
