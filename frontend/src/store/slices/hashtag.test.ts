@@ -36,7 +36,7 @@ describe("report reducer", () => {
     });
     it("should handle initial state", () => {
         expect(reducer(undefined, { type: "unknown" })).toEqual({
-            hashtags: [],
+            hashtags: [], top3: [],
         });
     });
     it("should handle addhashtag", async () => {
