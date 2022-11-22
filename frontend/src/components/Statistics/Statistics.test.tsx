@@ -4,7 +4,6 @@ import Statistics from "./Statistics";
 import React from "react";
 import { getMockStore, mockStore } from "../../test-utils/mock";
 import { Provider } from "react-redux";
-import { ReportState } from "../../store/slices/report";
 
 jest.mock("react-minimal-pie-chart", () => ({
     PieChart: ({
@@ -42,7 +41,7 @@ describe("<Statistics />", () => {
     });
     it("should not show anything if no reports", async () => {
         const mymockStore = getMockStore({
-            users: { users: [], currUser: null },
+            users: { users: [], currUser: null, userPosts: []},
             posts: {
                 posts: [],
             },
