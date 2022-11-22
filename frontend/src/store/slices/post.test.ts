@@ -4,6 +4,7 @@ import axios from "axios";
 import reducer, {
     addPost,
     fetchChainedPost,
+    fetchHashPosts,
     fetchPost,
     fetchPosts,
     PostState,
@@ -59,6 +60,13 @@ describe("post reducer", () => {
             .fn()
             .mockResolvedValue({ data: { posts: [fakePost] } });
         await store.dispatch(fetchPosts({ lat: 0, lng: 0, radius: 10 }));
+        expect(store.getState().posts.posts).toEqual([fakePost]);
+    });
+    it("should handle fetchhashPosts", async () => {
+        axios.get = jest
+            .fn()
+            .mockResolvedValue({ data: { posts: [fakePost] } });
+        await store.dispatch(fetchHashPosts(1));
         expect(store.getState().posts.posts).toEqual([fakePost]);
     });
     it("should handle fetchPost", async () => {

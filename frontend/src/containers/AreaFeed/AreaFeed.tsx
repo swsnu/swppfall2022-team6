@@ -9,12 +9,12 @@ import { AppDispatch } from "../../store";
 
 import axios from "axios";
 
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import SearchBar from "material-ui-search-bar";
 import { styled } from "@material-ui/core/styles";
-import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import Switch from "react-switch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateLeft, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
@@ -27,7 +27,6 @@ import "./AreaFeed.scss";
 import { PositionType, selectPosition } from "../../store/slices/position";
 import { selectUser, UserType } from "../../store/slices/user";
 import { unwrapResult } from "@reduxjs/toolkit";
-
 
 type WeatherType = {
     icon?: string;
@@ -60,22 +59,22 @@ function AreaFeed() {
     const [queryPosts, setQueryPosts] = useState<PostType[]>(postState.posts);
     const [refresh, setRefresh] = useState<Boolean>(true);
     const [weather, setWeather] = useState<WeatherType>({});
-    const [selectTag, setSelectTag] = useState<string|undefined>(undefined);
+    const [selectTag, setSelectTag] = useState<number>(0);
     const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false);
-    
+
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
     const fetchData = async () => {
         const user = userState.currUser as UserType;
         let position: PositionType;
-        const savedPosition = localStorage.getItem("position")
-        if(savedPosition){
+        const savedPosition = localStorage.getItem("position");
+        if (savedPosition) {
             position = JSON.parse(savedPosition);
         } else {
             position = positionState.position;
         }
-        const {lat, lng} = position;
+        const { lat, lng } = position;
         const api = {
             key: "c22114b304afd9d97329b0223da5bb01",
             base: "https://api.openweathermap.org/data/2.5/",
@@ -91,57 +90,71 @@ function AreaFeed() {
         });
         setRefresh(false);
 
-        const queryPostPromise = dispatch(fetchPosts({
-            ...position, radius: user.radius 
-        }))
+        const queryPostPromise = dispatch(
+            fetchPosts({
+                ...position,
+                radius: user.radius,
+            })
+        );
         const postData = (await queryPostPromise).payload as PostType[];
         setQueryPosts(postData);
-        await dispatch(fetchTop3Hashtags({
-            ...position, radius: user.radius 
-        }));
-        await dispatch(fetchReports({
-            ...position, radius: user.radius 
-        }));
-    }
+        await dispatch(
+            fetchTop3Hashtags({
+                ...position,
+                radius: user.radius,
+            })
+        );
+        await dispatch(
+            fetchReports({
+                ...position,
+                radius: user.radius,
+            })
+        );
+    };
 
-    useEffect(() => {   
+    useEffect(() => {
         if (refresh) {
             fetchData();
         }
     }, [refresh]);
 
-    useEffect(()=>{
+    useEffect(() => {
         let resultPosts = postState.posts;
-        if(onlyPhoto){
+        if (onlyPhoto) {
             resultPosts = resultPosts.filter((post: PostType) => post.image);
         }
-        if(selectTag){
-            resultPosts = resultPosts.filter(
-                    (post: PostType) =>
-                        post.hashtags &&
-                        post.hashtags.map((h) => h.content).includes(selectTag)
-            );
-        }
+        // if (selectTag) {
+        //     resultPosts = resultPosts.filter(
+        //         (post: PostType) =>
+        //             post.hashtags &&
+        //             post.hashtags.map((h) => h.content).includes(selectTag)
+        //     );
+        // }
         setQueryPosts(resultPosts);
-    }, [selectTag, onlyPhoto])
+    }, [selectTag, onlyPhoto]);
 
     const onClickBackButton = () => {
-        navigate("/");
+        navigate(-1);
     };
     const onClickRefreshButton = () => {
         setRefresh(true);
     };
     const onSelectOnlyPhotos = () => {
-        setOnlyPhoto(!onlyPhoto)
+        setOnlyPhoto(!onlyPhoto);
     };
     const postListCallback = () => {
         setRefresh(true);
     }; // axios.get again
 
-    const handleToggleTag = (e: React.MouseEvent<HTMLElement>, value: string)=>{
-        if(value===selectTag) setSelectTag(undefined);
-        else setSelectTag(value);
-    }
+    const handleToggleTag = (
+        e: React.MouseEvent<HTMLElement>,
+        value: number
+    ) => {
+        // if (value === selectTag) setSelectTag(undefined);
+        // else setSelectTag(value);
+        setSelectTag(value);
+        navigate(`/hashfeed/${value}/`);
+    };
     const AreaFeedPosts = () => {
         const [searchQuery, setSearchQuery] = useState<string>("");
         const onSubmitSearchBox = () => {
@@ -150,55 +163,56 @@ function AreaFeed() {
                     post.content.includes(searchQuery)
                 )
             );
-        };   
-        const onClickClose = ()=>{
+        };
+        const onClickClose = () => {
             setSearchQuery("");
-        }
-        return(
-        <div>
-            <Row id="search-box-container">
-                <Row className="area-label">Posts</Row>
-                <Row id="search-container">
-                    <Col md={6}>
-                        <CustomSearchBar
-                            className="search-box"
-                            value={searchQuery}
-                            onChange={(searchVal) => setSearchQuery(searchVal)}
-                            onCancelSearch={() => onClickClose()}
-                            onRequestSearch={()=>onSubmitSearchBox()}
-                            placeholder=""
-                        />
-                    </Col>
-                    <Col md={3} id="only-photos-button-container">
-                        <div
-                            id="only-photos-button"
-                        >
-                            <Switch
-                                onChange={onSelectOnlyPhotos}
-                                checked={onlyPhoto}
-                                onColor="#3185e7"
-                                checkedIcon={false}
-                                uncheckedIcon={false}
-                                height={20}
-                                width={40}
-                                boxShadow="0 0 2px 2px #999"
+        };
+        return (
+            <div>
+                <Row id="search-box-container">
+                    <Row className="area-label">Posts</Row>
+                    <Row id="search-container">
+                        <Col md={6}>
+                            <CustomSearchBar
+                                className="search-box"
+                                value={searchQuery}
+                                onChange={(searchVal) =>
+                                    setSearchQuery(searchVal)
+                                }
+                                onCancelSearch={() => onClickClose()}
+                                onRequestSearch={() => onSubmitSearchBox()}
+                                placeholder=""
                             />
-                            <span> Only Photos</span>
-                        </div>
-                    </Col>
+                        </Col>
+                        <Col md={3} id="only-photos-button-container">
+                            <div id="only-photos-button">
+                                <Switch
+                                    onChange={onSelectOnlyPhotos}
+                                    checked={onlyPhoto}
+                                    onColor="#3185e7"
+                                    checkedIcon={false}
+                                    uncheckedIcon={false}
+                                    height={20}
+                                    width={40}
+                                    boxShadow="0 0 2px 2px #999"
+                                />
+                                <span> Only Photos</span>
+                            </div>
+                        </Col>
+                    </Row>
                 </Row>
-            </Row>
-            <Row id="postlist-container">
-                <PostList
-                    type={"Post"}
-                    postListCallback={postListCallback}
-                    replyTo={0}
-                    allPosts={queryPosts}
-                />
-            </Row>;
-        </div>
-        )
-    }
+                <Row id="postlist-container">
+                    <PostList
+                        type={"Post"}
+                        postListCallback={postListCallback}
+                        replyTo={0}
+                        allPosts={queryPosts}
+                    />
+                </Row>
+                ;
+            </div>
+        );
+    };
 
     return (
         <Container className="AreaFeed">
@@ -214,7 +228,10 @@ function AreaFeed() {
                 <Col id="weather-container">
                     {" "}
                     <Row id="upper-weather-container">
-                        <img src={`http://openweathermap.org/img/w/${weather.icon}.png`} className="weather-icon" />
+                        <img
+                            src={`http://openweathermap.org/img/w/${weather.icon}.png`}
+                            className="weather-icon"
+                        />
                     </Row>
                     <Row id="lower-weather-container">
                         <div id="weather-temp">{weather.temp}&deg;C</div>
@@ -235,21 +252,20 @@ function AreaFeed() {
                             onChange={handleToggleTag}
                             className="hashtag-buttons-group"
                         >
-                        {hashtagState.top3.map((item, i)=>{
-                            return(
+                            {hashtagState.top3.map((item, i) => {
+                                return (
                                     <ToggleButton
                                         key={i}
-                                        value={item}
+                                        value={item.id}
                                         className="hashtag"
-                                        style={{textTransform: 'none'}}
+                                        style={{ textTransform: "none" }}
                                     >
-                                        {"#" + item}
+                                        {"#" + item.content}
                                     </ToggleButton>
-                            )
-                        })}
+                                );
+                            })}
                         </CustomToggleButtonGroup>
                     }
-
                 </Row>
             </Row>
             <AreaFeedPosts></AreaFeedPosts>

@@ -1,31 +1,11 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import axios from "axios";
 import "jest-canvas-mock";
-import AreaFeed from "./AreaFeed";
 import { IProps } from "../../components/PostModal/PostModal";
 import { Provider } from "react-redux";
 import { mockStore } from "../../test-utils/mock";
 import { MemoryRouter, Route, Routes } from "react-router";
-
-jest.mock("react-chartjs-2", () => ({
-    Bar: () => <div>BarChart</div>,
-}));
-jest.mock("react-minimal-pie-chart", () => ({
-    PieChart: () => <div>PieChart</div>,
-}));
-const mockNavigate = jest.fn();
-jest.mock("react-router", () => ({
-    ...jest.requireActual("react-router"),
-    useNavigate: () => mockNavigate,
-}));
-// const mockDispatch = jest.fn();
-// jest.mock("react-redux", ()=>({
-//   ...jest.requireActual("react-redux"),
-//   useDispatch: ()=>mockDispatch,
-console.error = jest.fn();
-// }));
-jest.mock("axios");
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+import HashFeed from "./HashFeed";
 
 jest.mock("../../components/PostModal/PostModal", () => (props: IProps) => (
     <div>
@@ -36,29 +16,24 @@ jest.mock("../../components/PostModal/PostModal", () => (props: IProps) => (
         ></button>
     </div>
 ));
+jest.mock("axios");
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-describe("<AreaFeed />", () => {
-    let areaFeedJSX: JSX.Element;
+const mockNavigate = jest.fn();
+jest.mock("react-router", () => ({
+    ...jest.requireActual("react-router"),
+    useNavigate: () => mockNavigate,
+}));
+
+describe("<HashFeed />", () => {
+    let hashFeedJSX: JSX.Element;
     beforeEach(() => {
         jest.clearAllMocks();
-        const weather = {
-            weather: [
-                {
-                    id: 800,
-                    main: "Clear",
-                    description: "clear sky",
-                    icon: "01d",
-                },
-            ],
-            main: {
-                temp: 283.76,
-            },
-        };
-        areaFeedJSX = (
+        hashFeedJSX = (
             <Provider store={mockStore}>
                 <MemoryRouter>
                     <Routes>
-                        <Route path="/" element={<AreaFeed />} />
+                        <Route path="/" element={<HashFeed />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
@@ -72,12 +47,6 @@ describe("<AreaFeed />", () => {
                             top3_hashtags: mockStore.getState().hashtags.top3,
                         },
                     });
-                case url.includes("/report/"):
-                    return Promise.resolve({
-                        data: mockStore.getState().reports.reports,
-                    });
-                case url.includes("https://api.openweathermap.org/data/2.5/"):
-                    return Promise.resolve({ data: weather });
                 default:
                     return Promise.reject(new Error("not found"));
             }
@@ -85,46 +54,38 @@ describe("<AreaFeed />", () => {
     });
 
     it("should render withour errors", async () => {
-        const { container } = render(areaFeedJSX);
+        const { container } = render(hashFeedJSX);
         await waitFor(() => {
             expect(container).toBeTruthy();
         });
     });
     it("should handle back button", async () => {
-        const view = render(areaFeedJSX);
+        const view = render(hashFeedJSX);
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const backBtn = view.container.querySelector("#back-button");
         fireEvent.click(backBtn!);
         await waitFor(() => expect(mockNavigate).toHaveBeenCalled());
     });
     it("should handle refresh button", async () => {
-        const view = render(areaFeedJSX);
+        const view = render(hashFeedJSX);
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const refreshBtn = view.container.querySelector("#refresh-button");
         fireEvent.click(refreshBtn!);
         await waitFor(() => expect(mockedAxios.get).toHaveBeenCalled());
     });
 
-    // it("should handle hashtag togglebutton", async () => {
-    //     render(areaFeedJSX);
-    //     await waitFor(() => screen.findByText("#hashtag1"));
-    //     // eslint-disable-next-line testing-library/await-async-query
-    //     const hashtag1Btn = screen.findByText("#hashtag1");
-    //     fireEvent.click(await hashtag1Btn!);
-    //     await waitFor(() =>
-    //         expect(screen.queryByText("user2")).not.toBeInTheDocument()
-    //     );
-    // });
-    it("should handle hashtag button", async () => {
-        render(areaFeedJSX);
+    it("should handle hashtag togglebutton", async () => {
+        render(hashFeedJSX);
         await waitFor(() => screen.findByText("#hashtag1"));
         // eslint-disable-next-line testing-library/await-async-query
         const hashtag1Btn = screen.findByText("#hashtag1");
         fireEvent.click(await hashtag1Btn!);
-        await waitFor(() => expect(mockNavigate).toHaveBeenCalled());
+        await waitFor(() =>
+            expect(screen.queryByText("user2")).not.toBeInTheDocument()
+        );
     });
     it("should handle only Photos button", async () => {
-        render(areaFeedJSX);
+        render(hashFeedJSX);
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const photosBtn = screen.getByRole("switch");
         fireEvent.click(photosBtn!);
@@ -135,7 +96,7 @@ describe("<AreaFeed />", () => {
     });
 
     it("should handle search", async () => {
-        const { container } = render(areaFeedJSX);
+        const { container } = render(hashFeedJSX);
         const newSearchBox = screen.getByRole("textbox");
         fireEvent.change(newSearchBox, { target: { value: "t2" } });
         await screen.findByDisplayValue("t2");
@@ -151,27 +112,13 @@ describe("<AreaFeed />", () => {
     });
 
     it("should handle postlistcallback after adding post", async () => {
-        render(areaFeedJSX);
+        render(hashFeedJSX);
         await waitFor(() => screen.findByText("user1"));
         const addPostButton = screen.getByText("Add Post");
         fireEvent.click(addPostButton!);
         const modalButton = screen.getByTestId("spyModal");
         fireEvent.click(modalButton);
         // refresh -> re-render
-        await waitFor(() => expect(mockedAxios.get).toHaveBeenCalledTimes(8));
+        await waitFor(() => expect(mockedAxios.get).toHaveBeenCalledTimes(4));
     });
-
-    // it("should handle close search", async () => {
-    //     const {container} = render(<AreaFeed />);
-    //     await screen.findByText("user1");
-    //     const searchInput = screen.getByRole("textbox");
-    //     fireEvent.change(searchInput, {target: {value: "t2"}});
-    //     await screen.findByDisplayValue("t2");
-    //     // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
-    //     const searchIcon = container.getElementsByClassName("MuiButtonBase-root MuiIconButton-root ForwardRef-iconButton-68")[0];
-    //     fireEvent.click(searchIcon!);
-    //     await waitFor(() =>
-    //         expect(screen.getByRole('textbox')).toHaveValue("")
-    //     );
-    // });
 });

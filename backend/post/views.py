@@ -13,7 +13,7 @@ from post.models import Post, PostHashtag
 from hashtag.models import Hashtag
 from .serializer import PostSerializer
 # from haversine import haversine
-from collections import Counter
+# from collections import Counter
 
 #from rest_framework.decorators import action
 
@@ -83,16 +83,51 @@ class PostViewSet(viewsets.GenericViewSet):
         post_hashtags = [Hashtag.objects.filter(posthashtag__post=post).values()
         for post in posts if Hashtag.objects.filter(posthashtag__post=post)]
         hashtags = []
+        keys = []
         for hashtag_ls in post_hashtags:
             for hashtag in hashtag_ls:
-                hashtags.append(hashtag['content'])
+                if hashtag['id'] not in keys:
+                    hashtags.append(hashtag)
+                    keys.append(hashtag['id'])
 
-        hashtag_count = Counter(hashtags)
-        hashtags = sorted(set(hashtags), key=lambda x: -hashtag_count[x])[:3]
+        #hashtag_count = Counter(hashtags)
+        #hashtags = sorted(set(hashtags), key=lambda x: -hashtag_count[x])[:3]
+        hashtags = hashtags[:3]
 
         data = {}
         data['posts'] = self.get_serializer(posts, many=True).data
         data['top3_hashtags'] = hashtags
+
+        return Response(
+            data,
+            status=status.HTTP_200_OK
+        )
+
+    # GET /post/:id/hashfeed/
+    @action(detail=True)
+    def hashfeed(self, request, pk=None):
+        del request
+        post_hashtags = PostHashtag.objects.all()
+        ids = list((ph.post.id for ph in post_hashtags
+        if ph.hashtag.id == int(pk)))
+
+        posts = Post.objects.all().filter(id__in=ids).order_by('-created_at')
+
+        post_hashtags = [Hashtag.objects.filter(posthashtag__post=post).values()
+        for post in posts if Hashtag.objects.filter(posthashtag__post=post)]
+        keys = [int(pk)]
+        hashtags = []
+        for hashtag_ls in post_hashtags:
+            for hashtag in hashtag_ls:
+                if hashtag['id'] not in keys:
+                    keys.append(hashtag['id'])
+                    hashtags.append(hashtag)
+        hashtags = hashtags[:3]
+
+
+        data = {}
+        data['top3_hashtags'] = hashtags
+        data['posts'] = self.get_serializer(posts, many=True).data
 
         return Response(
             data,

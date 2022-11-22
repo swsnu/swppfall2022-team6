@@ -100,7 +100,7 @@ class PostTestCase(TestCase):
         )
         self.assertIsNotNone(posts[1]['created_at'])
 
-        self.assertEqual(top3hashtags, ['hashtag'])
+        self.assertEqual(top3hashtags, [{'id': 1, 'content': 'hashtag'}])
 
     # Error-prone test
     # def test_get_detail(self):
@@ -144,6 +144,37 @@ class PostTestCase(TestCase):
                 'hashtags': [{'id': 1, 'content': 'hashtag'}]
             }]
         )
+
+    def test_hashfeed(self):
+        new_hashtag2 = Hashtag(content='hashtag2')
+        new_hashtag2.save()
+        new_posthashtag2 = PostHashtag(post=Post.objects.get(id=1),
+        hashtag=new_hashtag2)
+        new_posthashtag2.save()
+        client = Client()
+        response = client.get('/post/1/hashfeed/')
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+        self.assertJSONEqual(
+            str(response.content, encoding='utf8'),
+            {
+                'posts':
+                    [{'id': 1,
+                    'user_name': 'swpp',
+                    'content': 'content',
+                    'image': None,
+                    'latitude': 36.0,
+                    'longitude': 128.0,
+                    'created_at': data['posts'][0]['created_at'],
+                    'reply_to_author': None,
+                    'hashtags': [{'id': 1, 'content': 'hashtag'},
+                    {'id':2,'content':'hashtag2'}]}],
+                'top3_hashtags':
+                    [{'id':2,'content':'hashtag2'}]
+            }
+        )
+
 
     def test_retrieve(self):
         client = Client()

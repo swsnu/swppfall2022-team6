@@ -50,6 +50,25 @@ class ReportTestCase(TestCase):
         )
         new_report.save()
         client = Client()
+
+        response = client.get('/report/', {
+            'latitude':30,
+            'longitude':30,
+        })
+        self.assertEqual(response.status_code, 400)
+
+        response = client.get('/report/', {
+            'longitude':30,
+            'radius':2
+        })
+        self.assertEqual(response.status_code, 400)
+
+        response = client.get('/report/', {
+            'latitude':30,
+            'radius':2
+        })
+        self.assertEqual(response.status_code, 400)
+
         response = client.get('/report/', {
             'latitude':30,
             'longitude':30,
