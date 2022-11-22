@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import axios from "axios";
 import { MemoryRouter, Route, Routes } from "react-router";
 import Post from "./Post";
@@ -174,12 +174,17 @@ describe("<Post />", () => {
         const toggleChainButton = await screen.findByText("Show All");
         fireEvent.click(toggleChainButton);
         expect(axios.get).toHaveBeenCalled();
-        await waitFor(() => {
-            const chainPostUser = screen.getByText("SWPP2");
-            expect(chainPostUser).toBeInTheDocument();
-            fireEvent.click(chainPostUser);
-            expect(mockNavigate).toHaveBeenCalledTimes(1);
-        });
+        const chainPostContent = await screen.findByText("CHAIN");
+        expect(chainPostContent).toBeInTheDocument();
+        const chainDtText = screen.getByText("2020. 10. 21. 오전 10:20");
+        expect(chainDtText).toBeInTheDocument();
+        const newToggleChainButton = screen.getByText("Close All");
+        expect(newToggleChainButton).toBeInTheDocument();
+
+        const chainPostUser = screen.getByText("SWPP2");
+        expect(chainPostUser).toBeInTheDocument();
+        fireEvent.click(chainPostUser);
+        expect(mockNavigate).toHaveBeenCalledTimes(1);
     });
     it("should open the chain if something is missing", async () => {
         jest.spyOn(axios, "get").mockImplementation(() => {
