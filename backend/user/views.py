@@ -3,6 +3,8 @@
 '''
 from django.contrib.auth import get_user_model #, login, logout
 from django.db import transaction
+from django.shortcuts import get_object_or_404
+from post.serializer import PostSerializer
 #from django.shortcuts import redirect
 from rest_framework import status, viewsets
 from rest_framework.response import Response
@@ -41,6 +43,7 @@ class UserViewSet(viewsets.GenericViewSet):
     '''
         UserViewSet
     '''
+    serializer_class = PostSerializer
 
     # GET /user/me/
     def retrieve(self, request, pk=None):
@@ -100,9 +103,10 @@ class UserViewSet(viewsets.GenericViewSet):
         return Response("get report", status=status.HTTP_200_OK)
 
     # GET /user/:id/post/
-    @action(detail=True)
+    @action(detail=True) 
     @transaction.atomic
     def post(self, request, pk=None):
-        del request
-        del pk
-        return Response("get post", status=status.HTTP_200_OK)
+        user = get_object_or_404(User, pk=pk)
+        user_posts = user.userpost
+        data = self.get_serializer(user_posts, many=True).data
+        return Response(data, status=status.HTTP_200_OK)
