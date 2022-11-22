@@ -5,7 +5,7 @@ from datetime import datetime
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 #from django.shortcuts import redirect
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from user.models import User
@@ -23,6 +23,7 @@ class PostViewSet(viewsets.GenericViewSet):
     '''
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    permission_classes = (permissions.IsAuthenticated, )
 
     # POST /post/
     @transaction.atomic

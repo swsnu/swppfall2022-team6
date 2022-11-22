@@ -19,6 +19,7 @@ class UserSignUpView(GenericAPIView):
     '''
         user signup view
     '''
+    authentication_classes = []
     # POST /user/signup/
     def post(self, request):
         body = request.data
@@ -36,15 +37,17 @@ class UserLoginView(GenericAPIView):
         user login view
     '''
     serializer_class = LogInSerializer
-    permission_classes = (permissions.AllowAny, )
+    authentication_classes = []
 
     # POST /user/signin/
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
+        print(serializer.validated_data)
         access_token = serializer.data["tokens"]["access"]
         refresh_token = serializer.data["tokens"]["refresh"]
-        data = { "msg" : "login success", "username": serializer.data["username"] }
+        data = serializer.data
+        del data["tokens"]
         res = Response(data, status=status.HTTP_200_OK)
         res.set_cookie('access_token', value=access_token, httponly=True)
         res.set_cookie('refresh_token', value=refresh_token, httponly=True)

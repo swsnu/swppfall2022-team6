@@ -12,6 +12,7 @@ class LogInSerializer(serializers.ModelSerializer):
     username = serializers.CharField(read_only=True)
     password = serializers.CharField(max_length=68, write_only=True)
     email = serializers.EmailField()
+    main_badge = serializers.IntegerField(read_only=True)
     tokens = serializers.SerializerMethodField()
 
     def get_tokens(self, obj):
@@ -23,7 +24,7 @@ class LogInSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'password', 'email', 'tokens',]
+        fields = ['id', 'username', 'password', 'email', 'radius', 'main_badge', 'tokens']
 
     def validate(self, attrs):
         email = attrs.get('email', '')
@@ -35,11 +36,9 @@ class LogInSerializer(serializers.ModelSerializer):
         if not user.is_active:
             raise AuthenticationFailed('user not active')
 
-        return {
-            'username': user.username,
-            'email': user.email,
-            'tokens': user.tokens
-        }
+        data = UserSerializer(user).data
+        data['tokens'] = user.tokens
+        return data
 
 class LogOutSerializer(serializers.Serializer):
     refresh = serializers.CharField()
@@ -59,31 +58,27 @@ class UserSerializer(serializers.ModelSerializer):
     '''
         user serializer
     '''
-    user_name = serializers.CharField(read_only=True, source='username')
-    badges = serializers.SerializerMethodField()
-    token = serializers.SerializerMethodField()
     class Meta:
         model = User
         fields = (
             'id',
-            'user_name',
             'email',
+            'username',
             'password',
+            'radius',
             'main_badge',
-            'badges',
-            'token',
         )
         read_only_fields = ('id', 'email')
         extra_kwargs = {'password': {'write_only': True}}
 
-    def get_token(self, user):
-        token = Token.objects.get_or_create(user=user)
-        return token[0].key
+    # def get_token(self, user):
+    #     token = Token.objects.get_or_create(user=user)
+    #     return token[0].key
 
-    def get_badges(self, user):
-        badges = Badge.objects.filter(userbadge__user=user) \
-                                .values_list('id', flat=True)
-        return badges
+    # def get_badges(self, user):
+    #     badges = Badge.objects.filter(userbadge__user=user) \
+    #                             .values_list('id', flat=True)
+    #     return badges
 
 class BadgeSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(use_url=True)

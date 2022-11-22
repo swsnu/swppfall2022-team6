@@ -5,7 +5,7 @@ from datetime import datetime
 import json
 from django.db import transaction
 #from django.shortcuts import redirect
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, permissions
 from rest_framework.response import Response
 from user.models import User
 from report.models import Report
@@ -17,6 +17,7 @@ class ReportViewSet(viewsets.GenericViewSet):
         ReportViewSet
     '''
     serializer_class = ReportSerializer
+    permission_classes = (permissions.IsAuthenticated, )
     # POST /report/
     @transaction.atomic
     def create(self, request):
