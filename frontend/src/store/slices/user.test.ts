@@ -23,7 +23,7 @@ describe("user reducer", ()=>{
     id: 0, email: "test@test.com", password: "test", username: "test", logged_in: false, radius: 2, main_badge: 1,
   };
   const originUser: UserType = {
-    id: 100, email: "iluvswpp@swpp.com", password: "iluvswpp", username: "iluvswpp", logged_in: true, radius: 2, main_badge: null,
+    id: 1, email: "iluvswpp@swpp.com", password: "iluvswpp", username: "iluvswpp", logged_in: true, radius: 2, main_badge: null,
   }
 
   beforeAll(()=>{
@@ -39,6 +39,7 @@ describe("user reducer", ()=>{
     expect(UserReducer(undefined, {type: "unknown"})).toEqual({
       users: [originUser],
       currUser: originUser,
+      userPosts: []
     });
   });
   it("should handle fetchUsers", async ()=>{
