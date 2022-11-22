@@ -64,7 +64,7 @@ describe("<HashFeed />", () => {
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const backBtn = view.container.querySelector("#back-button");
         fireEvent.click(backBtn!);
-        await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith(`/`));
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalled());
     });
     it("should handle refresh button", async () => {
         const view = render(hashFeedJSX);

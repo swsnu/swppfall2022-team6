@@ -134,7 +134,7 @@ function AreaFeed() {
     }, [selectTag, onlyPhoto]);
 
     const onClickBackButton = () => {
-        navigate("/");
+        navigate(-1);
     };
     const onClickRefreshButton = () => {
         setRefresh(true);

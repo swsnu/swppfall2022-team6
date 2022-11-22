@@ -23,7 +23,6 @@ import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import "./HashFeed.scss";
 
 import { selectUser, UserType } from "../../store/slices/user";
-import { selectPosition } from "../../store/slices/position";
 import { CustomSearchBar } from "../AreaFeed/AreaFeed";
 
 const CustomToggleButtonGroup = styled(ToggleButtonGroup)({
@@ -40,7 +39,6 @@ function HashFeed() {
     const userState = useSelector(selectUser);
     const hashtagState = useSelector(selectHashtag);
     const postState = useSelector(selectPost);
-    const positionState = useSelector(selectPosition);
 
     const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false);
     const [selectTag, setSelectTag] = useState<string | undefined>(undefined);
@@ -98,7 +96,7 @@ function HashFeed() {
         else setSelectTag(value);
     };
     const onClickBackButton = () => {
-        navigate("/");
+        navigate(-1);
     };
 
     const HashFeedPosts = () => {
