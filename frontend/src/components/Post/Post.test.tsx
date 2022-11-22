@@ -2,6 +2,8 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import axios from "axios";
 import { MemoryRouter, Route, Routes } from "react-router";
 import Post from "./Post";
+import { Provider } from "react-redux";
+import { mockStore } from "../../test-utils/mock"
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
@@ -20,18 +22,20 @@ describe("<Post />", () => {
                     <Route
                         path="/"
                         element={
-                            <Post
-                                user_name={"User Name"}
-                                content={"Post Content"}
-                                location={"User Loc"}
-                                created_at={"2020-10-20 10:20:30"}
-                                id={1}
-                                image={""}
-                                reply_to_author={null}
-                                isReplyList={0}
-                                clickPost={jest.fn()}
-                                toggleChain={jest.fn()}
-                            />
+                            <Provider store={mockStore}>
+                                <Post
+                                    user_name={"User Name"}
+                                    content={"Post Content"}
+                                    location={"User Loc"}
+                                    created_at={"2020-10-20 10:20:30"}
+                                    id={1}
+                                    image={""}
+                                    reply_to_author={null}
+                                    isReplyList={0}
+                                    clickPost={jest.fn()}
+                                    toggleChain={jest.fn()}
+                                />
+                            </Provider>
                         }
                     />
                 </Routes>
@@ -53,16 +57,18 @@ describe("<Post />", () => {
                     <Route
                         path="/"
                         element={
-                            <Post
-                                user_name={"User Name"}
-                                content={"Post Content"}
-                                location={"User Loc"}
-                                created_at={"2020-10-20 10:20:30"}
-                                id={1}
-                                image={""}
-                                reply_to_author={null}
-                                isReplyList={1}
-                            />
+                            <Provider store={mockStore}>
+                                <Post
+                                    user_name={"User Name"}
+                                    content={"Post Content"}
+                                    location={"User Loc"}
+                                    created_at={"2020-10-20 10:20:30"}
+                                    id={1}
+                                    image={""}
+                                    reply_to_author={null}
+                                    isReplyList={1}
+                                />
+                            </Provider>
                         }
                     />
                 </Routes>
@@ -79,16 +85,18 @@ describe("<Post />", () => {
                     <Route
                         path="/"
                         element={
-                            <Post
-                                user_name={"User Name"}
-                                content={"Post Content"}
-                                location={"User Loc"}
-                                created_at={"2020-10-20 10:20:30"}
-                                id={1}
-                                image={""}
-                                reply_to_author={"SWPP"}
-                                isReplyList={0}
-                            />
+                            <Provider store={mockStore}>
+                                <Post
+                                    user_name={"User Name"}
+                                    content={"Post Content"}
+                                    location={"User Loc"}
+                                    created_at={"2020-10-20 10:20:30"}
+                                    id={1}
+                                    image={""}
+                                    reply_to_author={"SWPP"}
+                                    isReplyList={0}
+                                />
+                            </Provider>
                         }
                     />
                 </Routes>
@@ -106,16 +114,18 @@ describe("<Post />", () => {
                     <Route
                         path="/"
                         element={
-                            <Post
-                                user_name={"User Name"}
-                                content={"Post Content"}
-                                location={"User Loc"}
-                                created_at={"2020-10-20 10:20:30"}
-                                id={1}
-                                image={""}
-                                reply_to_author={"SWPP"}
-                                isReplyList={0}
-                            />
+                            <Provider store={mockStore}>
+                                <Post
+                                    user_name={"User Name"}
+                                    content={"Post Content"}
+                                    location={"User Loc"}
+                                    created_at={"2020-10-20 10:20:30"}
+                                    id={1}
+                                    image={""}
+                                    reply_to_author={"SWPP"}
+                                    isReplyList={0}
+                                />
+                            </Provider>
                         }
                     />
                 </Routes>
@@ -148,16 +158,18 @@ describe("<Post />", () => {
                     <Route
                         path="/"
                         element={
-                            <Post
-                                user_name={"User Name"}
-                                content={"Post Content"}
-                                location={"User Loc"}
-                                created_at={"2020-10-20 10:20:30"}
-                                id={1}
-                                image={"hi"}
-                                reply_to_author={"SWPP"}
-                                isReplyList={0}
-                            />
+                            <Provider store={mockStore}>
+                                <Post
+                                    user_name={"User Name"}
+                                    content={"Post Content"}
+                                    location={"User Loc"}
+                                    created_at={"2020-10-20 10:20:30"}
+                                    id={1}
+                                    image={"hi"}
+                                    reply_to_author={"SWPP"}
+                                    isReplyList={0}
+                                />
+                            </Provider>
                         }
                     />
                 </Routes>
@@ -205,17 +217,19 @@ describe("<Post />", () => {
                     <Route
                         path="/"
                         element={
-                            <Post
-                                user_name={"User Name"}
-                                content={"Post Content"}
-                                location={"User Loc"}
-                                created_at={"2020-10-20 10:20:30"}
-                                id={1}
-                                image={"hi"}
-                                reply_to_author={"SWPP"}
-                                isReplyList={0}
-                            />
-                        }
+                            <Provider store={mockStore}>
+                                <Post
+                                    user_name={"User Name"}
+                                    content={"Post Content"}
+                                    location={"User Loc"}
+                                    created_at={"2020-10-20 10:20:30"}
+                                    id={1}
+                                    image={"hi"}
+                                    reply_to_author={"SWPP"}
+                                    isReplyList={0}
+                                />
+                            </Provider>
+                            }
                     />
                 </Routes>
             </MemoryRouter>
