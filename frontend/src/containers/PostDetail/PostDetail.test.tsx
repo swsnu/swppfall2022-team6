@@ -3,6 +3,9 @@ import axios from "axios";
 import React from "react";
 import PostDetail from "./PostDetail";
 
+import { Provider } from "react-redux";
+import { mockStore } from "../../test-utils/mock"
+
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
     ...jest.requireActual("react-router"),
@@ -44,13 +47,21 @@ describe("<PostDetail />", () => {
         });
     });
     it("should render without errors", async () => {
-        const { container } = render(<PostDetail />);
+        const { container } = render(
+            <Provider store={mockStore}>
+                <PostDetail />
+            </Provider>
+        );
         await waitFor(() => {
             expect(container).toBeTruthy();
         });
     });
     it("should handle back button", async () => {
-        render(<PostDetail />);
+        render(
+            <Provider store={mockStore}>
+                <PostDetail />
+            </Provider>
+        );
         const backButton = await screen.findByRole("button", { name: "back" });
         fireEvent.click(backButton!);
         expect(mockNavigate).toHaveBeenCalled();
@@ -86,7 +97,11 @@ describe("<PostDetail />", () => {
                 },
             });
         });
-        render(<PostDetail />);
+        render(
+            <Provider store={mockStore}>
+                <PostDetail />
+            </Provider>
+        );
         const openModalButton = await screen.findByText("Add Reply");
         fireEvent.click(openModalButton);
         const textField = screen.getByTestId("textField");
@@ -98,7 +113,11 @@ describe("<PostDetail />", () => {
         expect(newReply).toBeInTheDocument();
     });
     it("should map hashtags", async () => {
-        render(<PostDetail />);
+        render(
+            <Provider store={mockStore}>
+                <PostDetail />
+            </Provider>
+        );
         await waitFor(() => {
             const hashtag = screen.getByText("#HASHTAG");
             expect(hashtag).toBeInTheDocument();
