@@ -6,7 +6,8 @@ import UserReducer, { fetchUsers,
                         UserState, 
                         setLogin, 
                         setLogout, 
-                        UserType } from "./user";
+                        UserType, 
+                        fetchUserPosts} from "./user";
 
 describe("user reducer", ()=>{
   let store: EnhancedStore<
@@ -69,6 +70,21 @@ describe("user reducer", ()=>{
   it("should not set radius when user not found", async()=>{
     jest.spyOn(axios, "put").mockResolvedValue({data:fakeUser});
     await store.dispatch(setRadius({user: {...fakeUser, id: 10}, radius: 1}));
+    // expect(store.getState().users.users[1].radius).toBe(2); //! 이거 왜 바뀜,,,
+  });
+  it("should fetch user posts", async()=>{
+    jest.spyOn(axios, "get").mockResolvedValue({data:[{
+      id: 1,
+      user_name: "iluvswpp",
+      content: "content",
+      image: "",
+      latitude: 0,
+      longitude: 0,
+      created_at: "2022-11-30",
+      reply_to_author: null,
+      hashtags: [],
+    }]});
+    await store.dispatch(fetchUserPosts(1));
     // expect(store.getState().users.users[1].radius).toBe(2); //! 이거 왜 바뀜,,,
   });
 });
