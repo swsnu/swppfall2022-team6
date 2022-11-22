@@ -145,6 +145,31 @@ class PostTestCase(TestCase):
             }]
         )
 
+    def test_hashfeed(self):
+        client = Client()
+        response = client.get('/post/1/hashfeed/')
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+        self.assertJSONEqual(
+            str(response.content, encoding='utf8'),
+            {
+                'posts':
+                    [{'id': 1,
+                    'user_name': 'swpp',
+                    'content': 'content',
+                    'image': None,
+                    'latitude': 36.0,
+                    'longitude': 128.0,
+                    'created_at': data['posts'][0]['created_at'],
+                    'reply_to_author': None,
+                    'hashtags': [{'id': 1, 'content': 'hashtag'}]}],
+                'top3_hashtags':
+                    ['hashtag']
+            }
+        )
+
+
     def test_retrieve(self):
         client = Client()
         response = client.get('/post/4/')

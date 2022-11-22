@@ -99,6 +99,38 @@ class PostViewSet(viewsets.GenericViewSet):
             status=status.HTTP_200_OK
         )
 
+    # GET /post/:id/hashfeed/
+    @action(detail=True)
+    def hashfeed(self, request, pk=None):
+        # user = request.user
+        # if not user.is_authenticated:
+        #     return Response(status=status.HTTP_401_UNAUTHORIZED)
+        del request
+        post_hashtags = PostHashtag.objects.all()
+        ids = list((ph.post.id for ph in post_hashtags
+        if ph.hashtag.id == int(pk)))
+
+        posts = Post.objects.all().filter(id__in=ids).order_by('-created_at')
+
+        post_hashtags = [Hashtag.objects.filter(posthashtag__post=post).values()
+        for post in posts if Hashtag.objects.filter(posthashtag__post=post)]
+        hashtags = []
+        for hashtag_ls in post_hashtags:
+            for hashtag in hashtag_ls:
+                hashtags.append(hashtag['content'])
+
+        hashtag_count = Counter(hashtags)
+        hashtags = sorted(set(hashtags), key=lambda x: -hashtag_count[x])[:3]
+
+        data = {}
+        data['posts'] = self.get_serializer(posts, many=True).data
+        data['top3_hashtags'] = hashtags
+
+        return Response(
+            data,
+            status=status.HTTP_200_OK
+        )
+
     # GET /post/:id/
     def retrieve(self, request, pk=None):
         # if not user.is_authenticated:

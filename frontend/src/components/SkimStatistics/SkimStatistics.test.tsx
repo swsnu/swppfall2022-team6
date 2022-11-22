@@ -80,7 +80,7 @@ describe("<SkimStatistics />", () => {
         });
         render(
             <Provider store={mockStore}>
-                    <SkimStatistics position={sampleCoord} radius={2} />
+                <SkimStatistics position={sampleCoord} radius={2} />
             </Provider>
         );
         await screen.findByText("☀️ Sunny");
