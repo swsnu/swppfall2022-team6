@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Container from 'react-bootstrap/Container';
@@ -9,10 +9,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
 import { useDispatch, useSelector } from "react-redux";
-import { unwrapResult } from "@reduxjs/toolkit";
 
 import PostList from "../../components/PostList/PostList";
-import { fetchPosts, PostType, selectPost } from "../../store/slices/post";
+import { PostType } from "../../store/slices/post";
 import { fetchUserPosts, selectUser, UserType } from "../../store/slices/user";
 import { AppDispatch } from "../../store";
 
@@ -26,13 +25,14 @@ function MyPage() {
     const [posts, setPosts] = useState<PostType[]>([]);
 
     const currUser = userState.currUser as UserType;
+    
     useEffect(()=>{
-        dispatch(fetchUserPosts(currUser.id))
-        .then(unwrapResult)
-        .then((result: PostType[])=>{
-            setPosts(result);
-        })
-    }, [])
+        dispatch(fetchUserPosts(currUser.id));
+    }, []);
+    
+    useEffect(()=>{
+        setPosts(userState.userPosts);
+    }, [userState.userPosts])
 
     useEffect(()=>{
         if(onlyPhoto){
@@ -53,7 +53,7 @@ function MyPage() {
         <Container id="MyPage">
             <Row id="header-container">
                 <Col id="back-button-container" md={1}>
-                    <button id="back-button" onClick={onClickBackButton}>
+                    <button id="back-button" aria-label="back-button" onClick={onClickBackButton}>
                         <FontAwesomeIcon size="xs" icon={faChevronLeft} />
                     </button>
                 </Col>
@@ -63,9 +63,6 @@ function MyPage() {
             <Row id="profile-container">
                 <Col md={{ span: 2, offset: 3 }} id="main-badge-container">
                     <div id="main-badge">
-                        <span>
-                            {/* Main<br/>Badge */}
-                        </span>
                     </div>
                 </Col>
                 <Col md={4} id="profile-col">
