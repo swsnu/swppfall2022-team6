@@ -1,10 +1,11 @@
 import axios from "axios";
 import { dispatch } from "d3";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { setLogin } from "../../store/slices/user";
 
 function SignIn() {
+    const authenticated = window.sessionStorage.getItem('isLoggedIn') === "true"
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const navigate = useNavigate();
@@ -31,12 +32,10 @@ function SignIn() {
         await login({email, password});
         navigate("/");
     };
-    // const onClickSignInButton = () => {
-    //     login({email, password})
-    //     window.location.reload();
-    //     navigate("/")
-    // };
 
+    if(authenticated){
+        return <Navigate to="/" />;
+    }
     return (
         <div className="SignIn">
             <form className="login-form" onSubmit={onSubmit}>

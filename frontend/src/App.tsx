@@ -30,11 +30,11 @@ function App() {
                         <Route path="/mypage/badges" element={<MyBadges />}></Route>
                         <Route path="/" element={<MainPage />}></Route>
                     </Route>
-                    {/* <Route path="/" element={<MainPage />}></Route>
+                    {/* <Route path="/" element={<MainPage />}></Route> */}
                     <Route
                         path="*"
                         element={<Navigate replace to="/" />}
-                    ></Route> */}
+                    ></Route>
                 </Routes>
             </BrowserRouter>
         </div>
