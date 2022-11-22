@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "..";
 import axios from "axios";
+import { PostType } from "./post";
 
 export interface UserType {
     id: number;
@@ -11,33 +12,32 @@ export interface UserType {
     radius: number;
     main_badge: number | null;
 }
-export interface UserState {
-    users: UserType[];
-    currUser: UserType | null;
+export interface UserState { 
+  users: UserType[];
+  currUser: UserType|null;
+  userPosts: PostType[];
 }
-const initialState: UserState = {
-    users: [
-        {
-            id: 100,
-            email: "team6@swpp.com",
-            password: "team6",
-            username: "team6",
-            logged_in: true,
-            radius: 2,
-            main_badge: null,
-        },
-    ],
-    currUser: {
-        //TODO: should change to null
-        id: 100,
-        email: "team6@swpp.com",
-        password: "team6",
-        username: "team6",
-        logged_in: true,
-        radius: 2,
-        main_badge: null,
-    },
-};
+const initialState: UserState = { 
+  users: [{
+    id: 1,
+    email: "iluvswpp@swpp.com",
+    password: "iluvswpp",
+    username: "iluvswpp",
+    logged_in: true,
+    radius: 2,
+    main_badge: null,
+  }], 
+  currUser: { //TODO: should change to null
+    id: 1,
+    email: "iluvswpp@swpp.com",
+    password: "iluvswpp",
+    username: "iluvswpp",
+    logged_in: true,
+    radius: 2,
+    main_badge: null,
+  },
+  userPosts: []
+}; 
 
 //@ts-ignore
 const userSlice = createSlice({
@@ -67,15 +67,29 @@ const userSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchUsers.fulfilled, (state, action) => {
-            state.users = action.payload;
-        });
-    },
-});
-export const fetchUsers = createAsyncThunk("user/fetchUsers", async () => {
+      builder.addCase(fetchUsers.fulfilled, (state, action) => {
+        state.users = action.payload;
+      });
+      builder.addCase(fetchUserPosts.fulfilled, (state, action) => {
+        state.userPosts = action.payload;
+      });
+    }
+  }
+);
+export const fetchUsers = createAsyncThunk(
+  "user/fetchUsers", 
+  async () => {
     const response = await axios.get<UserType[]>("/user/");
     return response.data;
-});
+  }
+);
+export const fetchUserPosts = createAsyncThunk(
+  "user/fetchUserPosts", 
+  async (id: number) => {
+    const response = await axios.get<PostType[]>(`/user/${id}/post/`);
+    return response.data;
+  }
+);
 export const setLogin = createAsyncThunk(
     "user/setLogin",
     async (user: UserType, { dispatch }) => {

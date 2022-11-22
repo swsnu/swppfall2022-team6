@@ -180,6 +180,7 @@ describe("<ReportModal />", () => {
                     },
                 ],
                 currUser: null,
+                userPosts: [],
             },
             posts: {
                 posts: [],

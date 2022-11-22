@@ -6,7 +6,8 @@ import UserReducer, { fetchUsers,
                         UserState, 
                         setLogin, 
                         setLogout, 
-                        UserType } from "./user";
+                        UserType, 
+                        fetchUserPosts} from "./user";
 
 describe("user reducer", ()=>{
   let store: EnhancedStore<
@@ -23,7 +24,7 @@ describe("user reducer", ()=>{
     id: 0, email: "test@test.com", password: "test", username: "test", logged_in: false, radius: 2, main_badge: 1,
   };
   const originUser: UserType = {
-    id: 100, email: "team6@swpp.com", password: "team6", username: "team6", logged_in: true, radius: 2, main_badge: null,
+    id: 1, email: "iluvswpp@swpp.com", password: "iluvswpp", username: "iluvswpp", logged_in: true, radius: 2, main_badge: null,
   }
 
   beforeAll(()=>{
@@ -39,6 +40,7 @@ describe("user reducer", ()=>{
     expect(UserReducer(undefined, {type: "unknown"})).toEqual({
       users: [originUser],
       currUser: originUser,
+      userPosts: []
     });
   });
   it("should handle fetchUsers", async ()=>{
@@ -68,6 +70,21 @@ describe("user reducer", ()=>{
   it("should not set radius when user not found", async()=>{
     jest.spyOn(axios, "put").mockResolvedValue({data:fakeUser});
     await store.dispatch(setRadius({user: {...fakeUser, id: 10}, radius: 1}));
+    // expect(store.getState().users.users[1].radius).toBe(2); //! 이거 왜 바뀜,,,
+  });
+  it("should fetch user posts", async()=>{
+    jest.spyOn(axios, "get").mockResolvedValue({data:[{
+      id: 1,
+      user_name: "iluvswpp",
+      content: "content",
+      image: "",
+      latitude: 0,
+      longitude: 0,
+      created_at: "2022-11-30",
+      reply_to_author: null,
+      hashtags: [],
+    }]});
+    await store.dispatch(fetchUserPosts(1));
     // expect(store.getState().users.users[1].radius).toBe(2); //! 이거 왜 바뀜,,,
   });
 });
