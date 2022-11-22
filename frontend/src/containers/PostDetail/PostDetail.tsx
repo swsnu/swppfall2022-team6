@@ -18,7 +18,8 @@ function PostDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
     const onClickBackButton = () => {
-        navigate("/areafeed/");
+        navigate(-1);
+        // navigate("/areafeed/");
     };
     // TODO: get badge image from backend
 
