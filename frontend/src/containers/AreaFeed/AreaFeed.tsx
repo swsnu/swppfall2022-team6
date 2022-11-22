@@ -59,7 +59,7 @@ function AreaFeed() {
     const [queryPosts, setQueryPosts] = useState<PostType[]>(postState.posts);
     const [refresh, setRefresh] = useState<Boolean>(true);
     const [weather, setWeather] = useState<WeatherType>({});
-    const [selectTag, setSelectTag] = useState<string | undefined>(undefined);
+    const [selectTag, setSelectTag] = useState<number>(0);
     const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false);
 
     const dispatch = useDispatch<AppDispatch>();
@@ -123,13 +123,13 @@ function AreaFeed() {
         if (onlyPhoto) {
             resultPosts = resultPosts.filter((post: PostType) => post.image);
         }
-        if (selectTag) {
-            resultPosts = resultPosts.filter(
-                (post: PostType) =>
-                    post.hashtags &&
-                    post.hashtags.map((h) => h.content).includes(selectTag)
-            );
-        }
+        // if (selectTag) {
+        //     resultPosts = resultPosts.filter(
+        //         (post: PostType) =>
+        //             post.hashtags &&
+        //             post.hashtags.map((h) => h.content).includes(selectTag)
+        //     );
+        // }
         setQueryPosts(resultPosts);
     }, [selectTag, onlyPhoto]);
 
@@ -148,10 +148,12 @@ function AreaFeed() {
 
     const handleToggleTag = (
         e: React.MouseEvent<HTMLElement>,
-        value: string
+        value: number
     ) => {
-        if (value === selectTag) setSelectTag(undefined);
-        else setSelectTag(value);
+        // if (value === selectTag) setSelectTag(undefined);
+        // else setSelectTag(value);
+        setSelectTag(value);
+        navigate(`/hashfeed/${value}/`);
     };
     const AreaFeedPosts = () => {
         const [searchQuery, setSearchQuery] = useState<string>("");
@@ -254,11 +256,11 @@ function AreaFeed() {
                                 return (
                                     <ToggleButton
                                         key={i}
-                                        value={item}
+                                        value={item.id}
                                         className="hashtag"
                                         style={{ textTransform: "none" }}
                                     >
-                                        {"#" + item}
+                                        {"#" + item.content}
                                     </ToggleButton>
                                 );
                             })}

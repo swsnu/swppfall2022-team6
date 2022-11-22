@@ -62,7 +62,7 @@ export const fetchHashPosts = createAsyncThunk(
     async (id: number) => {
         const response = await axios.get<{
             posts: PostType[];
-            top3_hashtags: string[];
+            top3_hashtags: HashtagType[];
         }>(`/post/${id}/hashfeed/`);
         return response.data["posts"];
     }

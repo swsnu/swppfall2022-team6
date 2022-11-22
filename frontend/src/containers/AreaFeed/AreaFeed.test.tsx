@@ -58,20 +58,24 @@ describe("<AreaFeed />", () => {
             <Provider store={mockStore}>
                 <MemoryRouter>
                     <Routes>
-                        <Route path="/" element={<AreaFeed/>}/>
+                        <Route path="/" element={<AreaFeed />} />
                     </Routes>
                 </MemoryRouter>
             </Provider>
-        )
+        );
         mockedAxios.get.mockImplementation((url: string) => {
             switch (true) {
                 case url.includes("/post/"):
-                    return Promise.resolve({ data: {
-                        posts: mockStore.getState().posts.posts,
-                        top3_hashtags: mockStore.getState().hashtags.top3 
-                    }});
+                    return Promise.resolve({
+                        data: {
+                            posts: mockStore.getState().posts.posts,
+                            top3_hashtags: mockStore.getState().hashtags.top3,
+                        },
+                    });
                 case url.includes("/report/"):
-                    return Promise.resolve({ data: mockStore.getState().reports.reports });
+                    return Promise.resolve({
+                        data: mockStore.getState().reports.reports,
+                    });
                 case url.includes("https://api.openweathermap.org/data/2.5/"):
                     return Promise.resolve({ data: weather });
                 default:
@@ -101,15 +105,23 @@ describe("<AreaFeed />", () => {
         await waitFor(() => expect(mockedAxios.get).toHaveBeenCalled());
     });
 
-    it("should handle hashtag togglebutton", async () => {
+    // it("should handle hashtag togglebutton", async () => {
+    //     render(areaFeedJSX);
+    //     await waitFor(() => screen.findByText("#hashtag1"));
+    //     // eslint-disable-next-line testing-library/await-async-query
+    //     const hashtag1Btn = screen.findByText("#hashtag1");
+    //     fireEvent.click(await hashtag1Btn!);
+    //     await waitFor(() =>
+    //         expect(screen.queryByText("user2")).not.toBeInTheDocument()
+    //     );
+    // });
+    it("should handle hashtag button", async () => {
         render(areaFeedJSX);
         await waitFor(() => screen.findByText("#hashtag1"));
         // eslint-disable-next-line testing-library/await-async-query
         const hashtag1Btn = screen.findByText("#hashtag1");
         fireEvent.click(await hashtag1Btn!);
-        await waitFor(() =>
-            expect(screen.queryByText("user2")).not.toBeInTheDocument()
-        );
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalled());
     });
     it("should handle only Photos button", async () => {
         render(areaFeedJSX);

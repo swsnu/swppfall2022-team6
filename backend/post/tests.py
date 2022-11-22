@@ -100,7 +100,7 @@ class PostTestCase(TestCase):
         )
         self.assertIsNotNone(posts[1]['created_at'])
 
-        self.assertEqual(top3hashtags, ['hashtag'])
+        self.assertEqual(top3hashtags, [{'id': 1, 'content': 'hashtag'}])
 
     # Error-prone test
     # def test_get_detail(self):
@@ -165,7 +165,7 @@ class PostTestCase(TestCase):
                     'reply_to_author': None,
                     'hashtags': [{'id': 1, 'content': 'hashtag'}]}],
                 'top3_hashtags':
-                    ['hashtag']
+                    [{'id': 1, 'content': 'hashtag'}]
             }
         )
 

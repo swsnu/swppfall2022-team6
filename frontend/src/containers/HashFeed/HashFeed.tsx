@@ -188,9 +188,9 @@ function HashFeed() {
                                         className="hashtag"
                                         key={i}
                                         style={{ textTransform: "none" }}
-                                        value={item}
+                                        value={item.content}
                                     >
-                                        {"#" + item}
+                                        {"#" + item.content}
                                     </ToggleButton>
                                 );
                             })}

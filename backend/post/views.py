@@ -13,7 +13,7 @@ from post.models import Post, PostHashtag
 from hashtag.models import Hashtag
 from .serializer import PostSerializer
 # from haversine import haversine
-from collections import Counter
+# from collections import Counter
 
 #from rest_framework.decorators import action
 
@@ -83,12 +83,16 @@ class PostViewSet(viewsets.GenericViewSet):
         post_hashtags = [Hashtag.objects.filter(posthashtag__post=post).values()
         for post in posts if Hashtag.objects.filter(posthashtag__post=post)]
         hashtags = []
+        keys = []
         for hashtag_ls in post_hashtags:
             for hashtag in hashtag_ls:
-                hashtags.append(hashtag['content'])
+                if hashtag['id'] not in keys:
+                    hashtags.append(hashtag)
+                    keys.append(hashtag['id'])
 
-        hashtag_count = Counter(hashtags)
-        hashtags = sorted(set(hashtags), key=lambda x: -hashtag_count[x])[:3]
+        #hashtag_count = Counter(hashtags)
+        #hashtags = sorted(set(hashtags), key=lambda x: -hashtag_count[x])[:3]
+        hashtags = hashtags[:3]
 
         data = {}
         data['posts'] = self.get_serializer(posts, many=True).data
@@ -115,12 +119,17 @@ class PostViewSet(viewsets.GenericViewSet):
         post_hashtags = [Hashtag.objects.filter(posthashtag__post=post).values()
         for post in posts if Hashtag.objects.filter(posthashtag__post=post)]
         hashtags = []
+        keys = []
         for hashtag_ls in post_hashtags:
             for hashtag in hashtag_ls:
-                hashtags.append(hashtag['content'])
+                if hashtag['id'] not in keys:
+                    hashtags.append(hashtag)
+                    keys.append(hashtag['id'])
 
-        hashtag_count = Counter(hashtags)
-        hashtags = sorted(set(hashtags), key=lambda x: -hashtag_count[x])[:3]
+        #hashtag_count = Counter(hashtags)
+        #hashtags = sorted(set(hashtags), key=lambda x: -hashtag_count[x])[:3]
+        hashtags = hashtags[:3]
+
 
         data = {}
         data['posts'] = self.get_serializer(posts, many=True).data

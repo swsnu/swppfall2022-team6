@@ -10,7 +10,7 @@ export type HashtagType = {
 
 export interface HashtagState {
     hashtags: HashtagType[];
-    top3: string[];
+    top3: HashtagType[];
 }
 const initialState: HashtagState = {
     hashtags: [],
@@ -58,7 +58,7 @@ export const fetchTop3Hashtags = createAsyncThunk(
         const { lat, lng, radius } = data;
         const response = await axios.get<{
             posts: PostType[];
-            top3_hashtags: string[];
+            top3_hashtags: HashtagType[];
         }>("/post/", {
             params: { latitude: lat, longitude: lng, radius: radius },
         });
@@ -70,7 +70,7 @@ export const fetchHashfeedTop3Hashtags = createAsyncThunk(
     async (id: number) => {
         const response = await axios.get<{
             posts: PostType[];
-            top3_hashtags: string[];
+            top3_hashtags: HashtagType[];
         }>(`/post/${id}/hashfeed/`);
         return response.data["top3_hashtags"];
     }
