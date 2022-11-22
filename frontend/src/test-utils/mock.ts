@@ -57,6 +57,16 @@ const stubUserInitialState: UserState = {
             radius: 0.0,
             main_badge: 1,
         },
+        {
+        id: 4,
+        password: "admin",
+        username: "user4",
+        email: "",
+        logged_in: false,
+        radius: 0.0,
+        main_badge: 1,
+        
+        },
     ],
     currUser: {
         id: 1,
@@ -66,8 +76,10 @@ const stubUserInitialState: UserState = {
         logged_in: true,
         radius: 0.0,
         main_badge: 1,
+        
     },
-};
+    userPosts: [],
+}
 const stubHashtagInitialState: HashtagState = {
     hashtags: [
         { id: 1, content: "hashtag1" },
