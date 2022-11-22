@@ -8,24 +8,39 @@ import Switch from "react-switch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
-import PostList from "../../components/PostList/PostList";
-import { fetchPosts, selectPost } from "../../store/slices/post";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "../../store/slices/user";
+import { unwrapResult } from "@reduxjs/toolkit";
+
+import PostList from "../../components/PostList/PostList";
+import { fetchPosts, PostType, selectPost } from "../../store/slices/post";
+import { fetchUserPosts, selectUser, UserType } from "../../store/slices/user";
 import { AppDispatch } from "../../store";
 
 import "./MyPage.scss"
 
 function MyPage() {
-    const postState = useSelector(selectPost);
     const userState = useSelector(selectUser);
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false);
+    const [posts, setPosts] = useState<PostType[]>([]);
+
+    const currUser = userState.currUser as UserType;
+    useEffect(()=>{
+        dispatch(fetchUserPosts(currUser.id))
+        .then(unwrapResult)
+        .then((result: PostType[])=>{
+            setPosts(result);
+        })
+    }, [])
 
     useEffect(()=>{
-        dispatch(fetchPosts({lat: 0, lng: 0, radius: 0})); //! 여기 알고리즘 생각해볼 것
-    }, [])
+        if(onlyPhoto){
+            setPosts(posts.filter(post => post.image))
+        } else {
+            setPosts(userState.userPosts);
+        }
+    }, [onlyPhoto])
 
     const onClickBackButton = () => {
         navigate(-1);
@@ -55,7 +70,7 @@ function MyPage() {
                 </Col>
                 <Col md={4} id="profile-col">
                     <Row id="user-name">
-                        {userState.currUser?.username}
+                        {currUser.username}
                     </Row>
                     <Row id="profile-butons">
                         <button id="see-badges-button" onClick={onClickSeeBadgesButton}>
@@ -76,7 +91,7 @@ function MyPage() {
                 <Col id="only-photos-button">
                     <div>
                         <Switch
-                            onChange={()=>setOnlyPhoto(!onlyPhoto)}
+                            onChange={()=>{setOnlyPhoto(!onlyPhoto)}}
                             checked={onlyPhoto}
                             onColor="#3185e7"
                             checkedIcon={false}
@@ -94,12 +109,7 @@ function MyPage() {
                     type={"Mypage"}
                     postListCallback={() => {}}
                     replyTo={0}
-                    allPosts={
-                        postState.posts.filter(
-                            post=>post.user_name===userState.currUser?.username
-                            // post=>post.user_name==="iluvswpp"
-                        )
-                    }
+                    allPosts={posts}
                 />
             </Row>
         </Container>
