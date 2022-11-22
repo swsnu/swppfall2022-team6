@@ -72,7 +72,7 @@ const stubUserInitialState: UserState = {
     main_badge: 1,
     
   },
-    
+  userPosts: [],
 }
 const stubHashtagInitialState: HashtagState = {
   hashtags: [
