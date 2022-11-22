@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PostList from "../../components/PostList/PostList";
@@ -10,7 +11,17 @@ function MyPage() {
         navigate("/");
     };
     const onClickSeeBadgesButton = () => {};
-    const onClickLogOutButton = () => {};
+    const onClickLogOutButton = () => {
+        axios
+        .post('/user/signout/')
+        .then(() => {
+            window.sessionStorage.clear();
+            window.location.reload();
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    };
     const onSelectOnlyPhotos = () => {};
     return (
         <div className="MyPage">

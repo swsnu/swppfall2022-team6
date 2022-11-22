@@ -14,7 +14,6 @@ function SignIn() {
         axios
             .post("/user/signin/", { email, password })
             .then((res) => {
-                console.log(res.data);
                 sessionStorage.setItem('isLoggedIn', "true");
                 window.location.reload();
             })
