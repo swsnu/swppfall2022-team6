@@ -23,7 +23,7 @@ describe("user reducer", ()=>{
     id: 0, email: "test@test.com", password: "test", username: "test", logged_in: false, radius: 2, main_badge: 1,
   };
   const originUser: UserType = {
-    id: 100, email: "team6@swpp.com", password: "team6", username: "team6", logged_in: true, radius: 2, main_badge: null,
+    id: 100, email: "iluvswpp@swpp.com", password: "iluvswpp", username: "iluvswpp", logged_in: true, radius: 2, main_badge: null,
   }
 
   beforeAll(()=>{
