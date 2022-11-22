@@ -49,8 +49,8 @@ describe("<MyPage />", () => {
         jest.clearAllMocks();
     });
     it("should render withour errors", async () => {
-        const container = render(myPageJSX);
-        expect(container).toBeTruthy();
+        const view = render(myPageJSX);
+        expect(view).toBeTruthy();
         await screen.findByText("user1");
         expect(mockDispatch).toHaveBeenCalled();
     });

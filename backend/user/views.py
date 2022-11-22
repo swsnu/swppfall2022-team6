@@ -103,9 +103,10 @@ class UserViewSet(viewsets.GenericViewSet):
         return Response("get report", status=status.HTTP_200_OK)
 
     # GET /user/:id/post/
-    @action(detail=True) 
+    @action(detail=True)
     @transaction.atomic
     def post(self, request, pk=None):
+        del request
         user = get_object_or_404(User, pk=pk)
         user_posts = user.userpost
         data = self.get_serializer(user_posts, many=True).data

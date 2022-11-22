@@ -13,7 +13,7 @@ ignore=third_party
 # Files or directories matching the regex patterns are skipped. The regex
 # matches against base names, not paths.
 ignore-patterns=manage.py
-ignore-paths=.*/migrations/*,./nowsee-env/*
+ignore-paths=.*/migrations/*,./nowsee-env/*,./django-env/*
 
 # Pickle collected data for later comparisons.
 persistent=no

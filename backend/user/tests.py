@@ -3,7 +3,7 @@
 '''
 from django.test import TestCase, Client
 
-from .models import Badge, User, Achievement, UserBadge
+from .models import Badge, User
 
 class UserTestCase(TestCase):
     '''
