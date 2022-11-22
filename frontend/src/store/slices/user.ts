@@ -11,33 +11,26 @@ export interface UserType {
     radius: number;
     main_badge: number | null;
 }
-export interface UserState {
-    users: UserType[];
-    currUser: UserType | null;
-}
-const initialState: UserState = {
-    users: [
-        {
-            id: 100,
-            email: "team6@swpp.com",
-            password: "team6",
-            username: "team6",
-            logged_in: true,
-            radius: 2,
-            main_badge: null,
-        },
-    ],
-    currUser: {
-        //TODO: should change to null
-        id: 100,
-        email: "team6@swpp.com",
-        password: "team6",
-        username: "team6",
-        logged_in: true,
-        radius: 2,
-        main_badge: null,
-    },
-};
+export interface UserState { users: UserType[]; currUser: UserType|null; }
+const initialState: UserState = { 
+  users: [{
+    id: 100,
+    email: "iluvswpp@swpp.com",
+    password: "iluvswpp",
+    username: "iluvswpp",
+    logged_in: true,
+    radius: 2,
+    main_badge: null,
+  }], 
+  currUser: { //TODO: should change to null
+    id: 100,
+    email: "iluvswpp@swpp.com",
+    password: "iluvswpp",
+    username: "iluvswpp",
+    logged_in: true,
+    radius: 2,
+    main_badge: null,
+} }; 
 
 //@ts-ignore
 const userSlice = createSlice({
