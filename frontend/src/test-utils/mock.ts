@@ -18,6 +18,20 @@ export const getMockStore = (preloadedState?: PreloadedState<RootState>) => {
         preloadedState,
     });
 };
+const stubHashtagInitialState: HashtagState = {
+    hashtags: [
+        { id: 1, content: "hashtag1" },
+        { id: 2, content: "hashtag2" },
+        { id: 3, content: "hashtag3" },
+        { id: 4, content: "hashtag4" },
+        { id: 5, content: "hashtag5" },
+    ],
+    top3: [
+        { id: 1, content: "hashtag1" },
+        { id: 2, content: "hashtag2" },
+        { id: 3, content: "hashtag3" },
+    ],
+};
 
 const stubUserInitialState: UserState = {
     users: [
@@ -78,22 +92,32 @@ const stubUserInitialState: UserState = {
         main_badge: 1,
         
     },
-    userPosts: [],
+    userPosts: [
+        {
+            id: 1,
+            user_name: "user1",
+            content: "CONTENT-t1",
+            image: "",
+            latitude: 0,
+            longitude: 0,
+            created_at: "2022-11-20T8:43:28UTC+9",
+            reply_to_author: null,
+            hashtags: [stubHashtagInitialState.hashtags[0]],
+        },
+        {
+            id: 2,
+            user_name: "user2",
+            content: "CONTENT-t2",
+            image: "/logo192.png",
+            latitude: 0,
+            longitude: 0,
+            created_at: "2022-11-21T8:43:28UTC+9",
+            reply_to_author: null,
+            hashtags: [stubHashtagInitialState.hashtags[1]],
+        },
+    ],
 }
-const stubHashtagInitialState: HashtagState = {
-    hashtags: [
-        { id: 1, content: "hashtag1" },
-        { id: 2, content: "hashtag2" },
-        { id: 3, content: "hashtag3" },
-        { id: 4, content: "hashtag4" },
-        { id: 5, content: "hashtag5" },
-    ],
-    top3: [
-        { id: 1, content: "hashtag1" },
-        { id: 2, content: "hashtag2" },
-        { id: 3, content: "hashtag3" },
-    ],
-};
+
 const stubPostInitialState: PostState = {
     posts: [
         {

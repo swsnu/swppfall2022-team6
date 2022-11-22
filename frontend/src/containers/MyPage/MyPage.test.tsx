@@ -9,22 +9,29 @@ const myPageJSX = (
         <MyPage />
     </Provider>
 );
-// jest.mock("../../components/PostList/PostList", () => (
-//     {
-//         type,
-//         postListCallback,
-//         replyTo,
-//         allPosts,
-//     }: {
-//         type: string;
-//         postListCallback: () => void;
-//         replyTo: number;
-//         allPosts: PostType[];
-//     }) => (
-//     <div>
-//         CONTENT-t1
-//     </div>
-// ));
+jest.mock(
+    "../../components/PostList/PostList",
+    () =>
+        ({
+            type,
+            postListCallback,
+            replyTo,
+            allPosts,
+        }: {
+            type: string;
+            postListCallback: () => void;
+            replyTo: number;
+            allPosts: PostType[];
+        }) =>
+            (
+                <div>
+                    {allPosts.map((p) => (
+                        <div>{p.content}</div>
+                    ))}
+                    <button onClick={postListCallback}>Callback</button>
+                </div>
+            )
+);
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
@@ -64,16 +71,18 @@ describe("<MyPage />", () => {
         const logoutButton = screen.getByText("Log Out");
         fireEvent.click(logoutButton!);
     });
-    it("should handle Only Photos button", async ()=>{
+    it("should handle Only Photos button", async () => {
         render(myPageJSX);
         const photosBtn = screen.getByRole("switch");
         await screen.findByText("CONTENT-t1");
-        fireEvent.click(photosBtn!);
+        fireEvent.click(photosBtn);
         await waitFor(() =>
             expect(screen.queryByText("CONTENT-t1")).not.toBeInTheDocument()
         );
-        fireEvent.click(photosBtn!);
+        fireEvent.click(photosBtn);
         await screen.findByText("CONTENT-t1");
+        const cbBtn = screen.getByText("Callback");
+        fireEvent.click(cbBtn);
     });
 
 });
