@@ -1,10 +1,40 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { Provider } from "react-redux";
+import { PostType } from "../../store/slices/post";
+import { mockStore } from "../../test-utils/mock";
 import MyPage from "./MyPage";
+
+const myPageJSX = (
+    <Provider store={mockStore}>
+        <MyPage />
+    </Provider>
+);
+// jest.mock("../../components/PostList/PostList", () => (
+//     {
+//         type,
+//         postListCallback,
+//         replyTo,
+//         allPosts,
+//     }: {
+//         type: string;
+//         postListCallback: () => void;
+//         replyTo: number;
+//         allPosts: PostType[];
+//     }) => (
+//     <div>
+//         CONTENT-t1
+//     </div>
+// ));
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
     ...jest.requireActual("react-router"),
     useNavigate: () => mockNavigate,
+}));
+const mockDispatch = jest.fn();
+jest.mock("react-redux", () => ({
+    ...jest.requireActual("react-redux"),
+    useDispatch: () => mockDispatch,
 }));
 
 describe("<MyPage />", () => {
@@ -12,15 +42,38 @@ describe("<MyPage />", () => {
         jest.clearAllMocks();
     });
     it("should render withour errors", async () => {
-        render(<MyPage />);
-        const backButton = screen.getByText("Back");
+        const container = render(myPageJSX);
+        expect(container).toBeTruthy();
+        await screen.findByText("user1");
+        expect(mockDispatch).toHaveBeenCalled();
+    });
+    it("should handle back button", ()=>{
+        render(myPageJSX);
+        const backButton = screen.getByLabelText("back-button");
         fireEvent.click(backButton);
         expect(mockNavigate).toHaveBeenCalledTimes(1);
-        const badgeButton = screen.getByText("See Badges");
-        fireEvent.click(badgeButton);
-        const logoutButton = screen.getByText("Log Out");
-        fireEvent.click(logoutButton);
-        const photosButton = screen.getByText("Only Photos");
-        fireEvent.click(photosButton);
     });
+    it("should handle See Badges button", ()=>{
+        render(myPageJSX);
+        const badgeButton = screen.getByText("See Badges");
+        fireEvent.click(badgeButton!);
+        expect(mockNavigate).toHaveBeenCalledTimes(1);
+    });
+    it("should handle Log Out button", ()=>{
+        render(myPageJSX);
+        const logoutButton = screen.getByText("Log Out");
+        fireEvent.click(logoutButton!);
+    });
+    it("should handle Only Photos button", async ()=>{
+        render(myPageJSX);
+        const photosBtn = screen.getByRole("switch");
+        await screen.findByText("CONTENT-t1");
+        fireEvent.click(photosBtn!);
+        await waitFor(() =>
+            expect(screen.queryByText("CONTENT-t1")).not.toBeInTheDocument()
+        );
+        fireEvent.click(photosBtn!);
+        await screen.findByText("CONTENT-t1");
+    });
+
 });
