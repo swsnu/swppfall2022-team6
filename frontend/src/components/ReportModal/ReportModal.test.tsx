@@ -27,6 +27,7 @@ describe("<ReportModal />", () => {
                     openReport={true}
                     setOpenReport={jest.fn()}
                     isNavbarReport={false}
+                    navReportCallback={() => {}}
                 />
             </Provider>
         );
@@ -46,6 +47,7 @@ describe("<ReportModal />", () => {
                     openReport={true}
                     setOpenReport={jest.fn()}
                     isNavbarReport={false}
+                    navReportCallback={() => {}}
                 />
             </Provider>
         );
@@ -67,6 +69,7 @@ describe("<ReportModal />", () => {
                     openReport={true}
                     setOpenReport={jest.fn()}
                     isNavbarReport={false}
+                    navReportCallback={() => {}}
                 />
             </Provider>
         );
@@ -87,6 +90,7 @@ describe("<ReportModal />", () => {
                     openReport={true}
                     setOpenReport={jest.fn()}
                     isNavbarReport={false}
+                    navReportCallback={() => {}}
                 />
             </Provider>
         );
@@ -101,6 +105,7 @@ describe("<ReportModal />", () => {
                     openReport={true}
                     setOpenReport={jest.fn()}
                     isNavbarReport={false}
+                    navReportCallback={() => {}}
                 />
             </Provider>
         );
@@ -133,6 +138,7 @@ describe("<ReportModal />", () => {
                     openReport={true}
                     setOpenReport={jest.fn()}
                     isNavbarReport={false}
+                    navReportCallback={() => {}}
                 />
             </Provider>
         );
@@ -153,6 +159,7 @@ describe("<ReportModal />", () => {
                     openReport={true}
                     setOpenReport={jest.fn()}
                     isNavbarReport={false}
+                    navReportCallback={() => {}}
                 />
             </Provider>
         );
@@ -168,6 +175,7 @@ describe("<ReportModal />", () => {
                     openReport={false}
                     setOpenReport={jest.fn()}
                     isNavbarReport={false}
+                    navReportCallback={() => {}}
                 />
             </Provider>
         );
@@ -215,6 +223,7 @@ describe("<ReportModal />", () => {
                     openReport={true}
                     setOpenReport={jest.fn()}
                     isNavbarReport={false}
+                    navReportCallback={() => {}}
                 />
             </Provider>
         );

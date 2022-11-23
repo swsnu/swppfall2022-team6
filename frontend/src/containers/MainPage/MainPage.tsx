@@ -218,6 +218,7 @@ function MainPage() {
                 openReport={openReport}
                 setOpenReport={setOpenReport}
                 isNavbarReport={false}
+                navReportCallback={() => {}}
             />
         </Container>
     );

@@ -15,9 +15,10 @@ interface IProps {
     openReport: boolean;
     setOpenReport: React.Dispatch<React.SetStateAction<boolean>>;
     isNavbarReport: boolean;
+    navReportCallback: () => void;
 }
 
-function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport }: IProps) {
+function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport, navReportCallback }: IProps) {
     const userState = useSelector(selectUser);
 
     const [content, setContent] = useState<string>("");
@@ -54,8 +55,10 @@ function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport }
             //@ts-ignore
             await dispatch(addPost(formData));
         }
-        if (location.pathname === "/areafeed/")
+        if (location.pathname === "/areafeed/" && navReportCallback){
             setOpenReport(false);
+            navReportCallback();
+        }
         else navigate("/areafeed/");
     };
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

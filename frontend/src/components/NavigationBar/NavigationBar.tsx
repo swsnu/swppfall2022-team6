@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse, faBullhorn, faUser } from "@fortawesome/free-solid-svg-icons";
 import ReportModal from "../ReportModal/ReportModal";
 
-function NavigationBar() {
+function NavigationBar({ navReportCallback } : {navReportCallback: () => void;}) {
     const navigate = useNavigate();
     const positionState = useSelector(selectPosition);
     const [openReport, setOpenReport] = useState<boolean>(false);
@@ -34,7 +34,6 @@ function NavigationBar() {
         navigate("/mypage");
     }
     const handleClickReport = () => {
-        // TODO: open report modal -> navigate to areafeed when closed
         setOpenReport(true);
     }
     return (
@@ -56,6 +55,8 @@ function NavigationBar() {
             currPosition={currPosition}
             openReport={openReport}
             setOpenReport={setOpenReport}
+            isNavbarReport={true}
+            navReportCallback={navReportCallback}
         />
     </div>
     )
