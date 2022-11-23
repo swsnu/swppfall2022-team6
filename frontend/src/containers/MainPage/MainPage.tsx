@@ -217,6 +217,7 @@ function MainPage() {
                 currPosition={currPosition}
                 openReport={openReport}
                 setOpenReport={setOpenReport}
+                isNavbarReport={false}
             />
         </Container>
     );

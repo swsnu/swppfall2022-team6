@@ -26,6 +26,7 @@ describe("<ReportModal />", () => {
                     currPosition={{ lat: 0, lng: 0 }}
                     openReport={true}
                     setOpenReport={jest.fn()}
+                    isNavbarReport={false}
                 />
             </Provider>
         );
@@ -44,6 +45,7 @@ describe("<ReportModal />", () => {
                     currPosition={{ lat: 0, lng: 0 }}
                     openReport={true}
                     setOpenReport={jest.fn()}
+                    isNavbarReport={false}
                 />
             </Provider>
         );
@@ -64,6 +66,7 @@ describe("<ReportModal />", () => {
                     currPosition={{ lat: 0, lng: 0 }}
                     openReport={true}
                     setOpenReport={jest.fn()}
+                    isNavbarReport={false}
                 />
             </Provider>
         );
@@ -83,6 +86,7 @@ describe("<ReportModal />", () => {
                     currPosition={{ lat: 0, lng: 0 }}
                     openReport={true}
                     setOpenReport={jest.fn()}
+                    isNavbarReport={false}
                 />
             </Provider>
         );
@@ -96,6 +100,7 @@ describe("<ReportModal />", () => {
                     currPosition={{ lat: 0, lng: 0 }}
                     openReport={true}
                     setOpenReport={jest.fn()}
+                    isNavbarReport={false}
                 />
             </Provider>
         );
@@ -127,6 +132,7 @@ describe("<ReportModal />", () => {
                     currPosition={{ lat: 0, lng: 0 }}
                     openReport={true}
                     setOpenReport={jest.fn()}
+                    isNavbarReport={false}
                 />
             </Provider>
         );
@@ -146,6 +152,7 @@ describe("<ReportModal />", () => {
                     currPosition={{ lat: 0, lng: 0 }}
                     openReport={true}
                     setOpenReport={jest.fn()}
+                    isNavbarReport={false}
                 />
             </Provider>
         );
@@ -160,6 +167,7 @@ describe("<ReportModal />", () => {
                     currPosition={{ lat: 0, lng: 0 }}
                     openReport={false}
                     setOpenReport={jest.fn()}
+                    isNavbarReport={false}
                 />
             </Provider>
         );
@@ -206,6 +214,7 @@ describe("<ReportModal />", () => {
                     currPosition={{ lat: 0, lng: 0 }}
                     openReport={true}
                     setOpenReport={jest.fn()}
+                    isNavbarReport={false}
                 />
             </Provider>
         );
