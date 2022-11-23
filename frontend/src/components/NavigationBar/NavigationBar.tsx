@@ -1,13 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { PositionType, selectPosition } from "../../store/slices/position";
+import { useSelector } from "react-redux";
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse, faBullhorn, faUser } from "@fortawesome/free-solid-svg-icons";
+import ReportModal from "../ReportModal/ReportModal";
 
 function NavigationBar() {
     const navigate = useNavigate();
+    const positionState = useSelector(selectPosition);
+    const [openReport, setOpenReport] = useState<boolean>(false);
+    const [currPosition, setCurrPosition] =
+        useState<PositionType>(positionState.position);
+    useEffect(() => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                setCurrPosition({
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                });
+            });
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
+    }, []);
+
     const handleClickHome = () => {
         navigate("/");
     }
@@ -15,21 +34,29 @@ function NavigationBar() {
         navigate("/mypage");
     }
     const handleClickReport = () => {
-        // TODO: open report modal in postdetail & arefeed -> navigate to areafeed
+        // TODO: open report modal -> navigate to areafeed when closed
+        setOpenReport(true);
     }
     return (
     <div id="navbar-container">
-        <ButtonGroup>
-            <Button onClick={handleClickHome}>
-                <FontAwesomeIcon icon={faHouse} />
-            </Button>
-            <Button>
-                <FontAwesomeIcon icon={faBullhorn}/>
-            </Button>
-            <Button onClick={handleClickMyPage}>
-                <FontAwesomeIcon icon={faUser}/>
-            </Button>
-        </ButtonGroup>
+        <div id="buttongroup-container">
+            <ButtonGroup>
+                <Button onClick={handleClickHome}>
+                    <FontAwesomeIcon icon={faHouse} />
+                </Button>
+                <Button onClick={handleClickReport}>
+                    <FontAwesomeIcon icon={faBullhorn}/>
+                </Button>
+                <Button onClick={handleClickMyPage}>
+                    <FontAwesomeIcon icon={faUser}/>
+                </Button>
+            </ButtonGroup>
+        </div>
+        <ReportModal 
+            currPosition={currPosition}
+            openReport={openReport}
+            setOpenReport={setOpenReport}
+        />
     </div>
     )
 }
