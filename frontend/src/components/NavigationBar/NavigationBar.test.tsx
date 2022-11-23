@@ -34,7 +34,6 @@ describe("<NavigationBar />", () => {
     });
     it("should navigate to main page when home button is clicked", async () => {
         render(navbar);
-        screen.debug();
         const home_button = screen.getByTestId("home-button");
         fireEvent.click(home_button!);
         await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/"));
