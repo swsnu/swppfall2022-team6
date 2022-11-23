@@ -10,7 +10,7 @@ import { selectUser } from "../../store/slices/user";
 import { addReport } from "../../store/slices/report";
 import { addPost } from "../../store/slices/post";
 
-interface IProps {
+export interface IProps {
     currPosition: PositionType;
     openReport: boolean;
     setOpenReport: React.Dispatch<React.SetStateAction<boolean>>;

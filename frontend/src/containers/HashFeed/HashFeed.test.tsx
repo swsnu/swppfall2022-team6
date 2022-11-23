@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import axios from "axios";
 import "jest-canvas-mock";
 import { IProps } from "../../components/PostModal/PostModal";
+import { IProps as ReportProps } from "../../components/ReportModal/ReportModal";
 import { Provider } from "react-redux";
 import { mockStore } from "../../test-utils/mock";
 import { MemoryRouter, Route, Routes } from "react-router";
@@ -36,6 +37,15 @@ jest.mock("../../components/PostModal/PostModal", () => (props: IProps) => (
             data-testid="spyModal"
             className="submitButton"
             onClick={props.postModalCallback}
+        ></button>
+    </div>
+));
+jest.mock("../../components/ReportModal/ReportModal", () => (props: ReportProps) => (
+    <div>
+        <button
+            data-testid="spyNavReportModal"
+            className="submitButton"
+            onClick={props.navReportCallback}
         ></button>
     </div>
 ));
@@ -153,6 +163,15 @@ describe("<HashFeed />", () => {
         const addPostButton = screen.getByText("Callback");
         fireEvent.click(addPostButton!);
         // refresh -> re-render
+        await waitFor(() => expect(mockedAxios.get).toHaveBeenCalledTimes(4));
+    });
+    it("should handle navReportCallback after submit", async () => {
+        render(hashFeedJSX);
+        await waitFor(() => screen.findByText("user1"));
+        const report_button = screen.getByTestId("report-button");
+        fireEvent.click(report_button!);
+        const modalButton = screen.getByTestId("spyNavReportModal");
+        fireEvent.click(modalButton);
         await waitFor(() => expect(mockedAxios.get).toHaveBeenCalledTimes(4));
     });
 });
