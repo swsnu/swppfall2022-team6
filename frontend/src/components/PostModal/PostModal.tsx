@@ -1,10 +1,11 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./PostModal.scss";
 import { TextField } from "@mui/material";
 import { addPost } from "../../store/slices/post";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store";
+import { useParams } from "react-router";
 
 export interface IProps {
     openPost: boolean;
@@ -25,16 +26,18 @@ function PostModal({
     const [image, setImage] = useState<File>();
     const [hashtags, setHashtags] = useState<string>("");
     const dispatch = useDispatch<AppDispatch>();
+    const { id } = useParams();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if(image || content) {
+        if (image || content) {
             const formData = new FormData();
             if (image) formData.append("image", image);
             formData.append("content", content);
+            if (type === "Post" && id !== undefined) formData.append("hid", id);
             formData.append("hashtags", hashtags);
             if (type === "Reply")
-            formData.append("replyTo", replyTo.toString());
+                formData.append("replyTo", replyTo.toString());
             //@ts-ignore
             await dispatch(addPost(formData));
             setContent("");

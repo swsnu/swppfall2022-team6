@@ -61,6 +61,7 @@ function AreaFeed() {
     const [weather, setWeather] = useState<WeatherType>({});
     const [selectTag, setSelectTag] = useState<number>(0);
     const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<Boolean>(false);
 
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
@@ -110,6 +111,7 @@ function AreaFeed() {
                 radius: user.radius,
             })
         );
+        setIsLoading(true);
     };
 
     useEffect(() => {
@@ -239,36 +241,46 @@ function AreaFeed() {
                     </Row>
                 </Col>
             </Row>
-            <Row>
-                <Statistics />
-            </Row>
-            <Row id="recommended-hashtag-container">
-                <Row className="area-label">Recommended Hashtags</Row>
-                <Row id="hashtag-buttons" xs="auto">
-                    {
-                        <CustomToggleButtonGroup
-                            value={selectTag}
-                            exclusive
-                            onChange={handleToggleTag}
-                            className="hashtag-buttons-group"
-                        >
-                            {hashtagState.top3.map((item, i) => {
-                                return (
-                                    <ToggleButton
-                                        key={i}
-                                        value={item.id}
-                                        className="hashtag"
-                                        style={{ textTransform: "none" }}
-                                    >
-                                        {"#" + item.content}
-                                    </ToggleButton>
-                                );
-                            })}
-                        </CustomToggleButtonGroup>
-                    }
-                </Row>
-            </Row>
-            <AreaFeedPosts></AreaFeedPosts>
+            {isLoading ? (
+                <div>
+                    <Row>
+                        <Statistics />
+                    </Row>
+                    <Row id="recommended-hashtag-container">
+                        <Row className="area-label">Recommended Hashtags</Row>
+                        <Row id="hashtag-buttons" xs="auto">
+                            {
+                                <CustomToggleButtonGroup
+                                    value={selectTag}
+                                    exclusive
+                                    onChange={handleToggleTag}
+                                    className="hashtag-buttons-group"
+                                >
+                                    {hashtagState.top3.map((item, i) => {
+                                        return (
+                                            <ToggleButton
+                                                key={i}
+                                                value={item.id}
+                                                className="hashtag"
+                                                style={{
+                                                    textTransform: "none",
+                                                }}
+                                            >
+                                                {"#" + item.content}
+                                            </ToggleButton>
+                                        );
+                                    })}
+                                </CustomToggleButtonGroup>
+                            }
+                        </Row>
+                    </Row>
+                    <AreaFeedPosts></AreaFeedPosts>
+                </div>
+            ) : (
+                <div style={{ fontSize: "20px", marginTop: "20px" }}>
+                    Loading
+                </div>
+            )}
             <NavigationBar />
         </Container>
     );

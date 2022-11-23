@@ -13,9 +13,58 @@ from post.models import Post, PostHashtag
 from hashtag.models import Hashtag
 from .serializer import PostSerializer
 # from haversine import haversine
-# from collections import Counter
+from collections import Counter
 
 #from rest_framework.decorators import action
+
+def hash_recommend(posts, user, pk=0):
+    post_hashtags = [Hashtag.objects.filter(posthashtag__post=post).all()
+    for post in posts if Hashtag.objects.filter(posthashtag__post=post)]
+
+    #unique hashtags in posts
+    keys = [pk] if pk != 0 else []
+    hashtags = []
+    for hashtag_ls in post_hashtags:
+        for hashtag in hashtag_ls:
+            if hashtag.id not in keys:
+                keys.append(hashtag.id)
+                hashtags.append(hashtag)
+
+    #hashtag user wrote
+    my_hashtag = []
+    for hlist in [p.posthashtag.values_list('hashtag')
+    for p in user.userpost.all()]:
+        for hid in hlist:
+            my_hashtag.append(hid)
+    my_hashtag = set(my_hashtag)
+
+    h_scores = []
+    for hashtag in hashtags:
+        #which user wrote this hashtag how much
+        h_posts = hashtag.posthashtag.values_list('post__user')
+        users_hashtag = []
+        for ulist in h_posts:
+            for uid in ulist:
+                users_hashtag.append(uid)
+        users_hashtag = Counter(users_hashtag)
+
+        score = 0
+        for uid, item in users_hashtag.items():
+            if uid == user.id: continue
+            #len of common hashtags
+            u_hashtag = []
+            for hlist in [p.posthashtag.values_list('hashtag')
+            for p in User.objects.get(id=uid).userpost.all()]:
+                for hid in hlist:
+                    u_hashtag.append(hid)
+            sim = len(my_hashtag.intersection(set(u_hashtag)))
+            #len of this hashtag u wrote
+            cnt = item
+            score += sim * cnt
+        h_scores.append([hashtag, 0.5*score+0.5*len(h_posts)])
+    h_scores.sort(key=lambda x: -x[1])
+
+    return [{'id':h[0].id, 'content':h[0].content} for h in h_scores[:3]]
 
 class PostViewSet(viewsets.GenericViewSet):
     '''
@@ -33,9 +82,15 @@ class PostViewSet(viewsets.GenericViewSet):
         latitude=37.0, longitude=127.0, created_at=datetime.now(),
         reply_to=Post.objects.get(id=int(request.POST['replyTo']))
         if 'replyTo' in request.POST else None)
+        hashid = ''
+        if 'hid' in request.POST:
+            hashid = Hashtag.objects.get(id=int(request.POST['hid']))
+            PostHashtag.objects.create(post=post, hashtag=hashid)
+            hashid = hashid.content
         if request.POST['hashtags'] != '':
             for hashtag in request.POST['hashtags'].strip().split(' '):
                 hashtag = hashtag.lstrip('#')
+                if hashtag == hashid: continue
                 h = Hashtag.objects.filter(content=hashtag).first()
                 if h is None:
                     h = Hashtag.objects.create(content=hashtag)
@@ -45,6 +100,8 @@ class PostViewSet(viewsets.GenericViewSet):
     # GET /post/
     def list(self, request):
         # user = request.user
+        user = User.objects.get(id=1)
+
         # if not user.is_authenticated:
         #     return Response(status=status.HTTP_401_UNAUTHORIZED)
 
@@ -80,19 +137,20 @@ class PostViewSet(viewsets.GenericViewSet):
 
         posts = all_posts.filter(id__in=ids).order_by('-created_at')
 
-        post_hashtags = [Hashtag.objects.filter(posthashtag__post=post).values()
-        for post in posts if Hashtag.objects.filter(posthashtag__post=post)]
-        hashtags = []
-        keys = []
-        for hashtag_ls in post_hashtags:
-            for hashtag in hashtag_ls:
-                if hashtag['id'] not in keys:
-                    hashtags.append(hashtag)
-                    keys.append(hashtag['id'])
+        # post_hashtags =
+        # [Hashtag.objects.filter(posthashtag__post=post).values()
+        # for post in posts if Hashtag.objects.filter(posthashtag__post=post)]
+        # hashtags = []
+        # keys = []
+        # for hashtag_ls in post_hashtags:
+        #     for hashtag in hashtag_ls:
+        #         if hashtag['id'] not in keys:
+        #             hashtags.append(hashtag)
+        #             keys.append(hashtag['id'])
 
         #hashtag_count = Counter(hashtags)
         #hashtags = sorted(set(hashtags), key=lambda x: -hashtag_count[x])[:3]
-        hashtags = hashtags[:3]
+        hashtags = hash_recommend(posts, user)
 
         data = {}
         data['posts'] = self.get_serializer(posts, many=True).data
@@ -107,23 +165,26 @@ class PostViewSet(viewsets.GenericViewSet):
     @action(detail=True)
     def hashfeed(self, request, pk=None):
         del request
+        user = User.objects.get(id=1)
         post_hashtags = PostHashtag.objects.all()
         ids = list((ph.post.id for ph in post_hashtags
         if ph.hashtag.id == int(pk)))
 
         posts = Post.objects.all().filter(id__in=ids).order_by('-created_at')
 
-        post_hashtags = [Hashtag.objects.filter(posthashtag__post=post).values()
-        for post in posts if Hashtag.objects.filter(posthashtag__post=post)]
-        keys = [int(pk)]
-        hashtags = []
-        for hashtag_ls in post_hashtags:
-            for hashtag in hashtag_ls:
-                if hashtag['id'] not in keys:
-                    keys.append(hashtag['id'])
-                    hashtags.append(hashtag)
-        hashtags = hashtags[:3]
-
+        # post_hashtags =
+        # [Hashtag.objects.filter(posthashtag__post=post).values()
+        # for post in posts if Hashtag.objects.filter(posthashtag__post=post)]
+        # keys = [int(pk)]
+        # hashtags = []
+        # for hashtag_ls in post_hashtags:
+        #     for hashtag in hashtag_ls:
+        #         if hashtag['id'] not in keys:
+        #             keys.append(hashtag['id'])
+        #             hashtags.append(hashtag)
+        hashtags = hash_recommend(posts, user, int(pk))
+        hashtags.insert(0, {'id':pk,
+        'content':Hashtag.objects.get(id=int(pk)).content})
 
         data = {}
         data['top3_hashtags'] = hashtags

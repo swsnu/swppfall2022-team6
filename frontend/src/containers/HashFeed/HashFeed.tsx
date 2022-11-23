@@ -44,6 +44,7 @@ function HashFeed() {
     const [selectTag, setSelectTag] = useState<string | undefined>(undefined);
     const [refresh, setRefresh] = useState<Boolean>(true);
     const [queryPosts, setQueryPosts] = useState<PostType[]>(postState.posts);
+    const [isLoading, setIsLoading] = useState<Boolean>(false);
 
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
@@ -56,6 +57,7 @@ function HashFeed() {
         const postData = (await queryPostPromise).payload as PostType[];
         setQueryPosts(postData);
         await dispatch(fetchHashfeedTop3Hashtags(Number(id)));
+        setIsLoading(true);
     };
 
     useEffect(() => {
@@ -160,43 +162,67 @@ function HashFeed() {
 
     return (
         <Container className="HashFeed">
-            <Row id="hashfeed-upper-container">
-                <Col id="button-container">
-                    <button id="back-button" onClick={onClickBackButton}>
-                        <FontAwesomeIcon icon={faChevronLeft} />
-                    </button>
-                    <button id="refresh-button" onClick={onClickRefreshButton}>
-                        <FontAwesomeIcon icon={faRotateLeft} />
-                    </button>
-                </Col>
-            </Row>
-            <Row id="recommended-hashtag-container">
-                <Row className="hash-label">Recommended Hashtags</Row>
-                <Row id="hashtag-buttons" xs="auto">
-                    {
-                        <CustomToggleButtonGroup
-                            className="hashtag-buttons-group"
-                            onChange={handleToggleTag}
-                            exclusive
-                            value={selectTag}
-                        >
-                            {hashtagState.top3.map((item, i) => {
-                                return (
-                                    <ToggleButton
-                                        className="hashtag"
-                                        key={i}
-                                        style={{ textTransform: "none" }}
-                                        value={item.content}
-                                    >
-                                        {"#" + item.content}
-                                    </ToggleButton>
-                                );
-                            })}
-                        </CustomToggleButtonGroup>
-                    }
-                </Row>
-            </Row>
-            <HashFeedPosts></HashFeedPosts>
+            {isLoading ? (
+                <div>
+                    <Row id="hashfeed-upper-container">
+                        <Col id="button-container">
+                            <button
+                                id="back-button"
+                                onClick={onClickBackButton}
+                            >
+                                <FontAwesomeIcon icon={faChevronLeft} />
+                            </button>
+                            <button
+                                id="refresh-button"
+                                onClick={onClickRefreshButton}
+                            >
+                                <FontAwesomeIcon icon={faRotateLeft} />
+                            </button>
+                        </Col>
+                    </Row>
+                    <Row
+                        className="fw-bolder fs-5 mb-1"
+                        style={{ justifyContent: "center" }}
+                    >
+                        HashFeed #{hashtagState.top3[0].content}
+                    </Row>
+                    <Row id="recommended-hashtag-container">
+                        <Row className="hash-label">Recommended Hashtags</Row>
+                        <Row id="hashtag-buttons" xs="auto">
+                            {
+                                <CustomToggleButtonGroup
+                                    className="hashtag-buttons-group"
+                                    onChange={handleToggleTag}
+                                    exclusive
+                                    value={selectTag}
+                                >
+                                    {hashtagState.top3
+                                        .slice(1)
+                                        .map((item, i) => {
+                                            return (
+                                                <ToggleButton
+                                                    className="hashtag"
+                                                    key={i}
+                                                    style={{
+                                                        textTransform: "none",
+                                                    }}
+                                                    value={item.content}
+                                                >
+                                                    {"#" + item.content}
+                                                </ToggleButton>
+                                            );
+                                        })}
+                                </CustomToggleButtonGroup>
+                            }
+                        </Row>
+                    </Row>
+                    <HashFeedPosts></HashFeedPosts>
+                </div>
+            ) : (
+                <div style={{ fontSize: "20px", marginTop: "20px" }}>
+                    Loading
+                </div>
+            )}
             <NavigationBar />
         </Container>
     );
