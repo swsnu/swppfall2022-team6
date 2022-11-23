@@ -6,6 +6,29 @@ import { Provider } from "react-redux";
 import { mockStore } from "../../test-utils/mock";
 import { MemoryRouter, Route, Routes } from "react-router";
 import HashFeed from "./HashFeed";
+import { PostType } from "../../store/slices/post";
+
+jest.mock(
+    "../../components/PostList/PostList",
+    () =>
+        ({
+            postListCallback,
+            allPosts,
+        }: {
+            postListCallback: () => void;
+            allPosts: PostType[];
+        }) =>
+            (
+                <div>
+                    <button onClick={postListCallback}>Callback</button>
+                    {allPosts.map((a) => (
+                        <div>
+                            <p>{a.user_name}</p>
+                        </div>
+                    ))}
+                </div>
+            )
+);
 
 jest.mock("../../components/PostModal/PostModal", () => (props: IProps) => (
     <div>
@@ -109,15 +132,13 @@ describe("<HashFeed />", () => {
 
     it("should handle search", async () => {
         const { container } = render(hashFeedJSX);
-        await waitFor(() =>
-            expect(screen.queryByText("Loading")).not.toBeInTheDocument()
-        );
+        await waitFor(() => screen.findByText("user1"));
         const newSearchBox = screen.getByRole("textbox");
         fireEvent.change(newSearchBox, { target: { value: "t2" } });
         await screen.findByDisplayValue("t2");
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const searchIcon = container.getElementsByClassName(
-            "MuiButtonBase-root MuiIconButton-root ForwardRef-iconButton-49 ForwardRef-searchIconButton-51"
+            "MuiButtonBase-root MuiIconButton-root ForwardRef-iconButton-40 ForwardRef-searchIconButton-42"
         )[0];
         fireEvent.click(searchIcon!);
         await waitFor(() =>
@@ -129,10 +150,8 @@ describe("<HashFeed />", () => {
     it("should handle postlistcallback after adding post", async () => {
         render(hashFeedJSX);
         await waitFor(() => screen.findByText("user1"));
-        const addPostButton = screen.getByText("Add Post");
+        const addPostButton = screen.getByText("Callback");
         fireEvent.click(addPostButton!);
-        const modalButton = screen.getByTestId("spyModal");
-        fireEvent.click(modalButton);
         // refresh -> re-render
         await waitFor(() => expect(mockedAxios.get).toHaveBeenCalledTimes(4));
     });
