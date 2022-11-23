@@ -2,6 +2,8 @@ import { render, screen, waitFor } from "@testing-library/react";
 import axios from "axios";
 import { PositionType } from "../../store/slices/position";
 import SkimStatistics, { SmallStatistics } from "./SkimStatistics";
+import { getMockStore, mockStore } from "../../test-utils/mock";
+import { Provider } from "react-redux";
 
 const sampleCoord: PositionType = {
     lat: 37.45940728355063,
@@ -76,10 +78,20 @@ describe("<SkimStatistics />", () => {
                 },
             ],
         });
-        render(<SkimStatistics position={sampleCoord} radius={2}/>);
+        render(
+            <Provider store={mockStore}>
+                <SkimStatistics position={sampleCoord} radius={2} />
+            </Provider>
+        );
         await screen.findByText("☀️ Sunny");
     });
     it("should render SmallStatistics", async () => {
+        const mockCoord2RegionCode = jest.fn((lng, lat, callback) =>
+            callback(mockResultData, "OK")
+        );
+        (kakao.maps.services.Geocoder as jest.Mock).mockReturnValue({
+            coord2RegionCode: mockCoord2RegionCode,
+        });
         axios.get = jest.fn().mockResolvedValue({
             data: [
                 {
@@ -116,7 +128,11 @@ describe("<SkimStatistics />", () => {
                 },
             ],
         });
-        render(<SmallStatistics position={sampleCoord} radius={2}/>);
+        render(
+            <Provider store={mockStore}>
+                <SkimStatistics position={sampleCoord} radius={2} />
+            </Provider>
+        );
         await screen.findByText("☀️ Sunny");
     });
 });

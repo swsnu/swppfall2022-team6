@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "..";
 import axios from "axios";
-import { dispatch } from "d3";
+import { PostType } from "./post";
 
 export interface UserType {
   id: number;
@@ -10,7 +10,7 @@ export interface UserType {
   radius: number;
   main_badge: number|null;
 }
-export interface UserState { users: UserType[]; currUser: UserType|null; }
+export interface UserState { users: UserType[]; currUser: UserType|null; userPosts: PostType[];}
 
 const initialState: UserState = { users: [], currUser: { //TODO: should change to null
   id: 100,
@@ -18,7 +18,8 @@ const initialState: UserState = { users: [], currUser: { //TODO: should change t
   username: "team6",
   radius: 2,
   main_badge: null,
-} };
+  },
+  userPosts: [] };
 
 export type LoginFormType = {
   email: string;
@@ -32,7 +33,7 @@ export const checkApiResponseStatus = (status: number) => {
     window.location.reload();
   } else if (status === 400) {
     alert('이메일이나 비밀번호가 틀립니다.');
-    window.location.reload();
+    // window.location.reload();
   }
 };
 
@@ -54,7 +55,15 @@ const userSlice = createSlice({ //! userSlice type?
     setUsers: (state, action: PayloadAction<UserType[]>) =>{
       state.users = action.payload;
     },
+    setUserPosts: (state, action: PayloadAction<PostType[]>) =>{
+      state.userPosts = action.payload;
+    },
   },
+    extraReducers: (builder) => {
+      builder.addCase(fetchUserPosts.fulfilled, (state, action) => {
+        state.userPosts = action.payload;
+      });
+    }
   // extraReducers: (builder) => {
   //   builder.addCase(fetchUsers.fulfilled, (state, action) => {
   //     state.users = action.payload;
@@ -73,6 +82,18 @@ export const fetchUsers = createAsyncThunk(
     });
   }
 );
+export const fetchUserPosts = createAsyncThunk(
+  "user/fetchUserPosts",
+  async (id: number) => {
+    axios
+    .get<PostType[]>(`/user/${id}/post/`)
+    .then((response) => {
+
+    })
+    const response = await axios.get<PostType[]>(`/user/${id}/post/`);
+    return response.data;
+  }
+);
 export const setLogin = createAsyncThunk(
   "user/setLogin",
   async (data: FormData, { dispatch }) => {
@@ -80,11 +101,12 @@ export const setLogin = createAsyncThunk(
     .post("/user/signin/", data, {headers: {
           "Content-Type": "multipart/form-data",
           }}
-    ).then((response) => {
+    ).then(async (response) => {
+      dispatch(userActions.setLogin(response.data));
       sessionStorage.setItem("isLoggedIn", "true");
-      window.location.reload();
-      dispatch(userActions.setLogin(response.data))
+      console.log("yes");
     }).catch((error) => {
+      console.log("error");
       checkApiResponseStatus(error.response.status);
     });
   }
@@ -96,7 +118,6 @@ export const setLogout = createAsyncThunk(
     .post('/user/signout/')
     .then(() => {
       window.sessionStorage.clear();
-      window.location.reload();
       dispatch(userActions.setLogout({}));
     }).catch((error) => {
       checkApiResponseStatus(error.response.status);

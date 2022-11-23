@@ -53,7 +53,7 @@ function MapComponent(props: IProps) {
                     <SkimStatistics position={markerPosition} radius={radius/25}/>;
                 </CustomOverlayMap>
             )}
-            {radius && (
+            {radius>0 ? (
                 <Circle
                     center={markerPosition}
                     radius={(radius / 25) * 1000}
@@ -63,8 +63,9 @@ function MapComponent(props: IProps) {
                     strokeStyle={"dash"} // 선의 스타일 입니다
                     fillColor={"#0000FF"} // 채우기 색깔입니다
                     fillOpacity={0.1} // 채우기 불투명도 입니다
-                />
-            )}
+                />)
+                :null
+            }
         </Map>
     );
 }

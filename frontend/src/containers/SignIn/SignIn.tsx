@@ -3,11 +3,15 @@ import { dispatch } from "d3";
 import React, { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { setLogin } from "../../store/slices/user";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store";
+import { selectUser } from "../../store/slices/user";
 
 function SignIn() {
     const authenticated = window.sessionStorage.getItem('isLoggedIn') === "true"
+
+    //debug
+    const userState = useSelector(selectUser);
 
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -15,13 +19,11 @@ function SignIn() {
     const dispatch = useDispatch<AppDispatch>();
 
     const login = async() => {
-        console.log("login")
         const formData = new FormData();
         formData.append("email", email);
         formData.append("password", password);
-        console.log(email, password)
-        console.log(formData)
         await dispatch(setLogin(formData));
+        console.log(userState.currUser);
     };
 
     const onClickSignUpButton = (e: React.MouseEvent<HTMLElement>) => {

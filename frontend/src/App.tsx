@@ -9,6 +9,7 @@ import MyBadges from "./containers/MyBadges/MyBadges";
 import PostDetail from "./containers/PostDetail/PostDetail";
 import AreaFeed from "./containers/AreaFeed/AreaFeed";
 import PrivateRoute from './PrivateRoute';
+import HashFeed from "./containers/HashFeed/HashFeed";
 
 function App() {
     return (
@@ -26,6 +27,7 @@ function App() {
                             path="/areafeed/:id"
                             element={<PostDetail />}
                         ></Route>
+                        <Route path="/hashfeed/:id" element={<HashFeed />}></Route>
                         <Route path="/mypage" element={<MyPage />}></Route>
                         <Route path="/mypage/badges" element={<MyBadges />}></Route>
                         <Route path="/" element={<MainPage />}></Route>
