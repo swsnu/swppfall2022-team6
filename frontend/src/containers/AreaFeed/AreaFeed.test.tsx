@@ -6,6 +6,7 @@ import { IProps } from "../../components/PostModal/PostModal";
 import { Provider } from "react-redux";
 import { mockStore } from "../../test-utils/mock";
 import { MemoryRouter, Route, Routes } from "react-router";
+import { PostType } from "../../store/slices/post";
 
 jest.mock("react-chartjs-2", () => ({
     Bar: () => <div>BarChart</div>,
@@ -27,15 +28,32 @@ console.error = jest.fn();
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-jest.mock("../../components/PostModal/PostModal", () => (props: IProps) => (
-    <div>
-        <button
-            data-testid="spyModal"
-            className="submitButton"
-            onClick={props.postModalCallback}
-        ></button>
-    </div>
-));
+jest.mock(
+    "../../components/PostList/PostList",
+    () =>
+        ({
+            type,
+            postListCallback,
+            replyTo,
+            allPosts,
+        }: {
+            type: string;
+            postListCallback: () => void;
+            replyTo: number;
+            allPosts: PostType[];
+        }) =>
+            (
+                <div>
+                    {allPosts.map((a) => (
+                        <div>
+                            {/* <p>{a.content}</p> */}
+                            <p>{a.user_name}</p>
+                        </div>
+                    ))}
+                    <button onClick={postListCallback}>Callback</button>
+                </div>
+            )
+);
 
 describe("<AreaFeed />", () => {
     let areaFeedJSX: JSX.Element;
@@ -126,6 +144,9 @@ describe("<AreaFeed />", () => {
     it("should handle only Photos button", async () => {
         render(areaFeedJSX);
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+        await waitFor(() =>
+            expect(screen.queryByText("Loading")).not.toBeInTheDocument()
+        );
         const photosBtn = screen.getByRole("switch");
         fireEvent.click(photosBtn!);
         await waitFor(() =>
@@ -136,12 +157,13 @@ describe("<AreaFeed />", () => {
 
     it("should handle search", async () => {
         const { container } = render(areaFeedJSX);
+        await waitFor(() => screen.findByText("user1"));
         const newSearchBox = screen.getByRole("textbox");
         fireEvent.change(newSearchBox, { target: { value: "t2" } });
         await screen.findByDisplayValue("t2");
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const searchIcon = container.getElementsByClassName(
-            "MuiButtonBase-root MuiIconButton-root ForwardRef-iconButton-49 ForwardRef-searchIconButton-51"
+            "MuiButtonBase-root MuiIconButton-root ForwardRef-iconButton-22 ForwardRef-searchIconButton-24"
         )[0];
         fireEvent.click(searchIcon!);
         await waitFor(() =>
@@ -153,10 +175,8 @@ describe("<AreaFeed />", () => {
     it("should handle postlistcallback after adding post", async () => {
         render(areaFeedJSX);
         await waitFor(() => screen.findByText("user1"));
-        const addPostButton = screen.getByText("Add Post");
-        fireEvent.click(addPostButton!);
-        const modalButton = screen.getByTestId("spyModal");
-        fireEvent.click(modalButton);
+        const addPostButton = screen.getByText("Callback");
+        fireEvent.click(addPostButton);
         // refresh -> re-render
         await waitFor(() => expect(mockedAxios.get).toHaveBeenCalledTimes(8));
     });
