@@ -6,6 +6,7 @@ import { IProps } from "../../components/PostModal/PostModal";
 import { Provider } from "react-redux";
 import { mockStore } from "../../test-utils/mock";
 import { MemoryRouter, Route, Routes } from "react-router";
+import { PostType } from "../../store/slices/post";
 
 jest.mock("react-chartjs-2", () => ({
     Bar: () => <div>BarChart</div>,
@@ -36,6 +37,32 @@ jest.mock("../../components/PostModal/PostModal", () => (props: IProps) => (
         ></button>
     </div>
 ));
+
+jest.mock(
+    "../../components/PostList/PostList",
+    () =>
+        ({
+            type,
+            postListCallback,
+            replyTo,
+            allPosts,
+        }: {
+            type: string;
+            postListCallback: () => void;
+            replyTo: number;
+            allPosts: PostType[];
+        }) =>
+            (
+                <div>
+                    {allPosts.map((a) => (
+                        <div>
+                            {/* <p>{a.content}</p> */}
+                            <p>{a.user_name}</p>
+                        </div>
+                    ))}
+                </div>
+            )
+);
 
 describe("<AreaFeed />", () => {
     let areaFeedJSX: JSX.Element;
@@ -139,9 +166,10 @@ describe("<AreaFeed />", () => {
 
     it("should handle search", async () => {
         const { container } = render(areaFeedJSX);
-        await waitFor(() =>
-            expect(screen.queryByText("Loading")).not.toBeInTheDocument()
-        );
+        // await waitFor(() =>
+        //     expect(screen.queryByText("Loading")).not.toBeInTheDocument()
+        // );
+        await waitFor(() => screen.findByText("user1"));
         const newSearchBox = screen.getByRole("textbox");
         fireEvent.change(newSearchBox, { target: { value: "t2" } });
         await screen.findByDisplayValue("t2");
