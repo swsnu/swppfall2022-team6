@@ -126,6 +126,9 @@ describe("<AreaFeed />", () => {
     it("should handle only Photos button", async () => {
         render(areaFeedJSX);
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+        await waitFor(() =>
+            expect(screen.queryByText("Loading")).not.toBeInTheDocument()
+        );
         const photosBtn = screen.getByRole("switch");
         fireEvent.click(photosBtn!);
         await waitFor(() =>
@@ -136,6 +139,9 @@ describe("<AreaFeed />", () => {
 
     it("should handle search", async () => {
         const { container } = render(areaFeedJSX);
+        await waitFor(() =>
+            expect(screen.queryByText("Loading")).not.toBeInTheDocument()
+        );
         const newSearchBox = screen.getByRole("textbox");
         fireEvent.change(newSearchBox, { target: { value: "t2" } });
         await screen.findByDisplayValue("t2");

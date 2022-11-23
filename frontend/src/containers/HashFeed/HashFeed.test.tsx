@@ -61,6 +61,9 @@ describe("<HashFeed />", () => {
     });
     it("should handle back button", async () => {
         const view = render(hashFeedJSX);
+        await waitFor(() =>
+            expect(screen.queryByText("Loading")).not.toBeInTheDocument()
+        );
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const backBtn = view.container.querySelector("#back-button");
         fireEvent.click(backBtn!);
@@ -68,6 +71,9 @@ describe("<HashFeed />", () => {
     });
     it("should handle refresh button", async () => {
         const view = render(hashFeedJSX);
+        await waitFor(() =>
+            expect(screen.queryByText("Loading")).not.toBeInTheDocument()
+        );
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const refreshBtn = view.container.querySelector("#refresh-button");
         fireEvent.click(refreshBtn!);
@@ -76,16 +82,22 @@ describe("<HashFeed />", () => {
 
     it("should handle hashtag togglebutton", async () => {
         render(hashFeedJSX);
-        await waitFor(() => screen.findByText("#hashtag1"));
+        await waitFor(() =>
+            expect(screen.queryByText("Loading")).not.toBeInTheDocument()
+        );
+        await waitFor(() => screen.findByText("#hashtag2"));
         // eslint-disable-next-line testing-library/await-async-query
-        const hashtag1Btn = screen.findByText("#hashtag1");
+        const hashtag1Btn = screen.findByText("#hashtag2");
         fireEvent.click(await hashtag1Btn!);
         await waitFor(() =>
-            expect(screen.queryByText("user2")).not.toBeInTheDocument()
+            expect(screen.queryByText("user1")).not.toBeInTheDocument()
         );
     });
     it("should handle only Photos button", async () => {
         render(hashFeedJSX);
+        await waitFor(() =>
+            expect(screen.queryByText("Loading")).not.toBeInTheDocument()
+        );
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const photosBtn = screen.getByRole("switch");
         fireEvent.click(photosBtn!);
@@ -97,6 +109,9 @@ describe("<HashFeed />", () => {
 
     it("should handle search", async () => {
         const { container } = render(hashFeedJSX);
+        await waitFor(() =>
+            expect(screen.queryByText("Loading")).not.toBeInTheDocument()
+        );
         const newSearchBox = screen.getByRole("textbox");
         fireEvent.change(newSearchBox, { target: { value: "t2" } });
         await screen.findByDisplayValue("t2");
