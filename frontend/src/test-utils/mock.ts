@@ -8,7 +8,7 @@ import positionReducer, { PositionState } from "../store/slices/position";
 
 export const getMockStore = (preloadedState?: PreloadedState<RootState>) => {
   return configureStore({
-    reducer: { 
+    reducer: {
       users: userReducer,
       posts: postReducer,
       reports: reportReducer,
@@ -23,56 +23,46 @@ const stubUserInitialState: UserState = {
   users: [
     {
       id: 1,
-      password: "admin",
       username: "user1",
       email: "",
-      logged_in: true,
       radius: 0.0,
       main_badge: 1,
-      
+
     },
     {
       id: 2,
-      password: "admin",
       username: "user2",
       email: "",
-      logged_in: false,
       radius: 0.0,
       main_badge: 1,
-      
+
     },
     {
       id: 3,
-      password: "admin",
       username: "user3",
       email: "",
-      logged_in: false,
       radius: 0.0,
       main_badge: 1,
-      
+
     },
     {
       id: 4,
-      password: "admin",
       username: "user4",
       email: "",
-      logged_in: false,
       radius: 0.0,
       main_badge: 1,
-      
+
     },
   ],
   currUser: {
     id: 1,
-    password: "admin",
     username: "user1",
     email: "",
-    logged_in: true,
     radius: 0.0,
     main_badge: 1,
-    
+
   },
-    
+
 }
 const stubHashtagInitialState: HashtagState = {
   hashtags: [
@@ -108,7 +98,7 @@ const stubPositionInitialState: PositionState = {
     lng: 126.95264777802309,
   }
 }
-export const mockStore = getMockStore({ 
+export const mockStore = getMockStore({
   users: stubUserInitialState,
   posts: stubPostInitialState,
   reports: stubReportInitialState,

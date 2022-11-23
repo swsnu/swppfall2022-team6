@@ -8,6 +8,23 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from rest_framework.authtoken.models import Token
 from .models import User, Badge
 
+class SignUpSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(max_length=68, min_length=8, write_only=True)
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
+
+    def validate(self, attrs):
+        # TODO: add validation logic
+        username = attrs.get('username', '')
+				# isalnum(): is alphabet number
+        if not username.isalnum():
+            raise serializers.ValidationError(self.default_error_messages)
+        return attrs
+
+    def create(self, validated_data):
+        return User.objects.create_user(**validated_data)
+
 class LogInSerializer(serializers.ModelSerializer):
     username = serializers.CharField(read_only=True)
     password = serializers.CharField(max_length=68, write_only=True)

@@ -1,30 +1,39 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "..";
 import axios from "axios";
+import { dispatch } from "d3";
 
-export interface UserType { 
-  id: number; 
+export interface UserType {
+  id: number;
   email: string;
-  password: string;
   username: string;
-  logged_in: boolean;
   radius: number;
   main_badge: number|null;
 }
 export interface UserState { users: UserType[]; currUser: UserType|null; }
+
 const initialState: UserState = { users: [], currUser: { //TODO: should change to null
   id: 100,
   email: "team6@swpp.com",
-  password: "team6",
   username: "team6",
-  logged_in: true,
   radius: 2,
   main_badge: null,
-} }; 
+} };
 
 export type LoginFormType = {
-  username: UserType["username"];
-  password: UserType["password"];
+  email: string;
+  password: string;
+};
+
+export const checkApiResponseStatus = (status: number) => {
+  if (status === 401) {
+    alert('로그인 후 2시간 이상이 경과되었습니다. 다시 로그인 해 주세요.');
+    sessionStorage.clear();
+    window.location.reload();
+  } else if (status === 400) {
+    alert('이메일이나 비밀번호가 틀립니다.');
+    window.location.reload();
+  }
 };
 
 //@ts-ignore
@@ -41,33 +50,57 @@ const userSlice = createSlice({ //! userSlice type?
     setRadius: (state, action: PayloadAction<number>) =>{
       if(state.currUser)
         state.currUser.radius = action.payload;
-    }
-  },
-  extraReducers: (builder) => {
-    builder.addCase(fetchUsers.fulfilled, (state, action) => {
+    },
+    setUsers: (state, action: PayloadAction<UserType[]>) =>{
       state.users = action.payload;
-    });
-  }
+    },
+  },
+  // extraReducers: (builder) => {
+  //   builder.addCase(fetchUsers.fulfilled, (state, action) => {
+  //     state.users = action.payload;
+  //   });
+  // }
 })
 export const fetchUsers = createAsyncThunk(
-  "user/fetchUsers", 
-  async () => {
-    const response = await axios.get<UserType[]>("/user/");
-    return response.data;
+  "user/fetchUsers",
+  async (_, { dispatch }) => {
+    axios
+    .get("/user/")
+    .then((response) => {
+      dispatch(userActions.setUsers(response.data));
+    }).catch((error) => {
+      checkApiResponseStatus(error.response.status);
+    });
   }
 );
 export const setLogin = createAsyncThunk(
   "user/setLogin",
-  async (user: UserType, { dispatch }) => {
-    const response = await axios.put(`/user/${user.id}/`, {...user, logged_in:true});
-    dispatch(userActions.setLogin(response.data))
+  async (data: FormData, { dispatch }) => {
+    axios
+    .post("/user/signin/", data, {headers: {
+          "Content-Type": "multipart/form-data",
+          }}
+    ).then((response) => {
+      sessionStorage.setItem("isLoggedIn", "true");
+      window.location.reload();
+      dispatch(userActions.setLogin(response.data))
+    }).catch((error) => {
+      checkApiResponseStatus(error.response.status);
+    });
   }
 );
 export const setLogout = createAsyncThunk(
   "user/setLogout",
-  async (user: UserType, { dispatch }) => {
-    const response = await axios.put(`/user/${user.id}/`, {...user, logged_in:false});
-    dispatch(userActions.setLogout({}));
+  async (_, { dispatch }) => {
+    await axios
+    .post('/user/signout/')
+    .then(() => {
+      window.sessionStorage.clear();
+      window.location.reload();
+      dispatch(userActions.setLogout({}));
+    }).catch((error) => {
+      checkApiResponseStatus(error.response.status);
+    });
   }
 );
 export const setRadius = createAsyncThunk(

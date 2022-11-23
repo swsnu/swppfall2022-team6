@@ -3,33 +3,35 @@ import { dispatch } from "d3";
 import React, { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { setLogin } from "../../store/slices/user";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store";
 
 function SignIn() {
     const authenticated = window.sessionStorage.getItem('isLoggedIn') === "true"
+
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
 
-    const login = async({ email, password }: {email: string, password: string}) => {
-        axios
-            .post("/user/signin/", { email, password })
-            .then((res) => {
-                sessionStorage.setItem('isLoggedIn', "true");
-                window.location.reload();
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+    const login = async() => {
+        console.log("login")
+        const formData = new FormData();
+        formData.append("email", email);
+        formData.append("password", password);
+        console.log(email, password)
+        console.log(formData)
+        await dispatch(setLogin(formData));
     };
 
-    const onClickSignUpButton = () => {
+    const onClickSignUpButton = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
         navigate("/signup");
     };
 
-    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await login({email, password});
-        navigate("/");
+        login();
     };
 
     if(authenticated){

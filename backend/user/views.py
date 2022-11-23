@@ -4,7 +4,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.db import transaction
-from .serializer import LogInSerializer, LogOutSerializer, UserSerializer
+from .serializer import LogInSerializer, LogOutSerializer, SignUpSerializer, UserSerializer
 #from django.shortcuts import redirect
 from rest_framework import status, viewsets, permissions
 from rest_framework.response import Response
@@ -19,17 +19,16 @@ class UserSignUpView(GenericAPIView):
     '''
         user signup view
     '''
+    serializer_class = SignUpSerializer
     authentication_classes = []
-    # POST /user/signup/
-    def post(self, request):
-        body = request.data
 
-        email = body.get('email')
-        password = body.get('password')
-        username = body.get('username')
-        User.objects.create_user \
-            (email=email, password=password, username=username)
-        return Response('signup', status=status.HTTP_201_CREATED)
+    def post(self, request):
+        user = request.data
+        serializer = self.serializer_class(data=user)
+        serializer.is_valid(raise_exception = True)
+        serializer.save()
+        data = { "msg": "user created" }
+        return Response(data, status=status.HTTP_201_CREATED)
 
 
 class UserLoginView(GenericAPIView):
@@ -77,6 +76,13 @@ class UserViewSet(viewsets.GenericViewSet):
     '''
         UserViewSet
     '''
+    serializer_class = UserSerializer
+    permission_classes = (permissions.IsAuthenticated, )
+
+    # GET /user/
+    def list(self, request):
+        users = User.objects.all()
+        return Response(self.get_serializer(users, many=True).data, status=status.HTTP_200_OK)
 
     # GET /user/me/
     def retrieve(self, request, pk=None):

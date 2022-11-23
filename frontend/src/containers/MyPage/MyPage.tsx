@@ -3,29 +3,26 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PostList from "../../components/PostList/PostList";
 import { PostType } from "../../store/slices/post";
+import { setLogout } from "../../store/slices/user";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store";
 
 function MyPage() {
     const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
     const [allPosts, setAllPosts] = useState<PostType[]>([]);
+
     const onClickBackButton = () => {
         navigate("/");
     };
     const onClickSeeBadgesButton = () => {};
-    const onClickLogOutButton = () => {
-        axios
-        .post('/user/signout/')
-        .then(() => {
-            window.sessionStorage.clear();
-            window.location.reload();
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    const onClickLogOutButton = async () => {
+        await dispatch(setLogout());
     };
     const onSelectOnlyPhotos = () => {};
     return (
         <div className="MyPage">
-            <button id="back-button" onClick={onClickBackButton}>
+            <button id="back-button" onClick={e => onClickBackButton}>
                 Back
             </button>
             <div id="upper-container">
