@@ -55,7 +55,7 @@ function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport, 
             //@ts-ignore
             await dispatch(addPost(formData));
         }
-        if (location.pathname === "/areafeed/" && navReportCallback){
+        if (location.pathname === "/areafeed/"){
             setOpenReport(false);
             navReportCallback();
         }

@@ -40,13 +40,19 @@ function NavigationBar({ navReportCallback } : {navReportCallback: () => void;})
     <div id="navbar-container">
         <div id="buttongroup-container">
             <ButtonGroup>
-                <Button onClick={handleClickHome}>
+                <Button 
+                data-testid="home-button"
+                onClick={handleClickHome}>
                     <FontAwesomeIcon icon={faHouse} />
                 </Button>
-                <Button onClick={handleClickReport}>
+                <Button 
+                data-testid="report-button"
+                onClick={handleClickReport}>
                     <FontAwesomeIcon icon={faBullhorn}/>
                 </Button>
-                <Button onClick={handleClickMyPage}>
+                <Button 
+                data-testid="user-button"
+                onClick={handleClickMyPage}>
                     <FontAwesomeIcon icon={faUser}/>
                 </Button>
             </ButtonGroup>

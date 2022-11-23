@@ -288,4 +288,26 @@ describe("<ReportModal />", () => {
             expect(mockNavigate).toHaveBeenCalledWith("/areafeed/");
         });
     });
+    it("should close modal when submitted on areafeed page", async () => {
+        const mockCallback = jest.fn();
+        const areafeedRoute = "/areafeed/";
+        render(
+            <Provider store={mockStore}>
+                <MemoryRouter initialEntries={[areafeedRoute]}>
+                    <ReportModal
+                        currPosition={{ lat: 0, lng: 0 }}
+                        openReport={true}
+                        setOpenReport={jest.fn()}
+                        isNavbarReport={true}
+                        navReportCallback={mockCallback}
+                    />
+                </MemoryRouter>
+            </Provider>
+        ); 
+        const submitButton = screen.getByText("Submit!");
+        fireEvent.click(submitButton);
+        await waitFor(() => {
+            expect(mockCallback).toHaveBeenCalled();
+        });
+    })
 });
