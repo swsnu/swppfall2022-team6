@@ -209,7 +209,6 @@ function AreaFeed() {
                         allPosts={queryPosts}
                     />
                 </Row>
-                ;
             </div>
         );
     };
