@@ -220,15 +220,15 @@ function HashFeed() {
                         </Row>
                     </Row>
                     <HashFeedPosts></HashFeedPosts>
+                    <NavigationBar
+                        navReportCallback={navReportCallback}
+                    />
                 </div>
             ) : (
                 <div style={{ fontSize: "20px", marginTop: "20px" }}>
                     Loading
                 </div>
             )}
-            <NavigationBar
-                navReportCallback={navReportCallback}
-            />
         </Container>
     );
 }
