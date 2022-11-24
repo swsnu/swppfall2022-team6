@@ -82,7 +82,10 @@ function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport, 
                     </header>
                     <main>
                         <form onSubmit={handleSubmit}>
-                            {isNavbarReport? null : (
+                            {isNavbarReport
+                            ? <div className="navreport-margin-top">
+                            </div> 
+                            : (
                                 <p id="photo-container">
                                     <span id="photo-label">📷 Add Photo</span>
                                     <input
@@ -144,6 +147,11 @@ function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport, 
                                     ❄️ Snow
                                 </button>
                             </div>
+                            {isNavbarReport
+                                ? <div className="navreport-margin-top">
+                                    </div>
+                                : null
+                            }
                             <div>
                                 <div className="slider-container">
                                     <p
@@ -223,7 +231,10 @@ function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport, 
                                     />
                                 </div>
                             </div>
-                            {isNavbarReport? null : (
+                            {isNavbarReport
+                            ? <div className="navreport-margin-bottom">
+                                </div>  
+                            : (
                                 <div style={{ margin: "0px 50px" }}>
                                     <TextField
                                         inputProps={{ "data-testid": "textField" }}
