@@ -27,15 +27,15 @@ function NavigationBar({ navReportCallback } : {navReportCallback: () => void;})
         }
     }, []);
 
-    const [navbarVertical, setNavBarVertical] = useState(
-        window.matchMedia("(min-width: 768px)").matches
-    )
+    // const [navbarVertical, setNavBarVertical] = useState(
+    //     window.matchMedia("(min-width: 768px)").matches
+    // )
 
-    useEffect(() => {
-        window
-        .matchMedia("(min-width: 768px)")
-        .addEventListener('change', e => setNavBarVertical( e.matches ));
-    }, []);
+    // useEffect(() => {
+    //     window
+    //     .matchMedia("(min-width: 768px)")
+    //     .addEventListener('change', e => setNavBarVertical( e.matches ));
+    // }, []);
 
     const handleClickHome = () => {
         navigate("/");
@@ -48,14 +48,11 @@ function NavigationBar({ navReportCallback } : {navReportCallback: () => void;})
     }
     return (
     <div id="navbar-container">
-        <div className={navbarVertical 
-            ? "navbar-buttongroup-vertical" 
-            : "navbar-buttongroup-horizontal"}
-        >
-            { navbarVertical
-                ?
+        <div>
+            { // navbarVertical
+                // ?
                 <ButtonGroup vertical
-                style={{position: "absolute", bottom: "35%", right: "2%"}}
+                style={{position: "absolute", bottom: "50%", right: "2%"}}
                 >
                     <Button 
                     style={{background:"#3185E7", border:0}}
@@ -78,31 +75,31 @@ function NavigationBar({ navReportCallback } : {navReportCallback: () => void;})
                         <FontAwesomeIcon icon={faUser}/>
                     </Button>
                 </ButtonGroup>
-                :
-                <ButtonGroup
-                style={{position: "absolute", bottom: "4px", right: "40%"}}
-                >
-                    <Button 
-                    style={{background:"#3185E7", border:0}}
-                    data-testid="home-button"
-                    onClick={handleClickHome}>
-                        <FontAwesomeIcon icon={faHouse} />
-                    </Button>
-                    <Button 
-                    className="navbar-button"
-                    style={{background:"#3185E7", border:0}}
-                    data-testid="report-button"
-                    onClick={handleClickReport}>
-                        <FontAwesomeIcon icon={faBullhorn}/>
-                    </Button>
-                    <Button 
-                    className="navbar-button"
-                    style={{background:"#3185E7", border:0}}
-                    data-testid="user-button"
-                    onClick={handleClickMyPage}>
-                        <FontAwesomeIcon icon={faUser}/>
-                    </Button>
-                </ButtonGroup>
+                // :
+                // <ButtonGroup 
+                // style={{position: "absolute", bottom: "4px", right: "40%"}}
+                // >
+                //     <Button 
+                //     style={{background:"#3185E7", border:0}}
+                //     data-testid="home-button"
+                //     onClick={handleClickHome}>
+                //         <FontAwesomeIcon icon={faHouse} />
+                //     </Button>
+                //     <Button 
+                //     className="navbar-button"
+                //     style={{background:"#3185E7", border:0}}
+                //     data-testid="report-button"
+                //     onClick={handleClickReport}>
+                //         <FontAwesomeIcon icon={faBullhorn}/>
+                //     </Button>
+                //     <Button 
+                //     className="navbar-button"
+                //     style={{background:"#3185E7", border:0}}
+                //     data-testid="user-button"
+                //     onClick={handleClickMyPage}>
+                //         <FontAwesomeIcon icon={faUser}/>
+                //     </Button>
+                // </ButtonGroup>
             }
         </div>
         <ReportModal 
