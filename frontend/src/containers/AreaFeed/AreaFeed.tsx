@@ -148,6 +148,11 @@ function AreaFeed() {
         setRefresh(true);
     }; // axios.get again
 
+    // TODO: reportModalCallback for refreshing statistics
+    const navReportCallback = () => {
+        setRefresh(true);
+    }
+
     const handleToggleTag = (
         e: React.MouseEvent<HTMLElement>,
         value: number
@@ -211,7 +216,6 @@ function AreaFeed() {
                         allPosts={queryPosts}
                     />
                 </Row>
-                ;
             </div>
         );
     };
@@ -281,7 +285,9 @@ function AreaFeed() {
                     Loading
                 </div>
             )}
-            <NavigationBar />
+            <NavigationBar 
+                navReportCallback={navReportCallback}
+            />
         </Container>
     );
 }

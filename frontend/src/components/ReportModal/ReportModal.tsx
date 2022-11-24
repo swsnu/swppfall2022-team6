@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import "./ReportModal.scss";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Slider, TextField } from "@mui/material";
 import { PositionType } from "../../store/slices/position";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,13 +10,15 @@ import { selectUser } from "../../store/slices/user";
 import { addReport } from "../../store/slices/report";
 import { addPost } from "../../store/slices/post";
 
-interface IProps {
+export interface IProps {
     currPosition: PositionType;
     openReport: boolean;
     setOpenReport: React.Dispatch<React.SetStateAction<boolean>>;
+    isNavbarReport: boolean;
+    navReportCallback: () => void;
 }
 
-function ReportModal({ currPosition, openReport, setOpenReport }: IProps) {
+function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport, navReportCallback }: IProps) {
     const userState = useSelector(selectUser);
 
     const [content, setContent] = useState<string>("");
@@ -29,6 +31,7 @@ function ReportModal({ currPosition, openReport, setOpenReport }: IProps) {
 
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -52,7 +55,11 @@ function ReportModal({ currPosition, openReport, setOpenReport }: IProps) {
             //@ts-ignore
             await dispatch(addPost(formData));
         }
-        navigate("/areafeed/");
+        if (location.pathname === "/areafeed/"){
+            setOpenReport(false);
+            navReportCallback();
+        }
+        else navigate("/areafeed/");
     };
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
@@ -75,20 +82,22 @@ function ReportModal({ currPosition, openReport, setOpenReport }: IProps) {
                     </header>
                     <main>
                         <form onSubmit={handleSubmit}>
-                            <p id="photo-container">
-                                <span id="photo-label">📷 Add Photo</span>
-                                <input
-                                    id="photo-input image"
-                                    type="file"
-                                    accept="image/png, image/jpeg, image/jpg"
-                                    onChange={handleImageChange}
-                                    style={{
-                                        paddingLeft: "75px",
-                                        fontSize: "9px",
-                                    }}
-                                    data-testid="fileUploader"
-                                />
-                            </p>
+                            {isNavbarReport? null : (
+                                <p id="photo-container">
+                                    <span id="photo-label">📷 Add Photo</span>
+                                    <input
+                                        id="photo-input image"
+                                        type="file"
+                                        accept="image/png, image/jpeg, image/jpg"
+                                        onChange={handleImageChange}
+                                        style={{
+                                            paddingLeft: "75px",
+                                            fontSize: "9px",
+                                        }}
+                                        data-testid="fileUploader"
+                                    />
+                                </p>
+                            )}
                             <div id="weather-select-container">
                                 <button
                                     className={
@@ -214,22 +223,24 @@ function ReportModal({ currPosition, openReport, setOpenReport }: IProps) {
                                     />
                                 </div>
                             </div>
-                            <div style={{ margin: "0px 50px" }}>
-                                <TextField
-                                    inputProps={{ "data-testid": "textField" }}
-                                    id="standard-basic"
-                                    variant="standard"
-                                    placeholder="Add Text"
-                                    size="small"
-                                    multiline
-                                    fullWidth
-                                    margin="normal"
-                                    value={content}
-                                    maxRows={5}
-                                    spellCheck={false}
-                                    onChange={(e) => setContent(e.target.value)}
-                                />
-                            </div>
+                            {isNavbarReport? null : (
+                                <div style={{ margin: "0px 50px" }}>
+                                    <TextField
+                                        inputProps={{ "data-testid": "textField" }}
+                                        id="standard-basic"
+                                        variant="standard"
+                                        placeholder="Add Text"
+                                        size="small"
+                                        multiline
+                                        fullWidth
+                                        margin="normal"
+                                        value={content}
+                                        maxRows={5}
+                                        spellCheck={false}
+                                        onChange={(e) => setContent(e.target.value)}
+                                    />
+                                </div>
+                            )}
                             <p>
                                 <input
                                     type="submit"

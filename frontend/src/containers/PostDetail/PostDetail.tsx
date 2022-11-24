@@ -140,7 +140,9 @@ function PostDetail() {
                     allPosts={replyPosts}
                 />
             </div>
-            <NavigationBar />
+            <NavigationBar 
+                navReportCallback={() => {}}
+            />
         </div>
     );
 }

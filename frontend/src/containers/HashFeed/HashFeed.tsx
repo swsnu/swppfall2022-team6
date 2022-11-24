@@ -90,6 +90,9 @@ function HashFeed() {
     const postListCallback = () => {
         setRefresh(true);
     }; // axios.get again
+    const navReportCallback = () => {
+        setRefresh(true);
+    };
     const handleToggleTag = (
         e: React.MouseEvent<HTMLElement>,
         value: string
@@ -223,7 +226,9 @@ function HashFeed() {
                     Loading
                 </div>
             )}
-            <NavigationBar />
+            <NavigationBar
+                navReportCallback={navReportCallback}
+            />
         </Container>
     );
 }
