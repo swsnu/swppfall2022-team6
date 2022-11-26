@@ -33,6 +33,10 @@ Object.defineProperty(window, 'sessionStorage', {
   value: localStorageMock
 });
 
+Object.defineProperty(window, 'location', {
+  configurable: true,
+  value: { reload: jest.fn() },
+});
 window.alert = jest.fn();
 
 describe("user reducer", ()=>{

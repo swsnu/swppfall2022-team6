@@ -29,7 +29,9 @@ function MyPage() {
     const currUser = userState.currUser as UserType;
 
     useEffect(()=>{
-        dispatch(fetchUserPosts(currUser.id));
+        if(currUser){
+            dispatch(fetchUserPosts(currUser.id));
+        }
     }, []);
 
     useEffect(()=>{
