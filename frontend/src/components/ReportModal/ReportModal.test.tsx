@@ -7,6 +7,7 @@ import userEvent from "@testing-library/user-event";
 import { getMockStore, mockStore } from "../../test-utils/mock";
 import { Provider } from "react-redux";
 import { UserState } from "../../store/slices/user";
+import { MemoryRouter, Route, Routes } from "react-router";
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
@@ -22,11 +23,19 @@ describe("<ReportModal />", () => {
         axios.post = jest.fn().mockResolvedValue({});
         render(
             <Provider store={mockStore}>
-                <ReportModal
-                    currPosition={{ lat: 0, lng: 0 }}
-                    openReport={true}
-                    setOpenReport={jest.fn()}
-                />
+                <MemoryRouter>
+                    <Routes>
+                        <Route path="/" element={
+                            <ReportModal
+                                currPosition={{ lat: 0, lng: 0 }}
+                                openReport={true}
+                                setOpenReport={jest.fn()}
+                                isNavbarReport={false}
+                                navReportCallback={() => {}}
+                            />
+                        } />
+                    </Routes>
+                </MemoryRouter>
             </Provider>
         );
         const submitButton = screen.getByText("Submit!");
@@ -40,11 +49,19 @@ describe("<ReportModal />", () => {
         const file = new File(["TEST"], "test.png", { type: "image/png" });
         render(
             <Provider store={mockStore}>
-                <ReportModal
-                    currPosition={{ lat: 0, lng: 0 }}
-                    openReport={true}
-                    setOpenReport={jest.fn()}
-                />
+                <MemoryRouter>
+                    <Routes>
+                        <Route path="/" element={
+                            <ReportModal
+                                currPosition={{ lat: 0, lng: 0 }}
+                                openReport={true}
+                                setOpenReport={jest.fn()}
+                                isNavbarReport={false}
+                                navReportCallback={() => {}}
+                            />
+                        } />
+                    </Routes>
+                </MemoryRouter>
             </Provider>
         );
         const fileUploader = screen.getByTestId("fileUploader");
@@ -60,11 +77,19 @@ describe("<ReportModal />", () => {
         axios.post = jest.fn().mockResolvedValue({});
         render(
             <Provider store={mockStore}>
-                <ReportModal
-                    currPosition={{ lat: 0, lng: 0 }}
-                    openReport={true}
-                    setOpenReport={jest.fn()}
-                />
+                <MemoryRouter>
+                    <Routes>
+                        <Route path="/" element={
+                            <ReportModal
+                                currPosition={{ lat: 0, lng: 0 }}
+                                openReport={true}
+                                setOpenReport={jest.fn()}
+                                isNavbarReport={false}
+                                navReportCallback={() => {}}
+                            />
+                        } />
+                    </Routes>
+                </MemoryRouter>
             </Provider>
         );
         const textField = screen.getByTestId("textField");
@@ -79,11 +104,19 @@ describe("<ReportModal />", () => {
         axios.post = jest.fn().mockResolvedValue({});
         render(
             <Provider store={mockStore}>
-                <ReportModal
-                    currPosition={{ lat: 0, lng: 0 }}
-                    openReport={true}
-                    setOpenReport={jest.fn()}
-                />
+                <MemoryRouter>
+                    <Routes>
+                        <Route path="/" element={
+                            <ReportModal
+                                currPosition={{ lat: 0, lng: 0 }}
+                                openReport={true}
+                                setOpenReport={jest.fn()}
+                                isNavbarReport={false}
+                                navReportCallback={() => {}}
+                            />
+                        } />
+                    </Routes>
+                </MemoryRouter>
             </Provider>
         );
         const closeButton = screen.getByTestId("closeButton");
@@ -92,11 +125,19 @@ describe("<ReportModal />", () => {
     it("should select weather properly", async () => {
         render(
             <Provider store={mockStore}>
-                <ReportModal
-                    currPosition={{ lat: 0, lng: 0 }}
-                    openReport={true}
-                    setOpenReport={jest.fn()}
-                />
+                <MemoryRouter>
+                    <Routes>
+                        <Route path="/" element={
+                            <ReportModal
+                                currPosition={{ lat: 0, lng: 0 }}
+                                openReport={true}
+                                setOpenReport={jest.fn()}
+                                isNavbarReport={false}
+                                navReportCallback={() => {}}
+                            />
+                        } />
+                    </Routes>
+                </MemoryRouter>
             </Provider>
         );
         const sunnyButton = screen.getByText("☀️ Sunny");
@@ -123,11 +164,19 @@ describe("<ReportModal />", () => {
     it("should change slider properly", async () => {
         render(
             <Provider store={mockStore}>
-                <ReportModal
-                    currPosition={{ lat: 0, lng: 0 }}
-                    openReport={true}
-                    setOpenReport={jest.fn()}
-                />
+                <MemoryRouter>
+                    <Routes>
+                        <Route path="/" element={
+                            <ReportModal
+                                currPosition={{ lat: 0, lng: 0 }}
+                                openReport={true}
+                                setOpenReport={jest.fn()}
+                                isNavbarReport={false}
+                                navReportCallback={() => {}}
+                            />
+                        } />
+                    </Routes>
+                </MemoryRouter>
             </Provider>
         );
         const weatherSlider = screen.getByLabelText("weather_degree");
@@ -142,11 +191,19 @@ describe("<ReportModal />", () => {
     it("should change textfield properly", async () => {
         render(
             <Provider store={mockStore}>
-                <ReportModal
-                    currPosition={{ lat: 0, lng: 0 }}
-                    openReport={true}
-                    setOpenReport={jest.fn()}
-                />
+                <MemoryRouter>
+                    <Routes>
+                        <Route path="/" element={
+                            <ReportModal
+                                currPosition={{ lat: 0, lng: 0 }}
+                                openReport={true}
+                                setOpenReport={jest.fn()}
+                                isNavbarReport={false}
+                                navReportCallback={() => {}}
+                            />
+                        } />
+                    </Routes>
+                </MemoryRouter>
             </Provider>
         );
         const textField = screen.getByTestId("textField");
@@ -156,11 +213,19 @@ describe("<ReportModal />", () => {
     it("should show nothing if openReport is false", async () => {
         render(
             <Provider store={mockStore}>
-                <ReportModal
-                    currPosition={{ lat: 0, lng: 0 }}
-                    openReport={false}
-                    setOpenReport={jest.fn()}
-                />
+                <MemoryRouter>
+                    <Routes>
+                        <Route path="/" element={
+                            <ReportModal
+                                currPosition={{ lat: 0, lng: 0 }}
+                                openReport={false}
+                                setOpenReport={jest.fn()}
+                                isNavbarReport={false}
+                                navReportCallback={() => {}}
+                            />
+                        } />
+                    </Routes>
+                </MemoryRouter>
             </Provider>
         );
         expect(() => screen.getByText("📷 Add Photo")).toThrow();
@@ -200,11 +265,19 @@ describe("<ReportModal />", () => {
         axios.post = jest.fn().mockResolvedValue({});
         render(
             <Provider store={mymockStore}>
-                <ReportModal
-                    currPosition={{ lat: 0, lng: 0 }}
-                    openReport={true}
-                    setOpenReport={jest.fn()}
-                />
+                <MemoryRouter>
+                    <Routes>
+                        <Route path="/" element={
+                            <ReportModal
+                                currPosition={{ lat: 0, lng: 0 }}
+                                openReport={true}
+                                setOpenReport={jest.fn()}
+                                isNavbarReport={false}
+                                navReportCallback={() => {}}
+                            />
+                        } />
+                    </Routes>
+                </MemoryRouter>
             </Provider>
         );
         const submitButton = screen.getByText("Submit!");
@@ -213,4 +286,26 @@ describe("<ReportModal />", () => {
             expect(mockNavigate).toHaveBeenCalledWith("/areafeed/");
         });
     });
+    it("should close modal when submitted on areafeed page", async () => {
+        const mockCallback = jest.fn();
+        const areafeedRoute = "/areafeed/";
+        render(
+            <Provider store={mockStore}>
+                <MemoryRouter initialEntries={[areafeedRoute]}>
+                    <ReportModal
+                        currPosition={{ lat: 0, lng: 0 }}
+                        openReport={true}
+                        setOpenReport={jest.fn()}
+                        isNavbarReport={true}
+                        navReportCallback={mockCallback}
+                    />
+                </MemoryRouter>
+            </Provider>
+        ); 
+        const submitButton = screen.getByText("Submit!");
+        fireEvent.click(submitButton);
+        await waitFor(() => {
+            expect(mockCallback).toHaveBeenCalled();
+        });
+    })
 });

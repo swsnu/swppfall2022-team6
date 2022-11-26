@@ -58,7 +58,7 @@ class PostTestCase(TestCase):
 
     def test_post(self):
         response = self.client.post('/post/',
-        data={'content':'content', 'hashtags':'hi'})
+        data={'content':'content', 'hashtags':'hi', 'hid':'1'})
 
         self.assertEqual(response.status_code, 201)
 
@@ -162,6 +162,22 @@ class PostTestCase(TestCase):
         new_posthashtag2 = PostHashtag(post=Post.objects.get(id=1),
         hashtag=new_hashtag2)
         new_posthashtag2.save()
+        new_user2 = User.objects.create_user(
+            username='swpp2',
+            password='iluvswpp2',
+            main_badge=Badge.objects.get(id=1)
+        )
+        new_post3 = Post(
+            user=new_user2,
+            content='content2',
+            latitude=5.0,
+            longitude=12.0,
+        )
+        new_post3.created_at=date(2020, 10, 21)
+        new_post3.save()
+        new_posthashtag3 = PostHashtag(post=Post.objects.get(id=3),
+        hashtag=new_hashtag2)
+        new_posthashtag3.save()
         response = self.client.get('/post/1/hashfeed/')
         self.assertEqual(response.status_code, 200)
 
@@ -181,10 +197,10 @@ class PostTestCase(TestCase):
                     'hashtags': [{'id': 1, 'content': 'hashtag'},
                     {'id':2,'content':'hashtag2'}]}],
                 'top3_hashtags':
-                    [{'id':2,'content':'hashtag2'}]
+                    [{'content': 'hashtag', 'id': '1'},
+                    {'id':2,'content':'hashtag2'}]
             }
         )
-
 
     def test_retrieve(self):
         response = self.client.get('/post/4/')

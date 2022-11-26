@@ -25,7 +25,7 @@ export const checkApiResponseStatus = (status: number) => {
     alert('로그인 후 2시간 이상이 경과되었습니다. 다시 로그인 해 주세요.');
     sessionStorage.clear();
     window.location.reload();
-  } else if (status === 400) {
+  } else if (status === 403) {
     alert('이메일이나 비밀번호가 틀립니다.');
     // window.location.reload();
   }
@@ -111,8 +111,8 @@ export const setLogout = createAsyncThunk(
     await axios
     .post('/user/signout/')
     .then(() => {
-      window.sessionStorage.clear();
       dispatch(userActions.setLogout({}));
+      window.sessionStorage.clear();
     }).catch((error) => {
       checkApiResponseStatus(error.response.status);
     });
@@ -122,7 +122,7 @@ export const setRadius = createAsyncThunk(
   "user/setRadius",
   async (data: {user: UserType, radius: number}, { dispatch }) => {
     const {user, radius} = data;
-    await axios.put(`/user/${user.id}/radius`, {radius: radius})
+    await axios.put(`/user/${user.id}/radius/`, {radius: radius})
     dispatch(userActions.setRadius(radius));
   }
 );

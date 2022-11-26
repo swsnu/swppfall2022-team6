@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -17,6 +17,7 @@ import { fetchUserPosts, selectUser, UserType } from "../../store/slices/user";
 import { AppDispatch } from "../../store";
 
 import "./MyPage.scss"
+import { NavigateBeforeTwoTone } from "@material-ui/icons";
 
 function MyPage() {
     const userState = useSelector(selectUser);
@@ -49,9 +50,14 @@ function MyPage() {
     const onClickSeeBadgesButton = () => {
         navigate("/mypage/badges")
     };
-    const onClickLogOutButton = async () => {
-        await dispatch(setLogout());
+    const onClickLogOutButton = async (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        await dispatch(setLogout())
     };
+
+    if(currUser === null){
+        return <Navigate to="/signin" />;
+    }
     return (
         <Container id="MyPage">
             <Row id="header-container">

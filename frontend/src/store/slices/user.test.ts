@@ -115,8 +115,8 @@ describe("user reducer", ()=>{
     await store.dispatch(setLogin(formData));
     expect(store.getState().users.currUser).toBeTruthy();
   });
-  it("should handle faulty login 400", async ()=>{
-    const err = {response: {status: 400}};
+  it("should handle faulty login 403", async ()=>{
+    const err = {response: {status: 403}};
     jest.spyOn(axios, "post").mockRejectedValueOnce(err);
     const formData = new FormData();
     formData.append("email", fakeUser.email);

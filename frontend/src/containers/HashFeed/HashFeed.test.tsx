@@ -2,10 +2,34 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import axios from "axios";
 import "jest-canvas-mock";
 import { IProps } from "../../components/PostModal/PostModal";
+import { IProps as ReportProps } from "../../components/ReportModal/ReportModal";
 import { Provider } from "react-redux";
 import { mockStore } from "../../test-utils/mock";
 import { MemoryRouter, Route, Routes } from "react-router";
 import HashFeed from "./HashFeed";
+import { PostType } from "../../store/slices/post";
+
+jest.mock(
+    "../../components/PostList/PostList",
+    () =>
+        ({
+            postListCallback,
+            allPosts,
+        }: {
+            postListCallback: () => void;
+            allPosts: PostType[];
+        }) =>
+            (
+                <div>
+                    <button onClick={postListCallback}>Callback</button>
+                    {allPosts.map((a) => (
+                        <div>
+                            <p>{a.user_name}</p>
+                        </div>
+                    ))}
+                </div>
+            )
+);
 
 jest.mock("../../components/PostModal/PostModal", () => (props: IProps) => (
     <div>
@@ -13,6 +37,15 @@ jest.mock("../../components/PostModal/PostModal", () => (props: IProps) => (
             data-testid="spyModal"
             className="submitButton"
             onClick={props.postModalCallback}
+        ></button>
+    </div>
+));
+jest.mock("../../components/ReportModal/ReportModal", () => (props: ReportProps) => (
+    <div>
+        <button
+            data-testid="spyNavReportModal"
+            className="submitButton"
+            onClick={props.navReportCallback}
         ></button>
     </div>
 ));
@@ -61,6 +94,9 @@ describe("<HashFeed />", () => {
     });
     it("should handle back button", async () => {
         const view = render(hashFeedJSX);
+        await waitFor(() =>
+            expect(screen.queryByText("Loading")).not.toBeInTheDocument()
+        );
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const backBtn = view.container.querySelector("#back-button");
         fireEvent.click(backBtn!);
@@ -68,6 +104,9 @@ describe("<HashFeed />", () => {
     });
     it("should handle refresh button", async () => {
         const view = render(hashFeedJSX);
+        await waitFor(() =>
+            expect(screen.queryByText("Loading")).not.toBeInTheDocument()
+        );
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const refreshBtn = view.container.querySelector("#refresh-button");
         fireEvent.click(refreshBtn!);
@@ -76,16 +115,22 @@ describe("<HashFeed />", () => {
 
     it("should handle hashtag togglebutton", async () => {
         render(hashFeedJSX);
-        await waitFor(() => screen.findByText("#hashtag1"));
+        await waitFor(() =>
+            expect(screen.queryByText("Loading")).not.toBeInTheDocument()
+        );
+        await waitFor(() => screen.findByText("#hashtag2"));
         // eslint-disable-next-line testing-library/await-async-query
-        const hashtag1Btn = screen.findByText("#hashtag1");
+        const hashtag1Btn = screen.findByText("#hashtag2");
         fireEvent.click(await hashtag1Btn!);
         await waitFor(() =>
-            expect(screen.queryByText("user2")).not.toBeInTheDocument()
+            expect(screen.queryByText("user1")).not.toBeInTheDocument()
         );
     });
     it("should handle only Photos button", async () => {
         render(hashFeedJSX);
+        await waitFor(() =>
+            expect(screen.queryByText("Loading")).not.toBeInTheDocument()
+        );
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const photosBtn = screen.getByRole("switch");
         fireEvent.click(photosBtn!);
@@ -97,12 +142,13 @@ describe("<HashFeed />", () => {
 
     it("should handle search", async () => {
         const { container } = render(hashFeedJSX);
+        await waitFor(() => screen.findByText("user1"));
         const newSearchBox = screen.getByRole("textbox");
         fireEvent.change(newSearchBox, { target: { value: "t2" } });
         await screen.findByDisplayValue("t2");
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const searchIcon = container.getElementsByClassName(
-            "MuiButtonBase-root MuiIconButton-root ForwardRef-iconButton-49 ForwardRef-searchIconButton-51"
+            "MuiButtonBase-root MuiIconButton-root ForwardRef-iconButton-40 ForwardRef-searchIconButton-42"
         )[0];
         fireEvent.click(searchIcon!);
         await waitFor(() =>
@@ -114,11 +160,18 @@ describe("<HashFeed />", () => {
     it("should handle postlistcallback after adding post", async () => {
         render(hashFeedJSX);
         await waitFor(() => screen.findByText("user1"));
-        const addPostButton = screen.getByText("Add Post");
+        const addPostButton = screen.getByText("Callback");
         fireEvent.click(addPostButton!);
-        const modalButton = screen.getByTestId("spyModal");
-        fireEvent.click(modalButton);
         // refresh -> re-render
+        await waitFor(() => expect(mockedAxios.get).toHaveBeenCalledTimes(4));
+    });
+    it("should handle navReportCallback after submit", async () => {
+        render(hashFeedJSX);
+        await waitFor(() => screen.findByText("user1"));
+        const report_button = screen.getByTestId("report-button");
+        fireEvent.click(report_button!);
+        const modalButton = screen.getByTestId("spyNavReportModal");
+        fireEvent.click(modalButton);
         await waitFor(() => expect(mockedAxios.get).toHaveBeenCalledTimes(4));
     });
 });
