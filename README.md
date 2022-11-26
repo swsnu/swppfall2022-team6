@@ -28,9 +28,10 @@ yarn test --coverage --watchAll=false
 ```bash
 cd backend
 pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
+sh data.sh
 ```
+
+Because badges are yet to be implemented, to mock badge data and create a genuine user bash data.sh must be executed.
 
 ## Backend Test
 
