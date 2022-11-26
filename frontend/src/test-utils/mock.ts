@@ -107,69 +107,9 @@ const stubUserInitialState: UserState = {
 }
 
 const stubUserInitialState2: UserState = {
-    users: [
-        {
-            id: 1,
-            username: "user1",
-            email: "",
-            radius: 0.0,
-            main_badge: 1,
-        },
-        {
-            id: 2,
-            username: "user2",
-            email: "",
-            radius: 0.0,
-            main_badge: 1,
-        },
-        {
-            id: 3,
-            username: "user3",
-            email: "",
-            radius: 0.0,
-            main_badge: 1,
-        },
-        {
-            id: 4,
-            username: "user4",
-            email: "",
-            radius: 0.0,
-            main_badge: 1,
-        },
-        {
-        id: 4,
-        username: "user4",
-        email: "",
-        radius: 0.0,
-        main_badge: 1,
-
-        },
-    ],
+    users: [],
     currUser: null,
-    userPosts: [
-        {
-            id: 1,
-            user_name: "user1",
-            content: "CONTENT-t1",
-            image: "",
-            latitude: 0,
-            longitude: 0,
-            created_at: "2022-11-20T8:43:28UTC+9",
-            reply_to_author: null,
-            hashtags: [stubHashtagInitialState.hashtags[0]],
-        },
-        {
-            id: 2,
-            user_name: "user2",
-            content: "CONTENT-t2",
-            image: "/logo192.png",
-            latitude: 0,
-            longitude: 0,
-            created_at: "2022-11-21T8:43:28UTC+9",
-            reply_to_author: null,
-            hashtags: [stubHashtagInitialState.hashtags[1]],
-        },
-    ],
+    userPosts: [],
 }
 
 const stubPostInitialState: PostState = {
