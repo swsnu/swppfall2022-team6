@@ -8,7 +8,6 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from user.models import User
 from post.models import Post, PostHashtag
 from hashtag.models import Hashtag
 from .serializer import PostSerializer

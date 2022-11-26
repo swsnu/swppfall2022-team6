@@ -2,7 +2,7 @@
     user views
 '''
 from django.conf import settings
-from django.contrib.auth import get_user_model, authenticate, login, logout
+from django.contrib.auth import get_user_model
 from django.db import transaction
 from .serializer import LogInSerializer, LogOutSerializer, SignUpSerializer, UserSerializer
 from django.shortcuts import get_object_or_404
@@ -29,7 +29,7 @@ class UserSignUpView(GenericAPIView):
         serializer = self.serializer_class(data=user)
         serializer.is_valid(raise_exception = True)
         serializer.save()
-        data = { "msg": "user created" }
+        data = { 'msg': 'user created' }
         return Response(data, status=status.HTTP_201_CREATED)
 
 
@@ -44,11 +44,10 @@ class UserLoginView(GenericAPIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        print(serializer.validated_data)
-        access_token = serializer.data["tokens"]["access"]
-        refresh_token = serializer.data["tokens"]["refresh"]
+        access_token = serializer.data['tokens']['access']
+        refresh_token = serializer.data['tokens']['refresh']
         data = serializer.data
-        del data["tokens"]
+        del data['tokens']
         res = Response(data, status=status.HTTP_200_OK)
         res.set_cookie('access_token', value=access_token, httponly=True)
         res.set_cookie('refresh_token', value=refresh_token, httponly=True)
@@ -63,11 +62,12 @@ class UserLogoutView(GenericAPIView):
 
     # POST /user/signout/
     def post(self, request):
-        refresh_token = { "refresh" : request.COOKIES.get(settings.SIMPLE_JWT['REFRESH_TOKEN'])}
+        refresh_token = { 'refresh' : request.COOKIES.get \
+            (settings.SIMPLE_JWT['REFRESH_TOKEN'])}
         serializer = self.serializer_class(data = refresh_token)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        data = { "msg": "logout success" }
+        data = { 'msg': 'logout success' }
         res = Response(data, status=status.HTTP_200_OK)
         res.delete_cookie('access_token')
         res.delete_cookie('refresh_token')
@@ -83,8 +83,10 @@ class UserViewSet(viewsets.GenericViewSet):
 
     # GET /user/
     def list(self, request):
+        del request # unnecessary but for pylint
         users = User.objects.all()
-        return Response(self.get_serializer(users, many=True).data, status=status.HTTP_200_OK)
+        return Response(self.get_serializer(users, many=True).data, \
+            status=status.HTTP_200_OK)
 
     # GET /user/me/
     def retrieve(self, request, pk=None):
@@ -115,13 +117,17 @@ class UserViewSet(viewsets.GenericViewSet):
     @action(detail=True, methods=['GET', 'PUT'])
     @transaction.atomic
     def radius(self, request, pk=None):
-        del request
-        del pk
+        user = request.user
         if self.request.method == 'GET':
             return Response('get radius', status=status.HTTP_200_OK)
 
         if self.request.method == 'PUT':
-            return Response('put radius', status=status.HTTP_200_OK)
+            serializer = self.get_serializer(user, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+
+            data = serializer.data
+            return Response(data, status=status.HTTP_200_OK)
 
     # GET/PUT /user/:id/achievement/
     @action(detail=True, methods=['GET', 'PUT'])

@@ -5,11 +5,14 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
-from rest_framework.authtoken.models import Token
 from .models import User, Badge
 
 class SignUpSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(max_length=68, min_length=8, write_only=True)
+    '''
+        signup serializer
+    '''
+    password = serializers.CharField(max_length=68, min_length=8, \
+        write_only=True)
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
@@ -26,6 +29,9 @@ class SignUpSerializer(serializers.ModelSerializer):
         return User.objects.create_user(**validated_data)
 
 class LogInSerializer(serializers.ModelSerializer):
+    '''
+        login serializer
+    '''
     username = serializers.CharField(read_only=True)
     password = serializers.CharField(max_length=68, write_only=True)
     email = serializers.EmailField()
@@ -41,7 +47,8 @@ class LogInSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'email', 'radius', 'main_badge', 'tokens']
+        fields = ['id', 'username', 'password', 'email', 'radius', \
+            'main_badge', 'tokens']
 
     def validate(self, attrs):
         email = attrs.get('email', '')
@@ -50,14 +57,15 @@ class LogInSerializer(serializers.ModelSerializer):
 
         if not user:
             raise AuthenticationFailed('invalid credentials, try again')
-        if not user.is_active:
-            raise AuthenticationFailed('user not active')
 
         data = UserSerializer(user).data
         data['tokens'] = user.tokens
         return data
 
 class LogOutSerializer(serializers.Serializer):
+    '''
+        logout serializer
+    '''
     refresh = serializers.CharField()
 
     def validate(self, attrs):
@@ -67,9 +75,10 @@ class LogOutSerializer(serializers.Serializer):
     def save(self, **kwargs):
         try:
             RefreshToken(self.token).blacklist()
-        except TokenError:
+        except TokenError as exc:
             msg = 'Token is blacklisted'
-            raise serializers.ValidationError(msg, code='authorization')
+            raise serializers.ValidationError\
+                (msg, code='authorization') from exc
 
 class UserSerializer(serializers.ModelSerializer):
     '''

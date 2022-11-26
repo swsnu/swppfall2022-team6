@@ -16,6 +16,9 @@ class Badge(models.Model):
 
 
 class User(AbstractUser):
+    '''
+        User
+    '''
     email = models.EmailField(unique=True)
     radius = models.FloatField(default=0)
     main_badge = models.ForeignKey(Badge, related_name='user', \
