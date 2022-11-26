@@ -117,12 +117,14 @@ class UserViewSet(viewsets.GenericViewSet):
     @action(detail=True, methods=['GET', 'PUT'])
     @transaction.atomic
     def radius(self, request, pk=None):
+        del pk
         user = request.user
         if self.request.method == 'GET':
             return Response('get radius', status=status.HTTP_200_OK)
 
         if self.request.method == 'PUT':
-            serializer = self.get_serializer(user, data=request.data, partial=True)
+            serializer = self.get_serializer\
+                (user, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
 
