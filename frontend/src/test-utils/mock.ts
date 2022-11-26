@@ -37,60 +37,48 @@ const stubUserInitialState: UserState = {
     users: [
         {
             id: 1,
-            password: "admin",
             username: "user1",
             email: "",
-            logged_in: true,
             radius: 0.0,
             main_badge: 1,
         },
         {
             id: 2,
-            password: "admin",
             username: "user2",
             email: "",
-            logged_in: false,
             radius: 0.0,
             main_badge: 1,
         },
         {
             id: 3,
-            password: "admin",
             username: "user3",
             email: "",
-            logged_in: false,
             radius: 0.0,
             main_badge: 1,
         },
         {
             id: 4,
-            password: "admin",
             username: "user4",
             email: "",
-            logged_in: false,
             radius: 0.0,
             main_badge: 1,
         },
         {
         id: 4,
-        password: "admin",
         username: "user4",
         email: "",
-        logged_in: false,
         radius: 0.0,
         main_badge: 1,
-        
+
         },
     ],
     currUser: {
         id: 1,
-        password: "admin",
         username: "user1",
         email: "",
-        logged_in: true,
         radius: 0.0,
         main_badge: 1,
-        
+
     },
     userPosts: [
         {
@@ -116,6 +104,12 @@ const stubUserInitialState: UserState = {
             hashtags: [stubHashtagInitialState.hashtags[1]],
         },
     ],
+}
+
+const stubUserInitialState2: UserState = {
+    users: [],
+    currUser: null,
+    userPosts: [],
 }
 
 const stubPostInitialState: PostState = {
@@ -226,6 +220,14 @@ const stubPositionInitialState: PositionState = {
 };
 export const mockStore = getMockStore({
     users: stubUserInitialState,
+    posts: stubPostInitialState,
+    reports: stubReportInitialState,
+    hashtags: stubHashtagInitialState,
+    positions: stubPositionInitialState,
+});
+
+export const mockStore2 = getMockStore({
+    users: stubUserInitialState2,
     posts: stubPostInitialState,
     reports: stubReportInitialState,
     hashtags: stubHashtagInitialState,

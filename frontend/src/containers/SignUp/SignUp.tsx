@@ -1,57 +1,130 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { isValidUserName, isValidPassword } from "./SignUpUtils";
+import { Navigate, useNavigate } from "react-router-dom";
+import axios from "axios";
+import './SignUp.scss';
+
+type SignUpFormType = {
+    email: string;
+    username: string;
+    password: string;
+    passwordCheck: string;
+};
+const initialvalues: SignUpFormType = {
+    email: "",
+    username: "",
+    password: "",
+    passwordCheck: "",
+}
 
 function SignUp() {
-    const [email, setEmail] = useState<string>("");
-    const [userName, setUsername] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const navigate = useNavigate();
+    const authenticated = window.sessionStorage.getItem('isLoggedIn') === "true"
 
-    const onClickSignUpButton = () => {
-        navigate("/");
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState<SignUpFormType>(initialvalues);
+
+    const signUp = (formData: SignUpFormType) => {
+        axios
+            .post("/user/signup/", formData)
+            .then(() => {
+                alert('회원가입 완료');
+                navigate("/signin")
+            })
+            .catch((error) => {
+                if (error.response.status === 400) {
+                    alert('해당 username 또는 email로 이미 가입된 사용자입니다');
+                }
+            });
     };
-    const onClickSignInButton = () => {
+
+    const onChangeFormData = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const name = e.target.name;
+        const value = e.target.value;
+        setFormData({
+            ...formData,
+            [name]: value.trim(),
+        });
+    };
+
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const {username, email, password, passwordCheck} = formData;
+
+        if(isValidUserName(username) && isValidPassword(password, passwordCheck)){
+            signUp(formData);
+        }
+    }
+
+    const onClickSignInButton = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
         navigate("/signin");
     };
 
+    if(authenticated){
+        return <Navigate to="/" />;
+    }
     return (
         <div className="SignUp">
-            <div id="input-container">
+            <form className="sign-up-form" onSubmit={onSubmit}>
                 <label>
-                    Email :{" "}
                     <input
-                        id="email-input"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        required
+						autoComplete="email"
+						autoFocus
+                        type="text"
+                        id="email"
+                        name="email"
+                        value = {formData.email}
+                        onChange={onChangeFormData}
+                        placeholder="email"
                     />
                 </label>
                 <label>
-                    Username :{" "}
                     <input
-                        id="username-input"
-                        value={userName}
-                        onChange={(e) => setUsername(e.target.value)}
+                        required
+						autoComplete="username"
+                        type="text"
+                        id="username"
+                        name="username"
+                        value = {formData.username}
+                        onChange={onChangeFormData}
+                        placeholder="username"
                     />
                 </label>
                 <label>
-                    Password :{" "}
                     <input
-                        id="password-input"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        autoComplete="current-password"
+                        type="password"
+                        id="password"
+                        name="password"
+                        value = {formData.password}
+                        onChange={onChangeFormData}
+                        placeholder="password"
                     />
                 </label>
-            </div>
-            <button
-                id="signup-button"
-                onClick={onClickSignUpButton}
-                //disabled={!(email && userName && password)}
-            >
-                Sign Up
-            </button>
-            <button id="signin-button" onClick={onClickSignInButton}>
-                Sign In
-            </button>
+                <label>
+                    <input
+                        required
+                        autoComplete="new-password"
+                        type="password"
+                        id="passwordCheck"
+                        name="passwordCheck"
+                        value = {formData.passwordCheck}
+                        onChange={onChangeFormData}
+                        placeholder="password"
+                    />
+                </label>
+                <button
+                    type="submit"
+                >Sign up</button>
+                <button
+                    id="signin-button"
+                    onClick={onClickSignInButton}
+                >
+                    Sign In
+                </button>
+            </form>
         </div>
     );
 }

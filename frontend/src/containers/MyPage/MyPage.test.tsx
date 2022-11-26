@@ -1,11 +1,17 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Provider } from "react-redux";
+import { store } from "../../store";
 import { PostType } from "../../store/slices/post";
-import { mockStore } from "../../test-utils/mock";
+import { mockStore, mockStore2 } from "../../test-utils/mock";
 import MyPage from "./MyPage";
 
 const myPageJSX = (
     <Provider store={mockStore}>
+        <MyPage />
+    </Provider>
+);
+const myPageJSX2 = (
+    <Provider store={mockStore2}>
         <MyPage />
     </Provider>
 );
@@ -37,6 +43,10 @@ const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
     ...jest.requireActual("react-router"),
     useNavigate: () => mockNavigate,
+    Navigate: (props: any) => {
+      mockNavigate(props.to);
+      return null;
+    },
 }));
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
@@ -54,6 +64,10 @@ describe("<MyPage />", () => {
         await screen.findByText("user1");
         expect(mockDispatch).toHaveBeenCalled();
     });
+    it("should navigate to signin when currUser null", ()=>{
+        render(myPageJSX2);
+        expect(mockNavigate).toHaveBeenCalled();
+    });
     it("should handle back button", ()=>{
         render(myPageJSX);
         const backButton = screen.getByLabelText("back-button");
@@ -66,10 +80,11 @@ describe("<MyPage />", () => {
         fireEvent.click(badgeButton!);
         expect(mockNavigate).toHaveBeenCalledTimes(1);
     });
-    it("should handle Log Out button", ()=>{
+    it("should handle Log Out button", async ()=>{
         render(myPageJSX);
         const logoutButton = screen.getByText("Log Out");
         fireEvent.click(logoutButton!);
+        expect(mockDispatch).toHaveBeenCalledTimes(2);
     });
     it("should handle Only Photos button", async () => {
         render(myPageJSX);

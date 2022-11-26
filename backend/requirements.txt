@@ -3,6 +3,7 @@ coverage==6.5
 pylint==2.15.5
 pylint-django==2.5.3
 djangorestframework==3.14.0
+djangorestframework-simplejwt==5.2.2
 Pillow==9.2.0
 haversine==2.7.0
 numpy==1.23.4

@@ -4,11 +4,11 @@
 from datetime import datetime
 from django.db import transaction
 from django.shortcuts import get_object_or_404
+from user.models import User
 #from django.shortcuts import redirect
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from user.models import User
 from post.models import Post, PostHashtag
 from hashtag.models import Hashtag
 from .serializer import PostSerializer
@@ -72,11 +72,13 @@ class PostViewSet(viewsets.GenericViewSet):
     '''
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    permission_classes = (permissions.IsAuthenticated, )
 
     # POST /post/
     @transaction.atomic
     def create(self, request):
-        post=Post.objects.create(user=User.objects.get(id=1),
+        user = request.user
+        post=Post.objects.create(user=user,
         content=request.POST['content'],
         image=request.FILES['image'] if 'image' in request.FILES else None,
         latitude=37.0, longitude=127.0, created_at=datetime.now(),

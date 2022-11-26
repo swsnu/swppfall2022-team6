@@ -8,6 +8,7 @@ import MyPage from "./containers/MyPage/MyPage";
 import MyBadges from "./containers/MyBadges/MyBadges";
 import PostDetail from "./containers/PostDetail/PostDetail";
 import AreaFeed from "./containers/AreaFeed/AreaFeed";
+import PrivateRoute from './PrivateRoute';
 import HashFeed from "./containers/HashFeed/HashFeed";
 
 function App() {
@@ -18,15 +19,21 @@ function App() {
                 <Routes>
                     <Route path="/signup" element={<SignUp />}></Route>
                     <Route path="/signin" element={<SignIn />}></Route>
-                    <Route path="/areafeed" element={<AreaFeed />}></Route>
                     <Route
-                        path="/areafeed/:id"
-                        element={<PostDetail />}
-                    ></Route>
-                    <Route path="/hashfeed/:id" element={<HashFeed />}></Route>
-                    <Route path="/mypage" element={<MyPage />}></Route>
-                    <Route path="/mypage/badges" element={<MyBadges />}></Route>
-                    <Route path="/" element={<MainPage />}></Route>
+                        path="/"
+                        element={<PrivateRoute/>}
+                    >
+                        <Route path="/areafeed" element={<AreaFeed />}></Route>
+                        <Route
+                            path="/areafeed/:id"
+                            element={<PostDetail />}
+                        ></Route>
+                        <Route path="/hashfeed/:id" element={<HashFeed />}></Route>
+                        <Route path="/mypage" element={<MyPage />}></Route>
+                        <Route path="/mypage/badges" element={<MyBadges />}></Route>
+                        <Route path="/" element={<MainPage />}></Route>
+                    </Route>
+                    {/* <Route path="/" element={<MainPage />}></Route> */}
                     <Route
                         path="*"
                         element={<Navigate replace to="/" />}

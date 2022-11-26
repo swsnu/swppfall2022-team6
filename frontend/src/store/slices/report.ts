@@ -18,7 +18,7 @@ export interface ReportType {
 export interface ReportState { reports: ReportType[];}
 const initialState: ReportState = {
   reports: [],
-}; 
+};
 
 export const reportSlice = createSlice({
   name: "report",
@@ -40,7 +40,7 @@ export const reportSlice = createSlice({
 });
 
 export const fetchReports = createAsyncThunk(
-  "report/fetchReports", 
+  "report/fetchReports",
   async (data: {lat:number, lng:number, radius:number}) => {
     const {lat, lng, radius} = data;
     const response = await axios.get<ReportType[]>("/report/", {

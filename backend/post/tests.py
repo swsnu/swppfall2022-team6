@@ -11,13 +11,27 @@ class PostTestCase(TestCase):
     '''
         PostTestCase
     '''
-    def setUp(self):
-        badge = Badge.objects.create()
-        new_user = User.objects.create_user(
-            username='swpp',
-            password='iluvswpp',
-            main_badge=badge
-        )
+    client = Client()
+
+    def setUp(self) -> None:
+        new_badge = Badge(title='test')
+        new_badge.save()
+        # TODO: remove dependency
+        data = {
+            'username': 'temporary',
+            'email': 'temporary@gmail.com',
+            'password': 'temporary'
+        }
+        self.client.post('/user/signup/'
+                    ,data=data)
+        data = {
+            'email': 'temporary@gmail.com',
+            'password': 'temporary'
+        }
+        self.client.post('/user/signin/'
+                    ,data=data)
+
+        new_user = User.objects.get(id=1)
         new_post = Post(
             user=new_user,
             content='content',
@@ -43,32 +57,30 @@ class PostTestCase(TestCase):
         new_posthashtag.save()
 
     def test_post(self):
-        client = Client()
-        response = client.post('/post/',
+        response = self.client.post('/post/',
         data={'content':'content', 'hashtags':'hi', 'hid':'1'})
 
         self.assertEqual(response.status_code, 201)
 
     def test_get(self):
-        client = Client()
         # check query params
-        response = client.get(
+        response = self.client.get(
             '/post/',
             {'latitude': 37.0, 'longitude': 127.0}
         )
         self.assertEqual(response.status_code, 400)
-        response = client.get(
+        response = self.client.get(
             '/post/',
             {'radius': 2, 'longitude': 127.0}
         )
         self.assertEqual(response.status_code, 400)
-        response = client.get(
+        response = self.client.get(
             '/post/',
             {'radius': 2, 'latitude': 37.0}
         )
         self.assertEqual(response.status_code, 400)
 
-        response = client.get(
+        response = self.client.get(
             '/post/',
             {'radius': 2, 'latitude': 36.0, 'longitude': 128.0}
         )
@@ -84,7 +96,7 @@ class PostTestCase(TestCase):
         self.assertIsNone(posts[0]['image'])
         self.assertEqual(posts[0]['latitude'], 5.0)
         self.assertEqual(posts[0]['longitude'], 12.0)
-        self.assertEqual(posts[0]['reply_to_author'], 'swpp')
+        self.assertEqual(posts[0]['reply_to_author'], 'temporary')
         self.assertEqual(posts[0]['hashtags'], [])
         self.assertIsNotNone(posts[0]['created_at'])
 
@@ -123,10 +135,9 @@ class PostTestCase(TestCase):
     #     )
 
     def test_get_chain(self):
-        client = Client()
-        response = client.get('/post/4/chain/')
+        response = self.client.get('/post/4/chain/')
         self.assertEqual(response.status_code, 404)
-        response = client.get('/post/2/chain/')
+        response = self.client.get('/post/2/chain/')
         self.assertEqual(response.status_code, 200)
 
         data = response.json()
@@ -134,7 +145,7 @@ class PostTestCase(TestCase):
             str(response.content, encoding='utf8'),
             [{
                 'id': 1,
-                'user_name': 'swpp',
+                'user_name': 'temporary',
                 'content': 'content',
                 'image': None,
                 'latitude': 36.0,
@@ -167,8 +178,7 @@ class PostTestCase(TestCase):
         new_posthashtag3 = PostHashtag(post=Post.objects.get(id=3),
         hashtag=new_hashtag2)
         new_posthashtag3.save()
-        client = Client()
-        response = client.get('/post/1/hashfeed/')
+        response = self.client.get('/post/1/hashfeed/')
         self.assertEqual(response.status_code, 200)
 
         data = response.json()
@@ -177,7 +187,7 @@ class PostTestCase(TestCase):
             {
                 'posts':
                     [{'id': 1,
-                    'user_name': 'swpp',
+                    'user_name': 'temporary',
                     'content': 'content',
                     'image': None,
                     'latitude': 36.0,
@@ -193,10 +203,9 @@ class PostTestCase(TestCase):
         )
 
     def test_retrieve(self):
-        client = Client()
-        response = client.get('/post/4/')
+        response = self.client.get('/post/4/')
         self.assertEqual(response.status_code, 404)
-        response = client.get('/post/1/')
+        response = self.client.get('/post/1/')
         self.assertEqual(response.status_code, 200)
 
         data = response.json()
@@ -205,7 +214,7 @@ class PostTestCase(TestCase):
             {
                 'post':{
                     'id': 1,
-                    'user_name': 'swpp',
+                    'user_name': 'temporary',
                     'content': 'content',
                     'image': None,
                     'latitude': 36.0,
@@ -216,15 +225,14 @@ class PostTestCase(TestCase):
                     },
                 'replies': [{
                     'id': 2,
-                    'user_name': 'swpp',
+                    'user_name': 'temporary',
                     'content': 'content',
                     'image': None,
                     'latitude': 5.0,
                     'longitude': 12.0,
                     'created_at': data['replies'][0]['created_at'],
-                    'reply_to_author': 'swpp',
+                    'reply_to_author': 'temporary',
                     'hashtags': [],
                     }]
                 }
         )
-        

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -12,10 +12,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 import PostList from "../../components/PostList/PostList";
 import { PostType } from "../../store/slices/post";
+import { setLogout } from "../../store/slices/user";
 import { fetchUserPosts, selectUser, UserType } from "../../store/slices/user";
 import { AppDispatch } from "../../store";
 
 import "./MyPage.scss"
+import { NavigateBeforeTwoTone } from "@material-ui/icons";
 
 function MyPage() {
     const userState = useSelector(selectUser);
@@ -25,11 +27,13 @@ function MyPage() {
     const [posts, setPosts] = useState<PostType[]>([]);
 
     const currUser = userState.currUser as UserType;
-    
+
     useEffect(()=>{
-        dispatch(fetchUserPosts(currUser.id));
+        if(currUser){
+            dispatch(fetchUserPosts(currUser.id));
+        }
     }, []);
-    
+
     useEffect(()=>{
         setPosts(userState.userPosts);
     }, [userState.userPosts])
@@ -48,7 +52,14 @@ function MyPage() {
     const onClickSeeBadgesButton = () => {
         navigate("/mypage/badges")
     };
-    const onClickLogOutButton = () => {};
+    const onClickLogOutButton = async (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        await dispatch(setLogout())
+    };
+
+    if(currUser === null){
+        return <Navigate to="/signin" />;
+    }
     return (
         <Container id="MyPage">
             <Row id="header-container">

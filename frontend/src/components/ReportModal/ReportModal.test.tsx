@@ -236,10 +236,8 @@ describe("<ReportModal />", () => {
                 users: [
                     {
                         id: 1,
-                        password: "admin",
                         username: "user1",
                         email: "",
-                        logged_in: true,
                         radius: 0.0,
                         main_badge: 1,
                     },
