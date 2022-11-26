@@ -102,6 +102,11 @@ describe("user reducer", ()=>{
     await store.dispatch(fetchUserPosts(1));
     await waitFor(() => expect(window.alert).toHaveBeenCalled());
   });
+  it("should handle faulty fetch user posts 500", async()=>{
+    const err = {response: {status: 500}};
+    jest.spyOn(axios, "get").mockRejectedValueOnce(err);
+    await store.dispatch(fetchUserPosts(1));
+  });
   it("should handle login", async ()=>{
     jest.spyOn(axios, "post").mockResolvedValue({data: fakeUser});
     const formData = new FormData();
@@ -131,14 +136,27 @@ describe("user reducer", ()=>{
     await waitFor(() => expect(window.alert).toHaveBeenCalled());
   })
   it("should set radius", async()=>{
-    const radiusUser = {...fakeUser, radius: 1}
-    jest.spyOn(axios, "put").mockResolvedValue({data: radiusUser});
+    // set curr_user to fakeuser
+    jest.spyOn(axios, "post").mockResolvedValue({data: fakeUser});
+    const formData = new FormData();
+    formData.append("email", fakeUser.email);
+    formData.append("password", "password");
+    await store.dispatch(setLogin(formData));
+    expect(store.getState().users.currUser).toBeTruthy();
+    // change curr_user radius
+    const radiusUser = {...fakeUser, radius: 1};
+    jest.spyOn(axios, "put").mockResolvedValue({data: {radiusUser}});
     await store.dispatch(setRadius({user: fakeUser, radius: 1}));
-    expect(store.getState().users.users[1].radius).toBe(1);
+    expect(store.getState().users.currUser?.radius).toBe(1)
   });
-  it("should not set radius when user not found", async()=>{
-    jest.spyOn(axios, "put").mockResolvedValue({data:fakeUser});
-    await store.dispatch(setRadius({user: {...fakeUser, id: 10}, radius: 1}));
-    // expect(store.getState().users.users[1].radius).toBe(2); //! 이거 왜 바뀜,,,
+  it("should not set radius when not current user", async()=>{
+    // set curr_user to null
+    jest.spyOn(axios, "post").mockResolvedValue({data: {msg: "logout complete"}});
+    await store.dispatch(setLogout());
+    expect(store.getState().users.currUser).toBeNull();
+    // set radius
+    const radiusUser = {...fakeUser, radius: 1};
+    jest.spyOn(axios, "put").mockResolvedValue({data: {radiusUser}});
+    await store.dispatch(setRadius({user: fakeUser, radius: 1}));
   });
 });

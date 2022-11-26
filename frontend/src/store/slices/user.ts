@@ -122,7 +122,7 @@ export const setRadius = createAsyncThunk(
   "user/setRadius",
   async (data: {user: UserType, radius: number}, { dispatch }) => {
     const {user, radius} = data;
-    await axios.put(`/user/${user.id}/`, {...user, radius: radius})
+    await axios.put(`/user/${user.id}/radius`, {radius: radius})
     dispatch(userActions.setRadius(radius));
   }
 );
