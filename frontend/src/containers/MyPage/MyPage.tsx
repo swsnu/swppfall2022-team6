@@ -29,7 +29,6 @@ function MyPage() {
 
     useEffect(()=>{
         dispatch(fetchUserPosts(currUser.id));
-        console.log(currUser);
     }, []);
 
     useEffect(()=>{

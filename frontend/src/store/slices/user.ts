@@ -12,13 +12,7 @@ export interface UserType {
 }
 export interface UserState { users: UserType[]; currUser: UserType|null; userPosts: PostType[];}
 
-const initialState: UserState = { users: [], currUser: { //TODO: should change to null
-  id: 100,
-  email: "team6@swpp.com",
-  username: "team6",
-  radius: 2,
-  main_badge: null,
-  },
+const initialState: UserState = { users: [], currUser: null,
   userPosts: [] };
 
 export type LoginFormType = {
@@ -59,11 +53,11 @@ const userSlice = createSlice({ //! userSlice type?
       state.userPosts = action.payload;
     },
   },
-    extraReducers: (builder) => {
-      builder.addCase(fetchUserPosts.fulfilled, (state, action) => {
-        state.userPosts = action.payload;
-      });
-    }
+    // extraReducers: (builder) => {
+    //   builder.addCase(fetchUserPosts.fulfilled, (state, action) => {
+    //     state.userPosts = action.payload;
+    //   });
+    // }
   // extraReducers: (builder) => {
   //   builder.addCase(fetchUsers.fulfilled, (state, action) => {
   //     state.users = action.payload;
@@ -84,14 +78,16 @@ export const fetchUsers = createAsyncThunk(
 );
 export const fetchUserPosts = createAsyncThunk(
   "user/fetchUserPosts",
-  async (id: number) => {
+  async (id: number, {dispatch}) => {
     axios
     .get<PostType[]>(`/user/${id}/post/`)
     .then((response) => {
-
-    })
-    const response = await axios.get<PostType[]>(`/user/${id}/post/`);
-    return response.data;
+      dispatch(userActions.setUserPosts(response.data));
+    }).catch((error) => {
+      checkApiResponseStatus(error.response.status);
+    });
+    // const response = await axios.get<PostType[]>(`/user/${id}/post/`);
+    // return response.data;
   }
 );
 export const setLogin = createAsyncThunk(
@@ -104,9 +100,7 @@ export const setLogin = createAsyncThunk(
     ).then(async (response) => {
       dispatch(userActions.setLogin(response.data));
       sessionStorage.setItem("isLoggedIn", "true");
-      console.log("yes");
     }).catch((error) => {
-      console.log("error");
       checkApiResponseStatus(error.response.status);
     });
   }

@@ -1,27 +1,125 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { Dictionary } from "@reduxjs/toolkit";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import axios from "axios";
 import SignUp from "./SignUp";
+
+const utils = require('./SignUpUtils');
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
     ...jest.requireActual("react-router"),
     useNavigate: () => mockNavigate,
+    Navigate: (props: any) => {
+      mockNavigate(props.to);
+      return null;
+    },
 }));
+
+
+const localStorageMock = (() => {
+    let store: Dictionary<string> = {};
+
+    return {
+      getItem(key: string) {
+        return store[key] || null;
+      },
+      setItem(key: string, value: string) {
+        store[key] = value;
+      },
+      removeItem(key: string) {
+        delete store[key];
+      },
+      clear() {
+        store = {};
+      }
+    };
+  })();
+
+Object.defineProperty(window, 'sessionStorage', {
+value: localStorageMock
+});
+
+window.alert = jest.fn();
+jest.mock('axios');
+
 
 describe("<SignUp />", () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
     it("should change values", async () => {
-        render(<SignUp />);
-        const email = screen.getByLabelText("Email :");
-        fireEvent.change(email, { target: { value: "test@test.com" } });
-        await screen.findByDisplayValue("test@test.com");
-        const password = screen.getByLabelText("Password :");
-        fireEvent.change(password, { target: { value: "passtest" } });
+        const view =  render(<SignUp />);
+        // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+        const email = view.container.querySelector('#email');
+        if(email){
+          fireEvent.change(email, { target: { value: "test@test.com" } });
+        }
+        // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+        const username = view.container.querySelector('#username');
+        if(username){
+          fireEvent.change(username, { target: { value: "test" } });
+        };
+        // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+        const password = view.container.querySelector('#password');
+        if(password){
+          fireEvent.change(password, { target: { value: "passtest" } });
+        }
         await screen.findByDisplayValue("passtest");
-        const username = screen.getByLabelText("Username :");
-        fireEvent.change(username, { target: { value: "swpp" } });
-        await screen.findByDisplayValue("swpp");
+        // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+        const passwordCheck = view.container.querySelector('#passwordCheck');
+        if(passwordCheck){
+          fireEvent.change(passwordCheck, { target: { value: "passtest2" } });
+        }
+        await screen.findByDisplayValue("passtest2");
+    });
+    it("should sign up", async () => {
+        render(<SignUp />);
+        const res = { data: {msg: "signup complete"}};
+        jest.spyOn(axios, "post").mockResolvedValue(res);
+        const isValidUserName = jest.spyOn(utils, 'isValidUserName');
+        isValidUserName.mockImplementation(() => true);
+        const isValidPassword = jest.spyOn(utils, 'isValidPassword');
+        isValidPassword.mockImplementation(() => true);
+        const signup = screen.getByText("Sign up");
+        fireEvent.click(signup);
+        await waitFor(() => expect(window.alert).toHaveBeenCalledWith("회원가입 완료"));
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
+    });
+    it("should not sign up when username or password faulty", async () => {
+        render(<SignUp />);
+        const res = { data: {msg: "signup complete"}};
+        jest.spyOn(axios, "post").mockResolvedValue(res);
+        const isValidUserName = jest.spyOn(utils, 'isValidUserName');
+        isValidUserName.mockImplementation(() => true);
+        const isValidPassword = jest.spyOn(utils, 'isValidPassword');
+        isValidPassword.mockImplementation(() => false);
+        const signup = screen.getByText("Sign up");
+        fireEvent.click(signup);
+        expect(mockNavigate).not.toHaveBeenCalled();
+    });
+    it("should not sign up on status code 400(integrity error)", async () => {
+        render(<SignUp />);
+        const err = {response: {status: 400}};
+        jest.spyOn(axios, "post").mockRejectedValueOnce(err);
+        const isValidUserName = jest.spyOn(utils, 'isValidUserName');
+        isValidUserName.mockImplementation(() => true);
+        const isValidPassword = jest.spyOn(utils, 'isValidPassword');
+        isValidPassword.mockImplementation(() => true);
+        const signup = screen.getByText("Sign up");
+        fireEvent.click(signup);
+        await waitFor(() => expect(window.alert).toHaveBeenCalledWith('해당 username 또는 email로 이미 가입된 사용자입니다'));
+    });
+    it("should not sign up on other status code", async () => {
+        render(<SignUp />);
+        const err = {response: {status: 500}};
+        jest.spyOn(axios, "post").mockRejectedValueOnce(err);
+        const isValidUserName = jest.spyOn(utils, 'isValidUserName');
+        isValidUserName.mockImplementation(() => true);
+        const isValidPassword = jest.spyOn(utils, 'isValidPassword');
+        isValidPassword.mockImplementation(() => true);
+        const signup = screen.getByText("Sign up");
+        fireEvent.click(signup);
+        expect(window.alert).not.toHaveBeenCalled();
     });
     it("should sign in", async () => {
         render(<SignUp />);
@@ -29,10 +127,9 @@ describe("<SignUp />", () => {
         fireEvent.click(signin);
         expect(mockNavigate).toHaveBeenCalledTimes(1);
     });
-    it("should sign up", async () => {
-        render(<SignUp />);
-        const signup = screen.getByText("Sign Up");
-        fireEvent.click(signup);
+    it("should navigate to mainpage when user is already signed in", async () => {
+        window.sessionStorage.setItem('isLoggedIn', "true");
+        render(<SignUp/>);
         expect(mockNavigate).toHaveBeenCalledTimes(1);
-    });
+      });
 });

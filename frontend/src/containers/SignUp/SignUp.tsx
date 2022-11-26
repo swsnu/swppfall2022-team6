@@ -26,7 +26,7 @@ function SignUp() {
     const signUp = (formData: SignUpFormType) => {
         axios
             .post("/user/signup/", formData)
-            .then((res) => {
+            .then(() => {
                 alert('회원가입 완료');
                 navigate("/signin")
             })

@@ -28,7 +28,8 @@ class PostViewSet(viewsets.GenericViewSet):
     # POST /post/
     @transaction.atomic
     def create(self, request):
-        post=Post.objects.create(user=User.objects.get(id=1),
+        user = request.user
+        post=Post.objects.create(user=user,
         content=request.POST['content'],
         image=request.FILES['image'] if 'image' in request.FILES else None,
         latitude=37.0, longitude=127.0, created_at=datetime.now(),

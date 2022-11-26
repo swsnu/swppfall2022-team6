@@ -23,7 +23,6 @@ function SignIn() {
         formData.append("email", email);
         formData.append("password", password);
         await dispatch(setLogin(formData));
-        console.log(userState.currUser);
     };
 
     const onClickSignUpButton = (e: React.MouseEvent<HTMLElement>) => {
