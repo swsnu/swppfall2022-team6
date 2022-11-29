@@ -27,6 +27,7 @@ import "./AreaFeed.scss";
 import { PositionType, selectPosition } from "../../store/slices/position";
 import { selectUser, UserType } from "../../store/slices/user";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { Address } from "../../components/SkimStatistics/SkimStatistics";
 
 type WeatherType = {
     icon?: string;
@@ -62,11 +63,12 @@ function AreaFeed() {
     const [selectTag, setSelectTag] = useState<number>(0);
     const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<Boolean>(false);
+    const [queryHash, setQueryHash] = useState<string>("");
 
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
-    const fetchData = async () => {
+    const refreshReports = async () => {
         const user = userState.currUser as UserType;
         let position: PositionType;
         const savedPosition = localStorage.getItem("position");
@@ -89,8 +91,23 @@ function AreaFeed() {
                 main: data.weather[0].main,
             });
         });
-        setRefresh(false);
+        await dispatch(
+            fetchReports({
+                ...position,
+                radius: user.radius,
+            })
+        );
+    };
 
+    const refreshPosts = async () => {
+        const user = userState.currUser as UserType;
+        let position: PositionType;
+        const savedPosition = localStorage.getItem("position");
+        if (savedPosition) {
+            position = JSON.parse(savedPosition);
+        } else {
+            position = positionState.position;
+        }
         const queryPostPromise = dispatch(
             fetchPosts({
                 ...position,
@@ -99,18 +116,81 @@ function AreaFeed() {
         );
         const postData = (await queryPostPromise).payload as PostType[];
         setQueryPosts(postData);
+    };
+
+    const refreshHashtag = async () => {
+        const user = userState.currUser as UserType;
+        let position: PositionType;
+        const savedPosition = localStorage.getItem("position");
+        if (savedPosition) {
+            position = JSON.parse(savedPosition);
+        } else {
+            position = positionState.position;
+        }
         await dispatch(
             fetchTop3Hashtags({
                 ...position,
                 radius: user.radius,
             })
         );
-        await dispatch(
-            fetchReports({
-                ...position,
-                radius: user.radius,
-            })
-        );
+        setQueryHash("");
+    };
+
+    const fetchData = async () => {
+        const user = userState.currUser as UserType;
+        let position: PositionType;
+        const savedPosition = localStorage.getItem("position");
+        if (savedPosition) {
+            position = JSON.parse(savedPosition);
+        } else {
+            position = positionState.position;
+        }
+        // const { lat, lng } = position;
+        // const api = {
+        //     key: "c22114b304afd9d97329b0223da5bb01",
+        //     base: "https://api.openweathermap.org/data/2.5/",
+        // };
+        // const url = `${api.base}weather?lat=${lat}&lon=${lng}&appid=${api.key}`;
+        // await axios.get(url).then((response) => {
+        //     const data = response.data;
+        //     setWeather({
+        //         icon: data.weather[0].icon,
+        //         temp: Math.round(data.main.temp - 273.15),
+        //         main: data.weather[0].main,
+        //     });
+        // });
+        console.time("reports");
+        await refreshReports();
+        console.timeEnd("reports");
+        console.time("posts");
+        await refreshPosts();
+        console.timeEnd("posts");
+        console.time("hashtags");
+        await refreshHashtag();
+        console.timeEnd("hashtags");
+        setRefresh(false);
+
+        // const queryPostPromise = dispatch(
+        //     fetchPosts({
+        //         ...position,
+        //         radius: user.radius,
+        //     })
+        // );
+        // const postData = (await queryPostPromise).payload as PostType[];
+        // setQueryPosts(postData);
+        // await dispatch(
+        //     fetchTop3Hashtags({
+        //         ...position,
+        //         radius: user.radius,
+        //     })
+        // );
+        // await dispatch(
+        //     fetchReports({
+        //         ...position,
+        //         radius: user.radius,
+        //     })
+        // );
+        // setQueryHash("");
         setIsLoading(true);
     };
 
@@ -144,14 +224,17 @@ function AreaFeed() {
     const onSelectOnlyPhotos = () => {
         setOnlyPhoto(!onlyPhoto);
     };
-    const postListCallback = () => {
-        setRefresh(true);
+    const postListCallback = async () => {
+        //setRefresh(true);
+        console.time("Addpost");
+        await refreshPosts();
+        console.timeEnd("Addpost");
     }; // axios.get again
 
     // TODO: reportModalCallback for refreshing statistics
     const navReportCallback = () => {
         setRefresh(true);
-    }
+    };
 
     const handleToggleTag = (
         e: React.MouseEvent<HTMLElement>,
@@ -170,9 +253,24 @@ function AreaFeed() {
                     post.content.includes(searchQuery)
                 )
             );
+            setQueryHash(searchQuery);
         };
         const onClickClose = () => {
             setSearchQuery("");
+            setQueryHash("");
+        };
+        const onQueryHashClick = async () => {
+            await axios
+                .get("/hashtag/", {
+                    params: { content: queryHash },
+                })
+                .then((response) => {
+                    if (response.data) {
+                        navigate(`/hashfeed/${response.data.id}`);
+                    } else {
+                        alert("Hashtag doesn't exist");
+                    }
+                });
         };
         return (
             <div>
@@ -207,6 +305,11 @@ function AreaFeed() {
                             </div>
                         </Col>
                     </Row>
+                    {queryHash ? (
+                        <Row className="area-label" onClick={onQueryHashClick}>
+                            Go to #{queryHash}
+                        </Row>
+                    ) : null}
                 </Row>
                 <Row id="postlist-container">
                     <PostList
@@ -243,6 +346,7 @@ function AreaFeed() {
                         <div id="weather-temp">{weather.temp}&deg;C</div>
                         <div id="weather-status">{weather.main}</div>
                     </Row>
+                    <Address position={positionState.position} />
                 </Col>
             </Row>
             {isLoading ? (
@@ -279,9 +383,7 @@ function AreaFeed() {
                         </Row>
                     </Row>
                     <AreaFeedPosts></AreaFeedPosts>
-                    <NavigationBar
-                        navReportCallback={navReportCallback}
-                    />
+                    <NavigationBar navReportCallback={navReportCallback} />
                 </div>
             ) : (
                 <div style={{ fontSize: "20px", marginTop: "20px" }}>
