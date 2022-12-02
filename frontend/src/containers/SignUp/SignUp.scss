@@ -65,7 +65,6 @@
     border: 1px solid #F5F5F5;
     border-radius: 20px;
     max-width: 97%;
-    font-weight: bold;
 }
 
 .SignUp input {
@@ -91,16 +90,18 @@
     line-height: 300%;
     background: #3185E7;
     color: #FFFFFF;
-    box-shadow: 0px 4px 4px 0px #00000040;
+    // box-shadow: 0px 4px 4px 0px #00000040;
     border: 1px solid #3185E7;
     border-radius: 20px;
     max-width: 97%;
     margin-bottom: 18px;
+    font-size: 15px;
+    line-height: 200%;
     font-weight: bold;
+    height: 40px;
 }
 
 .SignUp #signin-button {
     background: #FFFFFF;
     color: #3185E7;
-    border: 1px solid #FFFFFF;
 }
