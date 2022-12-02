@@ -1,0 +1,92 @@
+.SignIn {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    padding-top: 10px;
+    font-size: 15px;
+    line-height: 200%;
+    height: 100%;
+    width: 360px;
+}
+
+.SignIn #header-container {
+    display: flex;
+    flex-flow: row wrap;
+    flex-basis: 360px;
+}
+#signin-title {
+    font-size: 25px;
+    padding-bottom: 20px;
+}
+
+.SignIn #nowsee-logo-container {
+    display: block;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    padding-bottom: 15%;
+}
+
+.SignIn .login-form {
+    display: flex;
+    flex-flow: row wrap;
+    // flex-direction: column;
+    align-items: flex-start;
+    flex-basis: 360px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.SignIn span {
+    display: flex;
+    flex-basis: 360px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.SignIn .icon{
+    position: absolute;
+    top: 0px;
+    left: 15px;
+    width: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.SignIn input {
+    flex-basis: 360px;
+    line-height: 300%;
+    background: #F5F5F5;
+    box-shadow: 0px 4px 4px 0px #00000040;
+    border: 1px solid #F5F5F5;
+    border-radius: 20px;
+    max-width: 97%;
+    font-weight: bold;
+}
+
+.SignIn .button-container {
+    display: flex;
+    flex-flow: row wrap;
+    margin: 30px 0;
+    flex-basis: 360px;
+}
+
+.SignIn button {
+    flex-basis: 360px;
+    line-height: 300%;
+    background: #3185E7;
+    color: #FFFFFF;
+    box-shadow: 0px 4px 4px 0px #00000040;
+    border: 1px solid #3185E7;
+    border-radius: 20px;
+    max-width: 97%;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.SignIn #signup-button {
+    background: #FFFFFF;
+    color: #3185E7;
+    border: 1px solid #FFFFFF;
+}

@@ -6,6 +6,10 @@ import { setLogin, fetchUserBadges } from "../../store/slices/user";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store";
 import { selectUser } from "../../store/slices/user";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import "./SignIn.scss"
 
 function SignIn() {
     const authenticated = window.sessionStorage.getItem('isLoggedIn') === "true"
@@ -39,37 +43,55 @@ function SignIn() {
         return <Navigate to="/" />;
     }
     return (
-        <div className="SignIn">
+        <Container className="SignIn">
+            <Row id="header-container">
+                <Row id="nowsee-logo-container">
+                    <img src="/logo.svg" className="nowsee-logo-image"/>
+                </Row>
+                <Row id="signin-title">Login to your Account</Row>
+            </Row>
             <form className="login-form" onSubmit={onSubmit}>
-                <input
-                    required
-                    autoComplete="username"
-                    autoFocus
-                    type="text"
-                    id="email-input"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value.trim())}
-                    placeholder="Email"
-                />
-                <input
-                    required
-                    autoComplete="current-password"
-                    type="password"
-                    id="password-input"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value.trim())}
-                    placeholder="Password"
-                />
-                <button type="submit">Sign In</button>
-                <button
-                    id="signup-button"
-                    onClick={onClickSignUpButton}
-                    //disabled={!(email && password)}
-                >
-                    Sign Up
-                </button>
+                <span>
+                    <div className="icon">
+                        {email === "" && <img src="/email-icon.svg" className="email-icon"/>}
+                    </div>
+                    <input
+                        required
+                        autoComplete="username"
+                        autoFocus
+                        type="text"
+                        id="email-input"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value.trim())}
+                        placeholder="           Email"
+                    />
+                </span>
+                <span>
+                    <div className="icon">
+                        {password === "" && <img src="/password-icon.svg" className="password-icon"/>}
+                    </div>
+                    <input
+                        required
+                        autoComplete="current-password"
+                        type="password"
+                        id="password-input"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value.trim())}
+                        placeholder="           Password"
+                    />
+                </span>
+                <div className="button-container">
+                    <button type="submit">Sign In</button>
+                    <button
+                        id="signup-button"
+                        onClick={onClickSignUpButton}
+                        //disabled={!(email && password)}
+                    >
+                        Sign Up
+                    </button>
+                </div>
             </form>
-        </div>
+        </Container>
     );
 }
 

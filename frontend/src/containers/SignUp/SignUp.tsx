@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { isValidUserName, isValidPassword } from "./SignUpUtils";
 import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import './SignUp.scss';
 
 type SignUpFormType = {
@@ -64,9 +67,18 @@ function SignUp() {
         return <Navigate to="/" />;
     }
     return (
-        <div className="SignUp">
+        <Container className="SignUp">
+            <Row id="header-container">
+                <Row id="nowsee-logo-container">
+                    <img src="/logo.svg" className="nowsee-logo-image"/>
+                </Row>
+                <Row id="signup-title">Create new Account</Row>
+            </Row>
             <form className="sign-up-form" onSubmit={onSubmit}>
-                <label>
+                <span>
+                    <div className="icon">
+                        {formData.email === "" && <img src="/email-icon.svg" className="email-icon"/>}
+                    </div>
                     <input
                         required
 						autoComplete="email"
@@ -76,10 +88,13 @@ function SignUp() {
                         name="email"
                         value = {formData.email}
                         onChange={onChangeFormData}
-                        placeholder="email"
+                        placeholder="           email"
                     />
-                </label>
-                <label>
+                </span>
+                <span>
+                    <div className="icon">
+                        {formData.username === "" && <img src="/username-icon.svg" className="username-icon"/>}
+                    </div>
                     <input
                         required
 						autoComplete="username"
@@ -88,10 +103,13 @@ function SignUp() {
                         name="username"
                         value = {formData.username}
                         onChange={onChangeFormData}
-                        placeholder="username"
+                        placeholder="           username"
                     />
-                </label>
-                <label>
+                </span>
+                <span>
+                    <div className="icon">
+                        {formData.password === "" && <img src="/password-icon.svg" className="password-icon"/>}
+                    </div>
                     <input
                         required
                         autoComplete="current-password"
@@ -100,10 +118,13 @@ function SignUp() {
                         name="password"
                         value = {formData.password}
                         onChange={onChangeFormData}
-                        placeholder="password"
+                        placeholder="           password"
                     />
-                </label>
-                <label>
+                </span>
+                <span>
+                    <div className="icon">
+                        {formData.passwordCheck === "" && <img src="/password-icon.svg" className="password-icon"/>}
+                    </div>
                     <input
                         required
                         autoComplete="new-password"
@@ -112,20 +133,22 @@ function SignUp() {
                         name="passwordCheck"
                         value = {formData.passwordCheck}
                         onChange={onChangeFormData}
-                        placeholder="password"
+                        placeholder="           password check"
                     />
-                </label>
-                <button
-                    type="submit"
-                >Sign up</button>
-                <button
-                    id="signin-button"
-                    onClick={onClickSignInButton}
-                >
-                    Sign In
-                </button>
+                </span>
+                <div className="button-container">
+                    <button
+                        type="submit"
+                    >Sign up</button>
+                    <button
+                        id="signin-button"
+                        onClick={onClickSignInButton}
+                    >
+                        Sign In
+                    </button>
+                </div>
             </form>
-        </div>
+        </Container>
     );
 }
 
