@@ -92,7 +92,7 @@ export const addPost = createAsyncThunk(
                 "Content-Type": "multipart/form-data",
             },
         });
-        dispatch(postActions.addPost(response.data));
+        dispatch(postActions.addPost(response.data));// update Attendance Achievement(login)
         return response.data;
     }
 );

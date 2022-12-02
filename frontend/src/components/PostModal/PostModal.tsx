@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import "./PostModal.scss";
 import { TextField } from "@mui/material";
 import { addPost } from "../../store/slices/post";
-import { useDispatch } from "react-redux";
+import { selectUser, Achievement, updateUserAchievements } from "../../store/slices/user";
+import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store";
 import { useParams } from "react-router";
 
@@ -27,6 +28,7 @@ function PostModal({
     const [hashtags, setHashtags] = useState<string>("");
     const dispatch = useDispatch<AppDispatch>();
     const { id } = useParams();
+    const userState = useSelector(selectUser);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -39,7 +41,16 @@ function PostModal({
             if (type === "Reply")
                 formData.append("replyTo", replyTo.toString());
             //@ts-ignore
-            await dispatch(addPost(formData));
+            const response = await dispatch(addPost(formData));
+            if (response.payload){
+                // update Post-related Achievement(Reply)
+                if (type === "Reply"){
+                    const achievement_type: Achievement = Achievement.REPLY;
+                    if (!userState.userBadges[achievement_type-1].is_fulfilled){
+                        dispatch(updateUserAchievements({id: Number(userState.currUser?.id), type: achievement_type}));
+                    }
+                }
+            }
             setContent("");
             setHashtags("");
             postModalCallback();

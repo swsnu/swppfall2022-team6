@@ -22,11 +22,7 @@ function SignIn() {
         const formData = new FormData();
         formData.append("email", email);
         formData.append("password", password);
-        const response = await dispatch(setLogin(formData));
-        console.log(response)
-        // if (response.payload){
-        //     await dispatch(fetchUserBadges(userState.currUser?.id));
-        // }
+        await dispatch(setLogin(formData));
     };
 
     const onClickSignUpButton = (e: React.MouseEvent<HTMLElement>) => {

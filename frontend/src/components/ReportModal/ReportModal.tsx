@@ -6,7 +6,7 @@ import { Slider, TextField } from "@mui/material";
 import { PositionType } from "../../store/slices/position";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store";
-import { selectUser } from "../../store/slices/user";
+import { selectUser, Achievement, updateUserAchievements } from "../../store/slices/user";
 import { addReport } from "../../store/slices/report";
 import { addPost } from "../../store/slices/post";
 
@@ -33,6 +33,16 @@ function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport, 
     const navigate = useNavigate();
     const location = useLocation();
 
+    const report_achievement_handler = (achievement_types: Achievement[]) => {
+        for(const achievement_type of achievement_types){
+            const now = new Date();
+            const early_condition = (achievement_type === Achievement.EARLY) && (now.getHours() >9)
+            if ((!userState.userBadges[achievement_type-1].is_fulfilled) && (!early_condition)){
+                dispatch(updateUserAchievements({id: Number(userState.currUser?.id), type: achievement_type}));
+            }
+        }
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const data = {
@@ -46,7 +56,14 @@ function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport, 
             longitude: currPosition.lng,
         };
         //@ts-ignore
-        await dispatch(addReport(data)); //! 왜 0개의 인수,,,?
+        const response = await dispatch(addReport(data)); //! 왜 0개의 인수,,,?
+        if (response.payload){
+            console.log("yes");
+            // update Report-Related Achievements
+            const achievement_types: Achievement[] = [Achievement.FIRST_REPORT, Achievement.CLOUDY, Achievement.EARLY];
+            report_achievement_handler(achievement_types);
+
+        }
         if (image || content) {
             const formData = new FormData();
             if (image) formData.append("image", image);
@@ -84,7 +101,7 @@ function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport, 
                         <form onSubmit={handleSubmit}>
                             {isNavbarReport
                             ? <div className="navreport-margin-top">
-                            </div> 
+                            </div>
                             : (
                                 <p id="photo-container">
                                     <span id="photo-label">📷 Add Photo</span>
@@ -233,7 +250,7 @@ function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport, 
                             </div>
                             {isNavbarReport
                             ? <div className="navreport-margin-bottom">
-                                </div>  
+                                </div>
                             : (
                                 <div style={{ margin: "0px 50px" }}>
                                     <TextField

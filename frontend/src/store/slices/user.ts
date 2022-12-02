@@ -18,6 +18,14 @@ interface BadgeType {
   description: string;
   is_fulfilled: boolean;
 }
+
+export enum Achievement {
+  FIRST_REPORT = 2,
+  CLOUDY,
+  EARLY,
+  REPLY,
+  ATTENDANCE,
+}
 export interface UserState { users: UserType[]; currUser: UserType|null; userPosts: PostType[]; userBadges: BadgeType[]}
 
 const initialState: UserState = { users: [], currUser: null,
@@ -108,6 +116,11 @@ export const fetchUserBadges = createAsyncThunk(
     .get<BadgeType[]>(`/user/${id}/badges/`)
     .then((response) => {
       dispatch(userActions.setUserBadges(response.data));
+      // update Attendance Achievement(login)
+      const achievement_type: Achievement = Achievement.ATTENDANCE;
+      if (!response.data[achievement_type-1].is_fulfilled){
+        dispatch(updateUserAchievements({id: id, type: achievement_type}));
+      }
     }).catch((error) => {
       checkApiResponseStatus(error.response.status);
     });
@@ -125,6 +138,16 @@ export const updateUserBadges = createAsyncThunk(
     });
   }
 );
+export const updateUserAchievements = createAsyncThunk(
+  "user/updateUserAchievements",
+  async (data: {id: number, type: Achievement}) => {
+    axios
+    .put<BadgeType[]>(`/user/${data.id}/achievement/`, {badge_id: data.type})
+    .catch((error) => {
+      checkApiResponseStatus(error.response.status);
+    });
+  }
+);
 export const setLogin = createAsyncThunk(
   "user/setLogin",
   async (data: FormData, { dispatch }) => {
@@ -133,7 +156,9 @@ export const setLogin = createAsyncThunk(
           "Content-Type": "multipart/form-data",
           }}
     ).then(async (response) => {
+      // set Current User
       dispatch(userActions.setLogin(response.data));
+      // set Current Userbadges & update Achievement
       dispatch(fetchUserBadges(response.data.id));
       sessionStorage.setItem("isLoggedIn", "true");
       return response.data

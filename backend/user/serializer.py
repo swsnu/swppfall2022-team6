@@ -26,7 +26,7 @@ class SignUpSerializer(serializers.ModelSerializer):
         return attrs
 
     def create_badges(self, user_id):
-        for badge_id in range (1, BADGE_NUM):
+        for badge_id in range (1, BADGE_NUM+1):
             userbadge = UserBadge.objects.create(user_id = user_id, badge_id = badge_id)
             Achievement.objects.create(userbadge=userbadge)
 

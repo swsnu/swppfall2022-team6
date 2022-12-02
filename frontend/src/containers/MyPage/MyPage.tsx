@@ -53,7 +53,7 @@ function MyPage() {
     }, [onlyPhoto])
 
     const onClickBackButton = () => {
-        navigate(-1);
+        navigate("/areafeed");
     };
     const onClickSeeBadgesButton = () => {
         navigate("/mypage/badges")
