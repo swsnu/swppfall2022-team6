@@ -56,7 +56,8 @@
     margin-top: 8px;
     margin-bottom: 8px;
 }
-.SignIn input {
+.SignIn .input-container {
+    display: flex;
     flex-basis: 360px;
     line-height: 300%;
     background: #F5F5F5;
@@ -64,6 +65,17 @@
     border: 1px solid #F5F5F5;
     border-radius: 20px;
     max-width: 97%;
+    font-weight: bold;
+}
+
+.SignIn input {
+    display: flex;
+    flex-basis: 360px;
+    line-height: 300%;
+    background: #F5F5F5;
+    margin-left: 40px;
+    margin-right: 20px;
+    border: 0px;
     font-weight: bold;
 }
 

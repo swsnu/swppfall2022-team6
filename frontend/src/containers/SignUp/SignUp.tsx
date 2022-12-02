@@ -77,64 +77,72 @@ function SignUp() {
             <form className="sign-up-form" onSubmit={onSubmit}>
                 <span>
                     <div className="icon">
-                        {formData.email === "" && <img src="/email-icon.svg" className="email-icon"/>}
+                        <img src="/email-icon.svg" className="email-icon"/>
                     </div>
-                    <input
-                        required
-						autoComplete="email"
-						autoFocus
-                        type="text"
-                        id="email"
-                        name="email"
-                        value = {formData.email}
-                        onChange={onChangeFormData}
-                        placeholder="           email"
-                    />
+                    <div className="input-container">
+                        <input
+                            required
+                            autoComplete="email"
+                            autoFocus
+                            type="text"
+                            id="email"
+                            name="email"
+                            value = {formData.email}
+                            onChange={onChangeFormData}
+                            placeholder="email"
+                        />
+                    </div>
                 </span>
                 <span>
                     <div className="icon">
-                        {formData.username === "" && <img src="/username-icon.svg" className="username-icon"/>}
+                        <img src="/username-icon.svg" className="username-icon"/>
                     </div>
-                    <input
-                        required
-						autoComplete="username"
-                        type="text"
-                        id="username"
-                        name="username"
-                        value = {formData.username}
-                        onChange={onChangeFormData}
-                        placeholder="           username"
-                    />
+                    <div className="input-container">
+                        <input
+                            required
+                            autoComplete="username"
+                            type="text"
+                            id="username"
+                            name="username"
+                            value = {formData.username}
+                            onChange={onChangeFormData}
+                            placeholder="username"
+                        />
+                    </div>
                 </span>
                 <span>
                     <div className="icon">
-                        {formData.password === "" && <img src="/password-icon.svg" className="password-icon"/>}
+                        <img src="/password-icon.svg" className="password-icon"/>
                     </div>
-                    <input
-                        required
-                        autoComplete="current-password"
-                        type="password"
-                        id="password"
-                        name="password"
-                        value = {formData.password}
-                        onChange={onChangeFormData}
-                        placeholder="           password"
-                    />
+                    <div className="input-container">
+                        <input
+                            required
+                            autoComplete="current-password"
+                            type="password"
+                            id="password"
+                            name="password"
+                            value = {formData.password}
+                            onChange={onChangeFormData}
+                            placeholder="password"
+                        />
+                    </div>
                 </span>
                 <span>
                     <div className="icon">
-                        {formData.passwordCheck === "" && <img src="/password-icon.svg" className="password-icon"/>}
+                        <img src="/password-icon.svg" className="password-icon"/>
                     </div>
-                    <input
-                        required
-                        autoComplete="new-password"
-                        type="password"
-                        id="passwordCheck"
-                        name="passwordCheck"
-                        value = {formData.passwordCheck}
-                        onChange={onChangeFormData}
-                        placeholder="           password check"
-                    />
+                    <div className="input-container">
+                        <input
+                            required
+                            autoComplete="new-password"
+                            type="password"
+                            id="passwordCheck"
+                            name="passwordCheck"
+                            value = {formData.passwordCheck}
+                            onChange={onChangeFormData}
+                            placeholder="password check"
+                        />
+                    </div>
                 </span>
                 <div className="button-container">
                     <button

@@ -53,32 +53,36 @@ function SignIn() {
             <form className="login-form" onSubmit={onSubmit}>
                 <span>
                     <div className="icon">
-                        {email === "" && <img src="/email-icon.svg" className="email-icon"/>}
+                        <img src="/email-icon.svg" className="email-icon"/>
                     </div>
-                    <input
-                        required
-                        autoComplete="email"
-                        autoFocus
-                        type="text"
-                        id="email-input"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value.trim())}
-                        placeholder="           Email"
-                    />
+                    <div className="input-container">
+                        <input
+                            required
+                            autoComplete="email"
+                            autoFocus
+                            type="text"
+                            id="email-input"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value.trim())}
+                            placeholder="Email"
+                        />
+                    </div>
                 </span>
                 <span>
                     <div className="icon">
-                        {password === "" && <img src="/password-icon.svg" className="password-icon"/>}
+                        <img src="/password-icon.svg" className="password-icon"/>
                     </div>
-                    <input
-                        required
-                        autoComplete="current-password"
-                        type="password"
-                        id="password-input"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value.trim())}
-                        placeholder="           Password"
-                    />
+                    <div className="input-container">
+                        <input
+                            required
+                            autoComplete="current-password"
+                            type="password"
+                            id="password-input"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value.trim())}
+                            placeholder="Password"
+                        />
+                    </div>
                 </span>
                 <div className="button-container">
                     <button type="submit">Sign In</button>
