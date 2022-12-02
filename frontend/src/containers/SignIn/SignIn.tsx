@@ -57,7 +57,7 @@ function SignIn() {
                     </div>
                     <input
                         required
-                        autoComplete="username"
+                        autoComplete="email"
                         autoFocus
                         type="text"
                         id="email-input"
