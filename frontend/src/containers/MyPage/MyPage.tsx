@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import PostList from "../../components/PostList/PostList";
 import { PostType } from "../../store/slices/post";
 import { setLogout } from "../../store/slices/user";
-import { fetchUserPosts, selectUser, UserType } from "../../store/slices/user";
+import { fetchUserPosts, updateUserBadges, selectUser, UserType } from "../../store/slices/user";
 import { AppDispatch } from "../../store";
 
 import "./MyPage.scss"
@@ -31,6 +31,12 @@ function MyPage() {
     useEffect(()=>{
         if(currUser){
             dispatch(fetchUserPosts(currUser.id));
+        }
+    }, []);
+
+    useEffect(()=>{
+        if(currUser){
+            dispatch(updateUserBadges(currUser.id));
         }
     }, []);
 

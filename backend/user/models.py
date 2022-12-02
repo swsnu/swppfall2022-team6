@@ -6,9 +6,12 @@ from django.contrib.auth.models import AbstractUser
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
+BADGE_NUM = 6
 class Badge(models.Model):
     title = models.CharField(max_length=50, default='')
-    stage = models.PositiveSmallIntegerField(null=True, blank=True)
+    requirement = models.PositiveSmallIntegerField(null=True, blank=True)
+    description = models.CharField(max_length=100, default='')
+    # stage = models.PositiveSmallIntegerField(null=True, blank=True)
     image = models.ImageField(upload_to='badge', null=True) # ??
 
     class Meta:
@@ -35,16 +38,16 @@ class User(AbstractUser):
         db_table = 'user'
 
 
-class Achievement(models.Model):
-    user = models.ForeignKey(User, related_name='achievement', \
-        on_delete=models.CASCADE)
-    visit_count = models.PositiveIntegerField(default=0)
-
-
 class UserBadge(models.Model):
     user = models.ForeignKey(User, related_name='userbadge', \
         on_delete=models.CASCADE)
     badge = models.ForeignKey(Badge, related_name='userbadge', \
         on_delete=models.CASCADE)
+    is_fulfilled = models.BooleanField(default=False)
+
+class Achievement(models.Model):
+    userbadge = models.OneToOneField(UserBadge, related_name='achievement', \
+        on_delete=models.CASCADE)
+    status = models.PositiveIntegerField(default=0)
 
 

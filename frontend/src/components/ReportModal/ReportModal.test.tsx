@@ -244,6 +244,7 @@ describe("<ReportModal />", () => {
                 ],
                 currUser: null,
                 userPosts: [],
+                userBadges: [],
             },
             posts: {
                 posts: [],
@@ -301,7 +302,7 @@ describe("<ReportModal />", () => {
                     />
                 </MemoryRouter>
             </Provider>
-        ); 
+        );
         const submitButton = screen.getByText("Submit!");
         fireEvent.click(submitButton);
         await waitFor(() => {

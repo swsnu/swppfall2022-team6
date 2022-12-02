@@ -2,7 +2,7 @@ import axios from "axios";
 import { dispatch } from "d3";
 import React, { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { setLogin } from "../../store/slices/user";
+import { setLogin, fetchUserBadges } from "../../store/slices/user";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store";
 import { selectUser } from "../../store/slices/user";
@@ -22,7 +22,11 @@ function SignIn() {
         const formData = new FormData();
         formData.append("email", email);
         formData.append("password", password);
-        await dispatch(setLogin(formData));
+        const response = await dispatch(setLogin(formData));
+        console.log(response)
+        // if (response.payload){
+        //     await dispatch(fetchUserBadges(userState.currUser?.id));
+        // }
     };
 
     const onClickSignUpButton = (e: React.MouseEvent<HTMLElement>) => {

@@ -10,10 +10,18 @@ export interface UserType {
   radius: number;
   main_badge: number|null;
 }
-export interface UserState { users: UserType[]; currUser: UserType|null; userPosts: PostType[];}
+
+interface BadgeType {
+  id: number;
+  title: string;
+  image: string;
+  description: string;
+  is_fulfilled: boolean;
+}
+export interface UserState { users: UserType[]; currUser: UserType|null; userPosts: PostType[]; userBadges: BadgeType[]}
 
 const initialState: UserState = { users: [], currUser: null,
-  userPosts: [] };
+  userPosts: [], userBadges: [] };
 
 export type LoginFormType = {
   email: string;
@@ -51,6 +59,9 @@ const userSlice = createSlice({ //! userSlice type?
     },
     setUserPosts: (state, action: PayloadAction<PostType[]>) =>{
       state.userPosts = action.payload;
+    },
+    setUserBadges: (state, action: PayloadAction<BadgeType[]>) =>{
+      state.userBadges = action.payload;
     },
   },
     // extraReducers: (builder) => {
@@ -90,6 +101,30 @@ export const fetchUserPosts = createAsyncThunk(
     // return response.data;
   }
 );
+export const fetchUserBadges = createAsyncThunk(
+  "user/fetchUserBadges",
+  async (id: number, {dispatch}) => {
+    axios
+    .get<BadgeType[]>(`/user/${id}/badges/`)
+    .then((response) => {
+      dispatch(userActions.setUserBadges(response.data));
+    }).catch((error) => {
+      checkApiResponseStatus(error.response.status);
+    });
+  }
+);
+export const updateUserBadges = createAsyncThunk(
+  "user/updateUserBadges",
+  async (id: number, {dispatch}) => {
+    axios
+    .post<BadgeType[]>(`/user/${id}/badges/`)
+    .then((response) => {
+      dispatch(userActions.setUserBadges(response.data));
+    }).catch((error) => {
+      checkApiResponseStatus(error.response.status);
+    });
+  }
+);
 export const setLogin = createAsyncThunk(
   "user/setLogin",
   async (data: FormData, { dispatch }) => {
@@ -99,7 +134,9 @@ export const setLogin = createAsyncThunk(
           }}
     ).then(async (response) => {
       dispatch(userActions.setLogin(response.data));
+      dispatch(fetchUserBadges(response.data.id));
       sessionStorage.setItem("isLoggedIn", "true");
+      return response.data
     }).catch((error) => {
       checkApiResponseStatus(error.response.status);
     });

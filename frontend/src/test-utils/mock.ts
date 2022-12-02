@@ -104,12 +104,15 @@ const stubUserInitialState: UserState = {
             hashtags: [stubHashtagInitialState.hashtags[1]],
         },
     ],
+    // TODO: fill in mock badges
+    userBadges: [],
 }
 
 const stubUserInitialState2: UserState = {
     users: [],
     currUser: null,
     userPosts: [],
+    userBadges: [],
 }
 
 const stubPostInitialState: PostState = {

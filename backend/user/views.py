@@ -4,7 +4,9 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import transaction
-from .serializer import LogInSerializer, LogOutSerializer, SignUpSerializer, UserSerializer
+
+from user.models import UserBadge, Badge, Achievement
+from .serializer import LogInSerializer, LogOutSerializer, SignUpSerializer, UserSerializer, BadgeSerializer, UserBadgeSerializer,AchievementSerializer
 from django.shortcuts import get_object_or_404
 from post.serializer import PostSerializer
 #from django.shortcuts import redirect
@@ -24,6 +26,7 @@ class UserSignUpView(GenericAPIView):
     serializer_class = SignUpSerializer
     authentication_classes = []
 
+    @transaction.atomic
     def post(self, request):
         user = request.data
         serializer = self.serializer_class(data=user)
@@ -102,16 +105,45 @@ class UserViewSet(viewsets.GenericViewSet):
         return Response('put me', status=status.HTTP_200_OK)
 
     # GET/POST /user/:id/badges/
-    @action(detail=True, methods=['GET', 'POST'])
+    # POST: Evaluates Achievement for userbadges, returns updated badges list
+    # TODO: optimize db queries
+    @action(detail = True, methods=['GET', 'POST'])
     @transaction.atomic
     def badges(self, request, pk=None):
-        del request
-        del pk
-        if self.request.method == 'GET':
-            return Response('get badges', status=status.HTTP_200_OK)
+        if request.method == 'GET':
+            # For safety. 제대로 db setting 되어 있으면 Badges.objects.all() OK
+            badges = Badge.objects.filter(userbadge__user_id = pk)
+            data = BadgeSerializer(badges, context = {'pk': pk}, many=True).data
+            return Response(data, status=status.HTTP_200_OK)
 
-        if self.request.method == 'POST':
-            return Response('post badges', status=status.HTTP_201_CREATED)
+        if request.method == 'POST':
+            userbadges = UserBadge.objects.select_related('badge').filter(user_id = pk, is_fulfilled= False)
+            # update userbadges' is_fulfilled
+            for userbadge in userbadges:
+                serializer = UserBadgeSerializer(userbadge, data = {}, partial=True)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+            # return serialized badges
+            # For safety. 제대로 db setting 되어 있으면 Badges.objects.all() OK
+            badges = Badge.objects.filter(userbadge__user_id = pk)
+            data = BadgeSerializer(badges, context = {'pk': pk}, partial=True, many=True).data
+            return Response(data, status=status.HTTP_201_CREATED)
+
+    # GET/PUT /user/:id/achievement/
+    @action(detail=True, methods=['GET', 'PUT'])
+    @transaction.atomic
+    def achievement(self, request, pk=None):
+        if self.request.method == 'GET':
+            return Response('get achievement', status=status.HTTP_200_OK)
+
+        if self.request.method == 'PUT':
+            badge_id = request.data.get('badge_id')
+            achievement = Achievement.objects.get(userbadge__badge_id = badge_id, userbadge__user_id = pk)
+            serializer = AchievementSerializer(achievement, data = {}, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            data = serializer.data
+            return Response(data, status=status.HTTP_200_OK)
 
     # GET/PUT /user/:id/radius/
     @action(detail=True, methods=['GET', 'PUT'])
@@ -131,18 +163,6 @@ class UserViewSet(viewsets.GenericViewSet):
             data = serializer.data
             return Response(data, status=status.HTTP_200_OK)
 
-    # GET/PUT /user/:id/achievement/
-    @action(detail=True, methods=['GET', 'PUT'])
-    @transaction.atomic
-    def achievement(self, request, pk=None):
-        del request
-        del pk
-        if self.request.method == 'GET':
-            return Response('get achievement', status=status.HTTP_200_OK)
-
-        if self.request.method == 'PUT':
-            return Response('put achievement', status=status.HTTP_200_OK)
-
     # GET /user/:id/report/
     @action(detail=True)
     @transaction.atomic
@@ -160,3 +180,4 @@ class UserViewSet(viewsets.GenericViewSet):
         user_posts = user.userpost
         data = PostSerializer(user_posts, many=True).data
         return Response(data, status=status.HTTP_200_OK)
+

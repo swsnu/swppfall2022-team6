@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
-from .models import User, Badge
+from .models import User, Badge, UserBadge, Achievement, BADGE_NUM
 
 class SignUpSerializer(serializers.ModelSerializer):
     '''
@@ -25,8 +25,16 @@ class SignUpSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(self.default_error_messages)
         return attrs
 
+    def create_badges(self, user_id):
+        for badge_id in range (1, BADGE_NUM):
+            userbadge = UserBadge.objects.create(user_id = user_id, badge_id = badge_id)
+            Achievement.objects.create(userbadge=userbadge)
+
+
     def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
+        user = User.objects.create_user(**validated_data)
+        self.create_badges(user.id)
+        return user
 
 class LogInSerializer(serializers.ModelSerializer):
     '''
@@ -108,6 +116,45 @@ class UserSerializer(serializers.ModelSerializer):
 
 class BadgeSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(use_url=True)
+    is_fulfilled = serializers.SerializerMethodField()
     class Meta:
         model = Badge
+        fields = (
+            'id',
+            'title',
+            'image',
+            'description',
+            'is_fulfilled',
+        )
+    def get_is_fulfilled(self, badge):
+        user_id = self.context.get('pk')
+        is_fulfilled = UserBadge.objects.get(user_id=user_id, badge=badge).is_fulfilled
+        return is_fulfilled
+
+class AchievementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Achievement
         fields = '__all__'
+
+    def update(self, instance, validated_data):
+        del validated_data
+        instance.status += 1
+        instance.save()
+        return instance
+
+class UserBadgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserBadge
+        fields = '__all__'
+
+    def update(self, instance, validated_data):
+        del validated_data
+        achievement_status = instance.achievement.status
+        if (achievement_status >= instance.badge.requirement):
+            instance.is_fulfilled = True
+            instance.save()
+        return instance
+
+
+
+
