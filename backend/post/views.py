@@ -18,8 +18,8 @@ from collections import Counter
 #from rest_framework.decorators import action
 
 def hash_recommend(posts, user, pk=0):
-    post_hashtags = [Hashtag.objects.filter(posthashtag__post=post).all()
-    for post in posts if Hashtag.objects.filter(posthashtag__post=post)]
+    post_hashtags = [Hashtag.objects.filter(posthashtag__post__id=post['id']).all()
+    for post in posts]
 
     #unique hashtags in posts
     keys = [pk] if pk != 0 else []
@@ -152,7 +152,7 @@ class PostViewSet(viewsets.GenericViewSet):
 
         #hashtag_count = Counter(hashtags)
         #hashtags = sorted(set(hashtags), key=lambda x: -hashtag_count[x])[:3]
-        hashtags = hash_recommend(posts, user)
+        hashtags = hash_recommend(posts.values('id'), user)
 
         data = {}
         data['posts'] = self.get_serializer(posts, many=True).data
@@ -184,7 +184,7 @@ class PostViewSet(viewsets.GenericViewSet):
         #         if hashtag['id'] not in keys:
         #             keys.append(hashtag['id'])
         #             hashtags.append(hashtag)
-        hashtags = hash_recommend(posts, user, int(pk))
+        hashtags = hash_recommend(posts.values('id'), user, int(pk))
         hashtags.insert(0, {'id':pk,
         'content':Hashtag.objects.get(id=int(pk)).content})
 

@@ -19,3 +19,17 @@ class HashtagViewSet(viewsets.GenericViewSet):
             content=request.POST['content'],
         )
         return Response('create hashtag', status=status.HTTP_201_CREATED)
+
+    # GET /hashtag/
+    def list(self, request):
+        content = request.query_params.get('content')
+        if not content:
+            return Response(
+                { 'error': 'content missing' },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        try:
+            myhashid = Hashtag.objects.filter(content=content).values('id')[0]
+        except:
+            myhashid = None
+        return Response(myhashid, status=status.HTTP_200_OK)

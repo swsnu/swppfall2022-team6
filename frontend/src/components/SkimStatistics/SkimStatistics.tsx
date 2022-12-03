@@ -196,7 +196,7 @@ export const SmallStatistics = (props: IProps) => {
 };
 
 
-const Address = ({position}:{position: PositionType}) => {
+export const Address = ({position}:{position: PositionType}) => {
     const geocoder = new kakao.maps.services.Geocoder();
     const [address, setAddress] = useState<string>("");
     useEffect(() => {

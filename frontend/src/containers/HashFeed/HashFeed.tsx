@@ -187,7 +187,7 @@ function HashFeed() {
                         className="fw-bolder fs-5 mb-1"
                         style={{ justifyContent: "center" }}
                     >
-                        HashFeed #{hashtagState.top3[0].content}
+                        #{hashtagState.top3[0].content}
                     </Row>
                     <Row id="recommended-hashtag-container">
                         <Row className="hash-label">Recommended Hashtags</Row>
@@ -220,9 +220,7 @@ function HashFeed() {
                         </Row>
                     </Row>
                     <HashFeedPosts></HashFeedPosts>
-                    <NavigationBar
-                        navReportCallback={navReportCallback}
-                    />
+                    <NavigationBar navReportCallback={navReportCallback} />
                 </div>
             ) : (
                 <div style={{ fontSize: "20px", marginTop: "20px" }}>
