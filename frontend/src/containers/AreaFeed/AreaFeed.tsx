@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { fetchPosts, PostType, selectPost } from "../../store/slices/post";
 import { fetchTop3Hashtags, selectHashtag } from "../../store/slices/hashtag";
-import { fetchReports } from "../../store/slices/report";
+import { fetchReports, selectReport } from "../../store/slices/report";
 import { AppDispatch } from "../../store";
 
 import axios from "axios";
@@ -56,6 +56,7 @@ function AreaFeed() {
     const hashtagState = useSelector(selectHashtag);
     const positionState = useSelector(selectPosition);
     const userState = useSelector(selectUser);
+    const reportState = useSelector(selectReport);
 
     const [queryPosts, setQueryPosts] = useState<PostType[]>(postState.posts);
     const [refresh, setRefresh] = useState<Boolean>(true);
@@ -68,15 +69,27 @@ function AreaFeed() {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
-    const refreshReports = async () => {
-        const user = userState.currUser as UserType;
-        let position: PositionType;
-        const savedPosition = localStorage.getItem("position");
-        if (savedPosition) {
-            position = JSON.parse(savedPosition);
-        } else {
-            position = positionState.position;
-        }
+    const user = userState.currUser as UserType;
+    let position: PositionType;
+    const savedPosition = localStorage.getItem("position");
+    if (savedPosition) {
+        position = JSON.parse(savedPosition);
+    } else {
+        position = positionState.position;
+    }
+
+    // let statisticsJSX = JSX.Element;
+    // useEffect(() => {
+    //     statisticsJSX = <Statistics />;
+    // }, [reportState.reports, user]);
+    // const statisticsJSX = useCallback(() => {
+    //     return <Statistics />;
+    // }, [user, reportState.reports]);
+    const statisticsJSX = useMemo(() => {
+        return <Statistics />;
+    }, [reportState.reports, user]);
+
+    const renderWeatherAPI = async () => {
         const { lat, lng } = position;
         const api = {
             key: "c22114b304afd9d97329b0223da5bb01",
@@ -91,6 +104,9 @@ function AreaFeed() {
                 main: data.weather[0].main,
             });
         });
+    };
+
+    const refreshReports = async () => {
         await dispatch(
             fetchReports({
                 ...position,
@@ -100,14 +116,6 @@ function AreaFeed() {
     };
 
     const refreshPosts = async () => {
-        const user = userState.currUser as UserType;
-        let position: PositionType;
-        const savedPosition = localStorage.getItem("position");
-        if (savedPosition) {
-            position = JSON.parse(savedPosition);
-        } else {
-            position = positionState.position;
-        }
         const queryPostPromise = dispatch(
             fetchPosts({
                 ...position,
@@ -119,14 +127,6 @@ function AreaFeed() {
     };
 
     const refreshHashtag = async () => {
-        const user = userState.currUser as UserType;
-        let position: PositionType;
-        const savedPosition = localStorage.getItem("position");
-        if (savedPosition) {
-            position = JSON.parse(savedPosition);
-        } else {
-            position = positionState.position;
-        }
         await dispatch(
             fetchTop3Hashtags({
                 ...position,
@@ -137,28 +137,6 @@ function AreaFeed() {
     };
 
     const fetchData = async () => {
-        const user = userState.currUser as UserType;
-        let position: PositionType;
-        const savedPosition = localStorage.getItem("position");
-        if (savedPosition) {
-            position = JSON.parse(savedPosition);
-        } else {
-            position = positionState.position;
-        }
-        // const { lat, lng } = position;
-        // const api = {
-        //     key: "c22114b304afd9d97329b0223da5bb01",
-        //     base: "https://api.openweathermap.org/data/2.5/",
-        // };
-        // const url = `${api.base}weather?lat=${lat}&lon=${lng}&appid=${api.key}`;
-        // await axios.get(url).then((response) => {
-        //     const data = response.data;
-        //     setWeather({
-        //         icon: data.weather[0].icon,
-        //         temp: Math.round(data.main.temp - 273.15),
-        //         main: data.weather[0].main,
-        //     });
-        // });
         console.time("reports");
         await refreshReports();
         console.timeEnd("reports");
@@ -169,30 +147,12 @@ function AreaFeed() {
         await refreshHashtag();
         console.timeEnd("hashtags");
         setRefresh(false);
-
-        // const queryPostPromise = dispatch(
-        //     fetchPosts({
-        //         ...position,
-        //         radius: user.radius,
-        //     })
-        // );
-        // const postData = (await queryPostPromise).payload as PostType[];
-        // setQueryPosts(postData);
-        // await dispatch(
-        //     fetchTop3Hashtags({
-        //         ...position,
-        //         radius: user.radius,
-        //     })
-        // );
-        // await dispatch(
-        //     fetchReports({
-        //         ...position,
-        //         radius: user.radius,
-        //     })
-        // );
-        // setQueryHash("");
         setIsLoading(true);
     };
+
+    useEffect(() => {
+        renderWeatherAPI();
+    }, []);
 
     useEffect(() => {
         if (refresh) {
@@ -253,6 +213,7 @@ function AreaFeed() {
                     post.content.includes(searchQuery)
                 )
             );
+            console.log("three")
             setQueryHash(searchQuery);
         };
         const onClickClose = () => {
@@ -306,7 +267,11 @@ function AreaFeed() {
                         </Col>
                     </Row>
                     {queryHash ? (
-                        <Row className="area-label" onClick={onQueryHashClick}>
+                        <Row
+                            className="area-label"
+                            onClick={onQueryHashClick}
+                            data-testid="queryHash"
+                        >
                             Go to #{queryHash}
                         </Row>
                     ) : null}
@@ -351,9 +316,7 @@ function AreaFeed() {
             </Row>
             {isLoading ? (
                 <div>
-                    <Row>
-                        <Statistics />
-                    </Row>
+                    <Row>{statisticsJSX}</Row>
                     <Row id="recommended-hashtag-container">
                         <Row className="area-label">Recommended Hashtags</Row>
                         <Row id="hashtag-buttons" xs="auto">

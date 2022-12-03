@@ -25,6 +25,9 @@ import "./HashFeed.scss";
 import { selectUser, UserType } from "../../store/slices/user";
 import { CustomSearchBar } from "../AreaFeed/AreaFeed";
 
+import { Map, MapMarker, MarkerClusterer } from "react-kakao-maps-sdk";
+import { selectPosition } from "../../store/slices/position";
+
 const CustomToggleButtonGroup = styled(ToggleButtonGroup)({
     display: "flex",
     fontFamily: '"NanumGothic", sans-serif',
@@ -39,6 +42,7 @@ function HashFeed() {
     const userState = useSelector(selectUser);
     const hashtagState = useSelector(selectHashtag);
     const postState = useSelector(selectPost);
+    const positionState = useSelector(selectPosition);
 
     const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false);
     const [selectTag, setSelectTag] = useState<string | undefined>(undefined);
@@ -102,6 +106,34 @@ function HashFeed() {
     };
     const onClickBackButton = () => {
         navigate(-1);
+    };
+
+    const showClusterMap = () => {
+        return (
+            <Map
+                id="map-hashfeed"
+                center={positionState.position}
+                style={{
+                    width: "80%",
+                    height: "30vh",
+                    borderRadius: "12px",
+                }}
+                level={5}
+                minLevel={5}
+            >
+                <MarkerClusterer averageCenter={true}>
+                    {postState.posts.map((post) => (
+                        <MapMarker
+                            key={post.id}
+                            position={{
+                                lat: post.latitude,
+                                lng: post.longitude,
+                            }}
+                        />
+                    ))}
+                </MarkerClusterer>
+            </Map>
+        );
     };
 
     const HashFeedPosts = () => {
@@ -182,12 +214,23 @@ function HashFeed() {
                                 <FontAwesomeIcon icon={faRotateLeft} />
                             </button>
                         </Col>
+                        <Col
+                            className="fw-bolder fs-5 mb-1"
+                            style={{ justifyContent: "center" }}
+                        >
+                            #{hashtagState.top3[0].content}
+                        </Col>
+                        <Col></Col>
                     </Row>
+
                     <Row
-                        className="fw-bolder fs-5 mb-1"
-                        style={{ justifyContent: "center" }}
+                        id="cluster-map"
+                        style={{
+                            justifyContent: "center",
+                            paddingTop: "1vh",
+                        }}
                     >
-                        #{hashtagState.top3[0].content}
+                        {showClusterMap()}
                     </Row>
                     <Row id="recommended-hashtag-container">
                         <Row className="hash-label">Recommended Hashtags</Row>

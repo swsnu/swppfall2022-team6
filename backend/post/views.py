@@ -18,7 +18,8 @@ from collections import Counter
 #from rest_framework.decorators import action
 
 def hash_recommend(posts, user, pk=0):
-    post_hashtags = [Hashtag.objects.filter(posthashtag__post__id=post['id']).all()
+    post_hashtags = [Hashtag.objects.filter
+    (posthashtag__post__id=post['id']).all()
     for post in posts]
 
     #unique hashtags in posts

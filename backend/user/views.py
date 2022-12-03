@@ -4,10 +4,10 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import transaction
+from django.shortcuts import get_object_or_404
 
 from user.models import UserBadge, Badge, Achievement
 from .serializer import LogInSerializer, LogOutSerializer, SignUpSerializer, UserSerializer, BadgeSerializer, UserBadgeSerializer,AchievementSerializer
-from django.shortcuts import get_object_or_404
 from post.serializer import PostSerializer
 #from django.shortcuts import redirect
 from rest_framework import status, viewsets, permissions
@@ -117,16 +117,19 @@ class UserViewSet(viewsets.GenericViewSet):
             return Response(data, status=status.HTTP_200_OK)
 
         if request.method == 'POST':
-            userbadges = UserBadge.objects.select_related('badge').filter(user_id = pk, is_fulfilled= False)
+            userbadges = UserBadge.objects.select_related('badge').filter(
+                user_id = pk, is_fulfilled= False)
             # update userbadges' is_fulfilled
             for userbadge in userbadges:
-                serializer = UserBadgeSerializer(userbadge, data = {}, partial=True)
+                serializer = UserBadgeSerializer(userbadge,
+                data = {}, partial=True)
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
             # return serialized badges
             # For safety. 제대로 db setting 되어 있으면 Badges.objects.all() OK
             badges = Badge.objects.filter(userbadge__user_id = pk)
-            data = BadgeSerializer(badges, context = {'pk': pk}, partial=True, many=True).data
+            data = BadgeSerializer(badges,
+            context = {'pk': pk}, partial=True, many=True).data
             return Response(data, status=status.HTTP_201_CREATED)
 
     # GET/PUT /user/:id/achievement/
@@ -138,8 +141,10 @@ class UserViewSet(viewsets.GenericViewSet):
 
         if self.request.method == 'PUT':
             badge_id = request.data.get('badge_id')
-            achievement = Achievement.objects.get(userbadge__badge_id = badge_id, userbadge__user_id = pk)
-            serializer = AchievementSerializer(achievement, data = {}, partial=True)
+            achievement = Achievement.objects.get(userbadge__badge_id
+            = badge_id, userbadge__user_id = pk)
+            serializer = AchievementSerializer(achievement, data = {},
+            partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             data = serializer.data

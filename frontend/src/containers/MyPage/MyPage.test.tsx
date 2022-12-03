@@ -84,7 +84,7 @@ describe("<MyPage />", () => {
         render(myPageJSX);
         const logoutButton = screen.getByText("Log Out");
         fireEvent.click(logoutButton!);
-        expect(mockDispatch).toHaveBeenCalledTimes(2);
+        expect(mockDispatch).toHaveBeenCalledTimes(3);
     });
     it("should handle Only Photos button", async () => {
         render(myPageJSX);

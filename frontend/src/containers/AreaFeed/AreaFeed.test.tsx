@@ -8,26 +8,23 @@ import { Provider } from "react-redux";
 import { mockStore } from "../../test-utils/mock";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { PostType } from "../../store/slices/post";
+import { PositionState, PositionType } from "../../store/slices/position";
 
-jest.mock("react-chartjs-2", () => ({
-    Bar: () => <div>BarChart</div>,
-}));
-jest.mock("react-minimal-pie-chart", () => ({
-    PieChart: () => <div>PieChart</div>,
-}));
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
     ...jest.requireActual("react-router"),
     useNavigate: () => mockNavigate,
 }));
-// const mockDispatch = jest.fn();
-// jest.mock("react-redux", ()=>({
-//   ...jest.requireActual("react-redux"),
-//   useDispatch: ()=>mockDispatch,
 console.error = jest.fn();
-// }));
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
+
+jest.mock("../../components/Statistics/Statistics", () => () => {
+    <div>
+        <div>Bar Chart</div>
+        <div>PieChart</div>
+    </div>;
+});
 
 jest.mock(
     "../../components/PostList/PostList",
@@ -55,15 +52,24 @@ jest.mock(
                 </div>
             )
 );
-jest.mock("../../components/ReportModal/ReportModal", () => (props: ReportProps) => (
-    <div>
-        <button
-            data-testid="spyNavReportModal"
-            className="submitButton"
-            onClick={props.navReportCallback}
-        ></button>
-    </div>
-));
+jest.mock(
+    "../../components/ReportModal/ReportModal",
+    () => (props: ReportProps) =>
+        (
+            <div>
+                <button
+                    data-testid="spyNavReportModal"
+                    className="submitButton"
+                    onClick={props.navReportCallback}
+                ></button>
+            </div>
+        )
+);
+jest.mock("../../components/SkimStatistics/SkimStatistics", () => ({
+    Address: (props: PositionType) => <div>{props.lat}</div>,
+}));
+const mockConsoleLog = jest.fn();
+console.time = mockConsoleLog;
 
 describe("<AreaFeed />", () => {
     let areaFeedJSX: JSX.Element;
@@ -181,14 +187,51 @@ describe("<AreaFeed />", () => {
         );
         await screen.findByText("user2");
     });
-
+    it("should handle go to hashfeed after search", async () => {
+        const { container } = render(areaFeedJSX);
+        await waitFor(() => screen.findByText("user1"));
+        const newSearchBox = screen.getByRole("textbox");
+        console.log("one");
+        fireEvent.change(newSearchBox, { target: { value: "t2" } });
+        console.log("two");
+        await screen.findByDisplayValue("t2");
+        // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+        const searchIcon = container.getElementsByClassName(
+            "MuiButtonBase-root MuiIconButton-root ForwardRef-iconButton-31 ForwardRef-searchIconButton-33"
+        )[0];
+        fireEvent.click(searchIcon!);
+        await screen.findByText("Go to #t2");
+        axios.get = jest.fn().mockResolvedValue({ data: { id: 1 } });
+        const queryButton = screen.getByTestId("queryHash");
+        fireEvent.click(queryButton);
+        await waitFor(() => expect(mockNavigate).toHaveBeenCalled());
+    });
+    it("should handle not existing hashfeed navigation", async () => {
+        const { container } = render(areaFeedJSX);
+        await waitFor(() => screen.findByText("user1"));
+        const newSearchBox = screen.getByRole("textbox");
+        console.log("one");
+        fireEvent.change(newSearchBox, { target: { value: "t2" } });
+        console.log("two");
+        await screen.findByDisplayValue("t2");
+        // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+        const searchIcon = container.getElementsByClassName(
+            "MuiButtonBase-root MuiIconButton-root ForwardRef-iconButton-40 ForwardRef-searchIconButton-42"
+        )[0];
+        fireEvent.click(searchIcon!);
+        await screen.findByText("Go to #t2");
+        axios.get = jest.fn().mockResolvedValue({});
+        const queryButton = screen.getByTestId("queryHash");
+        fireEvent.click(queryButton);
+        await waitFor(() => expect(mockNavigate).not.toHaveBeenCalled());
+    });
     it("should handle postlistcallback after adding post", async () => {
         render(areaFeedJSX);
         await waitFor(() => screen.findByText("user1"));
         const addPostButton = screen.getByText("Callback");
         fireEvent.click(addPostButton);
         // refresh -> re-render
-        await waitFor(() => expect(mockedAxios.get).toHaveBeenCalledTimes(8));
+        await waitFor(() => expect(mockedAxios.get).toHaveBeenCalledTimes(5));
     });
     it("should handle navReportCallback after submit", async () => {
         render(areaFeedJSX);
@@ -197,7 +240,7 @@ describe("<AreaFeed />", () => {
         fireEvent.click(report_button!);
         const modalButton = screen.getByTestId("spyNavReportModal");
         fireEvent.click(modalButton);
-        await waitFor(() => expect(mockedAxios.get).toHaveBeenCalledTimes(8));
+        await waitFor(() => expect(mockedAxios.get).toHaveBeenCalledTimes(7));
     });
 
     // it("should handle close search", async () => {

@@ -11,6 +11,7 @@ from user.models import User
 from report.models import Report
 from .serializer import ReportSerializer
 #from rest_framework.decorators import action
+from haversine import haversine
 
 class ReportViewSet(viewsets.GenericViewSet):
     '''
@@ -56,12 +57,13 @@ class ReportViewSet(viewsets.GenericViewSet):
                 {'error': 'longitude missing'},
                 status=status.HTTP_400_BAD_REQUEST
             )
+        coordinate = (float(latitude),float(longitude))
 
         all_reports = Report.objects.all()
-        # ids = [report.id for report in all_reports
-        #     if haversine(coordinate, (report.latitude, report.longitude))
-        #     <= float(radius)]
-        ids = [post.id for post in all_reports]
+        ids = [report.id for report in all_reports
+        if haversine(coordinate, (report.latitude, report.longitude))
+        <= float(radius)]
+        #ids = [post.id for post in all_reports]
 
         reports = all_reports.filter(id__in=ids).order_by('-created_at')
 
