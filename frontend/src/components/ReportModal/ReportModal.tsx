@@ -37,7 +37,8 @@ function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport, 
         for(const achievement_type of achievement_types){
             const now = new Date();
             const early_condition = (achievement_type === Achievement.EARLY) && (now.getHours() >9)
-            if ((!userState.userBadges[achievement_type-1].is_fulfilled) && (!early_condition)){
+            const cloudy_condition = (achievement_type ===Achievement.CLOUDY) && (weather !==1)
+            if ((!userState.userBadges[achievement_type-1].is_fulfilled) && (!early_condition) && (!cloudy_condition)){
                 dispatch(updateUserAchievements({id: Number(userState.currUser?.id), type: achievement_type}));
             }
         }
