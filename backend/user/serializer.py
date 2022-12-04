@@ -27,7 +27,8 @@ class SignUpSerializer(serializers.ModelSerializer):
 
     def create_badges(self, user_id):
         for badge_id in range (1, BADGE_NUM+1):
-            userbadge = UserBadge.objects.create(user_id = user_id, badge_id = badge_id)
+            userbadge = UserBadge.objects.create(user_id = user_id,
+            badge_id = badge_id)
             Achievement.objects.create(userbadge=userbadge)
 
 
@@ -115,6 +116,9 @@ class UserSerializer(serializers.ModelSerializer):
     #     return badges
 
 class BadgeSerializer(serializers.ModelSerializer):
+    '''
+        badge serializer
+    '''
     image = serializers.ImageField(use_url=True)
     is_fulfilled = serializers.SerializerMethodField()
     class Meta:
@@ -128,10 +132,14 @@ class BadgeSerializer(serializers.ModelSerializer):
         )
     def get_is_fulfilled(self, badge):
         user_id = self.context.get('pk')
-        is_fulfilled = UserBadge.objects.get(user_id=user_id, badge=badge).is_fulfilled
+        is_fulfilled = UserBadge.objects.get(user_id=user_id,
+        badge=badge).is_fulfilled
         return is_fulfilled
 
 class AchievementSerializer(serializers.ModelSerializer):
+    '''
+        achievement serializer
+    '''
     class Meta:
         model = Achievement
         fields = '__all__'
@@ -143,6 +151,9 @@ class AchievementSerializer(serializers.ModelSerializer):
         return instance
 
 class UserBadgeSerializer(serializers.ModelSerializer):
+    '''
+        userbadge serializer
+    '''
     class Meta:
         model = UserBadge
         fields = '__all__'
@@ -150,7 +161,7 @@ class UserBadgeSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         del validated_data
         achievement_status = instance.achievement.status
-        if (achievement_status >= instance.badge.requirement):
+        if achievement_status >= instance.badge.requirement:
             instance.is_fulfilled = True
             instance.save()
         return instance

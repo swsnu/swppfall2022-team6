@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import { setPosition, PositionType, selectPosition } from "../../store/slices/position";
+import {
+    setPosition,
+    PositionType,
+    selectPosition,
+} from "../../store/slices/position";
 import { selectUser, setRadius, UserType } from "../../store/slices/user";
 import { AppDispatch } from "../../store";
 
@@ -36,12 +40,14 @@ function MainPage() {
     const positionState = useSelector(selectPosition);
 
     const currUser = userState.currUser as UserType;
-    const [currRadius, setCurrRadius] = useState<number>(currUser.radius*25);
+    const [currRadius, setCurrRadius] = useState<number>(currUser.radius * 25);
     const [openReport, setOpenReport] = useState<boolean>(false);
-    const [markerPosition, setMarkerPosition] =
-        useState<PositionType>(positionState.position);
-    const [currPosition, setCurrPosition] =
-        useState<PositionType>(positionState.position);
+    const [markerPosition, setMarkerPosition] = useState<PositionType>(
+        positionState.position
+    );
+    const [currPosition, setCurrPosition] = useState<PositionType>(
+        positionState.position
+    );
     const [address, setAddress] = useState<string>("");
     const [showResults, setShowResults] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -84,17 +90,17 @@ function MainPage() {
     }, [currPosition]);
 
     const onClickMyPageIcon = () => {
-        navigate("/mypage");
+        navigate("/mypage/");
     };
     const onChangeMapRadius = (event: Event, newValue: number | number[]) => {
         setCurrRadius(newValue as number);
     };
     const onClickFindOutButton = async () => {
-        const radiusKm = currRadius/25;
-        await dispatch(setRadius({user: currUser, radius: radiusKm})); //! type mismatch error,, why?
+        const radiusKm = currRadius / 25;
+        await dispatch(setRadius({ user: currUser, radius: radiusKm })); //! type mismatch error,, why?
         await dispatch(setPosition(markerPosition));
         localStorage.setItem("position", JSON.stringify(markerPosition));
-        navigate("/areafeed");
+        navigate("/areafeed/");
     };
     const onClickReportButton = () => {
         setOpenReport(true);
