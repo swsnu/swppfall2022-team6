@@ -141,6 +141,7 @@ export const updateUserBadges = createAsyncThunk(
     .post<BadgeType[]>(`/user/${id}/badges/`)
     .then((response) => {
       dispatch(userActions.setUserBadges(response.data));
+      sessionStorage.setItem("userbadges", JSON.stringify(response.data));
     }).catch((error) => {
       checkApiResponseStatus(error.response.status);
     });
