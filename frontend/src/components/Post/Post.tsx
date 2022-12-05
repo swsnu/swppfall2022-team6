@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
-
+import { selectUser } from "../../store/slices/user";
 import { fetchChainedPost, PostType, selectPost } from "../../store/slices/post";
 import { AppDispatch } from "../../store";
 
@@ -11,6 +11,7 @@ export interface postProps {
     id: number;
     user_name: string;
     content: string;
+    badge_id: number;
     image: string; // image url, "" if none
     location: string;
     created_at: string; // date & time string
@@ -23,6 +24,7 @@ export interface postProps {
 
 function Post(post: postProps) {
     const postState = useSelector(selectPost);
+    const userState = useSelector(selectUser);
 
     // set chain toggle status
     const [isChainOpen, setChainOpen] = useState<boolean>(false);
@@ -68,6 +70,7 @@ function Post(post: postProps) {
                     key={post.id}
                     id={post.id}
                     user_name={post.user_name}
+                    badge_id={post.badge_id}
                     content={post.content}
                     location={"Location"} //should come from map API
                     created_at={post.created_at}
@@ -94,7 +97,7 @@ function Post(post: postProps) {
                     <div id="user-main-badge">
                         <img
                             className="badge-image"
-                            src={"/badge1.svg"}
+                            src={userState.userBadges.find((badge) => badge.id === post.badge_id)?.image}
                             alt="sample"
                             style={{ height: "5vh", width: "auto" }}
                         />

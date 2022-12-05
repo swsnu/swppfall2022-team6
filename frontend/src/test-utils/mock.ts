@@ -84,6 +84,7 @@ const stubUserInitialState: UserState = {
         {
             id: 1,
             user_name: "user1",
+            badge_id: 1,
             content: "CONTENT-t1",
             image: "",
             latitude: 0,
@@ -95,6 +96,7 @@ const stubUserInitialState: UserState = {
         {
             id: 2,
             user_name: "user2",
+            badge_id: 1,
             content: "CONTENT-t2",
             image: "/logo192.png",
             latitude: 0,
@@ -120,6 +122,7 @@ const stubPostInitialState: PostState = {
         {
             id: 1,
             user_name: "user1",
+            badge_id: 1,
             content: "CONTENT-t1",
             image: "",
             latitude: 0,
@@ -131,6 +134,7 @@ const stubPostInitialState: PostState = {
         {
             id: 2,
             user_name: "user2",
+            badge_id: 1,
             content: "CONTENT-t2",
             image: "/logo192.png",
             latitude: 0,
@@ -142,6 +146,7 @@ const stubPostInitialState: PostState = {
         {
             id: 3,
             user_name: "user3",
+            badge_id: 1,
             content: "CONTENT-t3",
             image: "",
             latitude: 0,
@@ -153,6 +158,7 @@ const stubPostInitialState: PostState = {
         {
             id: 4,
             user_name: "user4",
+            badge_id: 1,
             content: "CONTENT-t4",
             image: "",
             latitude: 0,

@@ -6,6 +6,7 @@ import axios from "axios";
 export type PostType = {
     id: number;
     user_name: string;
+    badge_id: number;
     content: string;
     image: string; // image url
     latitude: number;

@@ -26,6 +26,7 @@ function PostDetail() {
     const [mainPost, setMainPost] = useState<PostType>({
         id: 1,
         user_name: "swpp",
+        badge_id: 1,
         content: "Default Original Post...",
         latitude: 37.44877599087201,
         longitude: 126.95264777802309,
@@ -54,7 +55,7 @@ function PostDetail() {
         <div className="PostDetail">
             <div id="upper-container">
                 <div id="page-header">
-                    <button id="back-button" 
+                    <button id="back-button"
                     aria-label='back'
                     onClick={onClickBackButton}>
                         <FontAwesomeIcon icon={faChevronLeft} />
@@ -140,7 +141,7 @@ function PostDetail() {
                     allPosts={replyPosts}
                 />
             </div>
-            <NavigationBar 
+            <NavigationBar
                 navReportCallback={() => {}}
             />
         </div>

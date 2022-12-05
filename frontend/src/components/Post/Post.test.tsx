@@ -25,6 +25,7 @@ describe("<Post />", () => {
                         element={
                             <Post
                                 user_name={"User Name"}
+                                badge_id={1}
                                 content={"Post Content"}
                                 location={"User Loc"}
                                 created_at={"2020-10-20 10:20:30"}

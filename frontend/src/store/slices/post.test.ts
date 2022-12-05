@@ -31,6 +31,7 @@ describe("post reducer", () => {
     const fakePost = {
         id: 1,
         user_name: "user1",
+        badge_id: 1,
         content: "CONTENT-t1",
         image: "",
         latitude: 0,
