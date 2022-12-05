@@ -16,7 +16,7 @@ export interface UserState {
     userPosts: PostType[];
 }
 
-interface BadgeType {
+export interface BadgeType {
   id: number;
   title: string;
   image: string;

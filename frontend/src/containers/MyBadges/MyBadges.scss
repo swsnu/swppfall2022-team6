@@ -13,6 +13,11 @@
     justify-content: center;
 }
 
+#badges-clicked {
+    box-shadow: inset -5px -5px 9px rgba(255,255,255,0.45), 
+    inset 5px 5px 9px rgba(94,104,121,0.3);
+}
+
 #badges-header-container .area-label{
     font-size: 10px;
     font-weight: 500;

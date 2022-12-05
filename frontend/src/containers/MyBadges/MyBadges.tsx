@@ -1,8 +1,9 @@
-import React from "react";
+import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/slices/user";
 import Badge from "../../components/Badge/Badge";
+import { BadgeType } from "../../store/slices/user";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import Container from "react-bootstrap/Container";
@@ -13,13 +14,19 @@ import "./MyBadges.scss";
 function MyBadges() {
     const userState = useSelector(selectUser);
     const navigate = useNavigate();
+    const [selectedBadge, setSelectedBadge] = useState<BadgeType | null>(null);
     const onClickBackButton = () => {
         navigate("/mypage");
     };
 
     const main_badge =
         userState.userBadges[Number(userState.currUser?.main_badge) - 1];
-    // const onClickBadge = () => {};
+    const onClickBadge = (badge: BadgeType) => {
+        if (selectedBadge === badge) {
+            setSelectedBadge(null);
+        }
+        else setSelectedBadge(badge);
+    };
     const onClickSetAsMainBadgeButton = () => {};
 
     return (
@@ -61,13 +68,16 @@ function MyBadges() {
                         })
                         .map((badge) => {
                             return (
-                                <Badge
-                                    key={badge.id}
-                                    title={badge.title}
-                                    image={badge.image}
-                                    description={badge.description}
-                                    is_fulfilled={badge.is_fulfilled}
-                                />
+                                <div className={badge === selectedBadge ? "selected-badge": "non-selected-badge"}>
+                                    <Badge
+                                        key={badge.id}
+                                        title={badge.title}
+                                        image={badge.image}
+                                        description={badge.description}
+                                        is_fulfilled={badge.is_fulfilled}
+                                        onClick={() => onClickBadge(badge)}
+                                    />
+                                </div>
                             );
                         })}
                 </Container>
