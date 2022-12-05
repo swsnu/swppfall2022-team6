@@ -3,10 +3,10 @@
   "model": "user.badge",
   "pk": 1,
   "fields": {
-    "title": "default",
+    "title": "Welcome",
     "requirement": 0,
     "description": "",
-    "image": "/badge1.svg"
+    "image": "/default.svg"
   }
 },
 {
@@ -16,7 +16,7 @@
     "title": "My First Report",
     "requirement": 1,
     "description": "Submit a Report",
-    "image": "/badge2.svg"
+    "image": "/first_report.svg"
   }
 },
 {
@@ -26,7 +26,7 @@
     "title": "Cloudy Days",
     "requirement": 3,
     "description": "Report on Cloudy Days",
-    "image": "/badge3.svg"
+    "image": "/cloudy.svg"
   }
 },
 {
@@ -36,7 +36,7 @@
     "title": "Rise and Shine",
     "requirement": 3,
     "description": "Report before 10AM",
-    "image": "/badge4.svg"
+    "image": "/early.svg"
   }
 },
 {
@@ -46,7 +46,7 @@
     "title": "Friendly Neighbor",
     "requirement": 3,
     "description": "Post More Replies to Other Users' Posts",
-    "image": "/badge5.svg"
+    "image": "/reply.svg"
   }
 },
 {
@@ -56,7 +56,7 @@
     "title": "Perfet Attendance",
     "requirement": 3,
     "description": "Log In Frequently",
-    "image": "/badge5.svg"
+    "image": "/attendance.svg"
   }
 }
 ]
