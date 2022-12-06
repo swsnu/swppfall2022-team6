@@ -106,15 +106,6 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'email')
         extra_kwargs = {'password': {'write_only': True}}
 
-    # def get_token(self, user):
-    #     token = Token.objects.get_or_create(user=user)
-    #     return token[0].key
-
-    # def get_badges(self, user):
-    #     badges = Badge.objects.filter(userbadge__user=user) \
-    #                             .values_list('id', flat=True)
-    #     return badges
-
 class BadgeSerializer(serializers.ModelSerializer):
     '''
         badge serializer
@@ -165,7 +156,6 @@ class UserBadgeSerializer(serializers.ModelSerializer):
             instance.is_fulfilled = True
             instance.save()
         return instance
-
 
 
 
