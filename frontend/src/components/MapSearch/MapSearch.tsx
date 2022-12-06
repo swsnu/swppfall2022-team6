@@ -81,6 +81,7 @@ const MapSearch = (props: IProps) => {
                     setIsOpen(false);
                     return;
                 } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+                    console.log("검색 결과가 존재하지 않습니다")
                     alert("검색 결과가 존재하지 않습니다.");
                     setSearchResponse(Response.zero_result);
                     setSearchResult([]);
@@ -103,9 +104,11 @@ const MapSearch = (props: IProps) => {
 
     const SearchResultBox = () => {
         const pagination = searchPagination as kakao.maps.Pagination;
+        const pageCount = pagination.totalCount / N_ITEM_PAGE >= 1?
+                          pagination.totalCount / N_ITEM_PAGE: 1;
         const idxArray: number[] = range(
             1,
-            pagination.totalCount / N_ITEM_PAGE
+            pageCount
         );
         return (
             <div className="search-result-box" aria-label="Search Results">
