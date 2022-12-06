@@ -80,6 +80,7 @@ function MyPage() {
             <Row id="profile-container">
                 <Col md={{ span: 2, offset: 3 }} id="main-badge-container">
                     <div id="main-badge">
+                        <img alt="" src={userState.mainBadge?.image}/>
                     </div>
                 </Col>
                 <Col md={4} id="profile-col">
