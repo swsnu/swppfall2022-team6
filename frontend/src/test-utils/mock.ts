@@ -107,7 +107,9 @@ const stubUserInitialState: UserState = {
         },
     ],
     // TODO: fill in mock badges
+    // TODO: fill in mock mainBadge
     userBadges: [],
+    mainBadge: null
 }
 
 const stubUserInitialState2: UserState = {
@@ -115,6 +117,7 @@ const stubUserInitialState2: UserState = {
     currUser: null,
     userPosts: [],
     userBadges: [],
+    mainBadge: null,
 }
 
 const stubPostInitialState: PostState = {

@@ -41,7 +41,7 @@ describe("<Statistics />", () => {
     });
     it("should not show anything if no reports", async () => {
         const mymockStore = getMockStore({
-            users: { users: [], currUser: null, userPosts: [], userBadges: []},
+            users: { users: [], currUser: null, userPosts: [], userBadges: [], mainBadge: null,},
             posts: {
                 posts: [],
             },
