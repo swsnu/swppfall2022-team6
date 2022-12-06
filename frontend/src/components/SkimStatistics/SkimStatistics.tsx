@@ -20,6 +20,7 @@ export const SmallStatistics = (props: IProps) => {
     // const [allReports, setAllReports] = useState<ReportType[]>([]);
     const [maxIndex, setMaxIndex] = useState<number>(0);
     const [reportPerc, setReportPerc] = useState<number[]>([0, 0, 0, 0]);
+    const [noStat, setNoStat] = useState<boolean>(true);
 
     const dispatch = useDispatch<AppDispatch>();
     const svgRef = useRef<SVGElement>();
@@ -184,15 +185,28 @@ export const SmallStatistics = (props: IProps) => {
                     0
                 ) / reportState.reports.length,
             ]);
+            setNoStat(false)
         }
     }, [maxIndex, reportState.reports]);
 
-    return (
-        <div className="stats-container">
-            {/* @ts-ignore */}
-            <svg ref={svgRef} />
-        </div>
-    );
+    if (noStat) {
+        return (
+            <div className="stats-container">
+                <h2 style={{
+                    padding: "20px",
+                    fontSize: "20px",
+                }}>No Statistics!</h2>
+            </div>
+        );
+    }
+    else {
+        return (
+            <div className="stats-container">
+                {/* @ts-ignore */}
+                <svg ref={svgRef} />
+            </div>
+        );
+    }
 };
 
 
