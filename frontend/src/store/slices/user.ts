@@ -129,7 +129,6 @@ export const updateUserMainBadge = createAsyncThunk(
     axios
       .post(`/user/${data.user_id}/mainbadge/`, data)
       .then((response) => {
-        console.log(response.data)
         dispatch(userActions.setUserMainBadge(response.data));
       }).catch((error) => {
         checkApiResponseStatus(error.response.status);
