@@ -194,7 +194,11 @@ export const SmallStatistics = (props: IProps) => {
             <div className="stats-container">
                 <h2 style={{
                     padding: "20px",
+                    paddingTop: "50px",
                     fontSize: "20px",
+                    width: "350px",
+                    height: "130px",
+                    textAlign: "center",
                 }}>No Statistics!</h2>
             </div>
         );

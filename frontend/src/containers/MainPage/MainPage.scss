@@ -6,25 +6,25 @@ $small-text: 12px;
     font-size: $small-text;
 }
 #main-upper-container {
-    margin-top: 10px;
+    margin-top: 3px;
 }
 #main-logo-container {
     text-align: left;
 }
 #main-logo-container img {
-    width: 100px;
+    width: 80px;
     object-fit: cover;
 }
 #main-upper-container {
     text-align: right;
     vertical-align: middle;
-    font-size: 16px;
+    font-size: 13px;
 }
 #main-upper-container #mypage-button {
     border: 0;
     background: none;
     color: #c5e8fc;
-    font-size: 15px;
+    font-size: 13px;
 }
 #main-description {
     margin-top: 10px;
