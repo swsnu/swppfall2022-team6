@@ -1,8 +1,9 @@
 {
     "name": "frontend",
+    "homepage": ".",
     "version": "0.1.0",
     "private": true,
-    "proxy": "http://localhost:8000",
+    "proxy": "http://ec2-43-200-96-194.ap-northeast-2.compute.amazonaws.com:8000/",
     "dependencies": {
         "@emotion/react": "^11.10.5",
         "@emotion/styled": "^11.10.5",
@@ -30,7 +31,7 @@
         "jest-canvas-mock": "^2.4.0",
         "json-server": "^0.17.0",
         "material-ui-search-bar": "^1.0.0",
-        "node-sass": "^7.0.3",
+        "node-sass": "^8.0",
         "react": "^18.2.0",
         "react-bootstrap": "^2.5.0",
         "react-chartjs-2": "^4.3.1",
