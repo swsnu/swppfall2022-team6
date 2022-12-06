@@ -103,6 +103,18 @@ class UserViewSet(viewsets.GenericViewSet):
         del request
         del pk
         return Response('put me', status=status.HTTP_200_OK)
+    
+    # POST /user/:id/mainbadge/
+    @action(detail=True, methods=['POST'])
+    @transaction.atomic
+    def mainbadge(self, request, pk=None):
+        user = get_object_or_404(User, pk=pk)
+        serializer = self.get_serializer\
+                (user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        data = serializer.data
+        return Response(data, status=status.HTTP_200_OK)
 
     # GET/POST /user/:id/badges/
     # POST: Evaluates Achievement for userbadges, returns updated badges list

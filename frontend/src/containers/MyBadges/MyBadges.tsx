@@ -1,33 +1,45 @@
 import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { selectUser } from "../../store/slices/user";
 import Badge from "../../components/Badge/Badge";
-import { BadgeType } from "../../store/slices/user";
+import { BadgeType, updateUserMainBadge } from "../../store/slices/user";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import "./MyBadges.scss";
+import { AppDispatch } from "../../store";
 
 function MyBadges() {
     const userState = useSelector(selectUser);
+    const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const [selectedBadge, setSelectedBadge] = useState<BadgeType | null>(null);
+    const initial_main_badge = userState.mainBadge;
+    const [mainBadge, setMainBadge] = useState<BadgeType | null>(initial_main_badge);
+
     const onClickBackButton = () => {
         navigate("/mypage");
     };
-
-    const main_badge =
-        userState.userBadges[Number(userState.currUser?.main_badge) - 1];
     const onClickBadge = (badge: BadgeType) => {
-        if (selectedBadge === badge) {
-            setSelectedBadge(null);
-        }
-        else setSelectedBadge(badge);
+        // if (badge.is_fulfilled) {
+            if (selectedBadge === badge) setSelectedBadge(null);
+            else setSelectedBadge(badge);
+        //}
     };
-    const onClickSetAsMainBadgeButton = () => {};
+    const onClickSetAsMainBadgeButton = async () => {
+        if (userState.currUser && selectedBadge) {
+            setMainBadge(selectedBadge);
+            await dispatch(
+                updateUserMainBadge({
+                    user_id: userState.currUser.id, 
+                    main_badge: selectedBadge.id
+                })
+            )
+        }
+    };
 
     return (
         <Container className="MyBadges">
@@ -47,8 +59,13 @@ function MyBadges() {
             <Row id="profile-container">
                 <Col id="main-badge-container">
                     <div id="main-badge">
-                        {/* <img src={main_badge.image} className="main-badge-image"/> */}
-                        <img src={""} className="main-badge-image" />
+                        <img src={mainBadge 
+                                    ? mainBadge.image
+                                    : ""
+                                } 
+                        className="main-badge-image" 
+                        alt="" 
+                        style={{width: "110%"}}/>
                     </div>
                 </Col>
             </Row>
@@ -59,7 +76,7 @@ function MyBadges() {
                 <Col md={6}></Col>
             </Row>
             <Row className="badges-container">
-                <Container id="badges-list" className="mt-3 w-95 m-auto">
+                <Container id="badges-list" className="mt-3 w-95 m-auto" style={{padding: "10px"}}>
                     {[...userState.userBadges]
                         .sort((a, b) => {
                             if (!a.is_fulfilled && b.is_fulfilled) return 1;
@@ -68,7 +85,7 @@ function MyBadges() {
                         })
                         .map((badge) => {
                             return (
-                                <div className={badge === selectedBadge ? "selected-badge": "non-selected-badge"}>
+                                <div id={badge === selectedBadge ? "selected-badge": "non-selected-badge"} key={badge.id}>
                                     <Badge
                                         key={badge.id}
                                         title={badge.title}
@@ -82,12 +99,15 @@ function MyBadges() {
                         })}
                 </Container>
             </Row>
-            <button
+            {selectedBadge !== null 
+                ?<button
                 id="set-main-badge-button"
                 onClick={onClickSetAsMainBadgeButton}
-            >
-                Set As Main Badge
-            </button>
+                >
+                    Set As Main Badge
+                </button>
+                : null
+            }
         </Container>
     );
 }
