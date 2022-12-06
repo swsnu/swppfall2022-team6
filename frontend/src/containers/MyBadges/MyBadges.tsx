@@ -24,10 +24,10 @@ function MyBadges() {
         navigate("/mypage");
     };
     const onClickBadge = (badge: BadgeType) => {
-        // if (badge.is_fulfilled) {
+        if (badge.is_fulfilled) {
             if (selectedBadge === badge) setSelectedBadge(null);
             else setSelectedBadge(badge);
-        //}
+        }
     };
     const onClickSetAsMainBadgeButton = async () => {
         if (userState.currUser && selectedBadge) {
@@ -58,15 +58,11 @@ function MyBadges() {
             </Row>
             <Row id="profile-container">
                 <Col id="main-badge-container">
-                    <div id="main-badge">
-                        <img src={mainBadge 
-                                    ? mainBadge.image
-                                    : ""
-                                } 
-                        className="main-badge-image" 
-                        alt="" 
-                        style={{width: "110%"}}/>
-                    </div>
+                    <img src={mainBadge ? mainBadge.image : ""} 
+                    className="main-badge-image" 
+                    alt="" 
+                    style={{height: "14vh", width: "13vh",}}
+                    />
                 </Col>
             </Row>
             <Row id="badges-header-container">
