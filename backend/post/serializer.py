@@ -3,8 +3,8 @@
 '''
 from rest_framework import serializers
 from .models import Post
-from hashtag.models import Hashtag
 from user.models import Badge
+from hashtag.models import Hashtag
 from hashtag.serializer import HashtagSerializer
 
 class PostSerializer(serializers.ModelSerializer):
