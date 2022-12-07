@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 
-import SearchBar from "material-ui-search-bar";
+// import SearchBar from "material-ui-search-bar";
 import ListGroup from 'react-bootstrap/ListGroup';
 import Pagination from 'react-bootstrap/Pagination';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import { styled } from "@material-ui/core/styles";
+// import { styled } from "@material-ui/core/styles";
+import { Input } from "antd";
+import { SearchOutlined, CloseOutlined } from '@ant-design/icons';
 
 import { PositionType } from "../../store/slices/position";
 
@@ -48,13 +50,6 @@ const range = (start: number, count: number) => {
     }
     return array;
 };
-export const CustomSearchBar = styled(SearchBar)({
-    height: "38px",
-    backgroundColor: "#F5F5F5",
-    borderRadius: "12px",
-    fontFamily: '"NanumGothic", sans-serif',
-});
-
 const MapSearch = (props: IProps) => {
     const { markerPosition, setMarkerPosition, showResults, setShowResults, setIsOpen } = props;
     const [searchQuery, setSearchQuery] = useState<string>("");
@@ -111,7 +106,11 @@ const MapSearch = (props: IProps) => {
             pageCount
         );
         return (
-            <div className="search-result-box" aria-label="Search Results">
+            <div className="search-result-box" aria-label="Search Results"
+                style={{
+                    width: "80vw",
+                    left: "7vw",
+                }}>
                 <ListGroup
                     className="search-result-list"
                     aria-label="Search Result List Item"
@@ -155,27 +154,21 @@ const MapSearch = (props: IProps) => {
             </div>
         );
     };
-    const onClickClose = () => {
-        setSearchResponse(Response.zero_result);
-        setSearchResult([]);
-        setSearchQuery("");
-        setSearchPagination(undefined);
-        setShowResults(false);
-    };
     return (
         <Container id="search-box-container">
             <Row id="search-input-container">
-                <CustomSearchBar
+                <Input.Search
                     className="mapsearch-searchbar"
                     value={searchQuery}
-                    onChange={(searchVal) => setSearchQuery(searchVal)}
-                    onCancelSearch={() => onClickClose()}
-                    onRequestSearch={()=>onSubmitSearchBox()}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onSearch={()=>onSubmitSearchBox()}
                     placeholder="Search (e.g. 서울대학교, 관악로 1)"
+                    size="large"
+                    enterButton={<SearchOutlined style={{fontSize: "20px"}}/>}
                 />
             </Row>
             <Row>
-                {(showResults && searchResponse === Response.success)? <SearchResultBox />: null}
+                {(searchQuery && showResults && searchResponse === Response.success)? <SearchResultBox />: null}
             </Row>
       </Container>
     );

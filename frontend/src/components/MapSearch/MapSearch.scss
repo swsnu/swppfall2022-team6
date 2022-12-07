@@ -15,7 +15,7 @@ $sub-color: #edf9ff;
 .search-result-box {
     z-index: 5;
     position: absolute;
-    top: 110px;
+    top: 120px;
     left: 0;
     background-color: white;
     border-radius: 10px;
@@ -23,6 +23,7 @@ $sub-color: #edf9ff;
     flex-direction: column;
     align-items: center;
     filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.1));
+    width: 80vw;
 }
 .search-result-box .search-result-list {
     width: 100%;

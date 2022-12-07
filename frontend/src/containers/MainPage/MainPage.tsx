@@ -11,13 +11,15 @@ import { selectUser, setRadius, UserType } from "../../store/slices/user";
 import { AppDispatch } from "../../store";
 
 import Box from "@mui/material/Box";
-import Slider from "@mui/material/Slider";
+// import Slider from "@mui/material/Slider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import { Layout, Slider } from 'antd';
+import { RightOutlined } from '@ant-design/icons';
 
 import Map from "./../../components/Map/Map";
 import ReportModal from "../../components/ReportModal/ReportModal";
@@ -26,6 +28,7 @@ import MapSearch from "../../components/MapSearch/MapSearch";
 import "./MainPage.scss";
 // @ts-ignore
 import Logo from "./Logo.svg";
+const { Header, Content, Footer } = Layout;
 
 const marks = [
     { value: 0, label: "0km" },
@@ -34,8 +37,17 @@ const marks = [
     { value: 75, label: "3km" },
     { value: 100, label: "4km" },
 ];
+const sliderMarks = {
+    0: "0km",
+    25: "1km",
+    50: "2km",
+    75: "3km",
+    100: "4km",
+};
 
-function MainPage() {
+const formatter = (value: number)=>`${value/25}km`;
+
+const MainPage: React.FC = ()=>{
     const userState = useSelector(selectUser);
     const positionState = useSelector(selectPosition);
 
@@ -107,118 +119,184 @@ function MainPage() {
     };
 
     return (
-        <Container id="MainPage">
-            <Row
-                id="main-upper-container"
-                aria-label="background"
-                onClick={() => setShowResults(false)}
-            >
-                <Col id="main-logo-container">
-                    <img src={Logo} />
-                </Col>
-                <Col id="main-mypage-button-container">
-                    <button id="mypage-button" onClick={onClickMyPageIcon}>
-                        <FontAwesomeIcon
-                            icon={faUser}
-                            size="2x"
-                            aria-label="mypage-button"
-                        />
-                    </button>
-                </Col>
-            </Row>
-            <Row id="main-map-search-container">
-                <MapSearch
-                    markerPosition={markerPosition}
-                    setMarkerPosition={setMarkerPosition}
-                    showResults={showResults}
-                    setShowResults={setShowResults}
-                    setIsOpen={setIsOpen}
-                />
-            </Row>
-            <Row
-                id="main-description"
-                aria-label="background"
-                onClick={() => setShowResults(false)}
-            >
-                <span>Select a location and find out real-time statistics</span>
-            </Row>
-            <Row
-                id="main-map-container"
-                aria-label="background"
-                onClick={() => setShowResults(false)}
-            >
-                <Map
-                    markerPosition={markerPosition}
-                    setMarkerPosition={setMarkerPosition}
-                    radius={currRadius}
-                    isOpen={isOpen}
-                    setIsOpen={setIsOpen}
-                />
-            </Row>
-            <Row
-                id="main-radius-slider-container"
-                aria-label="background"
-                onClick={() => setShowResults(false)}
-            >
-                <Col>
-                    <Row id="main-change-radius">
-                        <p>Change Radius</p>
-                    </Row>
-                    <Row id="main-radius-slider-content">
-                        <Box sx={{ width: 200 }} id="radius-slider">
-                            <Slider
-                                key="radius-slider"
-                                aria-label="Custom marks"
-                                value={currRadius}
-                                step={2.5}
-                                min={0.01}
-                                getAriaValueText={(value: number): string => {
-                                    return `${value}km`;
-                                }}
-                                valueLabelDisplay="auto"
-                                valueLabelFormat={(value: number): string => {
-                                    return `${value / 25}km`;
-                                }}
-                                onChange={onChangeMapRadius}
-                                marks={marks}
-                            />
-                        </Box>
-                    </Row>
-                </Col>
-                <Col
-                    id="findout-container"
+        <Layout className="MainPage">
+            <Header className="Header" style={{backgroundColor: "white"}}>
+                <img src={Logo} className="nowsee-logo"/>
+                <button className="mypage-button" onClick={onClickMyPageIcon}>
+                    <img src="/mypage-icon.svg"/>
+                </button>
+                {/* <Row
+                    id="main-upper-container"
                     aria-label="background"
                     onClick={() => setShowResults(false)}
                 >
-                    <Button
-                        id="findout-button"
-                        onClick={onClickFindOutButton}
-                        type="button"
-                    >
-                        <span aria-label="findout-button">{"Find out  >"}</span>
-                    </Button>
-                </Col>
-            </Row>
-            <Row
-                id="main-curr-location-container"
-                aria-label="background"
-                onClick={() => setShowResults(false)}
-            >
-                <span>{`Current location: ${address}`}</span>
-            </Row>
-            <Row
-                id="main-report-button-container"
-                aria-label="background"
-                onClick={() => setShowResults(false)}
-            >
-                <Button
-                    id="report-button"
-                    onClick={onClickReportButton}
-                    type="button"
-                >
-                    Report!
-                </Button>
-            </Row>
+                    <Col id="main-logo-container">
+                    </Col>
+                    <Col id="main-mypage-button-container">
+                    </Col>
+                </Row> */}
+            </Header>
+            <Content className="Content">
+                <Row id="main-map-search-container">
+                    <MapSearch
+                        markerPosition={markerPosition}
+                        setMarkerPosition={setMarkerPosition}
+                        showResults={showResults}
+                        setShowResults={setShowResults}
+                        setIsOpen={setIsOpen}
+                    />
+                </Row>
+                <Row className="content-lower">
+                    <div className="main-top-map-container">
+                        <Row
+                            id="main-map-container"
+                            aria-label="background"
+                            onClick={() => setShowResults(false)}
+                        >
+                            <Map
+                                markerPosition={markerPosition}
+                                setMarkerPosition={setMarkerPosition}
+                                radius={currRadius}
+                                isOpen={isOpen}
+                                setIsOpen={setIsOpen}
+                            />
+                        </Row>
+                    </div>
+                    <div className="right-button-container">
+                        <div
+                            className="main-description"
+                            aria-label="background"
+                            onClick={() => setShowResults(false)}
+                        >
+                            <span className="main-description-span">
+                                Select a location and find out real-time statistics!
+                                {/* <strong>Select a location</strong><br/>
+                                and<br/>
+                                find out<br/>
+                                <strong>real-time statistics!</strong> */}
+                            </span>
+                        </div>
+                        <div className="current-location">
+                            <span>Current location:</span>
+                            <span>{address}</span>
+                        </div>
+                        <Button
+                            className="findout-button"
+                            onClick={onClickFindOutButton}
+                            type="button"
+                            style={{
+                                backgroundColor: "#3185e7",
+                                borderRadius: "10px",
+                                fontWeight: "900",
+                                fontSize: "15px",
+                                display: "flex",
+                                gap: "10px",
+                                placeContent: "center",
+                            }}
+                        >
+                            <span aria-label="findout-button">
+                                Find out
+                            </span>
+                            <span>{">"}</span>
+                        </Button>
+                        <Button
+                            className="report-button"
+                            onClick={onClickReportButton}
+                            type="button"
+                            style={{
+                                backgroundColor: "white",
+                                borderRadius: "10px",
+                                fontWeight: "900",
+                                fontSize: "15px",
+                                color: "#3185e7",
+                                border: "2px solid #3185e7"
+                            }}
+                        >
+                            Report!
+                        </Button>
+                        <div className="slider-description">
+                            Change radius
+                        </div>
+                        <Slider 
+                            // @ts-ignore
+                            tooltip={{formatter:(value: number)=>`${value/25}km`}}
+                            marks={sliderMarks}
+                            included
+                            value={currRadius}
+                            onChange={(value)=>setCurrRadius(value)}
+                            className="radius-slider"
+                        />
+                        {/* <Box sx={{ width: 200 }} id="radius-slider">
+                                    <Slider
+                                        key="radius-slider"
+                                        aria-label="Custom marks"
+                                        value={currRadius}
+                                        step={2.5}
+                                        min={0.01}
+                                        getAriaValueText={(value: number): string => {
+                                            return `${value}km`;
+                                        }}
+                                        valueLabelDisplay="auto"
+                                        valueLabelFormat={(value: number): string => {
+                                            return `${value / 25}km`;
+                                        }}
+                                        onChange={onChangeMapRadius}
+                                        marks={marks}
+                                    />
+                                </Box> */}
+                        {/* <Row
+                            id="main-radius-slider-container"
+                            aria-label="background"
+                            onClick={() => setShowResults(false)}
+                        >
+                            <Row id="main-change-radius">
+                                <p>Change Radius</p>
+                            </Row>
+                            <Row id="main-radius-slider-content">
+                                <Box sx={{ width: 200 }} id="radius-slider">
+                                    <Slider
+                                        key="radius-slider"
+                                        aria-label="Custom marks"
+                                        value={currRadius}
+                                        step={2.5}
+                                        min={0.01}
+                                        getAriaValueText={(value: number): string => {
+                                            return `${value}km`;
+                                        }}
+                                        valueLabelDisplay="auto"
+                                        valueLabelFormat={(value: number): string => {
+                                            return `${value / 25}km`;
+                                        }}
+                                        onChange={onChangeMapRadius}
+                                        marks={marks}
+                                    />
+                                </Box>
+                            </Row>
+                        </Row>
+                        <Row
+                            id="findout-container"
+                            aria-label="background"
+                            onClick={() => setShowResults(false)}
+                        >
+                            
+                        </Row> */}
+                        {/* <Row
+                            id="main-curr-location-container"
+                            aria-label="background"
+                            onClick={() => setShowResults(false)}
+                        >
+                            <span>{`Current location: ${address}`}</span>
+                        </Row>
+                        <Row
+                            id="main-report-button-container"
+                            aria-label="background"
+                            onClick={() => setShowResults(false)}
+                        >
+                            
+                        </Row> */}
+                    </div>
+                </Row>
+            </Content>
             <ReportModal
                 currPosition={currPosition}
                 openReport={openReport}
@@ -226,7 +304,7 @@ function MainPage() {
                 isNavbarReport={false}
                 navReportCallback={() => {}}
             />
-        </Container>
+        </Layout>
     );
 }
 

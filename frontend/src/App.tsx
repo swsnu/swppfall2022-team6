@@ -13,8 +13,7 @@ import HashFeed from "./containers/HashFeed/HashFeed";
 
 function App() {
     return (
-        <div className="App"
-        style={{overflow: "hidden"}}>
+        <div className="App">
             <BrowserRouter>
                 <Routes>
                     <Route path="/signup" element={<SignUp />}></Route>
