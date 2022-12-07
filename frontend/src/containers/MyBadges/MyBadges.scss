@@ -13,6 +13,16 @@
     justify-content: center;
 }
 
+#selected-badge {
+    box-shadow: -3px -3px 6px rgba(255,255,255,0.45),
+     3px 3px 6px rgba(94,104,121,0.3);
+    height: 14vh;
+    width: 12vh;
+    display: flex;
+    justify-content: center;
+    border-radius: 10px;
+}
+
 #badges-header-container .area-label{
     font-size: 10px;
     font-weight: 500;
@@ -32,4 +42,15 @@
     border: 1px solid #F5F5F5;
     border-radius: 20px;
     max-width: 97%;
+}
+
+#set-main-badge-button {
+    margin-top: 5vh;
+    border: 1px solid #2A79D6;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    padding: 4px 6px 4px 6px;
+    color: #3185E7;
+    font-weight: bold;
 }

@@ -245,6 +245,7 @@ describe("<ReportModal />", () => {
                 currUser: null,
                 userPosts: [],
                 userBadges: [],
+                mainBadge: null,
             },
             posts: {
                 posts: [],

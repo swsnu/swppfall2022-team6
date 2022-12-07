@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,6 +9,7 @@ import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import PostList from "../../components/PostList/PostList";
 import { PostType } from "../../store/slices/post";
+import { selectUser } from "../../store/slices/user";
 
 import "./PostDetail.scss";
 
@@ -22,7 +24,8 @@ function PostDetail() {
         // navigate("/areafeed/");
     };
     // TODO: get badge image from backend
-
+    const userState = useSelector(selectUser);
+    
     const [mainPost, setMainPost] = useState<PostType>({
         id: 1,
         user_name: "swpp",
@@ -65,7 +68,10 @@ function PostDetail() {
             <div id="main-post-container">
                 <div id="upper-post-container">
                     <div id="author-main-badge">
-                        <img src={"/badge4.svg"} style={{ height: "5vh", width: "auto" }}/>
+                        <img 
+                        alt=""
+                        src={userState.userBadges.find((badge) => badge.id === mainPost.badge_id)?.image} 
+                        style={{ height: "5vh", width: "auto" }}/>
                     </div>
                     <div id="author-container">
                         <div id="author-info">

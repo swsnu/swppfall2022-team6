@@ -16,7 +16,7 @@ export interface UserState {
     userPosts: PostType[];
 }
 
-interface BadgeType {
+export interface BadgeType {
   id: number;
   title: string;
   image: string;
@@ -31,7 +31,7 @@ export enum Achievement {
   REPLY,
   ATTENDANCE,
 }
-export interface UserState { users: UserType[]; currUser: UserType|null; userPosts: PostType[]; userBadges: BadgeType[]}
+export interface UserState { users: UserType[]; currUser: UserType|null; userPosts: PostType[]; userBadges: BadgeType[]; mainBadge: BadgeType|null}
 
 
 const initialUser = sessionStorage.getItem("user");
@@ -42,6 +42,10 @@ const initialState: UserState = {
     currUser: initialUser ? JSON.parse(initialUser) : null,
     userPosts: [],
     userBadges: initialUserBadges ? JSON.parse(initialUserBadges) : null,
+    mainBadge: initialUser && initialUserBadges 
+      ?  JSON.parse(initialUserBadges)
+          .find((badge: BadgeType) => badge.id === JSON.parse(initialUser).main_badge)
+      : null
 };
 
 export type LoginFormType = {
@@ -85,6 +89,13 @@ const userSlice = createSlice({
         setUserBadges: (state, action: PayloadAction<BadgeType[]>) =>{
           state.userBadges = action.payload;
         },
+        setUserMainBadge: (state, action: PayloadAction<UserType>) =>{
+          const new_main_badge = initialState.userBadges.find(badge => badge.id === action.payload.main_badge)
+          if (new_main_badge && state.currUser) {
+            state.mainBadge = new_main_badge
+            state.currUser.main_badge = new_main_badge.id
+          }
+        }
       },
 });
 
@@ -115,6 +126,19 @@ export const fetchUserPosts = createAsyncThunk(
         // const response = await axios.get<PostType[]>(`/user/${id}/post/`);
         // return response.data;
     }
+);
+export const updateUserMainBadge = createAsyncThunk(
+  "user/updateUserMainBadge",
+  async (data: {user_id: number, main_badge: number}, { dispatch }) => {
+    axios
+      .post(`/user/${data.user_id}/mainbadge/`, data)
+      .then((response) => {
+        dispatch(userActions.setUserMainBadge(response.data));
+        sessionStorage.setItem("user", JSON.stringify(response.data));
+      }).catch((error) => {
+        checkApiResponseStatus(error.response.status);
+      });
+  }
 );
 export const fetchUserBadges = createAsyncThunk(
   "user/fetchUserBadges",

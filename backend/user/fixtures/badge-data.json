@@ -53,7 +53,7 @@
   "model": "user.badge",
   "pk": 6,
   "fields": {
-    "title": "Perfet Attendance",
+    "title": "Perfect Attendance",
     "requirement": 3,
     "description": "Log In Frequently",
     "image": "/attendance.svg"
