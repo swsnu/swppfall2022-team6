@@ -10,16 +10,9 @@ import {
 import { selectUser, setRadius, UserType } from "../../store/slices/user";
 import { AppDispatch } from "../../store";
 
-import Box from "@mui/material/Box";
-// import Slider from "@mui/material/Slider";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import { Layout, Slider } from 'antd';
-import { RightOutlined } from '@ant-design/icons';
 
 import Map from "./../../components/Map/Map";
 import ReportModal from "../../components/ReportModal/ReportModal";
@@ -28,15 +21,8 @@ import MapSearch from "../../components/MapSearch/MapSearch";
 import "./MainPage.scss";
 // @ts-ignore
 import Logo from "./Logo.svg";
-const { Header, Content, Footer } = Layout;
+const { Header, Content } = Layout;
 
-const marks = [
-    { value: 0, label: "0km" },
-    { value: 25, label: "1km" },
-    { value: 50, label: "2km" },
-    { value: 75, label: "3km" },
-    { value: 100, label: "4km" },
-];
 const sliderMarks = {
     0: "0km",
     25: "1km",
@@ -125,16 +111,6 @@ const MainPage: React.FC = ()=>{
                 <button className="mypage-button" onClick={onClickMyPageIcon}>
                     <img src="/mypage-icon.svg"/>
                 </button>
-                {/* <Row
-                    id="main-upper-container"
-                    aria-label="background"
-                    onClick={() => setShowResults(false)}
-                >
-                    <Col id="main-logo-container">
-                    </Col>
-                    <Col id="main-mypage-button-container">
-                    </Col>
-                </Row> */}
             </Header>
             <Content className="Content">
                 <Row id="main-map-search-container">
@@ -226,74 +202,6 @@ const MainPage: React.FC = ()=>{
                             onChange={(value)=>setCurrRadius(value)}
                             className="radius-slider"
                         />
-                        {/* <Box sx={{ width: 200 }} id="radius-slider">
-                                    <Slider
-                                        key="radius-slider"
-                                        aria-label="Custom marks"
-                                        value={currRadius}
-                                        step={2.5}
-                                        min={0.01}
-                                        getAriaValueText={(value: number): string => {
-                                            return `${value}km`;
-                                        }}
-                                        valueLabelDisplay="auto"
-                                        valueLabelFormat={(value: number): string => {
-                                            return `${value / 25}km`;
-                                        }}
-                                        onChange={onChangeMapRadius}
-                                        marks={marks}
-                                    />
-                                </Box> */}
-                        {/* <Row
-                            id="main-radius-slider-container"
-                            aria-label="background"
-                            onClick={() => setShowResults(false)}
-                        >
-                            <Row id="main-change-radius">
-                                <p>Change Radius</p>
-                            </Row>
-                            <Row id="main-radius-slider-content">
-                                <Box sx={{ width: 200 }} id="radius-slider">
-                                    <Slider
-                                        key="radius-slider"
-                                        aria-label="Custom marks"
-                                        value={currRadius}
-                                        step={2.5}
-                                        min={0.01}
-                                        getAriaValueText={(value: number): string => {
-                                            return `${value}km`;
-                                        }}
-                                        valueLabelDisplay="auto"
-                                        valueLabelFormat={(value: number): string => {
-                                            return `${value / 25}km`;
-                                        }}
-                                        onChange={onChangeMapRadius}
-                                        marks={marks}
-                                    />
-                                </Box>
-                            </Row>
-                        </Row>
-                        <Row
-                            id="findout-container"
-                            aria-label="background"
-                            onClick={() => setShowResults(false)}
-                        >
-                            
-                        </Row> */}
-                        {/* <Row
-                            id="main-curr-location-container"
-                            aria-label="background"
-                            onClick={() => setShowResults(false)}
-                        >
-                            <span>{`Current location: ${address}`}</span>
-                        </Row>
-                        <Row
-                            id="main-report-button-container"
-                            aria-label="background"
-                            onClick={() => setShowResults(false)}
-                        >
-                            
-                        </Row> */}
                     </div>
                 </Row>
             </Content>
