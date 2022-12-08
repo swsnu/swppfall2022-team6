@@ -90,7 +90,7 @@ function MainPage() {
     }, [currPosition]);
 
     const onClickMyPageIcon = () => {
-        navigate("/mypage/");
+        navigate("/mypage");
     };
     const onChangeMapRadius = (event: Event, newValue: number | number[]) => {
         setCurrRadius(newValue as number);
@@ -100,7 +100,7 @@ function MainPage() {
         await dispatch(setRadius({ user: currUser, radius: radiusKm })); //! type mismatch error,, why?
         await dispatch(setPosition(markerPosition));
         localStorage.setItem("position", JSON.stringify(markerPosition));
-        navigate("/areafeed/");
+        navigate("/areafeed");
     };
     const onClickReportButton = () => {
         setOpenReport(true);

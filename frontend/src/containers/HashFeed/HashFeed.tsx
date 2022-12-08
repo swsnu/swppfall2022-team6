@@ -105,7 +105,7 @@ function HashFeed() {
         else setSelectTag(value);
     };
     const onClickBackButton = () => {
-        navigate(-1);
+        navigate("/areafeed");
     };
 
     const showClusterMap = () => {
@@ -216,7 +216,10 @@ function HashFeed() {
                         </Col>
                         <Col
                             className="fw-bolder fs-5 mb-1"
-                            style={{ justifyContent: "center" }}
+                            style={{
+                                justifyContent: "center",
+                                paddingTop: "10px",
+                            }}
                         >
                             #{hashtagState.top3[0].content}
                         </Col>

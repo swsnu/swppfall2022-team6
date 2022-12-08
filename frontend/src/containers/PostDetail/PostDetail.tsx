@@ -52,7 +52,7 @@ function PostDetail() {
             setReplyPosts(response.data["replies"]);
         });
         setRefresh(false);
-    }, [refresh]);
+    }, [refresh, id]);
 
     return (
         <div className="PostDetail">

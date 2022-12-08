@@ -33,7 +33,7 @@ class HashtagViewSet(viewsets.GenericViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
         try:
-            myhashid = Hashtag.objects.values_list('id').get(content=content)[0]
+            myhashid = Hashtag.objects.values_list('id', 'content').get(content=content)[0]
         except ObjectDoesNotExist:
             myhashid = None
         return Response(myhashid, status=status.HTTP_200_OK)
