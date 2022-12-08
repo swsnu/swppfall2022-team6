@@ -16,6 +16,7 @@ from .serializer import PostSerializer
 from collections import Counter
 
 #from rest_framework.decorators import action
+MAX_POST_LEN = 30
 
 def hash_recommend(posts, user, pk=0):
     post_hashtags = [Hashtag.objects.filter
@@ -138,7 +139,7 @@ class PostViewSet(viewsets.GenericViewSet):
         #     <= float(radius)]
         ids = [post.id for post in all_posts]
 
-        posts = all_posts.filter(id__in=ids).order_by('-created_at')
+        posts = all_posts.filter(id__in=ids).order_by('-created_at')[:MAX_POST_LEN]
 
         # post_hashtags =
         # [Hashtag.objects.filter(posthashtag__post=post).values()
@@ -173,7 +174,7 @@ class PostViewSet(viewsets.GenericViewSet):
         ids = list((ph.post.id for ph in post_hashtags
         if ph.hashtag.id == int(pk)))
 
-        posts = Post.objects.all().filter(id__in=ids).order_by('-created_at')
+        posts = Post.objects.all().filter(id__in=ids).order_by('-created_at')[:MAX_POST_LEN]
 
         # post_hashtags =
         # [Hashtag.objects.filter(posthashtag__post=post).values()
@@ -185,9 +186,10 @@ class PostViewSet(viewsets.GenericViewSet):
         #         if hashtag['id'] not in keys:
         #             keys.append(hashtag['id'])
         #             hashtags.append(hashtag)
+        content = get_object_or_404(Hashtag, pk=int(pk))
         hashtags = hash_recommend(posts.values('id'), user, int(pk))
         hashtags.insert(0, {'id':pk,
-        'content':Hashtag.objects.get(id=int(pk)).content})
+        'content':content.content})
 
         data = {}
         data['top3_hashtags'] = hashtags
@@ -206,7 +208,7 @@ class PostViewSet(viewsets.GenericViewSet):
         post = get_object_or_404(Post, pk=pk)
         post_info = self.get_serializer(post, many=False).data
         # user_info = {'user_name': post.user.username}
-        replies = Post.objects.filter(reply_to=post)
+        replies = Post.objects.filter(reply_to=post)[:MAX_POST_LEN]
         reply_info = self.get_serializer(replies, many=True).data
         data = {}
         data['post'] = post_info
@@ -226,11 +228,13 @@ class PostViewSet(viewsets.GenericViewSet):
         post = get_object_or_404(Post, pk=pk)
         # Add chained posts in order
         chain = []
-        while post.reply_to:
+        replen = 0
+        while post.reply_to and replen < MAX_POST_LEN:
             reply_id = post.reply_to.id
             reply_post = Post.objects.get(id=reply_id)
             chain.append(reply_post)
             post = reply_post
+            replen += 1
         return Response(
             self.get_serializer(chain, many=True).data,
             status=status.HTTP_200_OK

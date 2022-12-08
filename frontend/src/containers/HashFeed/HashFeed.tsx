@@ -57,8 +57,9 @@ function HashFeed() {
         const user = userState.currUser as UserType;
         setRefresh(false);
 
-        const queryPostPromise = dispatch(fetchHashPosts(Number(id)));
-        const postData = (await queryPostPromise).payload as PostType[];
+        const queryPostPromise = await dispatch(fetchHashPosts(Number(id)));
+        if (queryPostPromise.payload === undefined) navigate("/");
+        const postData = queryPostPromise.payload as PostType[];
         setQueryPosts(postData);
         await dispatch(fetchHashfeedTop3Hashtags(Number(id)));
         setIsLoading(true);

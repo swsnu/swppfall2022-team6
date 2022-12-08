@@ -203,7 +203,7 @@ function AreaFeed() {
         // if (value === selectTag) setSelectTag(undefined);
         // else setSelectTag(value);
         setSelectTag(value);
-        navigate(`/hashfeed/${value}/`);
+        navigate(`/hashfeed/${value}`);
     };
     const AreaFeedPosts = () => {
         const [searchQuery, setSearchQuery] = useState<string>("");

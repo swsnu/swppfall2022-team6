@@ -50,7 +50,7 @@ function PostDetail() {
         axios.get(`/post/${id}/`).then((response) => {
             setMainPost(response.data["post"]);
             setReplyPosts(response.data["replies"]);
-        });
+        }).catch(() => {navigate("/")});
         setRefresh(false);
     }, [refresh, id]);
 
