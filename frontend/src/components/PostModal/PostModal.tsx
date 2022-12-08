@@ -3,7 +3,11 @@ import React, { useEffect, useState } from "react";
 import "./PostModal.scss";
 import { TextField } from "@mui/material";
 import { addPost } from "../../store/slices/post";
-import { selectUser, Achievement, updateUserAchievements } from "../../store/slices/user";
+import {
+    selectUser,
+    Achievement,
+    updateUserAchievements,
+} from "../../store/slices/user";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store";
 import { useParams } from "react-router";
@@ -42,12 +46,19 @@ function PostModal({
                 formData.append("replyTo", replyTo.toString());
             //@ts-ignore
             const response = await dispatch(addPost(formData));
-            if (response.payload){
+            if (response.payload) {
                 // update Post-related Achievement(Reply)
-                if (type === "Reply"){
+                if (type === "Reply") {
                     const achievement_type: Achievement = Achievement.REPLY;
-                    if (!userState.userBadges[achievement_type-1].is_fulfilled){
-                        dispatch(updateUserAchievements({id: Number(userState.currUser?.id), type: achievement_type}));
+                    if (
+                        !userState.userBadges[achievement_type - 1].is_fulfilled
+                    ) {
+                        dispatch(
+                            updateUserAchievements({
+                                id: Number(userState.currUser?.id),
+                                type: achievement_type,
+                            })
+                        );
                     }
                 }
             }
@@ -58,7 +69,12 @@ function PostModal({
     };
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        if (e.target.files) setImage(e.target.files[0]);
+        if (e.target.files) {
+            if (e.target.files[0].size > 1048576) {
+                alert("File size is too big! Max size is 1MB");
+                e.target.value = "";
+            } else setImage(e.target.files[0]);
+        }
     };
 
     return (
@@ -93,7 +109,10 @@ function PostModal({
                             </p>
                             <div style={{ margin: "0px 50px" }}>
                                 <TextField
-                                    inputProps={{ "data-testid": "textField" }}
+                                    inputProps={{
+                                        "data-testid": "textField",
+                                        maxLength: 290,
+                                    }}
                                     id="standard-basic"
                                     variant="standard"
                                     placeholder="Add Text"
@@ -111,6 +130,7 @@ function PostModal({
                                 <TextField
                                     inputProps={{
                                         "data-testid": "hashtagField",
+                                        maxLength: 20,
                                     }}
                                     id="standard-basic"
                                     variant="standard"

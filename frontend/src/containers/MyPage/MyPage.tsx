@@ -61,7 +61,7 @@ function MyPage() {
     }, [onlyPhoto])
 
     const onClickBackButton = () => {
-        navigate("/areafeed");
+        navigate("/");
     };
     const onClickSeeBadgesButton = () => {
         navigate("/mypage/badges")

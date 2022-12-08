@@ -89,7 +89,7 @@ describe("<MainPage />", () => {
         const myPageBtn = screen.getByLabelText("mypage-button");
         fireEvent.click(myPageBtn!);
         await waitFor(() =>
-            expect(mockNavigate).toHaveBeenCalledWith(`/mypage/`)
+            expect(mockNavigate).toHaveBeenCalledWith(`/mypage`)
         );
     });
     it("should handle findout button", async () => {
@@ -97,7 +97,7 @@ describe("<MainPage />", () => {
         const findoutBtn = screen.getByLabelText("findout-button");
         fireEvent.click(findoutBtn!);
         await waitFor(() =>
-            expect(mockNavigate).toHaveBeenCalledWith(`/areafeed/`)
+            expect(mockNavigate).toHaveBeenCalledWith(`/areafeed`)
         );
     });
     it("should handle report button", async () => {
