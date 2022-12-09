@@ -22,6 +22,7 @@ import { faRotateLeft, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Statistics from "../../components/Statistics/Statistics";
 import PostList from "../../components/PostList/PostList";
+import Loading from "../../components/Loading/Loading";
 
 import "./AreaFeed.scss";
 import { PositionType, selectPosition } from "../../store/slices/position";
@@ -349,9 +350,7 @@ function AreaFeed() {
                     <NavigationBar navReportCallback={navReportCallback} />
                 </div>
             ) : (
-                <div style={{ fontSize: "20px", marginTop: "20px" }}>
-                    Loading
-                </div>
+                <Loading />
             )}
         </Container>
     );
