@@ -11,6 +11,24 @@ jest.mock("react-router", () => ({
     useNavigate: () => mockNavigate,
 }));
 
+const mockResultData = [
+    {
+        address_name: "서울특별시 관악구 신림동",
+    },
+];
+const kakao = {
+    maps: {
+        services: {
+            Geocoder: jest.fn(),
+            Status: {
+                OK: "OK",
+                ZERO_RESULT: "ZERO_RESULT",
+                ERROR: "ERROR",
+            },
+        },
+    },
+};
+
 describe("<NavigationBar />", () => { 
     let navbar: JSX.Element;
     beforeEach(() => {
@@ -27,6 +45,13 @@ describe("<NavigationBar />", () => {
                 </MemoryRouter>
             </Provider>
         )
+        global.kakao = kakao as any;
+        const mockCoord2RegionCode = jest.fn((lng, lat, callback) =>
+            callback(mockResultData, "OK")
+        );
+        (kakao.maps.services.Geocoder as jest.Mock).mockReturnValue({
+            coord2RegionCode: mockCoord2RegionCode,
+        });
     });
     it("should render properly", () => {
         const { container } = render(navbar);
