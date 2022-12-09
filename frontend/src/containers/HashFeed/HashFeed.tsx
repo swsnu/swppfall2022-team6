@@ -17,16 +17,21 @@ import { faRotateLeft, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { styled } from "@material-ui/core/styles";
+import { Checkbox, Layout } from "antd";
+import { ArrowLeftOutlined, SyncOutlined } from "@ant-design/icons"
 
 import PostList from "../../components/PostList/PostList";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
-import "./HashFeed.scss";
 
 import { selectUser, UserType } from "../../store/slices/user";
 import { CustomSearchBar } from "../AreaFeed/AreaFeed";
 
 import { Map, MapMarker, MarkerClusterer } from "react-kakao-maps-sdk";
 import { selectPosition } from "../../store/slices/position";
+
+import "./HashFeed.scss";
+
+const { Header, Content } = Layout;
 
 const CustomToggleButtonGroup = styled(ToggleButtonGroup)({
     display: "flex",
@@ -36,6 +41,12 @@ const CustomToggleButtonGroup = styled(ToggleButtonGroup)({
     height: "25px",
     borderRadius: "0px",
 });
+
+function getWindowSize() {
+    const {innerWidth, innerHeight} = window;
+    return {innerWidth, innerHeight};
+}
+
 
 function HashFeed() {
     const { id } = useParams();
@@ -53,8 +64,21 @@ function HashFeed() {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
 
+    const [windowSize, setWindowSize] = useState(getWindowSize());
+
+    useEffect(() => {
+        function handleWindowResize() {
+            setWindowSize(getWindowSize());
+        }
+        window.addEventListener('resize', handleWindowResize);
+        return () => {
+            window.removeEventListener('resize', handleWindowResize);
+        };
+    }, []);
+
+
     const fetchData = async () => {
-        const user = userState.currUser as UserType;
+        // const user = userState.currUser as UserType;
         setRefresh(false);
 
         const queryPostPromise = await dispatch(fetchHashPosts(Number(id)));
@@ -110,13 +134,14 @@ function HashFeed() {
     };
 
     const showClusterMap = () => {
+        const mapHeight = windowSize.innerWidth>1000? "80vh": "30vh";
         return (
             <Map
                 id="map-hashfeed"
                 center={positionState.position}
                 style={{
-                    width: "80%",
-                    height: "30vh",
+                    width: "100%",
+                    height: mapHeight,
                     borderRadius: "12px",
                 }}
                 level={8}
@@ -150,40 +175,27 @@ function HashFeed() {
             setSearchQuery("");
         };
         return (
-            <div>
-                <Row id="search-box-container">
-                    <Row className="hash-label">Posts</Row>
-                    <Row id="search-container">
-                        <Col md={6}>
-                            <CustomSearchBar
-                                className="search-box"
-                                placeholder=""
-                                value={searchQuery}
-                                onRequestSearch={() => onSubmitSearchBox()}
-                                onCancelSearch={() => onClickClose()}
-                                onChange={(searchVal) =>
-                                    setSearchQuery(searchVal)
-                                }
-                            />
-                        </Col>
-                        <Col md={3} id="only-photos-button-container">
-                            <div id="only-photos-button">
-                                <Switch
-                                    onChange={onSelectOnlyPhotos}
-                                    onColor="#3185e7"
-                                    boxShadow="0 0 2px 2px #999"
-                                    width={40}
-                                    height={20}
-                                    checked={onlyPhoto}
-                                    uncheckedIcon={false}
-                                    checkedIcon={false}
-                                />
-                                <span> Only Photos</span>
-                            </div>
-                        </Col>
-                    </Row>
-                </Row>
-                <Row id="postlist-container">
+            <div className="hashfeed-posts-container">
+                <h2 className="hash-label post-title title" >Posts</h2>
+                <div id="search-box-container" style={{display: "flex"}}>
+                    <div>
+                        <CustomSearchBar
+                            className="search-box"
+                            placeholder=""
+                            value={searchQuery}
+                            onRequestSearch={() => onSubmitSearchBox()}
+                            onCancelSearch={() => onClickClose()}
+                            onChange={(searchVal) =>
+                                setSearchQuery(searchVal)
+                            }
+                        />
+                    </div>
+                    <div id="only-photos-button">
+                        <Checkbox className="checkbox" checked={onlyPhoto} onChange={onSelectOnlyPhotos}/>
+                        <span> Only Photos</span>
+                    </div>
+                </div>
+                <div id="postlist-container">
                     <PostList
                         currPosition={positionState.position}
                         allPosts={queryPosts}
@@ -191,56 +203,32 @@ function HashFeed() {
                         replyTo={0}
                         postListCallback={postListCallback}
                     />
-                </Row>
+                </div>
                 ;
             </div>
         );
     };
 
     return (
-        <Container className="HashFeed">
+        <Layout className="HashFeed">
+            <Header id="hashfeed-upper-container"  className="Header"  style={{backgroundColor: "white"}}>
+                <div id="button-container">
+                    <ArrowLeftOutlined id="back-button" className="button" onClick={onClickBackButton}/>
+                    <SyncOutlined id="refresh-button" className="button" onClick={onClickRefreshButton}/>
+                </div>
+                <div className="title hashfeed-title">
+                    #{hashtagState.top3[0].content}
+                </div>
+            </Header>
             {isLoading ? (
-                <div>
-                    <Row id="hashfeed-upper-container">
-                        <Col id="button-container">
-                            <button
-                                id="back-button"
-                                onClick={onClickBackButton}
-                            >
-                                <FontAwesomeIcon icon={faChevronLeft} />
-                            </button>
-                            <button
-                                id="refresh-button"
-                                onClick={onClickRefreshButton}
-                            >
-                                <FontAwesomeIcon icon={faRotateLeft} />
-                            </button>
-                        </Col>
-                        <Col
-                            className="fw-bolder fs-5 mb-1"
-                            style={{
-                                justifyContent: "center",
-                                paddingTop: "10px",
-                            }}
-                        >
-                            #{hashtagState.top3[0].content}
-                        </Col>
-                        <Col></Col>
-                    </Row>
-
-                    <Row
-                        id="cluster-map"
-                        style={{
-                            justifyContent: "center",
-                            paddingTop: "1vh",
-                        }}
-                    >
+                <Content className="Content" style={{backgroundColor: "white"}}>
+                    <div id="cluster-map">
                         {showClusterMap()}
-                    </Row>
-                    <Row id="recommended-hashtag-container">
-                        <Row className="hash-label">Recommended Hashtags</Row>
-                        <Row id="hashtag-buttons" xs="auto">
-                            {
+                    </div>
+                    <div id="recommended-hashtag-container">
+                        <div className="hash-label title hashtag-title">Recommended Hashtags</div>
+                        <div id="hashtag-buttons">
+                            {hashtagState.top3.slice(1).length > 0?
                                 <CustomToggleButtonGroup
                                     className="hashtag-buttons-group"
                                     onChange={handleToggleTag}
@@ -263,19 +251,24 @@ function HashFeed() {
                                                 </ToggleButton>
                                             );
                                         })}
-                                </CustomToggleButtonGroup>
+                                </CustomToggleButtonGroup>:
+                                <div className="no-hashtag">
+                                    <span>😵</span><br/>
+                                    No recommended hashtag!
+                                </div>
                             }
-                        </Row>
-                    </Row>
-                    <HashFeedPosts></HashFeedPosts>
-                    <NavigationBar navReportCallback={navReportCallback} />
-                </div>
-            ) : (
-                <div style={{ fontSize: "20px", marginTop: "20px" }}>
+                        </div>
+                        <HashFeedPosts></HashFeedPosts>
+                    </div>
+                </Content>
+
+) : (
+    <div style={{ fontSize: "20px", marginTop: "20px" }}>
                     Loading
                 </div>
             )}
-        </Container>
+            <NavigationBar navReportCallback={navReportCallback} />
+        </Layout>
     );
 }
 
