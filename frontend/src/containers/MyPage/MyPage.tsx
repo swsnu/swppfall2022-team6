@@ -85,9 +85,9 @@ function MyPage() {
       >
         <div id="button-container">
             <ArrowLeftOutlined
-                id="back-button"
-                className="button"
-                onClick={onClickBackButton}
+              id="back-button"
+              className="button"
+              onClick={onClickBackButton}
             />
         </div>
         <div id="mypage-title">My Page</div>

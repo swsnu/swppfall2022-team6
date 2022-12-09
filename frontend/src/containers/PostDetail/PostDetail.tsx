@@ -3,6 +3,9 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 
+import { Layout } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons"
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
@@ -11,9 +14,11 @@ import PostList from "../../components/PostList/PostList";
 import Loading from "../../components/Loading/Loading";
 import { PostType } from "../../store/slices/post";
 import { selectUser } from "../../store/slices/user";
+import { PositionType, selectPosition } from "../../store/slices/position";
 
 import "./PostDetail.scss";
-import { PositionType, selectPosition } from "../../store/slices/position";
+
+const { Header, Content } = Layout;
 
 function PostDetail() {
     const postListCallback = () => {
@@ -64,26 +69,30 @@ function PostDetail() {
     }, [refresh, id]);
 
     return (
-        <div className="PostDetail">
-            <div id="upper-container">
-                <div id="page-header">
-                    <button id="back-button"
-                    aria-label='back'
-                    onClick={onClickBackButton}>
-                        <FontAwesomeIcon icon={faChevronLeft} />
-                    </button>
+        <Layout className="PostDetail">
+            <Header
+                id="header-container"
+                className="Header"
+                style={{ backgroundColor: "white" }}
+            >
+                <div id="button-container">
+                    <ArrowLeftOutlined
+                    id="back-button"
+                    className="button"
+                    onClick={onClickBackButton}
+                    />
                 </div>
-            </div>
+            </Header>
             { isLoading 
             ? <Loading />
-            : <div>
+            : <Content className="Content">
                 <div id="main-post-container">
                     <div id="upper-post-container">
                         <div id="author-main-badge">
                             <img
                                 alt=""
                                 src={userState.userBadges.find((badge) => badge.id === mainPost.badge_id)?.image}
-                                style={{ height: "5vh", width: "auto" }} />
+                            />
                         </div>
                         <div id="author-container">
                             <div id="author-info">
@@ -92,7 +101,6 @@ function PostDetail() {
                                 </div>
                                 <div
                                     id="time-and-location"
-                                    className="d-flex justify-content-start fw-light gap-1 fs-7 mt-1"
                                 >
                                     <div id="author-location"
                                         style={{ fontSize: "11px" }}>
@@ -155,14 +163,14 @@ function PostDetail() {
                             replyTo={Number(id)}
                             allPosts={replyPosts} />
                     </div>
-                </div>
+                </Content>
             }
             <div className="navbar-container">
                 <NavigationBar
                     navReportCallback={() => {}}
                 />
             </div>
-        </div>
+        </Layout>
     );
 }
 
