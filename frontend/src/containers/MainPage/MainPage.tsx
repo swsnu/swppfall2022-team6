@@ -103,7 +103,7 @@ const MainPage: React.FC = ()=>{
         <Layout className="MainPage">
             <Header className="Header" style={{backgroundColor: "white"}}>
                 <img src={Logo} className="nowsee-logo"/>
-                <button className="mypage-button" onClick={onClickMyPageIcon}>
+                <button className="mypage-button" onClick={onClickMyPageIcon} aria-label="mypage-button">
                     <img src="/mypage-icon.svg"/>
                 </button>
             </Header>
