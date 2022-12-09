@@ -11,8 +11,10 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store";
 import { useParams } from "react-router";
+import { PositionType } from "../../store/slices/position";
 
 export interface IProps {
+    currPosition: PositionType | null;
     openPost: boolean;
     setOpenPost: React.Dispatch<React.SetStateAction<boolean>>;
     postModalCallback: () => void;
@@ -21,6 +23,7 @@ export interface IProps {
 }
 
 function PostModal({
+    currPosition,
     openPost,
     setOpenPost,
     postModalCallback,
@@ -33,6 +36,24 @@ function PostModal({
     const dispatch = useDispatch<AppDispatch>();
     const { id } = useParams();
     const userState = useSelector(selectUser);
+    const geocoder = new kakao.maps.services.Geocoder();
+    const [address, setAddress] = useState<string>("");
+    useEffect(() => {
+        if (currPosition) {
+            geocoder.coord2RegionCode(
+                currPosition.lng,
+                currPosition.lat,
+                (result, status) => {
+                    if (
+                        status === kakao.maps.services.Status.OK &&
+                        !!result[0].address_name
+                    ) {
+                        setAddress(result[0].address_name);
+                    }
+                }
+            );
+        }
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -44,6 +65,11 @@ function PostModal({
             formData.append("hashtags", hashtags);
             if (type === "Reply")
                 formData.append("replyTo", replyTo.toString());
+            if (currPosition){
+                formData.append("latitude", currPosition.lat.toString());
+                formData.append("longitude", currPosition.lng.toString());
+                formData.append("location", address);
+            }
             //@ts-ignore
             const response = await dispatch(addPost(formData));
             if (response.payload) {

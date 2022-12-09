@@ -277,6 +277,7 @@ function AreaFeed() {
                 </Row>
                 <Row id="postlist-container">
                     <PostList
+                        currPosition={position}
                         type={"Post"}
                         postListCallback={postListCallback}
                         replyTo={0}

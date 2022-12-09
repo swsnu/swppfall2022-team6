@@ -127,6 +127,7 @@ function MyPage() {
             </Row>
             <Row id="postlist-container">
                 <PostList
+                    currPosition={null}
                     type={"Mypage"}
                     postListCallback={() => {}}
                     replyTo={0}

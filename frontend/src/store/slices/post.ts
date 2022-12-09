@@ -11,6 +11,7 @@ export type PostType = {
     image: string; // image url
     latitude: number;
     longitude: number;
+    location: string;
     created_at: string;
     reply_to_author: string | null; // id of the chained post
     hashtags: Array<HashtagType>;

@@ -185,6 +185,7 @@ function HashFeed() {
                 </Row>
                 <Row id="postlist-container">
                     <PostList
+                        currPosition={positionState.position}
                         allPosts={queryPosts}
                         type={"Post"}
                         replyTo={0}

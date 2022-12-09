@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ReportModal.scss";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Slider, TextField } from "@mui/material";
@@ -42,6 +42,23 @@ function ReportModal({
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const location = useLocation();
+
+    const geocoder = new kakao.maps.services.Geocoder();
+    const [address, setAddress] = useState<string>("");
+    useEffect(() => {
+        geocoder.coord2RegionCode(
+            currPosition.lng,
+            currPosition.lat,
+            (result, status) => {
+                if (
+                    status === kakao.maps.services.Status.OK &&
+                    !!result[0].address_name
+                ) {
+                    setAddress(result[0].address_name);
+                }
+            }
+        );
+    }, []);
 
     const report_achievement_handler = (achievement_types: Achievement[]) => {
         for (const achievement_type of achievement_types) {
@@ -94,6 +111,7 @@ function ReportModal({
             if (image) formData.append("image", image);
             formData.append("content", content);
             formData.append("hashtags", "");
+            formData.append("location", address);
             //@ts-ignore
             await dispatch(addPost(formData));
         }

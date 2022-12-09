@@ -36,7 +36,8 @@ class PostTestCase(TestCase):
             user=new_user,
             content='content',
             latitude=36.0,
-            longitude=128.0
+            longitude=128.0,
+            location="loc"
         )
         new_post.created_at=date(2020, 10, 20)
         new_post.save()
@@ -46,6 +47,7 @@ class PostTestCase(TestCase):
             content='content',
             latitude=5.0,
             longitude=12.0,
+            location='loc',
             reply_to=new_post
         )
         new_post2.created_at=date(2020, 10, 21)
@@ -96,6 +98,7 @@ class PostTestCase(TestCase):
         self.assertIsNone(posts[0]['image'])
         self.assertEqual(posts[0]['latitude'], 5.0)
         self.assertEqual(posts[0]['longitude'], 12.0)
+        self.assertEqual(posts[0]['location'], 'loc')
         self.assertEqual(posts[0]['reply_to_author'], 'temporary')
         self.assertEqual(posts[0]['hashtags'], [])
         self.assertIsNotNone(posts[0]['created_at'])
@@ -105,6 +108,7 @@ class PostTestCase(TestCase):
         self.assertIsNone(posts[1]['image'])
         self.assertEqual(posts[1]['latitude'], 36.0)
         self.assertEqual(posts[1]['longitude'], 128.0)
+        self.assertEqual(posts[0]['location'], 'loc')
         self.assertEqual(posts[1]['reply_to_author'], None)
         self.assertEqual(
             posts[1]['hashtags'],
@@ -150,6 +154,7 @@ class PostTestCase(TestCase):
                 'image': None,
                 'latitude': 36.0,
                 'longitude': 128.0,
+                'location': 'loc',
                 'created_at': data[0]['created_at'],
                 'reply_to_author': None,
                 'hashtags': [{'id': 1, 'content': 'hashtag'}]
@@ -172,6 +177,7 @@ class PostTestCase(TestCase):
             content='content2',
             latitude=5.0,
             longitude=12.0,
+            location='loc2',
         )
         new_post3.created_at=date(2020, 10, 21)
         new_post3.save()
@@ -192,6 +198,7 @@ class PostTestCase(TestCase):
                     'image': None,
                     'latitude': 36.0,
                     'longitude': 128.0,
+                    'location': 'loc',
                     'created_at': data['posts'][0]['created_at'],
                     'reply_to_author': None,
                     'hashtags': [{'id': 1, 'content': 'hashtag'},
@@ -219,6 +226,7 @@ class PostTestCase(TestCase):
                     'image': None,
                     'latitude': 36.0,
                     'longitude': 128.0,
+                    'location': 'loc',
                     'created_at': data['post']['created_at'],
                     'reply_to_author': None,
                     'hashtags': [{'id': 1, 'content': 'hashtag'}],
@@ -230,6 +238,7 @@ class PostTestCase(TestCase):
                     'image': None,
                     'latitude': 5.0,
                     'longitude': 12.0,
+                    'location': 'loc2',
                     'created_at': data['replies'][0]['created_at'],
                     'reply_to_author': 'temporary',
                     'hashtags': [],
