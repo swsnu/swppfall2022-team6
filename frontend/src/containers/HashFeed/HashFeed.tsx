@@ -27,6 +27,7 @@ import { CustomSearchBar } from "../AreaFeed/AreaFeed";
 
 import { Map, MapMarker, MarkerClusterer } from "react-kakao-maps-sdk";
 import { selectPosition } from "../../store/slices/position";
+import Loading from "../../components/Loading/Loading";
 
 const CustomToggleButtonGroup = styled(ToggleButtonGroup)({
     display: "flex",
@@ -39,7 +40,6 @@ const CustomToggleButtonGroup = styled(ToggleButtonGroup)({
 
 function HashFeed() {
     const { id } = useParams();
-    const userState = useSelector(selectUser);
     const hashtagState = useSelector(selectHashtag);
     const postState = useSelector(selectPost);
     const positionState = useSelector(selectPosition);
@@ -54,9 +54,7 @@ function HashFeed() {
     const dispatch = useDispatch<AppDispatch>();
 
     const fetchData = async () => {
-        const user = userState.currUser as UserType;
         setRefresh(false);
-
         const queryPostPromise = await dispatch(fetchHashPosts(Number(id)));
         if (queryPostPromise.payload === undefined) navigate("/");
         const postData = queryPostPromise.payload as PostType[];
@@ -66,6 +64,7 @@ function HashFeed() {
     };
 
     useEffect(() => {
+        // TODO: loading
         if (refresh) {
             fetchData();
         }
@@ -271,9 +270,7 @@ function HashFeed() {
                     <NavigationBar navReportCallback={navReportCallback} />
                 </div>
             ) : (
-                <div style={{ fontSize: "20px", marginTop: "20px" }}>
-                    Loading
-                </div>
+                <Loading />
             )}
         </Container>
     );

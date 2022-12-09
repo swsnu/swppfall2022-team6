@@ -3,7 +3,7 @@ import React from "react";
 export const Loading = () => {
     return (
         <div>
-            <img src="../public/loading-spinner.svg" alt="Loading contents..." width="40%"/>
+            <img src="/loading-spinner.svg" alt="Loading contents..." width="4%" height="4%"/>
         </div>
     )
 }
