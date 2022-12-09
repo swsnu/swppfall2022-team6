@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -14,20 +14,20 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import SearchBar from "material-ui-search-bar";
 import { styled } from "@material-ui/core/styles";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-import Switch from "react-switch";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRotateLeft, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import { Layout, Checkbox, Space, Button } from "antd";
+import { ArrowLeftOutlined, SyncOutlined } from "@ant-design/icons"
 
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Statistics from "../../components/Statistics/Statistics";
 import PostList from "../../components/PostList/PostList";
 
-import "./AreaFeed.scss";
 import { PositionType, selectPosition } from "../../store/slices/position";
 import { selectUser, UserType } from "../../store/slices/user";
-import { unwrapResult } from "@reduxjs/toolkit";
 import { Address } from "../../components/SkimStatistics/SkimStatistics";
+
+import "./AreaFeed.scss";
+
+const { Header, Content } = Layout;
 
 type WeatherType = {
     icon?: string;
@@ -40,15 +40,6 @@ export const CustomSearchBar = styled(SearchBar)({
     borderRadius: "10px",
     fontFamily: '"NanumGothic", sans-serif',
     fontSize: "10px",
-});
-
-const CustomToggleButtonGroup = styled(ToggleButtonGroup)({
-    display: "flex",
-    gap: "10px",
-    fontFamily: '"NanumGothic", sans-serif',
-    fontSize: "10px",
-    height: "25px",
-    borderRadius: "0px",
 });
 
 function AreaFeed() {
@@ -78,13 +69,6 @@ function AreaFeed() {
         position = positionState.position;
     }
 
-    // let statisticsJSX = JSX.Element;
-    // useEffect(() => {
-    //     statisticsJSX = <Statistics />;
-    // }, [reportState.reports, user]);
-    // const statisticsJSX = useCallback(() => {
-    //     return <Statistics />;
-    // }, [user, reportState.reports]);
     const statisticsJSX = useMemo(() => {
         return <Statistics />;
     }, [reportState.reports, user]);
@@ -165,13 +149,7 @@ function AreaFeed() {
         if (onlyPhoto) {
             resultPosts = resultPosts.filter((post: PostType) => post.image);
         }
-        // if (selectTag) {
-        //     resultPosts = resultPosts.filter(
-        //         (post: PostType) =>
-        //             post.hashtags &&
-        //             post.hashtags.map((h) => h.content).includes(selectTag)
-        //     );
-        // }
+
         setQueryPosts(resultPosts);
     }, [selectTag, onlyPhoto]);
 
@@ -196,15 +174,6 @@ function AreaFeed() {
         setRefresh(true);
     };
 
-    const handleToggleTag = (
-        e: React.MouseEvent<HTMLElement>,
-        value: number
-    ) => {
-        // if (value === selectTag) setSelectTag(undefined);
-        // else setSelectTag(value);
-        setSelectTag(value);
-        navigate(`/hashfeed/${value}`);
-    };
     const AreaFeedPosts = () => {
         const [searchQuery, setSearchQuery] = useState<string>("");
         const onSubmitSearchBox = () => {
@@ -234,10 +203,10 @@ function AreaFeed() {
         };
         return (
             <div>
-                <Row id="search-box-container">
-                    <Row className="area-label">Posts</Row>
-                    <Row id="search-container">
-                        <Col md={6}>
+                <div id="search-box-container">
+                    <h2 className="title post-title">Today's NowSee tweets</h2>
+                    <div id="search-container">
+                        <div >
                             <CustomSearchBar
                                 className="search-box"
                                 value={searchQuery}
@@ -248,34 +217,25 @@ function AreaFeed() {
                                 onRequestSearch={() => onSubmitSearchBox()}
                                 placeholder=""
                             />
-                        </Col>
-                        <Col md={3} id="only-photos-button-container">
+                        </div>
+                        <div id="only-photos-button-container">
                             <div id="only-photos-button">
-                                <Switch
-                                    onChange={onSelectOnlyPhotos}
-                                    checked={onlyPhoto}
-                                    onColor="#3185e7"
-                                    checkedIcon={false}
-                                    uncheckedIcon={false}
-                                    height={20}
-                                    width={40}
-                                    boxShadow="0 0 2px 2px #999"
-                                />
+                                <Checkbox checked={onlyPhoto} onChange={onSelectOnlyPhotos}/>
                                 <span> Only Photos</span>
                             </div>
-                        </Col>
-                    </Row>
+                        </div>
+                    </div>
                     {queryHash ? (
-                        <Row
-                            className="area-label"
+                        <div
+                            className="go-to-hash"
                             onClick={onQueryHashClick}
                             data-testid="queryHash"
                         >
-                            Go to #{queryHash}
-                        </Row>
+                            <span>Go to </span><span className="button">#{queryHash}</span>
+                        </div>
                     ) : null}
-                </Row>
-                <Row id="postlist-container">
+                </div>
+                <div id="postlist-container">
                     <PostList
                         currPosition={position}
                         type={"Post"}
@@ -283,77 +243,77 @@ function AreaFeed() {
                         replyTo={0}
                         allPosts={queryPosts}
                     />
-                </Row>
+                </div>
             </div>
         );
     };
 
     return (
-        <Container className="AreaFeed">
-            <Row id="areafeed-upper-container">
-                <Col id="button-container">
-                    <button id="back-button" onClick={onClickBackButton}>
-                        <FontAwesomeIcon icon={faChevronLeft} />
-                    </button>
-                    <button id="refresh-button" onClick={onClickRefreshButton}>
-                        <FontAwesomeIcon icon={faRotateLeft} />
-                    </button>
-                </Col>
+        <Layout className="AreaFeed">
+            <Header id="areafeed-upper-container" className="Header"  style={{backgroundColor: "white"}}>
+                <div id="button-container">
+                    <ArrowLeftOutlined id="back-button" className="button" onClick={onClickBackButton}/>
+                    <SyncOutlined id="refresh-button" className="button" onClick={onClickRefreshButton}/>
+                </div>
                 <Col id="weather-container">
                     {" "}
                     <Row id="upper-weather-container">
+                        <div id="weather-temp-status">
+                            <span id="weather-temp">{weather.temp}&deg;C,</span>
+                            <span id="weather-status">{weather.main}</span>
+                        </div>
                         <img
                             src={`http://openweathermap.org/img/w/${weather.icon}.png`}
                             className="weather-icon"
                         />
+                        {/* <div id="weather-status">{weather.main}</div> */}
                     </Row>
-                    <Row id="lower-weather-container">
-                        <div id="weather-temp">{weather.temp}&deg;C</div>
-                        <div id="weather-status">{weather.main}</div>
-                    </Row>
-                    <Address position={positionState.position} />
+                    <div id="lower-weather-container">
+                        <img src="/location-svgrepo-com.svg" />
+                        <Address position={positionState.position} />
+                    </div>
                 </Col>
-            </Row>
-            {isLoading ? (
-                <div>
-                    <Row>{statisticsJSX}</Row>
-                    <Row id="recommended-hashtag-container">
-                        <Row className="area-label">Recommended Hashtags</Row>
-                        <Row id="hashtag-buttons" xs="auto">
-                            {
-                                <CustomToggleButtonGroup
-                                    value={selectTag}
-                                    exclusive
-                                    onChange={handleToggleTag}
-                                    className="hashtag-buttons-group"
-                                >
-                                    {hashtagState.top3.map((item, i) => {
-                                        return (
-                                            <ToggleButton
-                                                key={i}
-                                                value={item.id}
-                                                className="hashtag"
-                                                style={{
-                                                    textTransform: "none",
-                                                }}
-                                            >
-                                                {"#" + item.content}
-                                            </ToggleButton>
-                                        );
-                                    })}
-                                </CustomToggleButtonGroup>
-                            }
-                        </Row>
-                    </Row>
-                    <AreaFeedPosts></AreaFeedPosts>
-                    <NavigationBar navReportCallback={navReportCallback} />
-                </div>
-            ) : (
-                <div style={{ fontSize: "20px", marginTop: "20px" }}>
-                    Loading
-                </div>
-            )}
-        </Container>
+            </Header>
+            <Content className="Content" style={{backgroundColor: "white"}}>
+
+                {isLoading ? (
+                    <Container className="Container">
+                        <div className="areafeed-statistics-container">
+                            <h2 className="title">
+                                Today's weather is likely... 
+                            </h2>
+                            <div>{statisticsJSX}</div>
+                            <div id="recommended-hashtag-container">
+                                <h2 className="title hashfeed-title">Go to HashFeed</h2>
+                                <div id="hashtag-buttons">
+                                    <Space >
+                                        {hashtagState.top3.map((item, i) => {
+                                            return (
+                                                <Button
+                                                    key={i}
+                                                    className="hashtag"
+                                                    onClick={()=>{navigate(`/hashfeed/${item.id}/`)}}
+                                                >
+                                                    {"#" + item.content}
+                                                </Button>
+                                            );
+                                        })}
+                                    </Space>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <AreaFeedPosts></AreaFeedPosts>
+                        </div>
+                    </Container>
+                ) : (
+                    <div style={{ fontSize: "20px", marginTop: "20px" }}>
+                        Loading
+                    </div>
+                )}
+            </Content>
+            <NavigationBar navReportCallback={navReportCallback} />
+        </Layout>
     );
 }
 
