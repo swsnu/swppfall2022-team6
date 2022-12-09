@@ -75,7 +75,7 @@ function MyPage() {
         return <Navigate to="/signin" />;
     }
     return (
-        <Container id="MyPage">
+        <Container className="MyPage">
             <Row id="header-container">
                 <Col id="back-button-container" md={1}>
                     <button id="back-button" aria-label="back-button" onClick={onClickBackButton}>
