@@ -1,29 +1,50 @@
-#upper-container {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    font-family: "NanumGothic", serif;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 140%;
-    margin: 0 auto;
-    width: 100%;
-    padding-bottom: 5vh;
+$main-color: #3185e7;
+$sub-color: #F88282;
+$small-text: 12px;
+$button-size: 20px;
+$top: 20px;
+
+.PostDetail {
+  height: 100%;
+  width: 100%;
+  background-color: white;
+
+  font-family: "NanumGothic", sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: $small-text;
+  line-height: 140%;
+  color: rgba(0, 0, 0, 0.75);
+  overflow: hidden;
 }
 
-#page-header {
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding: 0px;
-    gap: 6px;
-    width: 100%;
+.PostDetail .Header {
+	padding: 10px;
+	filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
 }
 
-#back-button {
-    background-color: transparent;
-    border: none;
-    font-size: 30px;
+.PostDetail #button-container {
+  margin: 0;
+  // background-color: #ddd;
+  text-align: left;
+
+  position: absolute;
+  left: 5vw;
+  top: $top;
+  width: 100px;
+  height: $button-size;
+
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+
+.PostDetail #button-container .button {
+  font-size: $button-size;
+  height: $button-size;
+  width: $button-size;
+  cursor: pointer;
+  z-index: 100;
 }
 
 #main-post-container {
@@ -48,8 +69,8 @@
     gap: 10px;
 }
 
-#author-main-badge {
-    width: 10%;
+#author-main-badge img{
+    width: 5vw;
 }
 
 #author-container {
@@ -57,7 +78,8 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    width: 80%;
+    width: 100%;
+		margin-top: 40px;
 }
 
 #author-info {
@@ -66,6 +88,13 @@
     justify-content: flex-start;
     align-items: flex-start;
     width: 100%;
+}
+
+#time-and-location {
+	font-family: "NanumGothic", serif;
+	font-weight: 500;
+	position: relative;
+	top: -10px;
 }
 
 #author-name {

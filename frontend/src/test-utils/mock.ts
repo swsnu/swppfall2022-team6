@@ -84,10 +84,12 @@ const stubUserInitialState: UserState = {
         {
             id: 1,
             user_name: "user1",
+            badge_id: 1,
             content: "CONTENT-t1",
             image: "",
             latitude: 0,
             longitude: 0,
+            location: "Location",
             created_at: "2022-11-20T8:43:28UTC+9",
             reply_to_author: null,
             hashtags: [stubHashtagInitialState.hashtags[0]],
@@ -95,21 +97,81 @@ const stubUserInitialState: UserState = {
         {
             id: 2,
             user_name: "user2",
+            badge_id: 1,
             content: "CONTENT-t2",
             image: "/logo192.png",
             latitude: 0,
             longitude: 0,
+            location: "Location",
             created_at: "2022-11-21T8:43:28UTC+9",
             reply_to_author: null,
             hashtags: [stubHashtagInitialState.hashtags[1]],
         },
     ],
+    // TODO: fill in mock badges
+    // TODO: fill in mock mainBadge
+    userBadges: [
+        {
+            id: 1,
+            title: "badge1",
+            image: "src1",
+            description: "badge1",
+            is_fulfilled: true,
+        },
+        {
+            id: 2,
+            title: "badge2",
+            image: "src2",
+            description: "badge2",
+            is_fulfilled: false,
+        }
+        ,
+        {
+            id: 3,
+            title: "badge3",
+            image: "src3",
+            description: "badge3",
+            is_fulfilled: true,
+        }
+    ],
+    mainBadge: {
+        id: 1,
+        title: "badge1",
+        image: "src1",
+        description: "badge1",
+        is_fulfilled: true,
+    }
 }
 
 const stubUserInitialState2: UserState = {
     users: [],
     currUser: null,
     userPosts: [],
+    userBadges: [
+        {
+            id: 1,
+            title: "badge1",
+            image: "src1",
+            description: "badge1",
+            is_fulfilled: true,
+        },
+        {
+            id: 2,
+            title: "badge2",
+            image: "src2",
+            description: "badge2",
+            is_fulfilled: false,
+        }
+        ,
+        {
+            id: 3,
+            title: "badge3",
+            image: "src3",
+            description: "badge3",
+            is_fulfilled: true,
+        }
+    ],
+    mainBadge: null,
 }
 
 const stubPostInitialState: PostState = {
@@ -117,10 +179,12 @@ const stubPostInitialState: PostState = {
         {
             id: 1,
             user_name: "user1",
+            badge_id: 1,
             content: "CONTENT-t1",
             image: "",
             latitude: 0,
             longitude: 0,
+            location: "Location",
             created_at: "2022-11-20T8:43:28UTC+9",
             reply_to_author: null,
             hashtags: [stubHashtagInitialState.hashtags[0]],
@@ -128,10 +192,12 @@ const stubPostInitialState: PostState = {
         {
             id: 2,
             user_name: "user2",
+            badge_id: 1,
             content: "CONTENT-t2",
             image: "/logo192.png",
             latitude: 0,
             longitude: 0,
+            location: "Location",
             created_at: "2022-11-21T8:43:28UTC+9",
             reply_to_author: null,
             hashtags: [stubHashtagInitialState.hashtags[1]],
@@ -139,10 +205,12 @@ const stubPostInitialState: PostState = {
         {
             id: 3,
             user_name: "user3",
+            badge_id: 1,
             content: "CONTENT-t3",
             image: "",
             latitude: 0,
             longitude: 0,
+            location: "Location",
             created_at: "2022-11-22T8:43:28UTC+9",
             reply_to_author: null,
             hashtags: [stubHashtagInitialState.hashtags[2]],
@@ -150,10 +218,12 @@ const stubPostInitialState: PostState = {
         {
             id: 4,
             user_name: "user4",
+            badge_id: 1,
             content: "CONTENT-t4",
             image: "",
             latitude: 0,
             longitude: 0,
+            location: "Location",
             created_at: "2022-11-23T8:43:28UTC+9",
             reply_to_author: null,
             hashtags: [stubHashtagInitialState.hashtags[3]],

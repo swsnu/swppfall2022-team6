@@ -1,15 +1,17 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "..";
-import { HashtagType } from "./hashtag";
+import { hashtagActions, HashtagType } from "./hashtag";
 import axios from "axios";
 
 export type PostType = {
     id: number;
     user_name: string;
+    badge_id: number;
     content: string;
     image: string; // image url
     latitude: number;
     longitude: number;
+    location: string;
     created_at: string;
     reply_to_author: string | null; // id of the chained post
     hashtags: Array<HashtagType>;
@@ -46,7 +48,7 @@ export const postSlice = createSlice({
 
 export const fetchPosts = createAsyncThunk(
     "post/fetchPosts",
-    async (data: { lat: number; lng: number; radius: number }) => {
+    async (data: { lat: number; lng: number; radius: number }, {dispatch}) => {
         const { lat, lng, radius } = data;
         const response = await axios.get<{
             posts: PostType[];
@@ -54,16 +56,18 @@ export const fetchPosts = createAsyncThunk(
         }>("/post/", {
             params: { latitude: lat, longitude: lng, radius: radius },
         });
+        dispatch(hashtagActions.addTop3Hashtags(response.data["top3_hashtags"]))
         return response.data["posts"];
     }
 );
 export const fetchHashPosts = createAsyncThunk(
     "post/fetchHashPosts",
-    async (id: number) => {
+    async (id: number, {dispatch}) => {
         const response = await axios.get<{
             posts: PostType[];
             top3_hashtags: HashtagType[];
         }>(`/post/${id}/hashfeed/`);
+        dispatch(hashtagActions.addTop3Hashtags(response.data["top3_hashtags"]))
         return response.data["posts"];
     }
 );
@@ -92,7 +96,7 @@ export const addPost = createAsyncThunk(
                 "Content-Type": "multipart/form-data",
             },
         });
-        dispatch(postActions.addPost(response.data));
+        dispatch(postActions.addPost(response.data));// update Attendance Achievement(login)
         return response.data;
     }
 );

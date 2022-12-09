@@ -98,7 +98,7 @@ $tablet: 1024px;
 
 @include mobile {
     #PostList {
-        height: 45vh;
+        height: calc(100vh - 420px);
     }
     #add-post-button {
         left: 75%;
@@ -106,7 +106,7 @@ $tablet: 1024px;
 }
 @include tablet {
     #PostList {
-        height: 57vh;
+        height: calc(100vh - 420px);
     }
     #add-post-button {
         left: 85%;
@@ -115,7 +115,8 @@ $tablet: 1024px;
 
 @include desktop {
     #PostList {
-        height: 55vh;
+        height: calc(100vh - 200px);
+        width: 100%;
     }
     #add-post-button {
         left: 90%;

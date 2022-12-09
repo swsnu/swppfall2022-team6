@@ -12,14 +12,16 @@ from rest_framework.decorators import action
 from post.models import Post, PostHashtag
 from hashtag.models import Hashtag
 from .serializer import PostSerializer
-# from haversine import haversine
+from haversine import haversine
 from collections import Counter
 
 #from rest_framework.decorators import action
+MAX_POST_LEN = 30
 
 def hash_recommend(posts, user, pk=0):
-    post_hashtags = [Hashtag.objects.filter(posthashtag__post=post).all()
-    for post in posts if Hashtag.objects.filter(posthashtag__post=post)]
+    post_hashtags = [Hashtag.objects.filter
+    (posthashtag__post__id=post['id']).all()
+    for post in posts]
 
     #unique hashtags in posts
     keys = [pk] if pk != 0 else []
@@ -78,26 +80,31 @@ class PostViewSet(viewsets.GenericViewSet):
     @transaction.atomic
     def create(self, request):
         user = request.user
+        print('before create')
         post=Post.objects.create(user=user,
         content=request.POST['content'],
         image=request.FILES['image'] if 'image' in request.FILES else None,
-        latitude=37.0, longitude=127.0, created_at=datetime.now(),
+        latitude=request.POST['latitude'],
+        longitude=request.POST['longitude'],
+        location=request.POST['location'],
+        created_at=datetime.now(),
         reply_to=Post.objects.get(id=int(request.POST['replyTo']))
         if 'replyTo' in request.POST else None)
+        print('after create')
         hashid = ''
         if 'hid' in request.POST:
             hashid = Hashtag.objects.get(id=int(request.POST['hid']))
             PostHashtag.objects.create(post=post, hashtag=hashid)
             hashid = hashid.content
         if request.POST['hashtags'] != '':
-            for hashtag in request.POST['hashtags'].strip().split(' '):
-                hashtag = hashtag.lstrip('#')
+            for hashtag in request.POST['hashtags'].strip().replace('#', ' ').split(' '):
+                #hashtag = hashtag.lstrip('#')
                 if hashtag == hashid: continue
                 h = Hashtag.objects.filter(content=hashtag).first()
                 if h is None:
                     h = Hashtag.objects.create(content=hashtag)
                 PostHashtag.objects.create(post=post, hashtag=h)
-        return Response('create post', status=status.HTTP_201_CREATED)
+        return Response(self.get_serializer(post, many=False).data, status=status.HTTP_201_CREATED)
 
     # GET /post/
     def list(self, request):
@@ -129,15 +136,15 @@ class PostViewSet(viewsets.GenericViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # coordinate = (float(latitude),float(longitude))
+        coordinate = (float(latitude),float(longitude))
         # TODO: filter by created_at
         all_posts = Post.objects.all()
-        # ids = [post.id for post in all_posts
-        #     if haversine(coordinate, (post.latitude, post.longitude))
-        #     <= float(radius)]
-        ids = [post.id for post in all_posts]
+        ids = [post.id for post in all_posts
+            if haversine(coordinate, (post.latitude, post.longitude))
+            <= float(radius)]
+        #ids = [post.id for post in all_posts]
 
-        posts = all_posts.filter(id__in=ids).order_by('-created_at')
+        posts = all_posts.filter(id__in=ids).order_by('-created_at')[:MAX_POST_LEN]
 
         # post_hashtags =
         # [Hashtag.objects.filter(posthashtag__post=post).values()
@@ -152,7 +159,7 @@ class PostViewSet(viewsets.GenericViewSet):
 
         #hashtag_count = Counter(hashtags)
         #hashtags = sorted(set(hashtags), key=lambda x: -hashtag_count[x])[:3]
-        hashtags = hash_recommend(posts, user)
+        hashtags = hash_recommend(posts.values('id'), user)
 
         data = {}
         data['posts'] = self.get_serializer(posts, many=True).data
@@ -172,7 +179,7 @@ class PostViewSet(viewsets.GenericViewSet):
         ids = list((ph.post.id for ph in post_hashtags
         if ph.hashtag.id == int(pk)))
 
-        posts = Post.objects.all().filter(id__in=ids).order_by('-created_at')
+        posts = Post.objects.all().filter(id__in=ids).order_by('-created_at')[:MAX_POST_LEN]
 
         # post_hashtags =
         # [Hashtag.objects.filter(posthashtag__post=post).values()
@@ -184,9 +191,10 @@ class PostViewSet(viewsets.GenericViewSet):
         #         if hashtag['id'] not in keys:
         #             keys.append(hashtag['id'])
         #             hashtags.append(hashtag)
-        hashtags = hash_recommend(posts, user, int(pk))
+        content = get_object_or_404(Hashtag, pk=int(pk))
+        hashtags = hash_recommend(posts.values('id'), user, int(pk))
         hashtags.insert(0, {'id':pk,
-        'content':Hashtag.objects.get(id=int(pk)).content})
+        'content':content.content})
 
         data = {}
         data['top3_hashtags'] = hashtags
@@ -205,7 +213,7 @@ class PostViewSet(viewsets.GenericViewSet):
         post = get_object_or_404(Post, pk=pk)
         post_info = self.get_serializer(post, many=False).data
         # user_info = {'user_name': post.user.username}
-        replies = Post.objects.filter(reply_to=post)
+        replies = Post.objects.filter(reply_to=post)[:MAX_POST_LEN]
         reply_info = self.get_serializer(replies, many=True).data
         data = {}
         data['post'] = post_info
@@ -225,11 +233,13 @@ class PostViewSet(viewsets.GenericViewSet):
         post = get_object_or_404(Post, pk=pk)
         # Add chained posts in order
         chain = []
-        while post.reply_to:
+        replen = 0
+        while post.reply_to and replen < MAX_POST_LEN:
             reply_id = post.reply_to.id
             reply_post = Post.objects.get(id=reply_id)
             chain.append(reply_post)
             post = reply_post
+            replen += 1
         return Response(
             self.get_serializer(chain, many=True).data,
             status=status.HTTP_200_OK
