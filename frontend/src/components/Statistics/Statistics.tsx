@@ -4,8 +4,9 @@ import { PieChart } from "react-minimal-pie-chart";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { ReportType, selectReport } from "../../store/slices/report";
+import report, { ReportType, selectReport } from "../../store/slices/report";
 import { useSelector } from "react-redux";
+import BarGraph from "../BarGraph/BarGraph";
 export interface dataType {
     weather: string;
     range: number;
@@ -52,10 +53,16 @@ const PieLabel = ({
     );
 };
 
+function getWindowSize() {
+    const {innerWidth, innerHeight} = window;
+    return {innerWidth, innerHeight};
+}
+
 function Statistics() {
     const reportState = useSelector(selectReport);
     const [maxIndex, setMaxIndex] = useState<number>(0);
     const [reportPerc, setReportPerc] = useState<number[]>([0, 0, 0, 0]);
+    const [windowSize, setWindowSize] = useState(getWindowSize());
 
     const barRef = useRef<SVGElement>();
 
@@ -74,114 +81,21 @@ function Statistics() {
         });
     }
 
-    const [w, h] = [350, 140];
+    const [w, h] = window.innerWidth>1000? [350, 140]: window.innerWidth>600?[350, 120]: [250, 120];
     // set the dimensions and margins of the graph
     const margin = { top: 20, right: 20, bottom: 30, left: 90 },
         width = w - margin.left - margin.right,
         height = h - margin.top - margin.bottom;
 
-    const svgElement = barRef.current as SVGElement;
-    const barHeight = 15;
-
-    // append the svg object to the body of the page
-    const svg = d3
-        .select(svgElement)
-        .call((g) => g.select("g").remove())
-        .attr("height", height + margin.top + margin.bottom)
-        .attr("width", width + margin.left + margin.right)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    const x = d3.scaleLinear().domain([0, 5.5]).range([0, width]);
-    const y = d3
-        .scalePoint()
-        .range([0, height])
-        .domain(data.map((d) => d.weather));
-
-    // .padding(.1)
-
-    svg.selectAll(".bar-background")
-        .data(data)
-        .enter()
-        .append("rect")
-        .attr("class", "bar")
-        .attr("ry", barHeight / 2)
-        .attr("rx", barHeight / 2)
-        //@ts-ignore
-        .attr("x", x(0))
-        .attr("width", x(5))
-        .attr("height", barHeight)
-        .attr("y", (d) => {
-            //@ts-ignore
-            return y(d.weather) + (y.bandwidth() - barHeight) / 2;
-        })
-        .attr("fill", "#EDF9FF");
-
-    const bar = svg
-        .selectAll(".bar-data")
-        .data(data)
-        .enter()
-        .append("rect")
-        .attr("class", "bar")
-        // .join(
-        //   (enter)=>enter.append(".bar"),
-        //   (update)=>update.attr("class", "bar"),
-        //   (exit)=>exit.remove()
-        // )
-        .attr("y", (d) => {
-            //@ts-ignore
-            return y(d.weather) + (y.bandwidth() - barHeight) / 2;
-        })
-        .attr("ry", barHeight / 2)
-        .attr("x", x(0))
-        .attr("rx", barHeight / 2)
-        //@ts-ignore
-        .attr("height", barHeight)
-        .attr("width", 0)
-        .attr("x", (d) => {
-            return x(0);
-        })
-        .transition()
-        .duration(750)
-        .delay(function (d, i) {
-            return i * 150;
-        })
-        //@ts-ignores
-        .attr("fill", "#3185E7")
-        .attr("width", (d) => x(d.range))
-        .attr("border", 0);
-
-    // label은 다음에 찾아보는걸로..
-    svg.selectAll(".text")
-        .data(data)
-        .enter()
-        .append("text")
-        .attr("class", "label")
-        .attr("x", x(5.5))
-        //@ts-ignore
-        .attr("y", function (d) {
-            //@ts-ignore
-            return y(d.weather) + (y.bandwidth() + 10) / 2;
-        })
-        .text((d) => {
-            return Math.round(d.range * 20) + "%";
-        })
-        .style("font-weight", "700")
-        .style("font-size", "12px")
-        .style("color", "rgba(0,0,0,50%)")
-        .style("font-family", "sans-serif")
-        .style("font-family", "NanumGothic")
-        .style("text-anchor", "middle");
-
-    svg.append("g")
-        .call(d3.axisLeft(y))
-        .style("font-weight", "700")
-        .style("stroke-width", 0)
-        .style("font-family", "NanumGothic")
-        .style("font-family", "sans-serif")
-        .style("font-size", "12px")
-        .style("color", "rgba(0,0,0,75%)");
-
+    useEffect(()=>{
+        function handleWindowResize() {
+            setWindowSize(getWindowSize());
+        }
+        window.addEventListener('resize', handleWindowResize);
+        return () => {
+            window.removeEventListener('resize', handleWindowResize);
+        };
+    }, [])
     useEffect(() => {
         const lenArray: number[] = [0, 0, 0, 0];
         reportState.reports.forEach((report) => {
@@ -242,21 +156,23 @@ function Statistics() {
             }}
         >
             {reportState.reports.length ? (
-                <Row
+                <div
                     style={{
                         margin: "20px",
-                        width: "600px",
                         display: "flex",
+                        flexDirection: window.innerWidth>1000?"column":"row",
                         alignItems: "center",
+                        textAlign: "center",
                         justifyContent: "space-between",
+                        gap: window.innerWidth>1000?"30px":"0px",
                     }}
                 >
-                    <Col
+                    <div
                         id="piechart-container"
                         style={{
                             width: "150px",
                             height: "150px",
-                            padding: "10px",
+                            paddingBottom: "10px",
                         }}
                     >
                         <PieChart
@@ -290,18 +206,12 @@ function Statistics() {
                                     color: "#F5F5F5",
                                 },
                             ]}
-                            lineWidth={40}
+                            lineWidth={window.innerWidth>1000?40:35}
                             background="#f3f3f3"
                             lengthAngle={360}
                             animate
                             label={({ x, y, dx, dy, dataEntry, dataIndex }) =>
                                 dataIndex === maxIndex ? (
-                                    // dataEntry.title +
-                                    //     "\n" +
-                                    //     Math.ceil(
-                                    //         dataEntry.percentage
-                                    //     ).toString() +
-                                    //     "%"
                                     <PieLabel
                                         key={dataIndex}
                                         x={x}
@@ -320,16 +230,54 @@ function Statistics() {
                                 color: "rgba(0,0,0,0.75)",
                             }}
                             labelPosition={0}
-                            viewBoxSize={[100, 100]}
+                            radius={window.innerWidth>1000?50:35}
                         />
-                    </Col>
-                    <Col md className="bar-container">
-                        {/* @ts-ignore */}
-                        <svg ref={barRef} />
-                    </Col>
-                </Row>
+                    </div>
+                    <div className="bar-container">
+                        <BarGraph 
+                            width={width} 
+                            height={height} 
+                            margin={margin}
+                            data={data}
+                            fontSize={window.innerWidth>1000? 15: 12}
+                            barHeight={window.innerWidth>1000? 15: 12}
+                        />
+                        <div className="total-reports" style={{
+                            textAlign: "right",
+                            width: "100%",
+                            fontSize: "12px",
+                            fontWeight: "500",
+                            marginTop: "10px",
+                            paddingRight: "30px",
+                        }}>
+                            Total {reportState.reports.length} Reports
+                        </div>
+                    </div>
+                </div>
             ) : (
-                <span>No Statistics!</span>
+                <div 
+                    className="no-stat" 
+                    style={{
+                        display: "flex",
+                        flexDirection: window.innerWidth>1000?"column":"row",
+                        alignItems: "center",
+                        padding: window.innerWidth>1000?"30px":"10px",
+                        gap: "20px",
+                    }}
+                >
+                    <span style={{
+                        fontSize: window.innerWidth>1000?"120px":"100px",
+                        height: "140px", 
+                        paddingTop: "70px"
+                    }}>😵</span>
+                    <span style={{
+                        fontSize: window.innerWidth>1000?"20px":"16px",
+                        lineHeight: "140%"
+                    }}>
+                        <strong style={{fontWeight: "900"}}>No Statistics</strong> <br/>
+                        for this location yet!
+                    </span>
+                </div>
             )}
         </Container>
     );
