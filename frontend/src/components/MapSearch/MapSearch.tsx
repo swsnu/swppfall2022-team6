@@ -1,13 +1,9 @@
-import React, { useState } from "react";
-
-// import SearchBar from "material-ui-search-bar";
+import React, { useEffect, useState } from "react";
 import ListGroup from 'react-bootstrap/ListGroup';
-import Pagination from 'react-bootstrap/Pagination';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-// import { styled } from "@material-ui/core/styles";
-import { Input } from "antd";
-import { SearchOutlined, CloseOutlined } from '@ant-design/icons';
+import { Input, Pagination } from "antd";
+import { SearchOutlined } from '@ant-design/icons';
 
 import { PositionType } from "../../store/slices/position";
 
@@ -43,13 +39,6 @@ type SearchResult = {
 
 const N_ITEM_PAGE = 15;
 
-const range = (start: number, count: number) => {
-    let array = [];
-    while (count--) {
-        array.push(start++);
-    }
-    return array;
-};
 const MapSearch = (props: IProps) => {
     const { markerPosition, setMarkerPosition, showResults, setShowResults, setIsOpen } = props;
     const [searchQuery, setSearchQuery] = useState<string>("");
@@ -61,6 +50,13 @@ const MapSearch = (props: IProps) => {
         kakao.maps.Pagination | undefined
     >(undefined);
     const [activePage, setActivePage] = useState<number>(1);
+
+    useEffect(() => {
+        setSearchResponse(Response.zero_result);
+        setSearchResult([]);
+        setShowResults(false);
+    }, [searchQuery])
+    
 
     const onSubmitSearchBox = () => {
         const ps = new kakao.maps.services.Places();
@@ -101,10 +97,6 @@ const MapSearch = (props: IProps) => {
         const pagination = searchPagination as kakao.maps.Pagination;
         const pageCount = pagination.totalCount / N_ITEM_PAGE >= 1?
                           pagination.totalCount / N_ITEM_PAGE: 1;
-        const idxArray: number[] = range(
-            1,
-            pageCount
-        );
         return (
             <div className="search-result-box" aria-label="Search Results"
                 style={{
@@ -134,23 +126,16 @@ const MapSearch = (props: IProps) => {
                     })}
                 </ListGroup>
                 <Pagination
-                    className="search-result-pagination"
-                    aria-label="Search Result Pagination"
-                >
-                    {idxArray.map((idx) => {
-                        return (
-                            <Pagination.Item
-                                key={idx}
-                                className={idx === 1 ? "on idx" : "idx"}
-                                onClick={() => {
-                                    pagination.gotoPage(idx);
-                                    setActivePage(idx+1);
-                                }}
-                                active={idx+1===activePage}
-                            >{`${idx}`}</Pagination.Item>
-                        );
-                    })}
-                </Pagination>
+                    current={activePage}
+                    total={pageCount*10} 
+                    onChange={(page)=>{
+                        setActivePage(page);
+                        pagination.gotoPage(page);
+                    }}
+                    style={{
+                        padding: "5px",
+                    }}
+                />
             </div>
         );
     };
@@ -165,6 +150,7 @@ const MapSearch = (props: IProps) => {
                     placeholder="Search (e.g. 서울대학교, 관악로 1)"
                     size="large"
                     enterButton={<SearchOutlined style={{fontSize: "20px"}}/>}
+                    allowClear //이걸 넣을지 말지,,, - 검색결과가 존재하지 않습니다 뜸
                 />
             </Row>
             <Row>
