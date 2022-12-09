@@ -51,28 +51,60 @@ function NavigationBar({ navReportCallback } : {navReportCallback: () => void;})
         <div>
             { // navbarVertical
                 // ?
-                <ButtonGroup vertical
-                style={{position: "absolute", bottom: "50%", right: "2%"}}
+                <ButtonGroup 
+                vertical
+                size="sm"
+                style={{
+                    position: "absolute", 
+                    bottom: "50%", 
+                    right: "5px",
+                    fontSize: "12px",
+                    zIndex: 100
+                }}
                 >
                     <Button 
-                    style={{background:"#3185E7", border:0}}
+                    style={{
+                        background:"#3185E7", 
+                        border:0, 
+                        display: "flex", 
+                        flexDirection: "column", 
+                        alignItems: "center",
+                        padding: "10px 5px"
+                    }}
                     data-testid="home-button"
                     onClick={handleClickHome}>
                         <FontAwesomeIcon icon={faHouse} />
+                        <span style={{fontSize: "12px",}}>Home</span>
                     </Button>
                     <Button 
                     className="navbar-button"
-                    style={{background:"#3185E7", border:0}}
+                    style={{
+                        background:"#3185E7", 
+                        border:0, 
+                        display: "flex", 
+                        flexDirection: "column", 
+                        alignItems: "center",
+                        padding: "10px 5px"
+                    }}
                     data-testid="report-button"
                     onClick={handleClickReport}>
                         <FontAwesomeIcon icon={faBullhorn}/>
+                        <span style={{fontSize: "12px",}}>Report</span>
                     </Button>
                     <Button 
                     className="navbar-button"
-                    style={{background:"#3185E7", border:0}}
+                    style={{
+                        background:"#3185E7",
+                        border:0, 
+                        display: "flex", 
+                        flexDirection: "column", 
+                        alignItems: "center",
+                        padding: "10px 5px"
+                    }}
                     data-testid="user-button"
                     onClick={handleClickMyPage}>
                         <FontAwesomeIcon icon={faUser}/>
+                        <span style={{fontSize: "12px",}}>My Page</span>
                     </Button>
                 </ButtonGroup>
                 // :

@@ -1,141 +1,149 @@
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Switch from "react-switch";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import { Checkbox, Layout } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons"
 
 import { useDispatch, useSelector } from "react-redux";
 
 import PostList from "../../components/PostList/PostList";
 import { PostType } from "../../store/slices/post";
 import { setLogout, updateUserMainBadge } from "../../store/slices/user";
-import { fetchUserPosts, updateUserBadges, selectUser, UserType } from "../../store/slices/user";
+import {
+  fetchUserPosts,
+  updateUserBadges,
+  selectUser,
+  UserType,
+} from "../../store/slices/user";
 import { AppDispatch } from "../../store";
 
-import "./MyPage.scss"
-import { NavigateBeforeTwoTone } from "@material-ui/icons";
+import "./MyPage.scss";
+
+const { Header, Content } = Layout;
 
 function MyPage() {
-    const userState = useSelector(selectUser);
-    const navigate = useNavigate();
-    const dispatch = useDispatch<AppDispatch>();
-    const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false);
-    const [posts, setPosts] = useState<PostType[]>([]);
+  const userState = useSelector(selectUser);
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false);
+  const [posts, setPosts] = useState<PostType[]>([]);
 
-    const currUser = userState.currUser as UserType;
+  const currUser = userState.currUser as UserType;
 
-    useEffect(()=>{
-        if(currUser){
-            dispatch(fetchUserPosts(currUser.id));
-        }
-    }, []);
-
-    useEffect(()=>{
-        if(currUser){
-            dispatch(updateUserBadges(currUser.id));
-            if (currUser.main_badge){
-                dispatch(
-                    updateUserMainBadge({
-                        user_id: currUser.id, 
-                        main_badge: currUser.main_badge
-                    })
-                )
-            }
-        }
-    }, []);
-
-    useEffect(()=>{
-        setPosts(userState.userPosts);
-    }, [userState.userPosts])
-
-    useEffect(()=>{
-        if(onlyPhoto){
-            setPosts(posts.filter(post => post.image))
-        } else {
-            setPosts(userState.userPosts);
-        }
-    }, [onlyPhoto])
-
-    const onClickBackButton = () => {
-        navigate("/");
-    };
-    const onClickSeeBadgesButton = () => {
-        navigate("/mypage/badges")
-    };
-    const onClickLogOutButton = async (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
-        await dispatch(setLogout())
-    };
-
-    if(currUser === null){
-        return <Navigate to="/signin" />;
+  useEffect(() => {
+    if (currUser) {
+      dispatch(fetchUserPosts(currUser.id));
     }
-    return (
-        <Container id="MyPage">
-            <Row id="header-container">
-                <Col id="back-button-container" md={1}>
-                    <button id="back-button" aria-label="back-button" onClick={onClickBackButton}>
-                        <FontAwesomeIcon size="xs" icon={faChevronLeft} />
-                    </button>
-                </Col>
-                <Col id="mypage-title">My Page</Col>
-                <Col md={1} ></Col>
-            </Row>
-            <Row id="profile-container">
-                <Col md={{ span: 2, offset: 3 }} id="main-badge-container">
-                    <img alt="" src={userState.mainBadge?.image} style={{height: "14vh", width: "13vh",}}/>
-                </Col>
-                <Col md={4} id="profile-col">
-                    <Row id="user-name">
-                        {currUser.username}
-                    </Row>
-                    <Row id="profile-butons">
-                        <button id="see-badges-button" onClick={onClickSeeBadgesButton}>
-                            See Badges
-                        </button>
-                        <button id="logout-button" onClick={onClickLogOutButton}>
-                            Log Out
-                        </button>
-                    </Row>
-                </Col>
-            </Row>
-            <Row id="posts-header-container">
-                <Col className="area-label">
-                    <span>My Posts</span>
-                </Col>
-                <Col md={6}></Col>
+  }, []);
 
-                <Col id="only-photos-button">
-                    <div>
-                        <Switch
-                            onChange={()=>{setOnlyPhoto(!onlyPhoto)}}
-                            checked={onlyPhoto}
-                            onColor="#3185e7"
-                            checkedIcon={false}
-                            uncheckedIcon={false}
-                            height={20}
-                            width={40}
-                            boxShadow="0 0 2px 2px #999"
-                        />
-                        <span> Only Photos</span>
+  useEffect(() => {
+    if (currUser) {
+      dispatch(updateUserBadges(currUser.id));
+      if (currUser.main_badge) {
+        dispatch(
+          updateUserMainBadge({
+            user_id: currUser.id,
+            main_badge: currUser.main_badge,
+          })
+        );
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    setPosts(userState.userPosts);
+  }, [userState.userPosts]);
+
+  useEffect(() => {
+    if (onlyPhoto) {
+      setPosts(posts.filter((post) => post.image));
+    } else {
+      setPosts(userState.userPosts);
+    }
+  }, [onlyPhoto]);
+
+  const onClickBackButton = () => {
+    navigate("/");
+  };
+  const onClickSeeBadgesButton = () => {
+    navigate("/mypage/badges");
+  };
+  const onClickLogOutButton = async (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    await dispatch(setLogout());
+  };
+
+  if (currUser === null) {
+    return <Navigate to="/signin" />;
+  }
+  return (
+    <Layout className="MyPage">
+      <Header
+        id="header-container"
+        className="Header"
+        style={{ backgroundColor: "white" }}
+      >
+        <div id="button-container">
+            <ArrowLeftOutlined
+              id="back-button"
+              className="button"
+              onClick={onClickBackButton}
+            />
+        </div>
+        <div id="mypage-title">My Page</div>
+      </Header>
+      <Content className="Content">
+        <div id="profile-container">
+            <div id="profile-sub-container">
+                <div id="main-badge-container">
+                    <img
+                    alt=""
+                    src={userState.mainBadge?.image}
+                    style={{ height: "14vh", width: "13vh" }}
+                    />
+                </div>
+                <div id="profile-col">
+                    <div id="user-name">{currUser.username}</div>
+                    <div id="profile-butons">
+                    <button id="see-badges-button" onClick={onClickSeeBadgesButton}>
+                        See Badges
+                    </button>
+                    <button id="logout-button" onClick={onClickLogOutButton}>
+                        Log Out
+                    </button>
                     </div>
-                </Col>
-            </Row>
-            <Row id="postlist-container">
-                <PostList
-                    currPosition={null}
-                    type={"Mypage"}
-                    postListCallback={() => {}}
-                    replyTo={0}
-                    allPosts={posts}
-                />
-            </Row>
-        </Container>
-    );
+                </div>
+            </div>
+        </div>
+        <div id="posts-header-container">
+          <div className="area-label title">
+            <span>My Posts</span>
+          </div>
+          <div id="only-photos-button">
+            <div>
+              <Checkbox
+                className="checkbox"
+                checked={onlyPhoto}
+                onChange={() => {
+                  setOnlyPhoto(!onlyPhoto);
+                }}
+              />
+              <span> Only Photos</span>
+            </div>
+          </div>
+        </div>
+        <div id="postlist-container">
+          <PostList
+            currPosition={null}
+            type={"Mypage"}
+            postListCallback={() => {}}
+            replyTo={0}
+            allPosts={posts}
+          />
+        </div>
+      </Content>
+    </Layout>
+  );
 }
 
 export default MyPage;

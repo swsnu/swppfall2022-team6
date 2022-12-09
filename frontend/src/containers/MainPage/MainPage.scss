@@ -1,86 +1,219 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&family=Lobster&family=Source+Sans+Pro&display=swap');
+
 $main-color: #3185e7;
 $sub-color: #edf9ff;
 $small-text: 12px;
+$top: 155px;
 
-#MainPage {
+.MainPage {
+    font-size: $small-text;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    padding: 0 5vw;
+
+    font-family: "NanumGothic", sans-serif;
+    font-style: normal;
+    font-weight: 700;
     font-size: $small-text;
 }
-#main-upper-container {
-    margin-top: 3px;
+.MainPage .Header {
+    padding: 10px;
+    margin: 0;
+    margin-bottom: 10px;
 }
-#main-logo-container {
-    text-align: left;
-}
-#main-logo-container img {
-    width: 80px;
+.MainPage .nowsee-logo {
+    position: absolute;
+    left: 5vw;
+    top: 18px;
+    width: 100px;
     object-fit: cover;
 }
-#main-upper-container {
-    text-align: right;
-    vertical-align: middle;
-    font-size: 13px;
-}
-#main-upper-container #mypage-button {
+.MainPage .mypage-button {
+    position: absolute;
+    right: 5vw;
     border: 0;
     background: none;
-    color: #c5e8fc;
-    font-size: 13px;
 }
-#main-description {
-    margin-top: 10px;
-    margin-bottom: 5px;
-    text-align: left;
+.MainPage .mypage-button img {
+    border-radius: 0;
 }
-#main-radius-slider-container {
-    padding-top: 10px;
-    text-align: left;
+.MainPage .main-top-map-container {
+    padding-top: 20px;
 }
-#findout-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    margin: 10px 0;
-}
-#findout-container button {
-    border: 2px solid $main-color;
-    border-radius: 12px;
-    width: 130px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    order: 1;
-    flex-grow: 0;
 
-    color: $main-color;
-    font-family: "NanumGothic", sans-serif;
+.MainPage .main-description-span {
+    word-break: keep-all;
+    word-wrap: break-word;
+}
+
+.MainPage .current-location {
+    line-height: 18px;
+}
+.MainPage .findout-button {
+    position: absolute;
+    height: 35px;
+
+    color: white;
     font-weight: 700;
     font-size: 14px;
     line-height: 140%;
     outline: 0;
-    background-color: rgba(0, 0, 0, 0);
 }
-#main-curr-location-container {
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
+.MainPage .report-button {
+    position: absolute;
+    height: 35px;
 }
-#main-report-button-container {
-    margin-top: 5px;
-    display: flex;
-    justify-content: center;
+.MainPage .slider-description {
+    position: absolute;
 }
-#main-report-button-container button {
-    border: 0;
-    background-color: $main-color;
-    color: white;
-    border-radius: 15px;
+.MainPage .radius-slider {
+    position: absolute;
+
+    
     font-family: "NanumGothic", sans-serif;
-    font-weight: 900;
-    font-size: 16px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    width: 500px;
-    height: 42px;
+    font-size: 12px;
+}
+
+$mobile: 767px;
+$tablet: 1300px;
+
+@mixin mobile {
+    @media (max-width: $mobile){
+        @content;
+  }
+}
+@mixin tablet {
+    @media (min-width: ($mobile + 1)) and (max-width: $tablet){
+        @content;
+  }
+}
+@mixin desktop {
+    @media (min-width: ($tablet + 1)){
+        @content;
+  }
+}
+
+@include mobile {
+    .MainPage{
+        .main-description {
+            margin-top: 7px;
+            font-weight: 800;
+            opacity: 0;
+        }
+        .current-location {
+            top: calc(60vh + 145px + 25px);
+            text-align: center;
+        }
+        .findout-button {
+            top: calc(60vh + 145px + 50px);
+            left: 5vw;
+            min-width: 100px;
+            width: 40vw;
+        }
+        .report-button {
+            top: calc(60vh + 145px + 50px);
+            right: 5vw;
+            min-width: 100px;
+            width: 40vw;
+        }
+        .slider-description {
+            top: calc(60vh + 145px + 90px);
+            opacity: 0;
+            // left: 5vw;
+        }
+        .radius-slider {
+            top: calc(60vh + 145px + 100px);
+            left: 20vw;
+            min-width: 213px;
+            width: 20vw;
+        }
+    }
+}
+@include tablet {
+    .MainPage {
+        .main-description {
+            text-align: left;
+            margin-top: 7px;
+            font-weight: 800;
+        }
+        .current-location {
+            position: absolute;
+            top: calc(60vh + 145px);
+            right: 5vw;
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+        }
+        .findout-button {
+            top: calc(60vh + 145px + 50px);
+            right: 5vw;
+            min-width: 200px;
+            width: 15vw;
+        }
+        .report-button {
+            top: calc(60vh + 145px + 100px);
+            right: 5vw;
+            min-width: 200px;
+            width: 15vw;
+        }
+        .slider-description {
+            top: calc(60vh + 145px + 50px);
+            left: 5vw;
+        }
+        .radius-slider {
+            top: calc(60vh + 145px + 70px);
+            left: 5vw;
+            min-width: 300px;
+            width: 20vw;
+        }
+    }
+}
+
+@include desktop {
+    .MainPage {
+        .main-description {
+            position: absolute;
+            bottom: 50vh;
+            right: 5vw;
+            width: 15vw;
+        
+            font-size: 30px;
+            line-height: 40px;
+            font-weight: 700;
+            letter-spacing: 0.1px;
+            font-family: 'Lobster', sans-serif;
+            color: $main-color;
+        }
+        .current-location {
+            position: absolute;
+            bottom: 250px;
+            right: 5vw;
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+        }
+        .findout-button {
+            bottom: 200px;
+            right: 5vw;
+            min-width: 130px;
+            width: 15vw;
+        }
+        .report-button {
+            bottom: 150px;
+            right: 5vw;
+            min-width: 130px;
+            width: 15vw;
+        }
+        .slider-description {
+            bottom: 110px;
+            right: 5vw;
+        }
+        .radius-slider {
+            bottom: 50px;
+            right: 4.3vw;
+            min-width: 213px;
+            width: 15vw;
+        }
+    }
 }
