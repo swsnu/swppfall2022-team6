@@ -191,7 +191,7 @@ export const setLogin = createAsyncThunk(
           }}
     ).then(async (response) => {
       // set Current User
-      dispatch(userActions.setLogin(response.data));
+      await dispatch(userActions.setLogin(response.data));
       // set Current Userbadges & update Achievement
       dispatch(fetchUserBadges(response.data.id));
       sessionStorage.setItem("isLoggedIn", "true");
