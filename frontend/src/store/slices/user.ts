@@ -42,7 +42,7 @@ const initialState: UserState = {
     currUser: initialUser ? JSON.parse(initialUser) : null,
     userPosts: [],
     userBadges: initialUserBadges ? JSON.parse(initialUserBadges) : null,
-    mainBadge: initialUser && initialUserBadges 
+    mainBadge: initialUser && initialUserBadges
       ?  JSON.parse(initialUserBadges)
           .find((badge: BadgeType) => badge.id === JSON.parse(initialUser).main_badge)
       : null
@@ -193,6 +193,7 @@ export const setLogin = createAsyncThunk(
       dispatch(userActions.setLogin(response.data));
       // set Current Userbadges & update Achievement
       dispatch(fetchUserBadges(response.data.id));
+      dispatch(userActions.setUserMainBadge(response.data));
       sessionStorage.setItem("isLoggedIn", "true");
       sessionStorage.setItem("user", JSON.stringify(response.data));
       return response.data

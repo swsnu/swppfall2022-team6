@@ -37,14 +37,6 @@ function MyPage() {
     useEffect(()=>{
         if(currUser){
             dispatch(updateUserBadges(currUser.id));
-            if (currUser.main_badge){
-                dispatch(
-                    updateUserMainBadge({
-                        user_id: currUser.id, 
-                        main_badge: currUser.main_badge
-                    })
-                )
-            }
         }
     }, []);
 
