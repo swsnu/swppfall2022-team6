@@ -2,7 +2,7 @@
     user tests
 '''
 from django.test import TestCase, Client
-from .models import Badge
+from .models import Badge, User
 
 class UserTestCase(TestCase):
     '''
@@ -118,11 +118,11 @@ class UserTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_post(self):
-        # badge = Badge.objects.create()
-        # User.objects.create_user(
-        #     username='swpp',
-        #     password='iluvswpp',
-        #     main_badge=badge
-        # )
+        badge = Badge.objects.create()
+        User.objects.create_user(
+            username='swpp',
+            password='iluvswpp',
+            main_badge=badge
+        )
         response = self.client.get('/user/1/post/')
         self.assertEqual(response.status_code, 200)

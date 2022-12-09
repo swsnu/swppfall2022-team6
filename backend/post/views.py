@@ -129,6 +129,13 @@ class PostViewSet(viewsets.GenericViewSet):
                 {'error': 'longitude missing'},
                 status=status.HTTP_400_BAD_REQUEST
             )
+        
+        location = request.query_params.get('location')
+        if not location:
+            return Response(
+                {'error': 'location missing'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         # coordinate = (float(latitude),float(longitude))
         # TODO: filter by created_at
