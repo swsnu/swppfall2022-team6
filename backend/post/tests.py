@@ -38,7 +38,7 @@ class PostTestCase(TestCase):
             content='content',
             latitude=36.0,
             longitude=128.0,
-            location="loc"
+            location='loc'
         )
         new_post.created_at=date(2020, 10, 20)
         new_post.save()
@@ -61,7 +61,8 @@ class PostTestCase(TestCase):
 
     def test_post(self):
         response = self.client.post('/post/',
-        data={'content':'content', 'hashtags':'hi', 'hid':'1', 'latitude': 37.0, 'longitude': 127.0, 'location': ''})
+        data={'content':'content', 'hashtags':'hi', 'hid':'1', \
+            'latitude': 37.0, 'longitude': 127.0, 'location': ''})
 
         self.assertEqual(response.status_code, 201)
 

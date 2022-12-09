@@ -2,7 +2,7 @@
     user tests
 '''
 from django.test import TestCase, Client
-from .models import Badge, User, BADGE_NUM, UserBadge, Achievement
+from .models import Badge, User, BADGE_NUM
 
 class UserTestCase(TestCase):
     '''
@@ -12,7 +12,7 @@ class UserTestCase(TestCase):
 
     def setUp(self) -> None:
         for i in range(1, BADGE_NUM+1):
-            new_badge = Badge(title = f"title{i}", requirement=0)
+            new_badge = Badge(title = f'title{i}', requirement=0)
             new_badge.save()
         # TODO: remove dependency
         data = {
@@ -109,7 +109,8 @@ class UserTestCase(TestCase):
 
     def test_mainbadge(self):
         data = {'main_badge': 3}
-        response = self.client.post('/user/1/mainbadge/', data, content_type='application/json',)
+        response = self.client.post('/user/1/mainbadge/', data, \
+            content_type='application/json',)
         self.assertEqual(response.status_code, 200)
 
     def test_radius(self):
@@ -124,7 +125,8 @@ class UserTestCase(TestCase):
         response = self.client.get('/user/1/achievement/')
         self.assertEqual(response.status_code, 200)
         data = {'badge_id': '1'}
-        response = self.client.put('/user/1/achievement/', data, content_type='application/json',)
+        response = self.client.put('/user/1/achievement/', data, \
+            content_type='application/json',)
 
         self.assertEqual(response.status_code, 200)
 
