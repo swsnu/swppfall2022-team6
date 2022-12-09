@@ -86,6 +86,7 @@ function MyPage() {
         <div id="button-container">
             <ArrowLeftOutlined
               id="back-button"
+              aria-label="back-button"
               className="button"
               onClick={onClickBackButton}
             />

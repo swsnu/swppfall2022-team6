@@ -31,8 +31,8 @@ jest.mock(
         }) =>
             (
                 <div>
-                    {allPosts.map((p) => (
-                        <div>{p.content}</div>
+                    {allPosts.map((p, i) => (
+                        <div key={i}>{p.content}</div>
                     ))}
                     <button onClick={postListCallback}>Callback</button>
                 </div>
@@ -84,11 +84,11 @@ describe("<MyPage />", () => {
         render(myPageJSX);
         const logoutButton = screen.getByText("Log Out");
         fireEvent.click(logoutButton!);
-        expect(mockDispatch).toHaveBeenCalledTimes(3);
+        expect(mockDispatch).toHaveBeenCalledTimes(4);
     });
     it("should handle Only Photos button", async () => {
         render(myPageJSX);
-        const photosBtn = screen.getByRole("switch");
+        const photosBtn = screen.getByRole("checkbox");
         await screen.findByText("CONTENT-t1");
         fireEvent.click(photosBtn);
         await waitFor(() =>
