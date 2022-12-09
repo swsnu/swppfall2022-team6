@@ -155,7 +155,7 @@ export const fetchUserBadges = createAsyncThunk(
         dispatch(updateUserAchievements({id: id, type: achievement_type}));
       }
     }).catch((error) => {
-      checkApiResponseStatus(error.response.status);
+      checkApiResponseStatus(error.status);
     });
   }
 );
@@ -168,7 +168,7 @@ export const updateUserBadges = createAsyncThunk(
       dispatch(userActions.setUserBadges(response.data));
       sessionStorage.setItem("userbadges", JSON.stringify(response.data));
     }).catch((error) => {
-      checkApiResponseStatus(error.response.status);
+      checkApiResponseStatus(error.status);
     });
   }
 );
@@ -199,7 +199,7 @@ export const setLogin = createAsyncThunk(
       return response.data
     }).catch((error) => {
       console.log(error);
-      checkApiResponseStatus(error.response.status);
+      checkApiResponseStatus(error.status);
     });
   }
 );
@@ -213,7 +213,7 @@ export const setLogout = createAsyncThunk(
                 window.sessionStorage.clear();
             })
             .catch((error) => {
-                checkApiResponseStatus(error.response.status);
+                checkApiResponseStatus(error.status);
             });
     }
 );

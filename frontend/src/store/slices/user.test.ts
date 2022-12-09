@@ -8,7 +8,13 @@ import UserReducer, { fetchUsers,
                         setLogin,
                         setLogout,
                         UserType,
-                        fetchUserPosts} from "./user";
+                        fetchUserPosts,
+                        BadgeType,
+                        fetchUserBadges,
+                        updateUserMainBadge,
+                        updateUserBadges,
+                        updateUserAchievements,
+                        Achievement} from "./user";
 
 const localStorageMock = (() => {
   let store: Dictionary<string> = {};
@@ -56,6 +62,11 @@ describe("user reducer", ()=>{
   const originUser: UserType = {
     id: 1, email: "iluvswpp@swpp.com", username: "iluvswpp", radius: 2, main_badge: null,
   }
+  const mockBadges: BadgeType[] = [
+    { id: 1, title: "badge1", image: "", description: "achievement1", is_fulfilled: true, }, 
+    { id: 2, title: "badge2", image: "", description: "achievement2", is_fulfilled: false, },
+    { id: 3, title: "badge3", image: "", description: "achievement3", is_fulfilled: false, }
+  ]
 
   beforeAll(()=>{
     jest.clearAllMocks();
@@ -71,7 +82,8 @@ describe("user reducer", ()=>{
       users: [],
       userBadges: null,
       currUser: null,
-      userPosts: []
+      userPosts: [],
+      mainBadge: null,
     });
   });
   it("should handle fetchUsers", async ()=>{
@@ -163,5 +175,55 @@ describe("user reducer", ()=>{
     const radiusUser = {...fakeUser, radius: 1};
     jest.spyOn(axios, "put").mockResolvedValue({data: {radiusUser}});
     await store.dispatch(setRadius({user: fakeUser, radius: 1}));
+  });
+  it("should handle fetchUserBadges", async () => {
+    axios.get = jest.fn().mockResolvedValue({ data: mockBadges });
+    await waitFor(() => {
+      store.dispatch(fetchUserBadges(1));
+      expect(store.getState().users.userBadges).toEqual(mockBadges);
+    }) 
+  });
+  it("should update main badge", async() => {
+    jest.spyOn(axios, "post").mockResolvedValue({data: fakeUser});
+    const formData = new FormData();
+    formData.append("email", fakeUser.email);
+    formData.append("password", "password");
+    await store.dispatch(setLogin(formData));
+    store.dispatch(updateUserBadges(1));
+    expect(store.getState().users.currUser).toBeTruthy();
+    const mainBadgeUser = {...fakeUser, main_badge: 2};
+    jest.spyOn(axios, "post").mockResolvedValue({data: {mainBadgeUser}});
+    await waitFor(() => {
+      store.dispatch(updateUserMainBadge({user_id: fakeUser.id, main_badge: 2}));
+      //expect(store.getState().users.currUser?.main_badge).toBe(2);
+    });
+  });
+  it("should not update faulty main badge", async() => {
+    jest.spyOn(axios, "post").mockResolvedValue({data: fakeUser});
+    const formData = new FormData();
+    formData.append("email", fakeUser.email);
+    formData.append("password", "password");
+    await store.dispatch(setLogin(formData));
+    store.dispatch(updateUserBadges(1));
+    await waitFor(() => {
+      store.dispatch(updateUserMainBadge({user_id: fakeUser.id, main_badge: 9}));
+      expect(window.alert).toHaveBeenCalled();
+    });
+  });
+  it("should update achievements", async() => {
+    jest.spyOn(axios, "post").mockResolvedValue({data: fakeUser});
+    const formData = new FormData();
+    formData.append("email", fakeUser.email);
+    formData.append("password", "password");
+    await store.dispatch(setLogin(formData));
+    store.dispatch(updateUserBadges(1));
+    await waitFor(() => {
+      store.dispatch(updateUserAchievements({id: 1, type: Achievement.CLOUDY}));
+      expect(store.getState().users.userBadges).toBe([
+        { id: 1, title: "badge1", image: "", description: "achievement1", is_fulfilled: true, }, 
+        { id: 2, title: "badge2", image: "", description: "achievement2", is_fulfilled: false, },
+        { id: 3, title: "badge3", image: "", description: "achievement3", is_fulfilled: true, }
+      ]);
+    });
   });
 });
