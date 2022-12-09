@@ -70,9 +70,12 @@ function Statistics() {
         });
     }
 
-    const [w, h] = window.innerWidth>1000? [350, 140]: window.innerWidth>600?[350, 120]: [250, 120];
+    const [w, h] = window.innerWidth>1000? [390, 140]:
+                   window.innerWidth>600?[350, 120]: [250, 120];
     // set the dimensions and margins of the graph
-    const margin = { top: 20, right: 20, bottom: 30, left: 90 },
+    const margin = { top: 20, right: 20, bottom: 30, 
+        left: window.innerWidth>1000? 110: 90
+    },
         width = w - margin.left - margin.right,
         height = h - margin.top - margin.bottom;
 

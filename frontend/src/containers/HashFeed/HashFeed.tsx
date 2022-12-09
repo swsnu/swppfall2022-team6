@@ -98,10 +98,6 @@ function HashFeed() {
   const navReportCallback = () => {
     setRefresh(true);
   };
-  const handleToggleTag = (e: React.MouseEvent<HTMLElement>, value: string) => {
-    if (value === selectTag) setSelectTag(undefined);
-    else setSelectTag(value);
-  };
   const onClickBackButton = () => {
     navigate("/areafeed");
   };

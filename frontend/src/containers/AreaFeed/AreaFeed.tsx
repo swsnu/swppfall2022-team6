@@ -204,7 +204,7 @@ function AreaFeed() {
         return (
             <div>
                 <div id="search-box-container">
-                    <h2 className="title post-title">Today's NowSee tweets</h2>
+                    <h2 className="title post-title">Today's NowSee posts</h2>
                     <div id="search-container">
                         <div >
                             <CustomSearchBar
@@ -236,13 +236,19 @@ function AreaFeed() {
                     ) : null}
                 </div>
                 <div id="postlist-container">
+                    {queryPosts.length>0?
                     <PostList
                         currPosition={position}
                         type={"Post"}
                         postListCallback={postListCallback}
                         replyTo={0}
                         allPosts={queryPosts}
-                    />
+                    />:
+                    <div className="no-post">
+                        <span>😥</span><br/>
+                        No Post<br/>for this location yet!
+                    </div>
+                    }
                 </div>
             </div>
         );
@@ -286,7 +292,7 @@ function AreaFeed() {
                             <div id="recommended-hashtag-container">
                                 <h2 className="title hashfeed-title">Go to HashFeed</h2>
                                 <div id="hashtag-buttons">
-                                    <Space >
+                                    {hashtagState.top3.length>0? <Space >
                                         {hashtagState.top3.map((item, i) => {
                                             return (
                                                 <Button
@@ -298,7 +304,10 @@ function AreaFeed() {
                                                 </Button>
                                             );
                                         })}
-                                    </Space>
+                                    </Space>:
+                                    <div className="no-hashtag">
+                                        No recommended hashtag!
+                                    </div>}
                                 </div>
                             </div>
                         </div>
