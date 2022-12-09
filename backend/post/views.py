@@ -12,7 +12,7 @@ from rest_framework.decorators import action
 from post.models import Post, PostHashtag
 from hashtag.models import Hashtag
 from .serializer import PostSerializer
-# from haversine import haversine
+from haversine import haversine
 from collections import Counter
 
 #from rest_framework.decorators import action
@@ -85,7 +85,7 @@ class PostViewSet(viewsets.GenericViewSet):
         content=request.POST['content'],
         image=request.FILES['image'] if 'image' in request.FILES else None,
         latitude=request.POST['latitude'],
-        longitude=request.POST['latitude'],
+        longitude=request.POST['longitude'],
         location=request.POST['location'],
         created_at=datetime.now(),
         reply_to=Post.objects.get(id=int(request.POST['replyTo']))
@@ -97,14 +97,14 @@ class PostViewSet(viewsets.GenericViewSet):
             PostHashtag.objects.create(post=post, hashtag=hashid)
             hashid = hashid.content
         if request.POST['hashtags'] != '':
-            for hashtag in request.POST['hashtags'].strip().split(' '):
-                hashtag = hashtag.lstrip('#')
+            for hashtag in request.POST['hashtags'].strip().replace('#', ' ').split(' '):
+                #hashtag = hashtag.lstrip('#')
                 if hashtag == hashid: continue
                 h = Hashtag.objects.filter(content=hashtag).first()
                 if h is None:
                     h = Hashtag.objects.create(content=hashtag)
                 PostHashtag.objects.create(post=post, hashtag=h)
-        return Response('create post', status=status.HTTP_201_CREATED)
+        return Response(self.get_serializer(post, many=False).data, status=status.HTTP_201_CREATED)
 
     # GET /post/
     def list(self, request):
@@ -136,13 +136,13 @@ class PostViewSet(viewsets.GenericViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # coordinate = (float(latitude),float(longitude))
+        coordinate = (float(latitude),float(longitude))
         # TODO: filter by created_at
         all_posts = Post.objects.all()
-        # ids = [post.id for post in all_posts
-        #     if haversine(coordinate, (post.latitude, post.longitude))
-        #     <= float(radius)]
-        ids = [post.id for post in all_posts]
+        ids = [post.id for post in all_posts
+            if haversine(coordinate, (post.latitude, post.longitude))
+            <= float(radius)]
+        #ids = [post.id for post in all_posts]
 
         posts = all_posts.filter(id__in=ids).order_by('-created_at')[:MAX_POST_LEN]
 

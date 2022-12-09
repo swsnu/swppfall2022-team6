@@ -62,7 +62,7 @@ function Statistics() {
     const displaylabels = [
         ["☀️ ", "☁️ ", "☔ ", "❄️ "][maxIndex] + labels[maxIndex],
         "💨 Wind",
-        "🤗 Happy",
+        "😖 Discomfort",
         "💧 Humidity",
     ];
 
@@ -167,7 +167,7 @@ function Statistics() {
             return Math.round(d.range * 20) + "%";
         })
         .style("font-weight", "700")
-        .style("font-size", "15px")
+        .style("font-size", "12px")
         .style("color", "rgba(0,0,0,50%)")
         .style("font-family", "sans-serif")
         .style("font-family", "NanumGothic")
@@ -179,7 +179,7 @@ function Statistics() {
         .style("stroke-width", 0)
         .style("font-family", "NanumGothic")
         .style("font-family", "sans-serif")
-        .style("font-size", "15px")
+        .style("font-size", "12px")
         .style("color", "rgba(0,0,0,75%)");
 
     useEffect(() => {

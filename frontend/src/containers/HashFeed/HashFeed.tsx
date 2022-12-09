@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { AppDispatch } from "../../store";
 import {
-    fetchHashfeedTop3Hashtags,
+    //fetchHashfeedTop3Hashtags,
     selectHashtag,
 } from "../../store/slices/hashtag";
 import { fetchHashPosts, PostType, selectPost } from "../../store/slices/post";
@@ -61,7 +61,7 @@ function HashFeed() {
         if (queryPostPromise.payload === undefined) navigate("/");
         const postData = queryPostPromise.payload as PostType[];
         setQueryPosts(postData);
-        await dispatch(fetchHashfeedTop3Hashtags(Number(id)));
+        //await dispatch(fetchHashfeedTop3Hashtags(Number(id)));
         setIsLoading(true);
     };
 
@@ -119,7 +119,7 @@ function HashFeed() {
                     height: "30vh",
                     borderRadius: "12px",
                 }}
-                level={5}
+                level={8}
                 minLevel={5}
             >
                 <MarkerClusterer averageCenter={true}>

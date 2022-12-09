@@ -253,7 +253,7 @@ function ReportModal({
                                     />
                                 </div>
                                 <div className="slider-container">
-                                    <p className="slider-label">Happy</p>
+                                    <p className="slider-label">Discomfort</p>
                                     <Slider
                                         aria-label="happy_degree"
                                         value={happyDegree}
