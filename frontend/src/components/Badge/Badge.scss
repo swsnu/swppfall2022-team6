@@ -21,8 +21,8 @@
     position: absolute;
     height: 10vh;
     width: 10vh;
-    filter: blur(8px);
-    -webkit-filter: blur(8px);
+    filter: blur(4px);
+    -webkit-filter: blur(4px);
     z-index: -1;
 }
 
@@ -36,5 +36,6 @@
     justify-content: center;
     height: 10vh;
     width: 10vh;
-    align-items: center
+    align-items: center;
+    gap: 5px;
 }
