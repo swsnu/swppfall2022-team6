@@ -4,6 +4,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/swsnu/swppfall2022-team6/badge.svg?branch=main&kill_cache=1)](https://coveralls.io/github/swsnu/swppfall2022-team6?branch=main)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=swsnu_swppfall2022-team6&metric=alert_status)](https://sonarcloud.io/dashboard?id=swsnu_swppfall2022-team6)
 
+## Sprint4
+Submission: 2022/11/26 Sat
 
 ## Frontend
 
@@ -26,9 +28,10 @@ yarn test --coverage --watchAll=false
 ```bash
 cd backend
 pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
+sh data.sh
 ```
+
+Because badges are yet to be implemented, to mock badge data and create a genuine user bash data.sh must be executed.
 
 ## Backend Test
 
