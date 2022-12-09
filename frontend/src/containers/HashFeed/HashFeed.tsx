@@ -34,7 +34,6 @@ function HashFeed() {
   const positionState = useSelector(selectPosition);
 
   const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false);
-  const [selectTag, setSelectTag] = useState<string | undefined>(undefined);
   const [refresh, setRefresh] = useState<Boolean>(true);
   const [queryPosts, setQueryPosts] = useState<PostType[]>(postState.posts);
   const [isLoading, setIsLoading] = useState<Boolean>(false);
@@ -74,18 +73,11 @@ function HashFeed() {
 
   useEffect(() => {
     let resultPosts = postState.posts;
-    if (selectTag) {
-      resultPosts = resultPosts.filter(
-        (post: PostType) =>
-          post.hashtags &&
-          post.hashtags.map((h) => h.content).includes(selectTag)
-      );
-    }
     if (onlyPhoto) {
       resultPosts = resultPosts.filter((post: PostType) => post.image);
     }
     setQueryPosts(resultPosts);
-  }, [selectTag, onlyPhoto]);
+  }, [onlyPhoto]);
 
   const onSelectOnlyPhotos = () => {
     setOnlyPhoto(!onlyPhoto);

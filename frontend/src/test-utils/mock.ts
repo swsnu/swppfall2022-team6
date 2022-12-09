@@ -252,6 +252,19 @@ export const mockStore2 = getMockStore({
     positions: stubPositionInitialState,
 });
 
+export const mockStoreHashFeed1 = getMockStore({
+    users: stubUserInitialState,
+    posts: stubPostInitialState,
+    reports: {reports:[]},
+    hashtags: {
+        hashtags: [
+            { id: 1, content: "hashtag1" },
+        ],
+        top3: [{ id: 1, content: "hashtag1" }],
+    },
+    positions: stubPositionInitialState,
+});
+
 export const mockSearchResultData = () => {
     const result = [];
     for (let i = 1; i <= 30; i++) {
