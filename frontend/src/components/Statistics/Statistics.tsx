@@ -14,44 +14,6 @@ export interface dataType {
 
 const labels = ["Sunny", "Cloudy", "Rain", "Snow"];
 
-const PieLabel = ({
-    x,
-    y,
-    dx,
-    dy,
-    dataEntry,
-}: {
-    x: number;
-    y: number;
-    dx: number;
-    dy: number;
-    dataEntry: any;
-}) => {
-    return (
-        <text
-            x={x}
-            y={y}
-            dx={dx}
-            dy={dy}
-            dominantBaseline="central"
-            textAnchor="middle"
-        >
-            <tspan x={x} y={y - 5} dx={dx} dy={dy} style={{ fontSize: "25px" }}>
-                {dataEntry.title}
-            </tspan>
-            <br />
-            <tspan
-                x={x}
-                y={y + 13}
-                dx={dx}
-                dy={dy}
-                style={{ fontSize: "13px" }}
-            >
-                {Math.ceil(dataEntry.percentage) + "%"}
-            </tspan>
-        </text>
-    );
-};
 
 function getWindowSize() {
     const {innerWidth, innerHeight} = window;
@@ -63,8 +25,35 @@ function Statistics() {
     const [maxIndex, setMaxIndex] = useState<number>(0);
     const [reportPerc, setReportPerc] = useState<number[]>([0, 0, 0, 0]);
     const [windowSize, setWindowSize] = useState(getWindowSize());
-
-    const barRef = useRef<SVGElement>();
+    
+    const PieLabel = ({ x, y, dx, dy, dataEntry }: {
+        x: number;
+        y: number;
+        dx: number;
+        dy: number;
+        dataEntry: any;
+    }) => {
+        return (
+            <text
+                x={x} y={y}
+                dx={dx} dy={dy}
+                dominantBaseline="central"
+                textAnchor="middle"
+            >
+                <tspan x={x} y={y - 5} dx={dx} dy={dy} style={{ fontSize: "25px" }}>
+                    {dataEntry.title}
+                </tspan>
+                <br />
+                <tspan
+                    x={x} y={y + 13}
+                    dx={dx} dy={dy}
+                    style={{ fontSize: windowSize.innerWidth>1000?"13px":"11px" }}
+                >
+                    {Math.ceil(dataEntry.percentage) + "%"}
+                </tspan>
+            </text>
+        );
+    };
 
     const displaylabels = [
         ["☀️ ", "☁️ ", "☔ ", "❄️ "][maxIndex] + labels[maxIndex],
