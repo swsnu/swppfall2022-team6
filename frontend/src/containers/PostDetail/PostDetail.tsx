@@ -8,6 +8,7 @@ import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import PostList from "../../components/PostList/PostList";
+import Loading from "../../components/Loading/Loading";
 import { PostType } from "../../store/slices/post";
 import { selectUser } from "../../store/slices/user";
 
@@ -24,7 +25,6 @@ function PostDetail() {
         navigate(-1);
         // navigate("/areafeed/");
     };
-    // TODO: get badge image from backend
 
     const positionState = useSelector(selectPosition);
     const userState = useSelector(selectUser);
