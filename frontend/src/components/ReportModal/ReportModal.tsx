@@ -1,12 +1,16 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ReportModal.scss";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Slider, TextField } from "@mui/material";
 import { PositionType } from "../../store/slices/position";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store";
-import { selectUser, Achievement, updateUserAchievements } from "../../store/slices/user";
+import {
+    selectUser,
+    Achievement,
+    updateUserAchievements,
+} from "../../store/slices/user";
 import { addReport } from "../../store/slices/report";
 import { addPost } from "../../store/slices/post";
 
@@ -18,7 +22,13 @@ export interface IProps {
     navReportCallback: () => void;
 }
 
-function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport, navReportCallback }: IProps) {
+function ReportModal({
+    currPosition,
+    openReport,
+    setOpenReport,
+    isNavbarReport,
+    navReportCallback,
+}: IProps) {
     const userState = useSelector(selectUser);
 
     const [content, setContent] = useState<string>("");
@@ -33,16 +43,44 @@ function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport, 
     const navigate = useNavigate();
     const location = useLocation();
 
+    const geocoder = new kakao.maps.services.Geocoder();
+    const [address, setAddress] = useState<string>("");
+    useEffect(() => {
+        geocoder.coord2RegionCode(
+            currPosition.lng,
+            currPosition.lat,
+            (result, status) => {
+                if (
+                    status === kakao.maps.services.Status.OK &&
+                    !!result[0].address_name
+                ) {
+                    setAddress(result[0].address_name);
+                }
+            }
+        );
+    }, []);
+
     const report_achievement_handler = (achievement_types: Achievement[]) => {
-        for(const achievement_type of achievement_types){
+        for (const achievement_type of achievement_types) {
             const now = new Date();
-            const early_condition = (achievement_type === Achievement.EARLY) && (now.getHours() >9)
-            const cloudy_condition = (achievement_type ===Achievement.CLOUDY) && (weather !==1)
-            if ((!userState.userBadges[achievement_type-1].is_fulfilled) && (!early_condition) && (!cloudy_condition)){
-                dispatch(updateUserAchievements({id: Number(userState.currUser?.id), type: achievement_type}));
+            const early_condition =
+                achievement_type === Achievement.EARLY && now.getHours() > 9;
+            const cloudy_condition =
+                achievement_type === Achievement.CLOUDY && weather !== 1;
+            if (
+                !userState.userBadges[achievement_type - 1].is_fulfilled &&
+                !early_condition &&
+                !cloudy_condition
+            ) {
+                dispatch(
+                    updateUserAchievements({
+                        id: Number(userState.currUser?.id),
+                        type: achievement_type,
+                    })
+                );
             }
         }
-    }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -58,26 +96,29 @@ function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport, 
         };
         //@ts-ignore
         const response = await dispatch(addReport(data)); //! 왜 0개의 인수,,,?
-        if (response.payload){
+        if (response.payload) {
             console.log("yes");
             // update Report-Related Achievements
-            const achievement_types: Achievement[] = [Achievement.FIRST_REPORT, Achievement.CLOUDY, Achievement.EARLY];
+            const achievement_types: Achievement[] = [
+                Achievement.FIRST_REPORT,
+                Achievement.CLOUDY,
+                Achievement.EARLY,
+            ];
             report_achievement_handler(achievement_types);
-
         }
         if (image || content) {
             const formData = new FormData();
             if (image) formData.append("image", image);
             formData.append("content", content);
             formData.append("hashtags", "");
+            formData.append("location", address);
             //@ts-ignore
             await dispatch(addPost(formData));
         }
-        if (location.pathname === "/areafeed/"){
+        if (location.pathname === "/areafeed/") {
             setOpenReport(false);
             navReportCallback();
-        }
-        else navigate("/areafeed/");
+        } else navigate("/areafeed/");
     };
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
@@ -100,10 +141,9 @@ function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport, 
                     </header>
                     <main>
                         <form onSubmit={handleSubmit}>
-                            {isNavbarReport
-                            ? <div className="navreport-margin-top">
-                            </div>
-                            : (
+                            {isNavbarReport ? (
+                                <div className="navreport-margin-top"></div>
+                            ) : (
                                 <p id="photo-container">
                                     <span id="photo-label">📷 Add Photo</span>
                                     <input
@@ -165,11 +205,9 @@ function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport, 
                                     ❄️ Snow
                                 </button>
                             </div>
-                            {isNavbarReport
-                                ? <div className="navreport-margin-top">
-                                    </div>
-                                : null
-                            }
+                            {isNavbarReport ? (
+                                <div className="navreport-margin-top"></div>
+                            ) : null}
                             <div>
                                 <div className="slider-container">
                                     <p
@@ -249,13 +287,15 @@ function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport, 
                                     />
                                 </div>
                             </div>
-                            {isNavbarReport
-                            ? <div className="navreport-margin-bottom">
-                                </div>
-                            : (
+                            {isNavbarReport ? (
+                                <div className="navreport-margin-bottom"></div>
+                            ) : (
                                 <div style={{ margin: "0px 50px" }}>
                                     <TextField
-                                        inputProps={{ "data-testid": "textField" }}
+                                        inputProps={{
+                                            "data-testid": "textField",
+                                            maxLength: 290,
+                                        }}
                                         id="standard-basic"
                                         variant="standard"
                                         placeholder="Add Text"
@@ -266,7 +306,9 @@ function ReportModal({ currPosition, openReport, setOpenReport, isNavbarReport, 
                                         value={content}
                                         maxRows={5}
                                         spellCheck={false}
-                                        onChange={(e) => setContent(e.target.value)}
+                                        onChange={(e) =>
+                                            setContent(e.target.value)
+                                        }
                                     />
                                 </div>
                             )}

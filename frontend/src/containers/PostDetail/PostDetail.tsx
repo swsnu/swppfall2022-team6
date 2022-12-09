@@ -12,6 +12,7 @@ import { PostType } from "../../store/slices/post";
 import { selectUser } from "../../store/slices/user";
 
 import "./PostDetail.scss";
+import { PositionType, selectPosition } from "../../store/slices/position";
 
 function PostDetail() {
     const postListCallback = () => {
@@ -24,7 +25,16 @@ function PostDetail() {
         // navigate("/areafeed/");
     };
     // TODO: get badge image from backend
+
+    const positionState = useSelector(selectPosition);
     const userState = useSelector(selectUser);
+    let position: PositionType;
+    const savedPosition = localStorage.getItem("position");
+    if (savedPosition) {
+        position = JSON.parse(savedPosition);
+    } else {
+        position = positionState.position;
+    }
     
     const [mainPost, setMainPost] = useState<PostType>({
         id: 1,
@@ -33,6 +43,7 @@ function PostDetail() {
         content: "Default Original Post...",
         latitude: 37.44877599087201,
         longitude: 126.95264777802309,
+        location: "관악구 봉천동",
         created_at: new Date().toLocaleDateString(),
         image: "/media/2022/11/07/screenshot.png",
         reply_to_author: null,
@@ -52,7 +63,7 @@ function PostDetail() {
             setReplyPosts(response.data["replies"]);
         });
         setRefresh(false);
-    }, [refresh]);
+    }, [refresh, id]);
 
     return (
         <div className="PostDetail">
@@ -77,7 +88,6 @@ function PostDetail() {
                         <div id="author-info">
                             <div id="author-name" className="fw-bolder fs-5 mb-1">
                                 {mainPost.user_name}
-                                {/* Get user name from back */}
                             </div>
                             <div
                                 id="time-and-location"
@@ -85,8 +95,7 @@ function PostDetail() {
                             >
                                 <div id="author-location"
                                 style={{ fontSize: "11px"}}>
-                                    관악구 봉천동
-                                    {/* Get address */}
+                                    {mainPost.location}
                                 </div>
                                 <div>.</div>
                                 <div
@@ -141,6 +150,7 @@ function PostDetail() {
                     Replies
                 </div>
                 <PostList
+                    currPosition={position}
                     type={"Reply"}
                     postListCallback={postListCallback}
                     replyTo={Number(id)}

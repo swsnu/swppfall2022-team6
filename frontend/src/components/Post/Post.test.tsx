@@ -85,6 +85,7 @@ describe("<Post />", () => {
                         image: "",
                         latitude: 127,
                         longitude: 37,
+                        location: "Location",
                         created_at: "2020-10-21 10:20:30",
                         reply_to_author: "User Name",
                         hashtags: [],

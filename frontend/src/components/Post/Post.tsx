@@ -72,7 +72,7 @@ function Post(post: postProps) {
                     user_name={post.user_name}
                     badge_id={post.badge_id}
                     content={post.content}
-                    location={"Location"} //should come from map API
+                    location={post.location}
                     created_at={post.created_at}
                     reply_to_author={post.reply_to_author}
                     image={post.image ? post.image : ""}

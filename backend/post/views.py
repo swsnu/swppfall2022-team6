@@ -79,12 +79,17 @@ class PostViewSet(viewsets.GenericViewSet):
     @transaction.atomic
     def create(self, request):
         user = request.user
+        print('before create')
         post=Post.objects.create(user=user,
         content=request.POST['content'],
         image=request.FILES['image'] if 'image' in request.FILES else None,
-        latitude=37.0, longitude=127.0, created_at=datetime.now(),
+        latitude=request.POST['latitude'],
+        longitude=request.POST['latitude'],
+        location=request.POST['location'],
+        created_at=datetime.now(),
         reply_to=Post.objects.get(id=int(request.POST['replyTo']))
         if 'replyTo' in request.POST else None)
+        print('after create')
         hashid = ''
         if 'hid' in request.POST:
             hashid = Hashtag.objects.get(id=int(request.POST['hid']))
@@ -127,13 +132,6 @@ class PostViewSet(viewsets.GenericViewSet):
         if not longitude:
             return Response(
                 {'error': 'longitude missing'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        location = request.query_params.get('location')
-        if not location:
-            return Response(
-                {'error': 'location missing'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 

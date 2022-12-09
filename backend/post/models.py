@@ -15,7 +15,7 @@ class Post(models.Model):
     image = models.ImageField(upload_to='%Y/%m/%d', blank=True)
     latitude = models.FloatField()
     longitude = models.FloatField()
-    location = models.CharField(max_length=100, default='')
+    location = models.CharField(max_length=100, default="")
     created_at = models.DateTimeField(auto_now_add=True)
     reply_to = models.ForeignKey('self', related_name='replypost', \
         on_delete=models.CASCADE, null=True)

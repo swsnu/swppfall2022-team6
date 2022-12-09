@@ -213,7 +213,6 @@ function AreaFeed() {
                     post.content.includes(searchQuery)
                 )
             );
-            console.log("three")
             setQueryHash(searchQuery);
         };
         const onClickClose = () => {
@@ -227,7 +226,7 @@ function AreaFeed() {
                 })
                 .then((response) => {
                     if (response.data) {
-                        navigate(`/hashfeed/${response.data.id}`);
+                        navigate(`/hashfeed/${response.data}`);
                     } else {
                         alert("Hashtag doesn't exist");
                     }
@@ -278,6 +277,7 @@ function AreaFeed() {
                 </Row>
                 <Row id="postlist-container">
                     <PostList
+                        currPosition={position}
                         type={"Post"}
                         postListCallback={postListCallback}
                         replyTo={0}
