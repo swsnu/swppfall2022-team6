@@ -16,6 +16,7 @@ import { CustomSearchBar } from "../AreaFeed/AreaFeed";
 
 import { Map, MapMarker, MarkerClusterer } from "react-kakao-maps-sdk";
 import { selectPosition } from "../../store/slices/position";
+import Loading from "../../components/Loading/Loading";
 
 import "./HashFeed.scss";
 
@@ -239,7 +240,7 @@ function HashFeed() {
           </div>
         </Content>
       ) : (
-        <div style={{ fontSize: "20px", marginTop: "20px" }}>Loading</div>
+        <Loading />
       )}
       <NavigationBar navReportCallback={navReportCallback} />
     </Layout>

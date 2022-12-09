@@ -20,6 +20,7 @@ import { ArrowLeftOutlined, SyncOutlined } from "@ant-design/icons"
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Statistics from "../../components/Statistics/Statistics";
 import PostList from "../../components/PostList/PostList";
+import Loading from "../../components/Loading/Loading";
 
 import { PositionType, selectPosition } from "../../store/slices/position";
 import { selectUser, UserType } from "../../store/slices/user";
@@ -316,9 +317,7 @@ function AreaFeed() {
                         </div>
                     </Container>
                 ) : (
-                    <div style={{ fontSize: "20px", marginTop: "20px" }}>
-                        Loading
-                    </div>
+                    <Loading />
                 )}
             </Content>
             <NavigationBar navReportCallback={navReportCallback} />
