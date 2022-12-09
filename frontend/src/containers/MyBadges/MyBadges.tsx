@@ -42,7 +42,7 @@ function MyBadges() {
             setMainBadge(selectedBadge);
             await dispatch(
                 updateUserMainBadge({
-                    user_id: userState.currUser.id, 
+                    user_id: userState.currUser.id,
                     main_badge: selectedBadge.id
                 })
             )
@@ -68,9 +68,9 @@ function MyBadges() {
             <Content className="Content">
                 <div id="profile-container">
                     <div id="main-badge-container">
-                        <img src={mainBadge ? mainBadge.image : ""} 
-                        className="main-badge-image" 
-                        alt="" 
+                        <img src={mainBadge ? mainBadge.image : ""}
+                        className="main-badge-image"
+                        alt=""
                         style={{height: "14vh", width: "13vh",}}
                         />
                     </div>
@@ -104,7 +104,7 @@ function MyBadges() {
                             })}
                     </div>
                 </div>
-                {selectedBadge !== null 
+                {selectedBadge !== null
                     ?<button
                     id="set-main-badge-button"
                     onClick={onClickSetAsMainBadgeButton}
