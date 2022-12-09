@@ -30,48 +30,35 @@ function MyPage() {
 
   const currUser = userState.currUser as UserType;
 
-  useEffect(() => {
-    if (currUser) {
-      dispatch(fetchUserPosts(currUser.id));
+  useEffect(()=>{
+    if(currUser){
+        dispatch(fetchUserPosts(currUser.id));
     }
-  }, []);
+    }, []);
 
-  useEffect(() => {
-    if (currUser) {
-      dispatch(updateUserBadges(currUser.id));
-      if (currUser.main_badge) {
-        dispatch(
-          updateUserMainBadge({
-            user_id: currUser.id,
-            main_badge: currUser.main_badge,
-          })
-        );
-      }
-    }
-  }, []);
+    useEffect(()=>{
+        setPosts(userState.userPosts);
+    }, [userState.userPosts])
 
-  useEffect(() => {
-    setPosts(userState.userPosts);
-  }, [userState.userPosts]);
+    useEffect(()=>{
+        if(onlyPhoto){
+            setPosts(posts.filter(post => post.image))
+        } else {
+            setPosts(userState.userPosts);
+        }
+    }, [onlyPhoto])
 
-  useEffect(() => {
-    if (onlyPhoto) {
-      setPosts(posts.filter((post) => post.image));
-    } else {
-      setPosts(userState.userPosts);
-    }
-  }, [onlyPhoto]);
-
-  const onClickBackButton = () => {
-    navigate("/");
-  };
-  const onClickSeeBadgesButton = () => {
-    navigate("/mypage/badges");
-  };
-  const onClickLogOutButton = async (e: React.MouseEvent<HTMLElement>) => {
-    e.preventDefault();
-    await dispatch(setLogout());
-  };
+    const onClickBackButton = () => {
+        navigate("/");
+    };
+    const onClickSeeBadgesButton = async() => {
+        await dispatch(updateUserBadges(currUser.id));
+        navigate("/mypage/badges")
+    };
+    const onClickLogOutButton = async (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        await dispatch(setLogout())
+    };
 
   if (currUser === null) {
     return <Navigate to="/signin" />;

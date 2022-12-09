@@ -42,7 +42,7 @@ const initialState: UserState = {
     currUser: initialUser ? JSON.parse(initialUser) : null,
     userPosts: [],
     userBadges: initialUserBadges ? JSON.parse(initialUserBadges) : null,
-    mainBadge: initialUser && initialUserBadges 
+    mainBadge: initialUser && initialUserBadges
       ?  JSON.parse(initialUserBadges)
           .find((badge: BadgeType) => badge.id === JSON.parse(initialUser).main_badge)
       : null
@@ -88,9 +88,10 @@ const userSlice = createSlice({
         },
         setUserBadges: (state, action: PayloadAction<BadgeType[]>) =>{
           state.userBadges = action.payload;
+          state.mainBadge = state.userBadges.find(badge => badge.id === state.currUser?.main_badge) ?? null;
         },
         setUserMainBadge: (state, action: PayloadAction<UserType>) =>{
-          const new_main_badge = initialState.userBadges.find(badge => badge.id === action.payload.main_badge)
+          const new_main_badge = state.userBadges.find(badge => badge.id === action.payload.main_badge)
           if (new_main_badge && state.currUser) {
             state.mainBadge = new_main_badge
             state.currUser.main_badge = new_main_badge.id
@@ -197,6 +198,7 @@ export const setLogin = createAsyncThunk(
       sessionStorage.setItem("user", JSON.stringify(response.data));
       return response.data
     }).catch((error) => {
+      console.log(error);
       checkApiResponseStatus(error.response.status);
     });
   }
