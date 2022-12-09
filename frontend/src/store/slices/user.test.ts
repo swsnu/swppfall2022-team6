@@ -71,7 +71,8 @@ describe("user reducer", ()=>{
       users: [],
       userBadges: null,
       currUser: null,
-      userPosts: []
+      userPosts: [],
+      mainBadge:null
     });
   });
   it("should handle fetchUsers", async ()=>{

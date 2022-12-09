@@ -66,7 +66,7 @@ describe("<ReportModal />", () => {
         const submitButton = screen.getByText("Submit!");
         fireEvent.click(submitButton);
         await waitFor(() => {
-            expect(mockNavigate).toHaveBeenCalledWith("/areafeed/");
+            expect(mockNavigate).toHaveBeenCalledWith("/areafeed");
         });
     });
     it("should change photo properly", async () => {
@@ -95,7 +95,7 @@ describe("<ReportModal />", () => {
         const submitButton = screen.getByText("Submit!");
         fireEvent.click(submitButton);
         await waitFor(() => {
-            expect(mockNavigate).toHaveBeenCalledWith("/areafeed/");
+            expect(mockNavigate).toHaveBeenCalledWith("/areafeed");
         });
     });
     it("should submit content if only exists", async () => {
@@ -122,7 +122,7 @@ describe("<ReportModal />", () => {
         const submitButton = screen.getByText("Submit!");
         fireEvent.click(submitButton);
         await waitFor(() => {
-            expect(mockNavigate).toHaveBeenCalledWith("/areafeed/");
+            expect(mockNavigate).toHaveBeenCalledWith("/areafeed");
         });
     });
     it("should close modal properly", async () => {
@@ -310,12 +310,12 @@ describe("<ReportModal />", () => {
         const submitButton = screen.getByText("Submit!");
         fireEvent.click(submitButton);
         await waitFor(() => {
-            expect(mockNavigate).toHaveBeenCalledWith("/areafeed/");
+            expect(mockNavigate).toHaveBeenCalledWith("/areafeed");
         });
     });
     it("should close modal when submitted on areafeed page", async () => {
         const mockCallback = jest.fn();
-        const areafeedRoute = "/areafeed/";
+        const areafeedRoute = "/areafeed";
         render(
             <Provider store={mockStore}>
                 <MemoryRouter initialEntries={[areafeedRoute]}>
@@ -358,7 +358,7 @@ describe("<ReportModal />", () => {
         const submitButton = screen.getByText("Submit!");
         fireEvent.click(submitButton);
         await waitFor(() => {
-            expect(mockNavigate).toHaveBeenCalledWith("/areafeed/");
+            expect(mockNavigate).toHaveBeenCalledWith("/areafeed");
         });
     });
 });

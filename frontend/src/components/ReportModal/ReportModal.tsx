@@ -111,14 +111,16 @@ function ReportModal({
             if (image) formData.append("image", image);
             formData.append("content", content);
             formData.append("hashtags", "");
+            formData.append("latitude", currPosition.lat.toString());
+            formData.append("longitude", currPosition.lng.toString());
             formData.append("location", address);
             //@ts-ignore
             await dispatch(addPost(formData));
         }
-        if (location.pathname === "/areafeed/") {
+        if (location.pathname === "/areafeed") {
             setOpenReport(false);
             navReportCallback();
-        } else navigate("/areafeed/");
+        } else navigate("/areafeed");
     };
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();

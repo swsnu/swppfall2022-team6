@@ -34,7 +34,7 @@ function HashFeed() {
   const positionState = useSelector(selectPosition);
 
   const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false);
-  const [refresh, setRefresh] = useState<Boolean>(true);
+  const [refresh, setRefresh] = useState<Boolean>(false);
   const [queryPosts, setQueryPosts] = useState<PostType[]>(postState.posts);
   const [isLoading, setIsLoading] = useState<Boolean>(false);
 
@@ -70,6 +70,10 @@ function HashFeed() {
       fetchData();
     }
   }, [refresh]);
+
+  useEffect(() => {
+    fetchData()
+  }, [id])
 
   useEffect(() => {
     let resultPosts = postState.posts;
@@ -212,7 +216,7 @@ function HashFeed() {
                         key={i}
                         className="hashtag"
                         onClick={() => {
-                          navigate(`/hashfeed/${item.id}/`);
+                          navigate(`/hashfeed/${item.id}`);
                         }}
                       >
                         {"#" + item.content}
