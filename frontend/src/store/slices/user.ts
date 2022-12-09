@@ -90,7 +90,7 @@ const userSlice = createSlice({
           state.userBadges = action.payload;
         },
         setUserMainBadge: (state, action: PayloadAction<UserType>) =>{
-          const new_main_badge = initialState.userBadges.find(badge => badge.id === action.payload.main_badge)
+          const new_main_badge = state.userBadges.find(badge => badge.id === action.payload.main_badge)
           if (new_main_badge && state.currUser) {
             state.mainBadge = new_main_badge
             state.currUser.main_badge = new_main_badge.id
@@ -190,14 +190,15 @@ export const setLogin = createAsyncThunk(
           }}
     ).then(async (response) => {
       // set Current User
-      dispatch(userActions.setLogin(response.data));
+      await dispatch(userActions.setLogin(response.data));
       // set Current Userbadges & update Achievement
-      dispatch(fetchUserBadges(response.data.id));
+      await dispatch(fetchUserBadges(response.data.id));
       dispatch(userActions.setUserMainBadge(response.data));
       sessionStorage.setItem("isLoggedIn", "true");
       sessionStorage.setItem("user", JSON.stringify(response.data));
       return response.data
     }).catch((error) => {
+      console.log(error);
       checkApiResponseStatus(error.response.status);
     });
   }

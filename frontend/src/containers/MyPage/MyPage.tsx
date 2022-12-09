@@ -34,11 +34,11 @@ function MyPage() {
         }
     }, []);
 
-    useEffect(()=>{
-        if(currUser){
-            dispatch(updateUserBadges(currUser.id));
-        }
-    }, []);
+    // useEffect(()=>{
+    //     if(currUser){
+    //         dispatch(updateUserBadges(currUser.id));
+    //     }
+    // }, []);
 
     useEffect(()=>{
         setPosts(userState.userPosts);
@@ -55,7 +55,8 @@ function MyPage() {
     const onClickBackButton = () => {
         navigate("/");
     };
-    const onClickSeeBadgesButton = () => {
+    const onClickSeeBadgesButton = async() => {
+        await dispatch(updateUserBadges(currUser.id));
         navigate("/mypage/badges")
     };
     const onClickLogOutButton = async (e: React.MouseEvent<HTMLElement>) => {
