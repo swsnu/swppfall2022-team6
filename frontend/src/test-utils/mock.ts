@@ -64,12 +64,11 @@ const stubUserInitialState: UserState = {
             main_badge: 1,
         },
         {
-        id: 4,
-        username: "user4",
-        email: "",
-        radius: 0.0,
-        main_badge: 1,
-
+            id: 4,
+            username: "user4",
+            email: "",
+            radius: 0.0,
+            main_badge: 1,
         },
     ],
     currUser: {
@@ -78,7 +77,6 @@ const stubUserInitialState: UserState = {
         email: "",
         radius: 0.0,
         main_badge: 1,
-
     },
     userPosts: [
         {
@@ -111,8 +109,8 @@ const stubUserInitialState: UserState = {
     // TODO: fill in mock badges
     // TODO: fill in mock mainBadge
     userBadges: [],
-    mainBadge: null
-}
+    mainBadge: null,
+};
 
 const stubUserInitialState2: UserState = {
     users: [],
@@ -120,7 +118,7 @@ const stubUserInitialState2: UserState = {
     userPosts: [],
     userBadges: [],
     mainBadge: null,
-}
+};
 
 const stubPostInitialState: PostState = {
     posts: [
@@ -252,14 +250,78 @@ export const mockStore2 = getMockStore({
     positions: stubPositionInitialState,
 });
 
+const stubUserBadgeHashFeed1 = [
+    {
+        id: 1,
+        title: "title1",
+        image: "",
+        description: "badge1",
+        is_fulfilled: false,
+    },
+    {
+        id: 2,
+        title: "title2",
+        image: "",
+        description: "badge2",
+        is_fulfilled: false,
+    },
+    {
+        id: 3,
+        title: "title3",
+        image: "",
+        description: "badge3",
+        is_fulfilled: false,
+    },
+    {
+        id: 4,
+        title: "title4",
+        image: "",
+        description: "badge4",
+        is_fulfilled: false,
+    },
+];
+
 export const mockStoreHashFeed1 = getMockStore({
-    users: stubUserInitialState,
-    posts: stubPostInitialState,
-    reports: {reports:[]},
-    hashtags: {
-        hashtags: [
-            { id: 1, content: "hashtag1" },
+    users: {
+        ...stubUserInitialState,
+        userBadges: [
+            ...stubUserBadgeHashFeed1,
+            {
+                id: 5,
+                title: "title5",
+                image: "",
+                description: "badge5",
+                is_fulfilled: false,
+            },
         ],
+    },
+    posts: stubPostInitialState,
+    reports: { reports: [] },
+    hashtags: {
+        hashtags: [{ id: 1, content: "hashtag1" }],
+        top3: [{ id: 1, content: "hashtag1" }],
+    },
+    positions: stubPositionInitialState,
+});
+
+export const mockStorePostModal1 = getMockStore({
+    users: {
+        ...stubUserInitialState,
+        userBadges: [
+            ...stubUserBadgeHashFeed1,
+            {
+                id: 5,
+                title: "title5",
+                image: "",
+                description: "badge5",
+                is_fulfilled: true,
+            },
+        ],
+    },
+    posts: stubPostInitialState,
+    reports: { reports: [] },
+    hashtags: {
+        hashtags: [{ id: 1, content: "hashtag1" }],
         top3: [{ id: 1, content: "hashtag1" }],
     },
     positions: stubPositionInitialState,

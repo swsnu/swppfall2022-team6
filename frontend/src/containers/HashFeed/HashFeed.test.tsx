@@ -168,7 +168,6 @@ describe("<HashFeed />", () => {
         await waitFor(() =>
             expect(screen.queryByText("t2")).not.toBeInTheDocument()
         );
-        //await screen.findByText("user2");
     });
     it("should handle postlistcallback after adding post", async () => {
         render(hashFeedJSX);

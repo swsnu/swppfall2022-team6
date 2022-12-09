@@ -4,7 +4,7 @@ import axios from "axios";
 import React from "react";
 import ReportModal from "./ReportModal";
 import userEvent from "@testing-library/user-event";
-import { getMockStore, mockStore } from "../../test-utils/mock";
+import { getMockStore, mockStore, mockStoreHashFeed1 } from "../../test-utils/mock";
 import { Provider } from "react-redux";
 import { UserState } from "../../store/slices/user";
 import { MemoryRouter, Route, Routes } from "react-router";
@@ -335,4 +335,30 @@ describe("<ReportModal />", () => {
             expect(mockCallback).toHaveBeenCalled();
         });
     })
+    it("should handle achievements", async () => {
+        axios.post = jest.fn().mockResolvedValue({data:"payload"});
+        axios.put = jest.fn().mockResolvedValue({})
+        render(
+            <Provider store={mockStoreHashFeed1}>
+                <MemoryRouter>
+                    <Routes>
+                        <Route path="/" element={
+                            <ReportModal
+                                currPosition={{ lat: 0, lng: 0 }}
+                                openReport={true}
+                                setOpenReport={jest.fn()}
+                                isNavbarReport={false}
+                                navReportCallback={() => {}}
+                            />
+                        } />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+        const submitButton = screen.getByText("Submit!");
+        fireEvent.click(submitButton);
+        await waitFor(() => {
+            expect(mockNavigate).toHaveBeenCalledWith("/areafeed/");
+        });
+    });
 });
