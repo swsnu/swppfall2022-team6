@@ -17,39 +17,39 @@ $top: 155px;
     font-weight: 700;
     font-size: $small-text;
 }
-.Header {
+.MainPage .Header {
     padding: 10px;
     margin: 0;
 }
-.nowsee-logo {
+.MainPage .nowsee-logo {
     position: absolute;
     left: 5vw;
     top: 18px;
     width: 100px;
     object-fit: cover;
 }
-.mypage-button {
+.MainPage .mypage-button {
     position: absolute;
     right: 5vw;
     border: 0;
     background: none;
 }
-.mypage-button img {
+.MainPage .mypage-button img {
     border-radius: 0;
 }
-.main-top-map-container {
+.MainPage .main-top-map-container {
     padding-top: 20px;
 }
 
-.main-description-span {
+.MainPage .main-description-span {
     word-break: keep-all;
     word-wrap: break-word;
 }
 
-.current-location {
+.MainPage .current-location {
     line-height: 18px;
 }
-.findout-button {
+.MainPage .findout-button {
     position: absolute;
     height: 35px;
 
@@ -59,14 +59,14 @@ $top: 155px;
     line-height: 140%;
     outline: 0;
 }
-.report-button {
+.MainPage .report-button {
     position: absolute;
     height: 35px;
 }
-.slider-description {
+.MainPage .slider-description {
     position: absolute;
 }
-.radius-slider {
+.MainPage .radius-slider {
     position: absolute;
 
     
@@ -94,119 +94,125 @@ $tablet: 1300px;
 }
 
 @include mobile {
-    .main-description {
-        margin-top: 7px;
-        font-weight: 800;
-        opacity: 0;
-    }
-    .current-location {
-        top: calc(60vh + 145px + 25px);
-        text-align: center;
-    }
-    .findout-button {
-        top: calc(60vh + 145px + 50px);
-        left: 5vw;
-        min-width: 100px;
-        width: 40vw;
-    }
-    .report-button {
-        top: calc(60vh + 145px + 50px);
-        right: 5vw;
-        min-width: 100px;
-        width: 40vw;
-    }
-    .slider-description {
-        top: calc(60vh + 145px + 90px);
-        opacity: 0;
-        // left: 5vw;
-    }
-    .radius-slider {
-        top: calc(60vh + 145px + 100px);
-        left: 20vw;
-        min-width: 213px;
-        width: 20vw;
+    .MainPage{
+        .main-description {
+            margin-top: 7px;
+            font-weight: 800;
+            opacity: 0;
+        }
+        .current-location {
+            top: calc(60vh + 145px + 25px);
+            text-align: center;
+        }
+        .findout-button {
+            top: calc(60vh + 145px + 50px);
+            left: 5vw;
+            min-width: 100px;
+            width: 40vw;
+        }
+        .report-button {
+            top: calc(60vh + 145px + 50px);
+            right: 5vw;
+            min-width: 100px;
+            width: 40vw;
+        }
+        .slider-description {
+            top: calc(60vh + 145px + 90px);
+            opacity: 0;
+            // left: 5vw;
+        }
+        .radius-slider {
+            top: calc(60vh + 145px + 100px);
+            left: 20vw;
+            min-width: 213px;
+            width: 20vw;
+        }
     }
 }
 @include tablet {
-    .main-description {
-        text-align: left;
-        margin-top: 7px;
-        font-weight: 800;
-    }
-    .current-location {
-        position: absolute;
-        top: calc(60vh + 145px);
-        right: 5vw;
-        display: flex;
-        flex-direction: column;
-        text-align: right;
-    }
-    .findout-button {
-        top: calc(60vh + 145px + 50px);
-        right: 5vw;
-        min-width: 200px;
-        width: 15vw;
-    }
-    .report-button {
-        top: calc(60vh + 145px + 100px);
-        right: 5vw;
-        min-width: 200px;
-        width: 15vw;
-    }
-    .slider-description {
-        top: calc(60vh + 145px + 50px);
-        left: 5vw;
-    }
-    .radius-slider {
-        top: calc(60vh + 145px + 70px);
-        left: 5vw;
-        min-width: 300px;
-        width: 20vw;
+    .MainPage {
+        .main-description {
+            text-align: left;
+            margin-top: 7px;
+            font-weight: 800;
+        }
+        .current-location {
+            position: absolute;
+            top: calc(60vh + 145px);
+            right: 5vw;
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+        }
+        .findout-button {
+            top: calc(60vh + 145px + 50px);
+            right: 5vw;
+            min-width: 200px;
+            width: 15vw;
+        }
+        .report-button {
+            top: calc(60vh + 145px + 100px);
+            right: 5vw;
+            min-width: 200px;
+            width: 15vw;
+        }
+        .slider-description {
+            top: calc(60vh + 145px + 50px);
+            left: 5vw;
+        }
+        .radius-slider {
+            top: calc(60vh + 145px + 70px);
+            left: 5vw;
+            min-width: 300px;
+            width: 20vw;
+        }
     }
 }
 
 @include desktop {
-    .main-description {
-        position: absolute;
-        top: 350px;
-        right: 5vw;
-        width: 15vw;
-    
-        font-size: 30px;
-        line-height: 40px;
-        font-weight: 700;
-        letter-spacing: 0.1px;
-        font-family: 'Lobster', sans-serif;
-        color: $main-color;
-    }
-    .current-location {
-        position: absolute;
-        bottom: 250px;
-        right: 5vw;
-        display: flex;
-        flex-direction: column;
-        text-align: right;
-    }
-    .findout-button {
-        bottom: 200px;
-        right: 5vw;
-        min-width: 130px;
-        width: 15vw;
-    }
-    .report-button {
-        bottom: 150px;
-        right: 5vw;
-        min-width: 130px;
-        width: 15vw;
-    }
-    .slider-description {
-        bottom: 110px;
-        right: 5vw;
-    }
-    .radius-slider {
-        bottom: 50px;
-        right: 4.3vw;
-        min-width: 213px;
-        width: 15vw;
+    .MainPage {
+        .main-description {
+            position: absolute;
+            bottom: 50vh;
+            right: 5vw;
+            width: 15vw;
+        
+            font-size: 30px;
+            line-height: 40px;
+            font-weight: 700;
+            letter-spacing: 0.1px;
+            font-family: 'Lobster', sans-serif;
+            color: $main-color;
+        }
+        .current-location {
+            position: absolute;
+            bottom: 250px;
+            right: 5vw;
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+        }
+        .findout-button {
+            bottom: 200px;
+            right: 5vw;
+            min-width: 130px;
+            width: 15vw;
+        }
+        .report-button {
+            bottom: 150px;
+            right: 5vw;
+            min-width: 130px;
+            width: 15vw;
+        }
+        .slider-description {
+            bottom: 110px;
+            right: 5vw;
+        }
+        .radius-slider {
+            bottom: 50px;
+            right: 4.3vw;
+            min-width: 213px;
+            width: 15vw;
+        }
     }
 }

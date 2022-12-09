@@ -31,8 +31,6 @@ const sliderMarks = {
     100: "4km",
 };
 
-const formatter = (value: number)=>`${value/25}km`;
-
 const MainPage: React.FC = ()=>{
     const userState = useSelector(selectUser);
     const positionState = useSelector(selectPosition);
@@ -90,9 +88,6 @@ const MainPage: React.FC = ()=>{
     const onClickMyPageIcon = () => {
         navigate("/mypage");
     };
-    const onChangeMapRadius = (event: Event, newValue: number | number[]) => {
-        setCurrRadius(newValue as number);
-    };
     const onClickFindOutButton = async () => {
         const radiusKm = currRadius / 25;
         await dispatch(setRadius({ user: currUser, radius: radiusKm })); //! type mismatch error,, why?
@@ -146,10 +141,6 @@ const MainPage: React.FC = ()=>{
                         >
                             <span className="main-description-span">
                                 Select a location and find out real-time statistics!
-                                {/* <strong>Select a location</strong><br/>
-                                and<br/>
-                                find out<br/>
-                                <strong>real-time statistics!</strong> */}
                             </span>
                         </div>
                         <div className="current-location">
