@@ -122,6 +122,12 @@ describe("user reducer", ()=>{
     await store.dispatch(fetchUserPosts(1));
     await waitFor(() => expect(window.alert).toHaveBeenCalled());
   });
+  it("should handle faulty fetch user posts 403(?)", async()=>{
+    const err = {response: {status: 403}};
+    jest.spyOn(axios, "get").mockRejectedValueOnce(err);
+    await store.dispatch(fetchUserPosts(1));
+    await waitFor(() => expect(window.alert).toHaveBeenCalled());
+  });
   it("should handle faulty fetch user posts 500", async()=>{
     const err = {response: {status: 500}};
     jest.spyOn(axios, "get").mockRejectedValueOnce(err);
@@ -216,13 +222,6 @@ describe("user reducer", ()=>{
     await waitFor(() => {
       store.dispatch(updateUserAchievements({id: fakeUser.id, type: 2}));
     })
-  });
-
-  it("should handle updateUserBadges", async () => {
-    axios.post = jest.fn().mockRejectedValue({response: {status: 401}});
-    await waitFor(() => {
-      store.dispatch(updateUserBadges(1));
-    });
   });
 
   it("should update main badge", async() => {
