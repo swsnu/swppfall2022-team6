@@ -13,22 +13,16 @@ jest.mock("react-router", ()=>({
   useNavigate: ()=>mockNavigate,
 }));
 
-const renderComponent = () => {
+const renderComponent = (showResults: boolean = false) => {
   const view = render (
     <Provider store={mockStore}>
-          <MemoryRouter>
-              <Routes>
-                  <Route path="/" element={
-                  <MapSearch 
-                    markerPosition={{lat:0, lng:0}} 
-                    setMarkerPosition={setStateMock} 
-                    showResults={false} 
-                    setShowResults={setStateMock}
-                    setIsOpen={setStateMock}
-                  />
-                }/>
-              </Routes>
-          </MemoryRouter>
+        <MapSearch 
+          markerPosition={{lat:0, lng:0}} 
+          setMarkerPosition={setStateMock} 
+          showResults={showResults} 
+          setShowResults={setStateMock}
+          setIsOpen={setStateMock}
+        />
       </Provider>
     
   );
@@ -72,31 +66,21 @@ describe("<MapSearch />", ()=>{
       mockResultData, 
       "OK", 
       new kakao.maps.Pagination()
-    ));
-    (kakao.maps.services.Places as jest.Mock).mockReturnValue({
-      keywordSearch: mockKeywordSearch,
-    });
-    const mockConsoleLog = jest.fn();
-    console.log = mockConsoleLog;
+      ));
+      (kakao.maps.services.Places as jest.Mock).mockReturnValue({
+        keywordSearch: mockKeywordSearch,
+      });
+      const mockConsoleLog = jest.fn();
+      console.log = mockConsoleLog;
+      renderComponent();
 
-    const {container} = renderComponent();
-    // screen.debug(container);
-    const searchInput = screen.getByRole("textbox");
-    fireEvent.change(searchInput, {target: {value: "서울대"}});
-    await screen.findByDisplayValue("서울대");
+      const searchInput = screen.getByRole("textbox");
+      fireEvent.change(searchInput, {target: {value: "서울대"}});
+      await screen.findByDisplayValue("서울대");
 
-    // @ts-ignore
-    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
-    const searchIcon = container.getElementsByClassName(
-      "MuiButtonBase-root MuiIconButton-root ForwardRef-iconButton-19 ForwardRef-searchIconButton-21"
-    )[0];
-    fireEvent.click(searchIcon!);
-    expect(mockKeywordSearch).toHaveBeenCalled();
-    expect(mockConsoleLog).toHaveBeenCalledWith("검색 중");
-    // setImmediate( () => {
-    //   // expect(wrapper.find('#promiseText').text()).toEqual('there is text!');
-    //   screen.findAllByText("place");
-    // })
+      fireEvent.keyDown(searchInput, {key: 'Enter', code: 'Enter', charCode: 13})
+      expect(mockKeywordSearch).toHaveBeenCalled();
+      expect(mockConsoleLog).toHaveBeenCalledWith("검색 중"); 
   });
 
   it("should search result: zero result", async ()=>{
@@ -110,17 +94,13 @@ describe("<MapSearch />", ()=>{
     (kakao.maps.services.Places as jest.Mock).mockReturnValue({
       keywordSearch: mockKeywordSearch,
     });
-    const {container} = renderComponent();
+    renderComponent();
 
     const searchInput = screen.getByRole("textbox");
     fireEvent.change(searchInput, {target: {value: "서울대"}});
     await screen.findByDisplayValue("서울대");
 
-    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
-    const searchIcon = container.getElementsByClassName(
-      "MuiButtonBase-root MuiIconButton-root ForwardRef-iconButton-27 ForwardRef-searchIconButton-29"
-    )[0];
-    fireEvent.click(searchIcon!);
+    fireEvent.keyDown(searchInput, {key: 'Enter', code: 'Enter', charCode: 13})
 
     expect(mockKeywordSearch).toHaveBeenCalled();
     expect(mockAlert).toHaveBeenCalledWith("검색 결과가 존재하지 않습니다.");
@@ -137,87 +117,16 @@ describe("<MapSearch />", ()=>{
     (kakao.maps.services.Places as jest.Mock).mockReturnValue({
       keywordSearch: mockKeywordSearch,
     });
-    const {container} = renderComponent();
-    // screen.debug(container)
+    renderComponent();
 
     const searchInput = screen.getByRole("textbox");
     fireEvent.change(searchInput, {target: {value: "서울대"}});
     await screen.findByDisplayValue("서울대");
-
-    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
-    const searchIcon = container.getElementsByClassName(
-      "MuiButtonBase-root MuiIconButton-root ForwardRef-iconButton-35 ForwardRef-searchIconButton-37"
-    )[0];
-    fireEvent.click(searchIcon!);
+    fireEvent.keyDown(searchInput, {key: 'Enter', code: 'Enter', charCode: 13})
 
     expect(mockKeywordSearch).toHaveBeenCalled();
     expect(mockAlert).toHaveBeenCalledWith("검색 결과 중 오류가 발생했습니다.");
   });
-  // it("should handle search cancel", async ()=>{
-  //   const mockKeywordSearch = jest.fn((searchQuery, callback, option)=>callback(
-  //     mockResultData, 
-  //     "OK", 
-  //     new kakao.maps.Pagination()
-  //   ));
-  //   (kakao.maps.services.Places as jest.Mock).mockReturnValue({
-  //     keywordSearch: mockKeywordSearch,
-  //   });
-  //   const {container} = renderComponent();
-  //   const searchInput = screen.getByRole("textbox");
-
-  //   // screen.debug(searchInput);
-
-  //   fireEvent.change(searchInput, {target: {value: "서울대"}});
-  //   await screen.findByDisplayValue("서울대");
-
-  //   // @ts-ignore
-  //   // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
-  //   const searchIcon = container.getElementsByClassName(
-  //     "MuiButtonBase-root MuiIconButton-root ForwardRef-iconButton-3"
-  //   )[0];
-  //   fireEvent.click(searchIcon!);
-  //   expect(mockKeywordSearch).toHaveBeenCalled();
-  //   await screen.findAllByText("place");
-  // });
-
-  // it("should search result: do nothing", async ()=>{
-  //   const mockAlert = jest.fn();
-  //   window.alert = mockAlert;
-  //   const mockKeywordSearch = jest.fn((searchQuery, callback, option)=>callback(
-  //     mockResultData, 
-  //     "ABC", 
-  //     new kakao.maps.Pagination()
-  //   ));
-  //   (kakao.maps.services.Places as jest.Mock).mockReturnValue({
-  //     keywordSearch: mockKeywordSearch,
-  //   });
-  //   renderComponent();
-  //   const searchInput = screen.getByRole("textbox");
-  //   fireEvent.change(searchInput, {target: {value: "서울대"}});
-  //   await screen.findByDisplayValue("서울대");
-  //   fireEvent.keyDown(searchInput, {key: "Enter"});
-  //   expect(mockKeywordSearch).toHaveBeenCalled();
-  // });
-  
-  // it("should handle click on search result", async ()=>{
-  //   const mockKeywordSearch = jest.fn((searchQuery, callback, option)=>callback(
-  //     mockResultData, 
-  //     "OK", 
-  //     new kakao.maps.Pagination()
-  //   ));
-  //   (kakao.maps.services.Places as jest.Mock).mockReturnValue({
-  //     keywordSearch: mockKeywordSearch,
-  //   });
-  //   renderComponent();
-  //   const searchInput = screen.getByRole("textbox");
-  //   fireEvent.change(searchInput, {target: {value: "서울대"}});
-  //   await screen.findByDisplayValue("서울대");
-  //   fireEvent.keyDown(searchInput, {key: "Enter"});
-  //   expect(mockKeywordSearch).toHaveBeenCalled();
-  //   await screen.findByLabelText("Search Results");
-  //   const searchResultItem = screen.getByText("place1");
-  //   fireEvent.click(searchResultItem!)
-  // });
 
   // it("should handle click on pagination", async ()=>{
   //   const mockGotoFirst = jest.fn();
@@ -237,26 +146,30 @@ describe("<MapSearch />", ()=>{
   //   (kakao.maps.services.Places as jest.Mock).mockReturnValue({
   //     keywordSearch: mockKeywordSearch,
   //   });
+  //   console.error = jest.fn()
 
-  //   renderComponent();
+  //   renderComponent(true);
 
   //   const searchInput = screen.getByRole("textbox");
   //   fireEvent.change(searchInput, {target: {value: "서울대"}});
   //   await screen.findByDisplayValue("서울대");
+  //   console.log(searchInput)
 
-  //   fireEvent.keyDown(searchInput, {key: "Enter"});
-  //   expect(mockKeywordSearch).toHaveBeenCalled();
+  //   // fireEvent.keyDown(searchInput, {key: "Enter"});
+  //   // expect(mockKeywordSearch).toHaveBeenCalled();
 
-  //   await screen.findByLabelText("Search Results");
+
+  //   // await screen.findByLabelText("Search Results");
+  //   // await screen.findByText("place1");
 
   //   const links = screen.getAllByRole("link");
     
   //   fireEvent.click(links[0]!)
   //   expect(mockGotoFirst).toHaveBeenCalled();
-  //   fireEvent.click(links[1]!)
-  //   expect(mockGotoPage).toHaveBeenCalled();
-  //   fireEvent.click(links[links.length-1]!)
-  //   expect(mockGotoLast).toHaveBeenCalled();
+  //   // fireEvent.click(links[1]!)
+  //   // expect(mockGotoPage).toHaveBeenCalled();
+  //   // fireEvent.click(links[links.length-1]!)
+  //   // expect(mockGotoLast).toHaveBeenCalled();
   // });
 
   it("should do nothing when other key pressed", async ()=>{
