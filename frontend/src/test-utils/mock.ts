@@ -110,15 +110,67 @@ const stubUserInitialState: UserState = {
     ],
     // TODO: fill in mock badges
     // TODO: fill in mock mainBadge
-    userBadges: [],
-    mainBadge: null
+    userBadges: [
+        {
+            id: 1,
+            title: "badge1",
+            image: "src1",
+            description: "badge1",
+            is_fulfilled: true,
+        },
+        {
+            id: 2,
+            title: "badge2",
+            image: "src2",
+            description: "badge2",
+            is_fulfilled: false,
+        }
+        ,
+        {
+            id: 3,
+            title: "badge3",
+            image: "src3",
+            description: "badge3",
+            is_fulfilled: true,
+        }
+    ],
+    mainBadge: {
+        id: 1,
+        title: "badge1",
+        image: "src1",
+        description: "badge1",
+        is_fulfilled: true,
+    }
 }
 
 const stubUserInitialState2: UserState = {
     users: [],
     currUser: null,
     userPosts: [],
-    userBadges: [],
+    userBadges: [
+        {
+            id: 1,
+            title: "badge1",
+            image: "src1",
+            description: "badge1",
+            is_fulfilled: true,
+        },
+        {
+            id: 2,
+            title: "badge2",
+            image: "src2",
+            description: "badge2",
+            is_fulfilled: false,
+        }
+        ,
+        {
+            id: 3,
+            title: "badge3",
+            image: "src3",
+            description: "badge3",
+            is_fulfilled: true,
+        }
+    ],
     mainBadge: null,
 }
 
