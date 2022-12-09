@@ -22,128 +22,115 @@ import "./MyPage.scss";
 const { Header, Content } = Layout;
 
 function MyPage() {
-  const userState = useSelector(selectUser);
-  const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
-  const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false);
-  const [posts, setPosts] = useState<PostType[]>([]);
+    const userState = useSelector(selectUser);
+    const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
+    const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false);
+    const [posts, setPosts] = useState<PostType[]>([]);
 
-  const currUser = userState.currUser as UserType;
+    const currUser = userState.currUser as UserType;
 
-  useEffect(() => {
-    if (currUser) {
-      dispatch(fetchUserPosts(currUser.id));
+    useEffect(()=>{
+        if(currUser){
+            dispatch(fetchUserPosts(currUser.id));
+        }
+    }, []);
+
+    useEffect(()=>{
+        setPosts(userState.userPosts);
+    }, [userState.userPosts])
+
+    useEffect(()=>{
+        if(onlyPhoto){
+            setPosts(posts.filter(post => post.image))
+        } else {
+            setPosts(userState.userPosts);
+        }
+    }, [onlyPhoto])
+
+    const onClickBackButton = () => {
+        navigate("/");
+    };
+    const onClickSeeBadgesButton = async() => {
+        await dispatch(updateUserBadges(currUser.id));
+        navigate("/mypage/badges")
+    };
+    const onClickLogOutButton = async (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        await dispatch(setLogout())
+    };
+
+    if (currUser === null) {
+        return <Navigate to="/signin" />;
     }
-  }, []);
-
-  useEffect(() => {
-    if (currUser) {
-      dispatch(updateUserBadges(currUser.id));
-      if (currUser.main_badge) {
-        dispatch(
-          updateUserMainBadge({
-            user_id: currUser.id,
-            main_badge: currUser.main_badge,
-          })
-        );
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    setPosts(userState.userPosts);
-  }, [userState.userPosts]);
-
-  useEffect(() => {
-    if (onlyPhoto) {
-      setPosts(posts.filter((post) => post.image));
-    } else {
-      setPosts(userState.userPosts);
-    }
-  }, [onlyPhoto]);
-
-  const onClickBackButton = () => {
-    navigate("/");
-  };
-  const onClickSeeBadgesButton = () => {
-    navigate("/mypage/badges");
-  };
-  const onClickLogOutButton = async (e: React.MouseEvent<HTMLElement>) => {
-    e.preventDefault();
-    await dispatch(setLogout());
-  };
-
-  if (currUser === null) {
-    return <Navigate to="/signin" />;
-  }
-  return (
-    <Layout className="MyPage">
-      <Header
-        id="header-container"
-        className="Header"
-        style={{ backgroundColor: "white" }}
-      >
-        <div id="button-container">
-            <ArrowLeftOutlined
-              id="back-button"
-              className="button"
-              onClick={onClickBackButton}
-            />
-        </div>
-        <div id="mypage-title">My Page</div>
-      </Header>
-      <Content className="Content">
-        <div id="profile-container">
-            <div id="profile-sub-container">
-                <div id="main-badge-container">
-                    <img
-                    alt=""
-                    src={userState.mainBadge?.image}
-                    style={{ height: "14vh", width: "13vh" }}
-                    />
-                </div>
-                <div id="profile-col">
-                    <div id="user-name">{currUser.username}</div>
-                    <div id="profile-butons">
-                    <button id="see-badges-button" onClick={onClickSeeBadgesButton}>
-                        See Badges
-                    </button>
-                    <button id="logout-button" onClick={onClickLogOutButton}>
-                        Log Out
-                    </button>
+    return (
+        <Layout className="MyPage">
+        <Header
+            id="header-container"
+            className="Header"
+            style={{ backgroundColor: "white" }}
+        >
+            <div id="button-container">
+                <ArrowLeftOutlined
+                id="back-button"
+                className="button"
+                onClick={onClickBackButton}
+                />
+            </div>
+            <div id="mypage-title">My Page</div>
+        </Header>
+        <Content className="Content">
+            <div id="profile-container">
+                <div id="profile-sub-container">
+                    <div id="main-badge-container">
+                        <img
+                        alt=""
+                        src={userState.mainBadge?.image}
+                        style={{ height: "14vh", width: "13vh" }}
+                        />
+                    </div>
+                    <div id="profile-col">
+                        <div id="user-name">{currUser.username}</div>
+                        <div id="profile-butons">
+                        <button id="see-badges-button" onClick={onClickSeeBadgesButton}>
+                            See Badges
+                        </button>
+                        <button id="logout-button" onClick={onClickLogOutButton}>
+                            Log Out
+                        </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div id="posts-header-container">
-          <div className="area-label title">
-            <span>My Posts</span>
-          </div>
-          <div id="only-photos-button">
-            <div>
-              <Checkbox
-                className="checkbox"
-                checked={onlyPhoto}
-                onChange={() => {
-                  setOnlyPhoto(!onlyPhoto);
-                }}
-              />
-              <span> Only Photos</span>
+            <div id="posts-header-container">
+            <div className="area-label title">
+                <span>My Posts</span>
             </div>
-          </div>
-        </div>
-        <div id="postlist-container">
-          <PostList
-            currPosition={null}
-            type={"Mypage"}
-            postListCallback={() => {}}
-            replyTo={0}
-            allPosts={posts}
-          />
-        </div>
-      </Content>
-    </Layout>
-  );
+            <div id="only-photos-button">
+                <div>
+                <Checkbox
+                    className="checkbox"
+                    checked={onlyPhoto}
+                    onChange={() => {
+                    setOnlyPhoto(!onlyPhoto);
+                    }}
+                />
+                <span> Only Photos</span>
+                </div>
+            </div>
+            </div>
+            <div id="postlist-container">
+            <PostList
+                currPosition={null}
+                type={"Mypage"}
+                postListCallback={() => {}}
+                replyTo={0}
+                allPosts={posts}
+            />
+            </div>
+        </Content>
+        </Layout>
+    );
 }
 
 export default MyPage;
