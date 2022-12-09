@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { fetchPosts, PostType, selectPost } from "../../store/slices/post";
-import { fetchTop3Hashtags, selectHashtag } from "../../store/slices/hashtag";
+import {selectHashtag } from "../../store/slices/hashtag";
 import { fetchReports, selectReport } from "../../store/slices/report";
 import { AppDispatch } from "../../store";
 
@@ -126,15 +126,15 @@ function AreaFeed() {
         setQueryPosts(postData);
     };
 
-    const refreshHashtag = async () => {
-        await dispatch(
-            fetchTop3Hashtags({
-                ...position,
-                radius: user.radius,
-            })
-        );
-        setQueryHash("");
-    };
+    // const refreshHashtag = async () => {
+    //     await dispatch(
+    //         fetchTop3Hashtags({
+    //             ...position,
+    //             radius: user.radius,
+    //         })
+    //     );
+    //     setQueryHash("");
+    // };
 
     const fetchData = async () => {
         console.time("reports");
@@ -143,9 +143,9 @@ function AreaFeed() {
         console.time("posts");
         await refreshPosts();
         console.timeEnd("posts");
-        console.time("hashtags");
-        await refreshHashtag();
-        console.timeEnd("hashtags");
+        // console.time("hashtags");
+        // await refreshHashtag();
+        // console.timeEnd("hashtags");
         setRefresh(false);
         setIsLoading(true);
     };

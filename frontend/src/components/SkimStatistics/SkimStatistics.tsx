@@ -4,7 +4,11 @@ import axios from "axios";
 import { PositionType } from "../../store/slices/position";
 import { dataType } from "../Statistics/Statistics";
 import "./SkimStatistics.scss";
-import { fetchReports, ReportType, selectReport } from "../../store/slices/report";
+import {
+    fetchReports,
+    ReportType,
+    selectReport,
+} from "../../store/slices/report";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store";
 
@@ -15,7 +19,7 @@ export interface IProps {
 const labels = ["Sunny", "Cloudy", "Rain", "Snow"];
 
 export const SmallStatistics = (props: IProps) => {
-    const {position, radius} = props;
+    const { position, radius } = props;
     const reportState = useSelector(selectReport);
     // const [allReports, setAllReports] = useState<ReportType[]>([]);
     const [maxIndex, setMaxIndex] = useState<number>(0);
@@ -28,7 +32,7 @@ export const SmallStatistics = (props: IProps) => {
     const displaylabels = [
         ["☀️ ", "☁️ ", "☔ ", "❄️ "][maxIndex] + labels[maxIndex],
         "💨 Wind",
-        "🤗 Happy",
+        "😖 Discomfort",
         "💧 Humidity",
     ];
 
@@ -134,7 +138,7 @@ export const SmallStatistics = (props: IProps) => {
         .style("font-family", "NanumGothic")
         .style("font-family", "sans-serif")
         .style("font-weight", "700")
-        .style("font-size", "15px")
+        .style("font-size", "12px")
         .style("color", "rgba(0,0,0,50%)");
 
     svg.append("g")
@@ -143,13 +147,16 @@ export const SmallStatistics = (props: IProps) => {
         .style("font-family", "NanumGothic")
         .style("font-family", "sans-serif")
         .style("font-weight", "700")
-        .style("font-size", "15px")
+        .style("font-size", "12px")
         .style("color", "rgba(0,0,0,75%)");
 
     useEffect(() => {
-        dispatch(fetchReports({
-            ...position, radius,
-        }));
+        dispatch(
+            fetchReports({
+                ...position,
+                radius,
+            })
+        );
     }, []);
 
     useEffect(() => {
@@ -185,25 +192,28 @@ export const SmallStatistics = (props: IProps) => {
                     0
                 ) / reportState.reports.length,
             ]);
-            setNoStat(false)
+            setNoStat(false);
         }
     }, [maxIndex, reportState.reports]);
 
     if (noStat) {
         return (
             <div className="stats-container">
-                <h2 style={{
-                    padding: "20px",
-                    paddingTop: "50px",
-                    fontSize: "20px",
-                    width: "350px",
-                    height: "130px",
-                    textAlign: "center",
-                }}>No Statistics!</h2>
+                <h2
+                    style={{
+                        padding: "20px",
+                        paddingTop: "50px",
+                        fontSize: "20px",
+                        width: "350px",
+                        height: "130px",
+                        textAlign: "center",
+                    }}
+                >
+                    No Statistics!
+                </h2>
             </div>
         );
-    }
-    else {
+    } else {
         return (
             <div className="stats-container">
                 {/* @ts-ignore */}
@@ -213,8 +223,7 @@ export const SmallStatistics = (props: IProps) => {
     }
 };
 
-
-export const Address = ({position}:{position: PositionType}) => {
+export const Address = ({ position }: { position: PositionType }) => {
     const geocoder = new kakao.maps.services.Geocoder();
     const [address, setAddress] = useState<string>("");
     useEffect(() => {
@@ -243,7 +252,7 @@ const SkimStatistics = (props: IProps) => {
     return (
         <div className="skim-stats">
             <Address position={props.position} />
-            <SmallStatistics position={props.position} radius={props.radius}/>
+            <SmallStatistics position={props.position} radius={props.radius} />
         </div>
     );
 };
