@@ -65,6 +65,7 @@ $top: 20px;
     // overflow: hidden;
 
     display: flex;
+    justify-content: flex-start;
 }
 
 // .HashFeed #search-box-container {
@@ -119,15 +120,12 @@ $top: 20px;
 
 .HashFeed .post-title {
     margin-bottom: 20px;
-    margin-top: 70px;
-}
-.HashFeed .hashtag-title {
-    position: relative;
-    top: 30px;
+    margin-top: 40px;
 }
 .HashFeed .no-hashtag {
-    position: relative;
-    top: 50px;
+    margin-top: 10px;
+    // position: relative;
+    // top: 50px;
     font-size: 13px;
 }
 .HashFeed .no-hashtag span {
@@ -156,7 +154,16 @@ $mobile: 1000px;
         }
         .Content {
             flex-direction: column;
-            gap: 5vw;
+        }
+        .hashtag-title {
+            margin-top: 35px;
+        }
+        .post-title {
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+        .hashfeed-posts-container {
+            width: 80vw;
         }
     }
 }
@@ -180,6 +187,12 @@ $mobile: 1000px;
             width: 30vw;
             margin-left: 10px;
         }
-        
+        .hashtag-title {
+            margin-top: 50px;
+        }
+        .post-title {
+            margin-bottom: 20px;
+            margin-top: 40px;
+        }
     }
 }

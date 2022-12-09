@@ -230,9 +230,7 @@ function HashFeed() {
                 </Space>
               ) : (
                 <div className="no-hashtag">
-                  <span>😵</span>
-                  <br />
-                  No recommended hashtag!
+                  No recommended hashtag! 😵
                 </div>
               )}
             </div>
