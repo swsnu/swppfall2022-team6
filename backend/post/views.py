@@ -80,7 +80,6 @@ class PostViewSet(viewsets.GenericViewSet):
     @transaction.atomic
     def create(self, request):
         user = request.user
-        print('before create')
         post=Post.objects.create(user=user,
         content=request.POST['content'],
         image=request.FILES['image'] if 'image' in request.FILES else None,
@@ -90,7 +89,6 @@ class PostViewSet(viewsets.GenericViewSet):
         created_at=datetime.now(),
         reply_to=Post.objects.get(id=int(request.POST['replyTo']))
         if 'replyTo' in request.POST else None)
-        print('after create')
         hashid = ''
         if 'hid' in request.POST:
             hashid = Hashtag.objects.get(id=int(request.POST['hid']))

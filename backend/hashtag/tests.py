@@ -3,7 +3,7 @@
 '''
 from django.test import TestCase, Client
 
-from user.models import Badge
+from user.models import Badge, BADGE_NUM
 from hashtag.models import Hashtag
 #from .models import Hashtag
 
@@ -16,8 +16,9 @@ class HashtagTestCase(TestCase):
     def setUp(self) -> None:
         new_hashtag = Hashtag(content='content')
         new_hashtag.save()
-        new_badge = Badge(title='test')
-        new_badge.save()
+        for i in range(1, BADGE_NUM+1):
+            new_badge = Badge(title= f'test{i}')
+            new_badge.save()
         # TODO: remove dependency
         data = {
             'username': 'temporary',
