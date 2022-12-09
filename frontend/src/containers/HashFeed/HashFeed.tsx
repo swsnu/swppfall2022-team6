@@ -212,7 +212,7 @@ function HashFeed() {
                         key={i}
                         className="hashtag"
                         onClick={() => {
-                          navigate(`/hashfeed/${item.id}/`);
+                          navigate(`/hashfeed/${item.id}`);
                         }}
                       >
                         {"#" + item.content}

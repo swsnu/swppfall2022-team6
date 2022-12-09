@@ -118,7 +118,7 @@ function ReportModal({
         if (location.pathname === "/areafeed/") {
             setOpenReport(false);
             navReportCallback();
-        } else navigate("/areafeed/");
+        } else navigate("/areafeed");
     };
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();

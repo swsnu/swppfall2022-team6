@@ -28,7 +28,6 @@ function PostDetail() {
     const navigate = useNavigate();
     const onClickBackButton = () => {
         navigate(-1);
-        // navigate("/areafeed/");
     };
 
     const positionState = useSelector(selectPosition);
