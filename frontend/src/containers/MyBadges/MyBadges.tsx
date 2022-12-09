@@ -1,16 +1,24 @@
 import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { selectUser } from "../../store/slices/user";
+
+import { Layout } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons"
+
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+// import Container from "react-bootstrap/Container";
+// import Row from "react-bootstrap/Row";
+// import Col from "react-bootstrap/Col";
 import Badge from "../../components/Badge/Badge";
+
 import { BadgeType, updateUserMainBadge } from "../../store/slices/user";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import "./MyBadges.scss";
+import { selectUser } from "../../store/slices/user";
 import { AppDispatch } from "../../store";
+
+import "./MyBadges.scss";
+
+const { Header, Content } = Layout;
 
 function MyBadges() {
     const userState = useSelector(selectUser);
@@ -42,69 +50,71 @@ function MyBadges() {
     };
 
     return (
-        <Container className="MyBadges">
-            <Row id="header-container">
-                <Col id="back-button-container" md={1}>
-                    <button
+        <Layout className="MyBadges">
+            <Header
+                id="header-container"
+                className="Header"
+                style={{ backgroundColor: "white" }}
+            >
+                <div id="button-container">
+                    <ArrowLeftOutlined
                         id="back-button"
-                        aria-label="back-button"
+                        className="button"
                         onClick={onClickBackButton}
-                    >
-                        <FontAwesomeIcon size="xs" icon={faChevronLeft} />
-                    </button>
-                </Col>
-                <Col id="mybadges-title">My Badges</Col>
-                <Col md={1}></Col>
-            </Row>
-            <Row id="profile-container">
-                <Col id="main-badge-container">
-                    <img src={mainBadge ? mainBadge.image : ""} 
-                    className="main-badge-image" 
-                    alt="" 
-                    style={{height: "14vh", width: "13vh",}}
                     />
-                </Col>
-            </Row>
-            <Row id="badges-header-container">
-                <Col className="area-label">
-                    <span>My Badges</span>
-                </Col>
-                <Col md={6}></Col>
-            </Row>
-            <Row className="badges-container">
-                <Container id="badges-list" className="mt-3 w-95 m-auto" style={{padding: "10px"}}>
-                    {[...userState.userBadges]
-                        .sort((a, b) => {
-                            if (!a.is_fulfilled && b.is_fulfilled) return 1;
-                            if (a.is_fulfilled && !b.is_fulfilled) return -1;
-                            return 0;
-                        })
-                        .map((badge) => {
-                            return (
-                                <div id={badge === selectedBadge ? "selected-badge": "non-selected-badge"} key={badge.id}>
-                                    <Badge
-                                        key={badge.id}
-                                        title={badge.title}
-                                        image={badge.image}
-                                        description={badge.description}
-                                        is_fulfilled={badge.is_fulfilled}
-                                        onClick={() => onClickBadge(badge)}
-                                    />
-                                </div>
-                            );
-                        })}
-                </Container>
-            </Row>
-            {selectedBadge !== null 
-                ?<button
-                id="set-main-badge-button"
-                onClick={onClickSetAsMainBadgeButton}
-                >
-                    Set As Main Badge
-                </button>
-                : null
-            }
-        </Container>
+                </div>
+                <div id="mybadges-title">My Badges</div>
+            </Header>
+            <Content className="Content">
+                <div id="profile-container">
+                    <div id="main-badge-container">
+                        <img src={mainBadge ? mainBadge.image : ""} 
+                        className="main-badge-image" 
+                        alt="" 
+                        style={{height: "14vh", width: "13vh",}}
+                        />
+                    </div>
+                </div>
+                <div id="badges-header-container">
+                    <div className="area-label">
+                        <span>My Badges</span>
+                    </div>
+                </div>
+                <div className="badges-container">
+                    <div id="badges-list" className="mt-3 w-95 m-auto" style={{padding: "10px"}}>
+                        {[...userState.userBadges]
+                            .sort((a, b) => {
+                                if (!a.is_fulfilled && b.is_fulfilled) return 1;
+                                if (a.is_fulfilled && !b.is_fulfilled) return -1;
+                                return 0;
+                            })
+                            .map((badge) => {
+                                return (
+                                    <div id={badge === selectedBadge ? "selected-badge": "non-selected-badge"} key={badge.id}>
+                                        <Badge
+                                            key={badge.id}
+                                            title={badge.title}
+                                            image={badge.image}
+                                            description={badge.description}
+                                            is_fulfilled={badge.is_fulfilled}
+                                            onClick={() => onClickBadge(badge)}
+                                        />
+                                    </div>
+                                );
+                            })}
+                    </div>
+                </div>
+                {selectedBadge !== null 
+                    ?<button
+                    id="set-main-badge-button"
+                    onClick={onClickSetAsMainBadgeButton}
+                    >
+                        Set As Main Badge
+                    </button>
+                    : null
+                }
+            </Content>
+        </Layout>
     );
 }
 
