@@ -98,7 +98,7 @@ const MainPage: React.FC = ()=>{
     const onClickReportButton = () => {
         setOpenReport(true);
     };
-
+    
     return (
         <Layout className="MainPage">
             <Header className="Header" style={{backgroundColor: "white"}}>
