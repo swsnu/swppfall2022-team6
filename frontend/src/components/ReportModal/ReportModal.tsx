@@ -60,7 +60,7 @@ function ReportModal({
         );
     }, []);
 
-    const report_achievement_handler = (achievement_types: Achievement[]) => {
+    const report_achievement_handler = async(achievement_types: Achievement[]) => {
         for (const achievement_type of achievement_types) {
             const now = new Date();
             const early_condition =
@@ -72,7 +72,7 @@ function ReportModal({
                 !early_condition &&
                 !cloudy_condition
             ) {
-                dispatch(
+                await dispatch(
                     updateUserAchievements({
                         id: Number(userState.currUser?.id),
                         type: achievement_type,
