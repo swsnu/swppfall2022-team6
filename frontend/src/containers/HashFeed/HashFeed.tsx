@@ -210,7 +210,7 @@ function HashFeed() {
             <div id="hashtag-buttons">
               {hashtagState.top3.slice(1).length > 0 ? (
                 <Space>
-                  {hashtagState.top3.map((item, i) => {
+                  {hashtagState.top3.slice(1).map((item, i) => {
                     return (
                       <Button
                         key={i}
