@@ -299,7 +299,7 @@ function AreaFeed() {
                                                 <Button
                                                     key={i}
                                                     className="hashtag"
-                                                    onClick={()=>{navigate(`/hashfeed/${item.id}/`)}}
+                                                    onClick={()=>{navigate(`/hashfeed/${item.id}`)}}
                                                 >
                                                     {"#" + item.content}
                                                 </Button>

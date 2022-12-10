@@ -17,13 +17,13 @@ class SignUpSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username', 'email', 'password']
 
-    def validate(self, attrs):
-        # TODO: add validation logic
-        username = attrs.get('username', '')
-				# isalnum(): is alphabet number
-        if not username.isalnum():
-            raise serializers.ValidationError(self.default_error_messages)
-        return attrs
+    # def validate(self, attrs):
+    #     # TODO: add validation logic
+    #     username = attrs.get('username', '')
+	# 			# isalnum(): is alphabet number
+    #     # if not username.isalnum():
+    #     #     raise serializers.ValidationError(self.default_error_messages)
+    #     return attrs
 
     def create_badges(self, user_id):
         for badge_id in range (1, BADGE_NUM+1):

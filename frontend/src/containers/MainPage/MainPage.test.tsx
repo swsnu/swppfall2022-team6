@@ -116,6 +116,7 @@ describe("<MainPage />", () => {
     });
     it("should change slider properly", async () => {
         const {container} = render(mainPageJSX);
+        // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
         const weatherSlider = container.querySelector(".radius-slider") as Element;
         //@ts-ignore
         weatherSlider.getBoundingClientRect = jest.fn(()=>{

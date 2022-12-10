@@ -1,7 +1,6 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { mockStore } from "../../test-utils/mock";
-import { MemoryRouter, Route, Routes } from "react-router";
 import MapSearch from "./MapSearch";
 import {mockSearchResultData} from "../../test-utils/mock";
 
@@ -182,4 +181,3 @@ describe("<MapSearch />", ()=>{
     fireEvent.keyDown(searchInput, {key: "A"});
   });
 });
-

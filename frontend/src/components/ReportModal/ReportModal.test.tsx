@@ -4,7 +4,7 @@ import axios from "axios";
 import React from "react";
 import ReportModal from "./ReportModal";
 import userEvent from "@testing-library/user-event";
-import { getMockStore, mockStore } from "../../test-utils/mock";
+import { getMockStore, mockStore, mockStoreHashFeed1 } from "../../test-utils/mock";
 import { Provider } from "react-redux";
 import { UserState } from "../../store/slices/user";
 import { MemoryRouter, Route, Routes } from "react-router";
@@ -15,9 +15,34 @@ jest.mock("react-router", () => ({
     useNavigate: () => mockNavigate,
 }));
 
+const mockResultData = [
+    {
+        address_name: "서울특별시 관악구 신림동",
+    },
+];
+const kakao = {
+    maps: {
+        services: {
+            Geocoder: jest.fn(),
+            Status: {
+                OK: "OK",
+                ZERO_RESULT: "ZERO_RESULT",
+                ERROR: "ERROR",
+            },
+        },
+    },
+};
+
 describe("<ReportModal />", () => {
     beforeEach(() => {
         jest.clearAllMocks();
+        global.kakao = kakao as any;
+        const mockCoord2RegionCode = jest.fn((lng, lat, callback) =>
+            callback(mockResultData, "OK")
+        );
+        (kakao.maps.services.Geocoder as jest.Mock).mockReturnValue({
+            coord2RegionCode: mockCoord2RegionCode,
+        });
     });
     it("should handle form submit properly", async () => {
         axios.post = jest.fn().mockResolvedValue({});
@@ -41,7 +66,7 @@ describe("<ReportModal />", () => {
         const submitButton = screen.getByText("Submit!");
         fireEvent.click(submitButton);
         await waitFor(() => {
-            expect(mockNavigate).toHaveBeenCalledWith("/areafeed/");
+            expect(mockNavigate).toHaveBeenCalledWith("/areafeed");
         });
     });
     it("should change photo properly", async () => {
@@ -70,7 +95,7 @@ describe("<ReportModal />", () => {
         const submitButton = screen.getByText("Submit!");
         fireEvent.click(submitButton);
         await waitFor(() => {
-            expect(mockNavigate).toHaveBeenCalledWith("/areafeed/");
+            expect(mockNavigate).toHaveBeenCalledWith("/areafeed");
         });
     });
     it("should submit content if only exists", async () => {
@@ -97,7 +122,7 @@ describe("<ReportModal />", () => {
         const submitButton = screen.getByText("Submit!");
         fireEvent.click(submitButton);
         await waitFor(() => {
-            expect(mockNavigate).toHaveBeenCalledWith("/areafeed/");
+            expect(mockNavigate).toHaveBeenCalledWith("/areafeed");
         });
     });
     it("should close modal properly", async () => {
@@ -285,12 +310,12 @@ describe("<ReportModal />", () => {
         const submitButton = screen.getByText("Submit!");
         fireEvent.click(submitButton);
         await waitFor(() => {
-            expect(mockNavigate).toHaveBeenCalledWith("/areafeed/");
+            expect(mockNavigate).toHaveBeenCalledWith("/areafeed");
         });
     });
     it("should close modal when submitted on areafeed page", async () => {
         const mockCallback = jest.fn();
-        const areafeedRoute = "/areafeed/";
+        const areafeedRoute = "/areafeed";
         render(
             <Provider store={mockStore}>
                 <MemoryRouter initialEntries={[areafeedRoute]}>
@@ -310,4 +335,30 @@ describe("<ReportModal />", () => {
             expect(mockCallback).toHaveBeenCalled();
         });
     })
+    it("should handle achievements", async () => {
+        axios.post = jest.fn().mockResolvedValue({data:"payload"});
+        axios.put = jest.fn().mockResolvedValue({})
+        render(
+            <Provider store={mockStoreHashFeed1}>
+                <MemoryRouter>
+                    <Routes>
+                        <Route path="/" element={
+                            <ReportModal
+                                currPosition={{ lat: 0, lng: 0 }}
+                                openReport={true}
+                                setOpenReport={jest.fn()}
+                                isNavbarReport={false}
+                                navReportCallback={() => {}}
+                            />
+                        } />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+        const submitButton = screen.getByText("Submit!");
+        fireEvent.click(submitButton);
+        await waitFor(() => {
+            expect(mockNavigate).toHaveBeenCalledWith("/areafeed");
+        });
+    });
 });

@@ -103,7 +103,7 @@ class UserViewSet(viewsets.GenericViewSet):
         del request
         del pk
         return Response('put me', status=status.HTTP_200_OK)
-    
+
     # POST /user/:id/mainbadge/
     @action(detail=True, methods=['POST'])
     @transaction.atomic
