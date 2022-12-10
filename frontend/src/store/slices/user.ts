@@ -131,7 +131,7 @@ export const fetchUserPosts = createAsyncThunk(
 export const updateUserMainBadge = createAsyncThunk(
   "user/updateUserMainBadge",
   async (data: {user_id: number, main_badge: number}, { dispatch }) => {
-    axios
+    await axios
       .post(`/user/${data.user_id}/mainbadge/`, data)
       .then((response) => {
         dispatch(userActions.setUserMainBadge(response.data));
@@ -162,7 +162,7 @@ export const fetchUserBadges = createAsyncThunk(
 export const updateUserBadges = createAsyncThunk(
   "user/updateUserBadges",
   async (id: number, {dispatch}) => {
-    axios
+    await axios
     .post<BadgeType[]>(`/user/${id}/badges/`)
     .then((response) => {
       dispatch(userActions.setUserBadges(response.data));
@@ -175,7 +175,7 @@ export const updateUserBadges = createAsyncThunk(
 export const updateUserAchievements = createAsyncThunk(
   "user/updateUserAchievements",
   async (data: {id: number, type: Achievement}) => {
-    axios
+    await axios
     .put<BadgeType[]>(`/user/${data.id}/achievement/`, {badge_id: data.type})
     .catch((error) => {
       checkApiResponseStatus(error.response.status);
