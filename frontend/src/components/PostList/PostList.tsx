@@ -8,16 +8,13 @@ import { PostType } from "../../store/slices/post";
 import Post from "../Post/Post";
 import PostModal from "../PostModal/PostModal";
 import "./PostList.scss";
-import { PositionType } from "../../store/slices/position";
 
 function PostList({
-    currPosition,
     type,
     postListCallback,
     replyTo,
     allPosts,
 }: {
-    currPosition: PositionType | null;
     type: string;
     postListCallback: () => void;
     replyTo: number;
@@ -25,6 +22,8 @@ function PostList({
 }) {
     const navigate = useNavigate();
     const [openPost, setOpenPost] = useState<boolean>(false);
+
+    const post_location = "관악구 봉천동"; //should be implemented with Map API,
 
     const clickPostHandler = (post: PostType) => {
         navigate("/areafeed/" + post.id);
@@ -50,10 +49,10 @@ function PostList({
                             <Post
                                 key={post.id}
                                 id={post.id}
+                                // TODO: user name from backend
                                 user_name={post.user_name}
-                                badge_id={post.badge_id}
                                 content={post.content}
-                                location={post.location}
+                                location={post_location} //should come from map API
                                 created_at={post.created_at}
                                 reply_to_author={post.reply_to_author}
                                 image={post.image}
@@ -75,7 +74,6 @@ function PostList({
                         Add {type}
                     </button>
                     <PostModal
-                        currPosition= {currPosition}
                         openPost={openPost}
                         setOpenPost={setOpenPost}
                         postModalCallback={postModalCallback}

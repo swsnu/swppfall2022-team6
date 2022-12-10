@@ -1,90 +1,42 @@
 $main-color: #3185e7;
 $sub-color: #F88282;
-$small-text: 12px;
-$button-size: 20px;
-$top: 20px;
 
-.MyPage {
-  height: 100%;
-  width: 100%;
-  background-color: white;
-
-  font-family: "NanumGothic", sans-serif;
-  font-style: normal;
-  font-weight: 700;
-  font-size: $small-text;
-  line-height: 140%;
-  color: rgba(0, 0, 0, 0.75);
-  overflow: hidden;
+#MyPage {
+  padding-top: 10px;
+  font-size: 12px;
 }
-
-.MyPage .Header {
-  padding: 10px;
-  filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
+#header-container {
+  margin: 10px 0;
+  // padding: 10px 0;
+  font-size: 12px;
 }
-
-.MyPage #button-container {
-  margin: 0;
-  // background-color: #ddd;
+#back-button-container {
   text-align: left;
-
-  position: absolute;
-  left: 5vw;
-  top: $top;
-  width: 100px;
-  height: $button-size;
-
   display: flex;
-  flex-direction: row;
-  gap: 15px;
+  align-items: flex-start;
 }
-
-.MyPage #button-container .button {
-  font-size: $button-size;
-  height: $button-size;
-  width: $button-size;
-  cursor: pointer;
-  z-index: 100;
+#back-button {
+  color: #aaa;
+  font-weight: 400;
 }
-
-.MyPage #mypage-title {
-    height: 30px;
-    width: auto;
-    line-height: 140%;
-
-    position: relative;
-    top: 10px;
-    font-size: 16px;
-
-    justify-content: center;
+#mypage-title {
+  font-size: 18px;
+  padding-bottom: 20px;
 }
-
-.MyPage .Content {
-    padding: 0 5vw;
-    padding-bottom: 10px;
-}
-.MyPage #profile-container {
-  text-align: center;
-  margin-top: 20px;
-}
-.MyPage #profile-sub-container {
+#profile-container {
+  // background-color: #aaa;
   display: flex;
-  flex-direction: column;
-  text-align: center;
   align-items: center;
   margin-bottom: 20px;
 }
-.MyPage #profile-col #user-name {
-  text-align: center;
+#profile-col #user-name {
+  text-align: left;
   // margin-left: 1px;
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 700;
-  margin: 5px 0;
+  // margin: 5px 0;
 }
-.MyPage #main-badge-container {
-  width: 100px;
-}
-.MyPage #main-badge {
+#main-badge {
   background-color: #ddd;
   margin-left: 20px;
   width: 70px;
@@ -92,7 +44,7 @@ $top: 20px;
   border-radius: 35px;
   text-align: right;
 }
-.MyPage #profile-container button{
+#profile-container button{
   border-radius: 13px;
   width: 100px;
   border: none;
@@ -100,118 +52,37 @@ $top: 20px;
   font-weight: 600;
   height: 23px;
 }
-.MyPage #profile-butons{
+#profile-butons{
   display: flex;
   gap: 5px;
 }
-.MyPage #see-badges-button {
+#see-badges-button {
   background-color: $main-color;
 }
-.MyPage #logout-button {
+#logout-button {
   background-color: $sub-color;
 }
-.MyPage #profile-col {
+#profile-col {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 200px;
 }
-
-.MyPage .title {
+#posts-header-container .area-label{
+  font-size: 10px;
+  font-weight: 500;
   text-align: left;
-  margin-left: 10px;
-  margin-top: 30px;
-  font-weight: 800;
-  font-size: 16px;
-}
-.MyPage #only-photos-button {
-  text-align: left;
-  margin-left: 10px;
-  margin-top: 10px;
-}
-// .MyPage {
-//   padding-top: 10px;
-//   font-size: 12px;
+  margin-left: 5px;
+  display: flex;
+  // flex-direction: column;
+  align-items: flex-end;
   
-//   #header-container {
-//     margin: 10px 0;
-//     // padding: 10px 0;
-//     font-size: 12px;
-//   }
-//   #back-button-container {
-//     text-align: left;
-//     display: flex;
-//     align-items: flex-start;
-//   }
-//   #back-button {
-//     color: #aaa;
-//     font-weight: 400;
-//   }
-//   #mypage-title {
-//     font-size: 18px;
-//     padding-bottom: 20px;
-//   }
-//   #profile-container {
-//     // background-color: #aaa;
-//     display: flex;
-//     align-items: center;
-//     margin-bottom: 20px;
-//   }
-//   #profile-col #user-name {
-//     text-align: left;
-//     // margin-left: 1px;
-//     font-size: 15px;
-//     font-weight: 700;
-//     // margin: 5px 0;
-//   }
-//   #main-badge {
-//     background-color: #ddd;
-//     margin-left: 20px;
-//     width: 70px;
-//     height: 70px;
-//     border-radius: 35px;
-//     text-align: right;
-//   }
-//   #profile-container button{
-//     border-radius: 13px;
-//     width: 100px;
-//     border: none;
-//     color: white;
-//     font-weight: 600;
-//     height: 23px;
-//   }
-//   #profile-butons{
-//     display: flex;
-//     gap: 5px;
-//   }
-//   #see-badges-button {
-//     background-color: $main-color;
-//   }
-//   #logout-button {
-//     background-color: $sub-color;
-//   }
-//   #profile-col {
-//     display: flex;
-//     flex-direction: column;
-//     gap: 10px;
-//   }
-//   #posts-header-container .area-label{
-//     font-size: 10px;
-//     font-weight: 500;
-//     text-align: left;
-//     margin-left: 5px;
-//     display: flex;
-//     // flex-direction: column;
-//     align-items: flex-end;
-    
-//   }
-//   #MyPage #only-photos-button span{
-//     font-size: 10px;
-//     font-weight: 600;
-//   }
-//   #only-photos-button div {
-//     display: flex;
-//     align-items: center;
-//     gap: 7px;
-//   }
-// }
+}
+#MyPage #only-photos-button span{
+  font-size: 10px;
+  font-weight: 600;
+}
+#only-photos-button div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
