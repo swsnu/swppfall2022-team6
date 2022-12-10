@@ -17,7 +17,6 @@ describe("<PostModal />", () => {
         render(
             <Provider store={mockStore}>
                 <PostModal
-                    currPosition={{ lat: 0, lng: 0 }}
                     openPost={false}
                     setOpenPost={jest.fn()}
                     postModalCallback={callbackMock}
@@ -34,7 +33,6 @@ describe("<PostModal />", () => {
         render(
             <Provider store={mockStore}>
                 <PostModal
-                    currPosition={{ lat: 0, lng: 0 }}
                     openPost={true}
                     setOpenPost={jest.fn()}
                     postModalCallback={callbackMock}
@@ -56,7 +54,6 @@ describe("<PostModal />", () => {
         render(
             <Provider store={mockStore}>
                 <PostModal
-                    currPosition={{ lat: 0, lng: 0 }}
                     openPost={true}
                     setOpenPost={jest.fn()}
                     postModalCallback={callbackMock}
@@ -80,7 +77,6 @@ describe("<PostModal />", () => {
         render(
             <Provider store={mockStore}>
                 <PostModal
-                    currPosition={{ lat: 0, lng: 0 }}
                     openPost={true}
                     setOpenPost={jest.fn()}
                     postModalCallback={callbackMock}
@@ -102,7 +98,6 @@ describe("<PostModal />", () => {
         render(
             <Provider store={mockStore}>
                 <PostModal
-                    currPosition={{ lat: 0, lng: 0 }}
                     openPost={true}
                     setOpenPost={jest.fn()}
                     postModalCallback={jest.fn()}
@@ -118,7 +113,6 @@ describe("<PostModal />", () => {
         render(
             <Provider store={mockStore}>
                 <PostModal
-                    currPosition={{ lat: 0, lng: 0 }}
                     openPost={true}
                     setOpenPost={jest.fn()}
                     postModalCallback={jest.fn()}
@@ -135,7 +129,6 @@ describe("<PostModal />", () => {
         render(
             <Provider store={mockStore}>
                 <PostModal
-                    currPosition={{ lat: 0, lng: 0 }}
                     openPost={true}
                     setOpenPost={jest.fn()}
                     postModalCallback={jest.fn()}

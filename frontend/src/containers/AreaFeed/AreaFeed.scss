@@ -1,154 +1,60 @@
-$main-color: #3185e7;
-$sub-color: #edf9ff;
-$small-text: 12px;
-$button-size: 20px;
-$top: 20px;
-
-.AreaFeed {
-    font-size: $small-text;
-    height: 100%;
-    width: 100%;
-    background-color: white;
-
-    font-family: "NanumGothic", sans-serif;
-    font-style: normal;
-    font-weight: 700;
-    font-size: $small-text;
-    line-height: 140%;
-    color: rgba(0, 0, 0, 0.75);
-    
-    overflow: hidden;
-}
-.AreaFeed .Content {
-    padding: 0 5vw;
-    padding-bottom: 10px;
-    overflow: hidden;
-}
-
-.AreaFeed .Container {
+#button-container {
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 6px;
 }
 
-.AreaFeed .Header {
-    padding: 10px;
-    // border-bottom: solid 1px rgba(0, 0, 0, 0.2);
-    filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
-}
-
-.AreaFeed #button-container {
-    margin: 0;
-    // background-color: #ddd;
-    text-align: left;
-
-    position: absolute;
-    left: 5vw;
-    top: $top;
-    width: 100px;
-    height: $button-size;
-
+#weather-container {
     display: flex;
     flex-direction: row;
-    gap: 15px;
-}
-
-.AreaFeed #button-container .button {
-    font-size: $button-size;
-    height: $button-size;
-    width: $button-size;
-    cursor: pointer;
-    z-index: 100;
-}
-.AreaFeed #upper-weather-container {
-    position: absolute;
-    right: 5vw;
-    top: 0;
-    display: flex;
-    gap: 5px;
-}
-.AreaFeed #weather-temp-status{
-    // position: absolute;
-    // top: 0;
-    width: auto;
-    height: 20px;
-    padding: 0;
-    margin: 0;
-
-    display: flex;
-    gap: 5px;
-    align-items: center;
-
-    font-weight: 800;
-    line-height: 140%;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 0px;
+    gap: 6px;
     font-size: 14px;
 }
-.AreaFeed #weather-temp-status span {
-    position: relative;
-    top: 13px;
-    height: auto;
-}
-.AreaFeed .weather-icon {
-    height: 45px;
-    width: auto;
-    padding: 0;
-}
-
-.AreaFeed #lower-weather-container p {
-    height: 30px;
-    width: auto;
-    // margin-top: 5px;
-    line-height: 140%;
-}
-.AreaFeed .areafeed-statistics-container {
-    position: relative;
-}
-
-.AreaFeed .title {
-    font-weight: 800;
-    font-size: 20px;
-}
-
-.AreaFeed .hashfeed-title {
-    text-align: center;
-    width: 100%;
-}
-
-.AreaFeed .post-title {
-    margin-bottom: 20px;
-    margin-top: 40px;
-}
-.AreaFeed #search-container {
+#upper-weather-container {
     display: flex;
-    gap: 20px;
+    justify-content: flex-end;
+    align-items: flex-end;
 }
-.AreaFeed #only-photos-button {
-    margin-top: 10px;
-    font-size: 13px;
-    display: flex;
-    gap: 5px;
-    align-items: center;
-    font-weight: 600;
+.weather-icon {
+    height: 28px;
+    width: auto;
 }
-.AreaFeed #postlist-container {
-    height: calc(100vh - 200px);
-}
-.AreaFeed #recommended-hashtag-container {
-    font-weight: 500;
-    text-align: left;
-    margin: 0;
-}
-.AreaFeed #hashtag-buttons {
-    margin-top: 5px;
+#lower-weather-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+#weather-temp,
+#weather-status {
+    display: flex;
+    align-items: flex-end;
+}
+
+#back-button,
+#refresh-button {
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+}
+#recommended-hashtag-container {
+    margin-top: 10px;
+    font-weight: 500;
+}
+#hashtag-buttons {
+    margin-top: 5px;
 }
 .hashtag-buttons-group button {
     background: #f8f8f8;
     border-radius: 0px;
     border: none;
 }
-.AreaFeed #search-box-container {
+#search-box-container {
     font-family: "NanumGothic", serif;
     font-style: normal;
     font-weight: 500;
@@ -158,150 +64,32 @@ $top: 20px;
     margin-top: 15px;
 }
 
-.AreaFeed #search-box-container .search-box {
+#search-box-container .search-box {
     display: flex;
     align-items: center;
     margin-top: 5px;
     font-family: "NanumGothic", serif;
     font-size: 10px;
     height: 30px;
-    // min-width: 300px;
-    // width: 30vw;
-    margin-left: 10px;
 }
-.AreaFeed .go-to-hash {
-    font-size: 13px;
-    font-weight: 600;
+#only-photos-button-container {
+    padding-top: 5px;
     text-align: left;
-    margin-left: 15px;
-    margin-top: 10px;
 }
-.AreaFeed .go-to-hash .button {
-    margin-left: 5px;
-    padding: 5px;
-    font-weight: 800;
-}
-.AreaFeed .go-to-hash .button:hover {
-    color: #aaa;
-    cursor: pointer;
-}
-
-.AreaFeed .no-hashtag{
-    position: relative;
-    top: 10px;
-    font-size: 13px;
-    text-align: center;
-    font-weight: 600;
-}
-.AreaFeed .no-post {
-    position: relative;
-    top: 100px;
-    font-size: 20px;
-    line-height: 140%;
-    text-align: center;
-    font-weight: 600;
+#only-photos-button {
+    background: none;
     display: flex;
-    flex-direction: column;
-    gap: 50px;
+    // justify-content: space-around;
+    gap: 20px;
+    border: none;
+    margin-right: 5%;
+    font-weight: 700;
+    font-size: 13px;
+    align-items: center;
+    // justify-content: flex-end;
+    // align-items: flex-end;
 }
 
-$mobile: 1000px;
-
-@mixin mobile {
-    @media (max-width: $mobile){
-        @content;
-  }
-}
-@mixin desktop {
-    @media (min-width: ($mobile + 1)){
-        @content;
-  }
-}
-
-@include mobile {
-    .AreaFeed {
-        .Container {
-            flex-direction: column;
-        }
-        .areafeed-statistics-container {
-            top: 20px;
-        }
-        .title {
-            font-size: 16px;
-        }
-        #search-box-container .search-box {
-            min-width: 100px;
-            width: 50vw;
-            margin-left: 10px;
-        }
-        #lower-weather-container {
-            position: absolute;
-            top: 30px;
-            right: 5vw;
-            font-size: 12px;
-            display: flex;
-            flex-direction: row;
-            gap: 10px;
-        }
-        #lower-weather-container img {
-            height: 15px;
-            width: 15px;
-        }
-        #weather-temp-status span {
-            top: 5px;
-        }
-        .weather-icon {
-            height: 40px;
-            width: auto;
-            padding: 0;
-            top: -5px;
-            position: relative;
-        }
-        .no-post span{
-            font-size: 100px;
-        }
-        .no-post {
-            font-size: 16px;
-            gap: 30px;
-        }
-    }
-}
-
-@include desktop {
-    .AreaFeed {
-        .Container {
-            flex-direction: row;
-        }
-        .hashfeed-title {
-            margin-top: 40px;
-        }
-        .title {
-            font-size: 20px;
-        }
-        .areafeed-statistics-container {
-            top: 100px;
-        }
-        #search-box-container .search-box {
-            min-width: 300px;
-            width: 30vw;
-            margin-left: 10px;
-        }
-        #lower-weather-container {
-            position: relative;
-            top: 10px;
-            left: 40vw;
-            font-size: 16px;
-            display: flex;
-            flex-direction: row;
-            gap: 10px;
-        }
-
-        #lower-weather-container img {
-            height: 20px;
-            width: 20px;
-        }
-        .no-post span{
-            font-size: 120px;
-        }
-    }
+.area-label {
+    margin-left: 3px;
 }

@@ -9,12 +9,12 @@
   text-align: left;
 }
 
-// .skim-stats:after {
-//   content:""; 
-//   position: absolute; 
-//   left: 45%;
-//   bottom: -5%; 
-//   border-left: 20px solid transparent; 
-//   border-right: 20px solid transparent; 
-//   border-top: 30px solid white;
-// }
+.skim-stats:after {
+  content:""; 
+  position: absolute; 
+  left: 45%;
+  bottom: -5%; 
+  border-left: 20px solid transparent; 
+  border-right: 20px solid transparent; 
+  border-top: 30px solid white;
+}

@@ -11,43 +11,32 @@ jest.mock("react-router", () => ({
     useNavigate: () => mockNavigate,
 }));
 
-jest.mock("../../components/Map/Map", () => (props: any) => (
-    <div>MapSearch</div>
-));
-jest.mock("../../components/MapSearch/MapSearch", () => (props: any) => (
-    <div>MapSearch</div>
-));
-jest.mock("../../components/ReportModal/ReportModal", () => (props: any) => (
-    <div>MapSearch</div>
-));
+jest.mock("../../components/Map/Map", ()=>(props: any)=><div>MapSearch</div>);
+jest.mock("../../components/MapSearch/MapSearch", ()=>(props: any)=><div>MapSearch</div>);
+jest.mock("../../components/ReportModal/ReportModal", ()=>(props: any)=><div>MapSearch</div>);
 console.log = jest.fn();
 
 const kakao = {
     maps: {
-        services: {
-            Geocoder: jest.fn(),
-            Status: {
-                OK: "OK",
-                ZERO_RESULT: "ZERO_RESULT",
-                ERROR: "ERROR",
-            },
-        },
+      services: {
+        Geocoder: jest.fn(),
+        Status: {
+          OK: "OK",
+          ZERO_RESULT: "ZERO_RESULT",
+          ERROR: "ERROR",
+        }},
     },
-};
+  };
 
 describe("<MainPage />", () => {
     let mainPageJSX: JSX.Element;
     beforeEach(() => {
-        const mockCoord2RegionCode = jest.fn((lng, lat, callback) =>
-            callback(
-                [
-                    {
-                        address_name: "서울특별시 관악구 신림동",
-                    },
-                ],
-                "OK"
-            )
-        );
+        const mockCoord2RegionCode = jest.fn((lng, lat, callback)=>callback(
+            [{
+                address_name: "서울특별시 관악구 신림동"
+            }],
+            "OK",
+        ));
         jest.clearAllMocks();
         global.kakao = kakao as any;
         (kakao.maps.services.Geocoder as jest.Mock).mockReturnValue({
@@ -58,27 +47,23 @@ describe("<MainPage />", () => {
             <Provider store={mockStore}>
                 <MemoryRouter>
                     <Routes>
-                        <Route path="/" element={<MainPage />} />
+                        <Route path="/" element={<MainPage/>}/>
                     </Routes>
                 </MemoryRouter>
             </Provider>
-        );
+        )
     });
     it("should render without errors", () => {
         const { container } = render(mainPageJSX);
         expect(container).toBeTruthy();
     });
     it("should not set address if kakao API error", () => {
-        const mockCoord2RegionCodeError = jest.fn((lng, lat, callback) =>
-            callback(
-                [
-                    {
-                        address_name: "",
-                    },
-                ],
-                "ERROR"
-            )
-        );
+        const mockCoord2RegionCodeError = jest.fn((lng, lat, callback)=>callback(
+            [{
+                address_name: ""
+            }],
+            "ERROR",
+        ));
         (kakao.maps.services.Geocoder as jest.Mock).mockReturnValue({
             coord2RegionCode: mockCoord2RegionCodeError,
         });
@@ -110,27 +95,14 @@ describe("<MainPage />", () => {
         render(mainPageJSX);
         console.error = jest.fn();
         const backGrounds = screen.getAllByLabelText("background");
-        for (let i = 0; i < backGrounds.length; i++) {
+        for(let i=0; i<backGrounds.length; i++){
             fireEvent.click(backGrounds[i]!);
         }
     });
     it("should change slider properly", async () => {
-        const {container} = render(mainPageJSX);
-        const weatherSlider = container.querySelector(".radius-slider") as Element;
-        //@ts-ignore
-        weatherSlider.getBoundingClientRect = jest.fn(()=>{
-            return {
-                bottom: 286.22918701171875,
-                height: 28,
-                left: 19.572917938232422,
-                right: 583.0937919616699,
-                top: 258.22918701171875,
-                width: 563.5208740234375,
-                x: 19.572917938232422,
-                y: 258.22918701171875,
-            }
-        })
-        fireEvent.mouseDown(weatherSlider, { clientX: 162, clientY: 302 })
+        render(mainPageJSX);
+        const weatherSlider = screen.getByLabelText("Custom marks");
+        fireEvent.change(weatherSlider, { target: { value: 1 } });
     });
     it("should get current location if navigator avaliable", async () => {
         const mockGeolocation = {

@@ -3,18 +3,11 @@ import React, { useEffect, useState } from "react";
 import "./PostModal.scss";
 import { TextField } from "@mui/material";
 import { addPost } from "../../store/slices/post";
-import {
-    selectUser,
-    Achievement,
-    updateUserAchievements,
-} from "../../store/slices/user";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store";
 import { useParams } from "react-router";
-import { PositionType } from "../../store/slices/position";
 
 export interface IProps {
-    currPosition: PositionType | null;
     openPost: boolean;
     setOpenPost: React.Dispatch<React.SetStateAction<boolean>>;
     postModalCallback: () => void;
@@ -23,7 +16,6 @@ export interface IProps {
 }
 
 function PostModal({
-    currPosition,
     openPost,
     setOpenPost,
     postModalCallback,
@@ -35,25 +27,6 @@ function PostModal({
     const [hashtags, setHashtags] = useState<string>("");
     const dispatch = useDispatch<AppDispatch>();
     const { id } = useParams();
-    const userState = useSelector(selectUser);
-    const geocoder = new kakao.maps.services.Geocoder();
-    const [address, setAddress] = useState<string>("");
-    useEffect(() => {
-        if (currPosition) {
-            geocoder.coord2RegionCode(
-                currPosition.lng,
-                currPosition.lat,
-                (result, status) => {
-                    if (
-                        status === kakao.maps.services.Status.OK &&
-                        !!result[0].address_name
-                    ) {
-                        setAddress(result[0].address_name);
-                    }
-                }
-            );
-        }
-    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -65,29 +38,8 @@ function PostModal({
             formData.append("hashtags", hashtags);
             if (type === "Reply")
                 formData.append("replyTo", replyTo.toString());
-            if (currPosition){
-                formData.append("latitude", currPosition.lat.toString());
-                formData.append("longitude", currPosition.lng.toString());
-                formData.append("location", address);
-            }
             //@ts-ignore
-            const response = await dispatch(addPost(formData));
-            if (response.payload) {
-                // update Post-related Achievement(Reply)
-                if (type === "Reply") {
-                    const achievement_type: Achievement = Achievement.REPLY;
-                    if (
-                        !userState.userBadges[achievement_type - 1].is_fulfilled
-                    ) {
-                        dispatch(
-                            updateUserAchievements({
-                                id: Number(userState.currUser?.id),
-                                type: achievement_type,
-                            })
-                        );
-                    }
-                }
-            }
+            await dispatch(addPost(formData));
             setContent("");
             setHashtags("");
             postModalCallback();
@@ -95,12 +47,7 @@ function PostModal({
     };
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        if (e.target.files) {
-            if (e.target.files[0].size > 1048576) {
-                alert("File size is too big! Max size is 1MB");
-                e.target.value = "";
-            } else setImage(e.target.files[0]);
-        }
+        if (e.target.files) setImage(e.target.files[0]);
     };
 
     return (
@@ -135,10 +82,7 @@ function PostModal({
                             </p>
                             <div style={{ margin: "0px 50px" }}>
                                 <TextField
-                                    inputProps={{
-                                        "data-testid": "textField",
-                                        maxLength: 290,
-                                    }}
+                                    inputProps={{ "data-testid": "textField" }}
                                     id="standard-basic"
                                     variant="standard"
                                     placeholder="Add Text"
@@ -156,7 +100,6 @@ function PostModal({
                                 <TextField
                                     inputProps={{
                                         "data-testid": "hashtagField",
-                                        maxLength: 20,
                                     }}
                                     id="standard-basic"
                                     variant="standard"

@@ -25,7 +25,6 @@ describe("<Post />", () => {
                         element={
                             <Post
                                 user_name={"User Name"}
-                                badge_id={1}
                                 content={"Post Content"}
                                 location={"User Loc"}
                                 created_at={"2020-10-20 10:20:30"}
@@ -85,7 +84,6 @@ describe("<Post />", () => {
                         image: "",
                         latitude: 127,
                         longitude: 37,
-                        location: "Location",
                         created_at: "2020-10-21 10:20:30",
                         reply_to_author: "User Name",
                         hashtags: [],

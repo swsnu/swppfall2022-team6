@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Map, MapMarker, Circle, CustomOverlayMap } from "react-kakao-maps-sdk";
 import SkimStatistics from "../SkimStatistics/SkimStatistics";
 
-import { PositionType, selectPosition } from "../../store/slices/position";
+import {PositionType, selectPosition} from "../../store/slices/position";
 
 interface IProps {
     markerPosition: PositionType;
@@ -12,41 +12,20 @@ interface IProps {
     radius: number;
     isOpen: boolean;
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-function getWindowSize() {
-    const {innerWidth, innerHeight} = window;
-    return {innerWidth, innerHeight};
-}
+};
 
 function MapComponent(props: IProps) {
-    const { markerPosition, setMarkerPosition, radius, isOpen, setIsOpen } =
-        props;
+    const { markerPosition, setMarkerPosition, radius, isOpen, setIsOpen } = props;
     const [centerPosition, setCenterPosition] =
         useState<PositionType>(markerPosition);
-
-    const [windowSize, setWindowSize] = useState(getWindowSize());
-
-    useEffect(() => {
-        function handleWindowResize() {
-            setWindowSize(getWindowSize());
-        }
-        window.addEventListener('resize', handleWindowResize);
-        return () => {
-            window.removeEventListener('resize', handleWindowResize);
-        };
-    }, []);
-
     useEffect(() => {
         setCenterPosition(markerPosition);
     }, [markerPosition]);
-    const mapWidth = windowSize.innerWidth>1300? "80%": "100%";
-    const mapHeight = windowSize.innerWidth>1300? "80vh": "60vh";
     return (
         <Map
             id="map"
             center={centerPosition}
-            style={{ width: mapWidth, height: mapHeight, borderRadius: "12px" }}
+            style={{ width: "100%", height: "60vh", borderRadius: "12px" }}
             level={5}
             onClick={(_t, mouseEvent) => {
                 setMarkerPosition({
@@ -71,14 +50,10 @@ function MapComponent(props: IProps) {
                     xAnchor={0.587}
                     yAnchor={1.075}
                 >
-                    <SkimStatistics
-                        position={markerPosition}
-                        radius={radius / 25}
-                    />
-                    ;
+                    <SkimStatistics position={markerPosition} radius={radius/25}/>;
                 </CustomOverlayMap>
             )}
-            {radius > 0 ? (
+            {radius>0 ? (
                 <Circle
                     center={markerPosition}
                     radius={(radius / 25) * 1000}
@@ -88,8 +63,9 @@ function MapComponent(props: IProps) {
                     strokeStyle={"dash"} // 선의 스타일 입니다
                     fillColor={"#0000FF"} // 채우기 색깔입니다
                     fillOpacity={0.1} // 채우기 불투명도 입니다
-                />
-            ) : null}
+                />)
+                :null
+            }
         </Map>
     );
 }

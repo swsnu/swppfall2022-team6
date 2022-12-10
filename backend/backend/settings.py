@@ -28,14 +28,7 @@ SECRET_KEY = \
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    '0.0.0.0',
-    'localhost',
-    'ec2-43-200-96-194.ap-northeast-2.compute.amazonaws.com',
-    '43.200.96.194',
-    'nowsee.today'
-]
+ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'user.User'
 AUTHENTICATION_BACKENDS = ['user.backends.CustomUserModelBackend']
