@@ -1,0 +1,41 @@
+.Badge {
+    display: flex;
+    align-items: center;
+    height: 12vh;
+    width: 10vh;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    flex-direction: column;
+    font-family: "NanumGothic", serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 10px;
+}
+
+.Badge .badge-image {
+    height: 10vh;
+    width: 10vh;
+}
+
+.Badge .default-image {
+    position: absolute;
+    height: 10vh;
+    width: 10vh;
+    filter: blur(4px);
+    -webkit-filter: blur(4px);
+    z-index: -1;
+}
+
+.Badge .badge-title {
+    height: 14px;
+}
+
+.Badge .badge-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 10vh;
+    width: 10vh;
+    align-items: center;
+    gap: 5px;
+}

@@ -31,10 +31,12 @@ describe("post reducer", () => {
     const fakePost = {
         id: 1,
         user_name: "user1",
+        badge_id: 1,
         content: "CONTENT-t1",
         image: "",
         latitude: 0,
         longitude: 0,
+        location: "Location",
         created_at: "2022-11-20T8:43:28UTC+9",
         reply_to_author: null,
         hashtags: [{ id: 1, content: "hashtag1" }],

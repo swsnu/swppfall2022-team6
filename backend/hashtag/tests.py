@@ -3,7 +3,8 @@
 '''
 from django.test import TestCase, Client
 
-from user.models import Badge
+from user.models import Badge, BADGE_NUM
+from hashtag.models import Hashtag
 #from .models import Hashtag
 
 class HashtagTestCase(TestCase):
@@ -13,8 +14,11 @@ class HashtagTestCase(TestCase):
     client = Client()
 
     def setUp(self) -> None:
-        new_badge = Badge(title='test')
-        new_badge.save()
+        new_hashtag = Hashtag(content='content')
+        new_hashtag.save()
+        for i in range(1, BADGE_NUM+1):
+            new_badge = Badge(title= f'test{i}')
+            new_badge.save()
         # TODO: remove dependency
         data = {
             'username': 'temporary',
@@ -34,3 +38,12 @@ class HashtagTestCase(TestCase):
         response = self.client.post('/hashtag/', {'content':'content'})
 
         self.assertEqual(response.status_code, 201)
+
+    def test_get(self):
+        response = self.client.get('/hashtag/', {})
+        self.assertEqual(response.status_code, 400)
+        response = self.client.get('/hashtag/', {'content':'content'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, 1)
+        response = self.client.get('/hashtag/', {'content':'content2'})
+        self.assertEqual(response.status_code, 200)

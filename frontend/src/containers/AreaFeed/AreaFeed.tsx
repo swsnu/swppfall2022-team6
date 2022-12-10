@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { fetchPosts, PostType, selectPost } from "../../store/slices/post";
-import { fetchTop3Hashtags, selectHashtag } from "../../store/slices/hashtag";
-import { fetchReports } from "../../store/slices/report";
+import {selectHashtag } from "../../store/slices/hashtag";
+import { fetchReports, selectReport } from "../../store/slices/report";
 import { AppDispatch } from "../../store";
 
 import axios from "axios";
@@ -14,19 +14,21 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import SearchBar from "material-ui-search-bar";
 import { styled } from "@material-ui/core/styles";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-import Switch from "react-switch";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRotateLeft, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import { Layout, Checkbox, Space, Button } from "antd";
+import { ArrowLeftOutlined, SyncOutlined } from "@ant-design/icons"
 
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Statistics from "../../components/Statistics/Statistics";
 import PostList from "../../components/PostList/PostList";
+import Loading from "../../components/Loading/Loading";
 
-import "./AreaFeed.scss";
 import { PositionType, selectPosition } from "../../store/slices/position";
 import { selectUser, UserType } from "../../store/slices/user";
-import { unwrapResult } from "@reduxjs/toolkit";
+import { Address } from "../../components/SkimStatistics/SkimStatistics";
+
+import "./AreaFeed.scss";
+
+const { Header, Content } = Layout;
 
 type WeatherType = {
     icon?: string;
@@ -41,20 +43,12 @@ export const CustomSearchBar = styled(SearchBar)({
     fontSize: "10px",
 });
 
-const CustomToggleButtonGroup = styled(ToggleButtonGroup)({
-    display: "flex",
-    gap: "10px",
-    fontFamily: '"NanumGothic", sans-serif',
-    fontSize: "10px",
-    height: "25px",
-    borderRadius: "0px",
-});
-
 function AreaFeed() {
     const postState = useSelector(selectPost);
     const hashtagState = useSelector(selectHashtag);
     const positionState = useSelector(selectPosition);
     const userState = useSelector(selectUser);
+    const reportState = useSelector(selectReport);
 
     const [queryPosts, setQueryPosts] = useState<PostType[]>(postState.posts);
     const [refresh, setRefresh] = useState<Boolean>(true);
@@ -62,19 +56,25 @@ function AreaFeed() {
     const [selectTag, setSelectTag] = useState<number>(0);
     const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<Boolean>(false);
+    const [queryHash, setQueryHash] = useState<string>("");
 
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
-    const fetchData = async () => {
-        const user = userState.currUser as UserType;
-        let position: PositionType;
-        const savedPosition = localStorage.getItem("position");
-        if (savedPosition) {
-            position = JSON.parse(savedPosition);
-        } else {
-            position = positionState.position;
-        }
+    const user = userState.currUser as UserType;
+    let position: PositionType;
+    const savedPosition = localStorage.getItem("position");
+    if (savedPosition) {
+        position = JSON.parse(savedPosition);
+    } else {
+        position = positionState.position;
+    }
+
+    const statisticsJSX = useMemo(() => {
+        return <Statistics />;
+    }, [reportState.reports, user]);
+
+    const renderWeatherAPI = async () => {
         const { lat, lng } = position;
         const api = {
             key: "c22114b304afd9d97329b0223da5bb01",
@@ -89,8 +89,18 @@ function AreaFeed() {
                 main: data.weather[0].main,
             });
         });
-        setRefresh(false);
+    };
 
+    const refreshReports = async () => {
+        await dispatch(
+            fetchReports({
+                ...position,
+                radius: user.radius,
+            })
+        );
+    };
+
+    const refreshPosts = async () => {
         const queryPostPromise = dispatch(
             fetchPosts({
                 ...position,
@@ -99,20 +109,35 @@ function AreaFeed() {
         );
         const postData = (await queryPostPromise).payload as PostType[];
         setQueryPosts(postData);
-        await dispatch(
-            fetchTop3Hashtags({
-                ...position,
-                radius: user.radius,
-            })
-        );
-        await dispatch(
-            fetchReports({
-                ...position,
-                radius: user.radius,
-            })
-        );
+    };
+
+    // const refreshHashtag = async () => {
+    //     await dispatch(
+    //         fetchTop3Hashtags({
+    //             ...position,
+    //             radius: user.radius,
+    //         })
+    //     );
+    //     setQueryHash("");
+    // };
+
+    const fetchData = async () => {
+        console.time("reports");
+        await refreshReports();
+        console.timeEnd("reports");
+        console.time("posts");
+        await refreshPosts();
+        console.timeEnd("posts");
+        // console.time("hashtags");
+        // await refreshHashtag();
+        // console.timeEnd("hashtags");
+        setRefresh(false);
         setIsLoading(true);
     };
+
+    useEffect(() => {
+        renderWeatherAPI();
+    }, []);
 
     useEffect(() => {
         if (refresh) {
@@ -125,18 +150,12 @@ function AreaFeed() {
         if (onlyPhoto) {
             resultPosts = resultPosts.filter((post: PostType) => post.image);
         }
-        // if (selectTag) {
-        //     resultPosts = resultPosts.filter(
-        //         (post: PostType) =>
-        //             post.hashtags &&
-        //             post.hashtags.map((h) => h.content).includes(selectTag)
-        //     );
-        // }
+
         setQueryPosts(resultPosts);
     }, [selectTag, onlyPhoto]);
 
     const onClickBackButton = () => {
-        navigate(-1);
+        navigate("/");
     };
     const onClickRefreshButton = () => {
         setRefresh(true);
@@ -144,24 +163,18 @@ function AreaFeed() {
     const onSelectOnlyPhotos = () => {
         setOnlyPhoto(!onlyPhoto);
     };
-    const postListCallback = () => {
-        setRefresh(true);
+    const postListCallback = async () => {
+        //setRefresh(true);
+        console.time("Addpost");
+        await refreshPosts();
+        console.timeEnd("Addpost");
     }; // axios.get again
 
     // TODO: reportModalCallback for refreshing statistics
     const navReportCallback = () => {
         setRefresh(true);
-    }
-
-    const handleToggleTag = (
-        e: React.MouseEvent<HTMLElement>,
-        value: number
-    ) => {
-        // if (value === selectTag) setSelectTag(undefined);
-        // else setSelectTag(value);
-        setSelectTag(value);
-        navigate(`/hashfeed/${value}/`);
     };
+
     const AreaFeedPosts = () => {
         const [searchQuery, setSearchQuery] = useState<string>("");
         const onSubmitSearchBox = () => {
@@ -170,16 +183,31 @@ function AreaFeed() {
                     post.content.includes(searchQuery)
                 )
             );
+            setQueryHash(searchQuery);
         };
         const onClickClose = () => {
             setSearchQuery("");
+            setQueryHash("");
+        };
+        const onQueryHashClick = async () => {
+            await axios
+                .get("/hashtag/", {
+                    params: { content: queryHash },
+                })
+                .then((response) => {
+                    if (response.data) {
+                        navigate(`/hashfeed/${response.data}`);
+                    } else {
+                        alert("Hashtag doesn't exist");
+                    }
+                });
         };
         return (
             <div>
-                <Row id="search-box-container">
-                    <Row className="area-label">Posts</Row>
-                    <Row id="search-container">
-                        <Col md={6}>
+                <div id="search-box-container">
+                    <h2 className="title post-title">Today's NowSee posts</h2>
+                    <div id="search-container">
+                        <div >
                             <CustomSearchBar
                                 className="search-box"
                                 value={searchQuery}
@@ -190,105 +218,110 @@ function AreaFeed() {
                                 onRequestSearch={() => onSubmitSearchBox()}
                                 placeholder=""
                             />
-                        </Col>
-                        <Col md={3} id="only-photos-button-container">
+                        </div>
+                        <div id="only-photos-button-container">
                             <div id="only-photos-button">
-                                <Switch
-                                    onChange={onSelectOnlyPhotos}
-                                    checked={onlyPhoto}
-                                    onColor="#3185e7"
-                                    checkedIcon={false}
-                                    uncheckedIcon={false}
-                                    height={20}
-                                    width={40}
-                                    boxShadow="0 0 2px 2px #999"
-                                />
+                                <Checkbox checked={onlyPhoto} onChange={onSelectOnlyPhotos}/>
                                 <span> Only Photos</span>
                             </div>
-                        </Col>
-                    </Row>
-                </Row>
-                <Row id="postlist-container">
+                        </div>
+                    </div>
+                    {queryHash ? (
+                        <div
+                            className="go-to-hash"
+                            onClick={onQueryHashClick}
+                            data-testid="queryHash"
+                        >
+                            <span>Go to </span><span className="button">#{queryHash}</span>
+                        </div>
+                    ) : null}
+                </div>
+                <div id="postlist-container">
+                    {queryPosts.length>0?
                     <PostList
+                        currPosition={position}
                         type={"Post"}
                         postListCallback={postListCallback}
                         replyTo={0}
                         allPosts={queryPosts}
-                    />
-                </Row>
+                    />:
+                    <div className="no-post">
+                        <span>😥</span><br/>
+                        No Post<br/>for this location yet!
+                    </div>
+                    }
+                </div>
             </div>
         );
     };
 
     return (
-        <Container className="AreaFeed">
-            <Row id="areafeed-upper-container">
-                <Col id="button-container">
-                    <button id="back-button" onClick={onClickBackButton}>
-                        <FontAwesomeIcon icon={faChevronLeft} />
-                    </button>
-                    <button id="refresh-button" onClick={onClickRefreshButton}>
-                        <FontAwesomeIcon icon={faRotateLeft} />
-                    </button>
-                </Col>
+        <Layout className="AreaFeed">
+            <Header id="areafeed-upper-container" className="Header"  style={{backgroundColor: "white"}}>
+                <div id="button-container">
+                    <ArrowLeftOutlined id="back-button" className="button" onClick={onClickBackButton}/>
+                    <SyncOutlined id="refresh-button" className="button" onClick={onClickRefreshButton}/>
+                </div>
                 <Col id="weather-container">
                     {" "}
                     <Row id="upper-weather-container">
+                        <div id="weather-temp-status">
+                            <span id="weather-temp">{weather.temp}&deg;C,</span>
+                            <span id="weather-status">{weather.main}</span>
+                        </div>
                         <img
                             src={`http://openweathermap.org/img/w/${weather.icon}.png`}
                             className="weather-icon"
                         />
+                        {/* <div id="weather-status">{weather.main}</div> */}
                     </Row>
-                    <Row id="lower-weather-container">
-                        <div id="weather-temp">{weather.temp}&deg;C</div>
-                        <div id="weather-status">{weather.main}</div>
-                    </Row>
+                    <div id="lower-weather-container">
+                        <img src="/location-svgrepo-com.svg" />
+                        <Address position={positionState.position} />
+                    </div>
                 </Col>
-            </Row>
-            {isLoading ? (
-                <div>
-                    <Row>
-                        <Statistics />
-                    </Row>
-                    <Row id="recommended-hashtag-container">
-                        <Row className="area-label">Recommended Hashtags</Row>
-                        <Row id="hashtag-buttons" xs="auto">
-                            {
-                                <CustomToggleButtonGroup
-                                    value={selectTag}
-                                    exclusive
-                                    onChange={handleToggleTag}
-                                    className="hashtag-buttons-group"
-                                >
-                                    {hashtagState.top3.map((item, i) => {
-                                        return (
-                                            <ToggleButton
-                                                key={i}
-                                                value={item.id}
-                                                className="hashtag"
-                                                style={{
-                                                    textTransform: "none",
-                                                }}
-                                            >
-                                                {"#" + item.content}
-                                            </ToggleButton>
-                                        );
-                                    })}
-                                </CustomToggleButtonGroup>
-                            }
-                        </Row>
-                    </Row>
-                    <AreaFeedPosts></AreaFeedPosts>
-                    <NavigationBar
-                        navReportCallback={navReportCallback}
-                    />
-                </div>
-            ) : (
-                <div style={{ fontSize: "20px", marginTop: "20px" }}>
-                    Loading
-                </div>
-            )}
-        </Container>
+            </Header>
+            <Content className="Content" style={{backgroundColor: "white"}}>
+
+                {isLoading ? (
+                    <Container className="Container">
+                        <div className="areafeed-statistics-container">
+                            <h2 className="title">
+                                Today's weather is likely... 
+                            </h2>
+                            <div>{statisticsJSX}</div>
+                            <div id="recommended-hashtag-container">
+                                <h2 className="title hashfeed-title">Go to HashFeed</h2>
+                                <div id="hashtag-buttons">
+                                    {hashtagState.top3.length>0? <Space >
+                                        {hashtagState.top3.map((item, i) => {
+                                            return (
+                                                <Button
+                                                    key={i}
+                                                    className="hashtag"
+                                                    onClick={()=>{navigate(`/hashfeed/${item.id}`)}}
+                                                >
+                                                    {"#" + item.content}
+                                                </Button>
+                                            );
+                                        })}
+                                    </Space>:
+                                    <div className="no-hashtag">
+                                        No recommended hashtag!
+                                    </div>}
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <AreaFeedPosts></AreaFeedPosts>
+                        </div>
+                    </Container>
+                ) : (
+                    <Loading />
+                )}
+            </Content>
+            <NavigationBar navReportCallback={navReportCallback} />
+        </Layout>
     );
 }
 

@@ -2,7 +2,7 @@
     user tests
 '''
 from django.test import TestCase, Client
-from .models import Badge
+from .models import Badge, User, BADGE_NUM
 
 class UserTestCase(TestCase):
     '''
@@ -11,8 +11,9 @@ class UserTestCase(TestCase):
     client = Client()
 
     def setUp(self) -> None:
-        new_badge = Badge(title='test')
-        new_badge.save()
+        for i in range(1, BADGE_NUM+1):
+            new_badge = Badge(title = f'title{i}', requirement=0)
+            new_badge.save()
         # TODO: remove dependency
         data = {
             'username': 'temporary',
@@ -39,6 +40,16 @@ class UserTestCase(TestCase):
                     ,data=data)
 
         self.assertEqual(response.status_code, 201)
+
+        data = {
+            'username': '*&&^$&',
+            'email': 'invalid@email.com',
+            'password': 'invalidpw'
+        }
+        response = self.client.post('/user/signup/'
+                    ,data=data)
+
+        self.assertEqual(response.status_code, 400)
 
     def test_signin(self):
         self.client.post('/user/signout/')
@@ -96,6 +107,12 @@ class UserTestCase(TestCase):
         response = self.client.post('/user/1/badges/')
         self.assertEqual(response.status_code, 201)
 
+    def test_mainbadge(self):
+        data = {'main_badge': 3}
+        response = self.client.post('/user/1/mainbadge/', data, \
+            content_type='application/json',)
+        self.assertEqual(response.status_code, 200)
+
     def test_radius(self):
 
         response = self.client.get('/user/1/radius/')
@@ -105,11 +122,12 @@ class UserTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_achievement(self):
-
         response = self.client.get('/user/1/achievement/')
         self.assertEqual(response.status_code, 200)
+        data = {'badge_id': '1'}
+        response = self.client.put('/user/1/achievement/', data, \
+            content_type='application/json',)
 
-        response = self.client.put('/user/1/achievement/')
         self.assertEqual(response.status_code, 200)
 
     def test_report_post(self):
@@ -118,11 +136,11 @@ class UserTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_post(self):
-        # badge = Badge.objects.create()
-        # User.objects.create_user(
-        #     username='swpp',
-        #     password='iluvswpp',
-        #     main_badge=badge
-        # )
+        badge = Badge.objects.create()
+        User.objects.create_user(
+            username='swpp',
+            password='iluvswpp',
+            main_badge=badge
+        )
         response = self.client.get('/user/1/post/')
         self.assertEqual(response.status_code, 200)

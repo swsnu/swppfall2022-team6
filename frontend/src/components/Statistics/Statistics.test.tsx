@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Statistics from "./Statistics";
 import React from "react";
@@ -27,6 +27,8 @@ jest.mock("react-minimal-pie-chart", () => ({
     }) => <div>PieChart</div>,
 }));
 
+jest.mock("../BarGraph/BarGraph", () => () => <div>Bar Graph</div>);
+
 describe("<Statistics />", () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -41,7 +43,13 @@ describe("<Statistics />", () => {
     });
     it("should not show anything if no reports", async () => {
         const mymockStore = getMockStore({
-            users: { users: [], currUser: null, userPosts: []},
+            users: {
+                users: [],
+                currUser: null,
+                userPosts: [],
+                userBadges: [],
+                mainBadge: null,
+            },
             posts: {
                 posts: [],
             },
@@ -64,6 +72,16 @@ describe("<Statistics />", () => {
                 <Statistics />
             </Provider>
         );
-        screen.getByText("No Statistics!");
+        screen.getByText("No Statistics");
+    });
+    it("should handle window resize", async () => {
+        render(
+            <Provider store={mockStore}>
+                <Statistics />
+            </Provider>
+        );
+        global.innerWidth = 500;
+        await waitFor(() => global.dispatchEvent(new Event("resize")));
+        screen.getByText("PieChart");
     });
 });

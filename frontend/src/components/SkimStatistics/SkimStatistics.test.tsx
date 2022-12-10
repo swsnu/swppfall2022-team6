@@ -2,7 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import axios from "axios";
 import { PositionType } from "../../store/slices/position";
 import SkimStatistics, { SmallStatistics } from "./SkimStatistics";
-import { getMockStore, mockStore } from "../../test-utils/mock";
+import { getMockStore, mockStore, mockStoreHashFeed1 } from "../../test-utils/mock";
 import { Provider } from "react-redux";
 
 const sampleCoord: PositionType = {
@@ -84,6 +84,24 @@ describe("<SkimStatistics />", () => {
             </Provider>
         );
         await screen.findByText("☀️ Sunny");
+    });
+    it("should render no reports", async () => {
+        const mockCoord2RegionCode = jest.fn((lng, lat, callback) =>
+            callback(mockResultData, "OK")
+        );
+        (kakao.maps.services.Geocoder as jest.Mock).mockReturnValue({
+            coord2RegionCode: mockCoord2RegionCode,
+        });
+        axios.get = jest.fn().mockResolvedValue({
+            data: [
+            ],
+        });
+        render(
+            <Provider store={mockStoreHashFeed1}>
+                <SkimStatistics position={sampleCoord} radius={2} />
+            </Provider>
+        );
+        await screen.findByText("No Statistics!");
     });
     it("should render SmallStatistics", async () => {
         const mockCoord2RegionCode = jest.fn((lng, lat, callback) =>

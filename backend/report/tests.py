@@ -6,7 +6,7 @@ import json
 from django.test import TestCase, Client
 from report.models import Report
 
-from user.models import User, Badge
+from user.models import User, Badge, BADGE_NUM
 #from .models import Report
 
 class ReportTestCase(TestCase):
@@ -16,8 +16,9 @@ class ReportTestCase(TestCase):
     client = Client()
 
     def setUp(self) -> None:
-        new_badge = Badge(title='test')
-        new_badge.save()
+        for i in range(1, BADGE_NUM+1):
+            new_badge = Badge(title= f'test{i}')
+            new_badge.save()
         # TODO: remove dependency
         data = {
             'username': 'temporary',
