@@ -255,6 +255,7 @@ function Statistics() {
                         alignItems: "center",
                         padding: window.innerWidth>1000?"30px":"10px",
                         gap: "20px",
+                        fontFamily: "NanumGothic",
                     }}
                 >
                     <span style={{
