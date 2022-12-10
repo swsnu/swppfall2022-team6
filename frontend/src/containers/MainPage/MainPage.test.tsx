@@ -115,9 +115,23 @@ describe("<MainPage />", () => {
         }
     });
     it("should change slider properly", async () => {
-        render(mainPageJSX);
-        const weatherSlider = screen.getByLabelText("Custom marks");
-        fireEvent.change(weatherSlider, { target: { value: 1 } });
+        const {container} = render(mainPageJSX);
+        // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+        const weatherSlider = container.querySelector(".radius-slider") as Element;
+        //@ts-ignore
+        weatherSlider.getBoundingClientRect = jest.fn(()=>{
+            return {
+                bottom: 286.22918701171875,
+                height: 28,
+                left: 19.572917938232422,
+                right: 583.0937919616699,
+                top: 258.22918701171875,
+                width: 563.5208740234375,
+                x: 19.572917938232422,
+                y: 258.22918701171875,
+            }
+        })
+        fireEvent.mouseDown(weatherSlider, { clientX: 162, clientY: 302 })
     });
     it("should get current location if navigator avaliable", async () => {
         const mockGeolocation = {

@@ -6,6 +6,7 @@ import reducer, {
     //fetchHashfeedTop3Hashtags,
     fetchHashtag,
     fetchHashtags,
+    hashtagSlice,
     //fetchTop3Hashtags,
     HashtagState,
 } from "./hashtag";
@@ -74,5 +75,10 @@ describe("report reducer", () => {
         });
         await store.dispatch(addHashtag(fakeHashtag));
         expect(mockConsoleError).toBeCalled();
+    });
+    it("should handle addTop3Hashtag", async () => {
+        axios.post = jest.fn().mockResolvedValue({ data: fakeHashtag });
+        await store.dispatch(hashtagSlice.actions.addTop3Hashtags([fakeHashtag]));
+        expect(store.getState().hashtags.top3).toEqual([fakeHashtag]);
     });
 });
