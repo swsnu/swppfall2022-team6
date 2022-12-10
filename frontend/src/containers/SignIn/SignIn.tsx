@@ -46,7 +46,7 @@ function SignIn() {
         <Container className="SignIn">
             <Row id="header-container">
                 <Row id="nowsee-logo-container">
-                    <embed src="/logo.svg" className="nowsee-logo-image"/>
+                    <img src="https://nowsee.today/Logo.svg" className="nowsee-logo-image"/>
                 </Row>
                 <Row id="signin-title">Login to your Account</Row>
             </Row>

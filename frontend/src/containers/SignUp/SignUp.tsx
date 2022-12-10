@@ -70,14 +70,14 @@ function SignUp() {
         <Container className="SignUp">
             <Row id="header-container">
                 <Row id="nowsee-logo-container">
-                    <embed src="/logo.svg" className="nowsee-logo-image"/>
+                    <img src="https://nowsee.today/Logo.svg" className="nowsee-logo-image"/>
                 </Row>
                 <Row id="signup-title">Create new Account</Row>
             </Row>
             <form className="sign-up-form" onSubmit={onSubmit}>
                 <span>
                     <div className="icon">
-                        <embed src="/email-icon.svg" className="email-icon"/>
+                        <img src="https://nowsee.today/email-icon.svg" className="email-icon"/>
                     </div>
                     <div className="input-container">
                         <input
@@ -95,7 +95,7 @@ function SignUp() {
                 </span>
                 <span>
                     <div className="icon">
-                        <embed src="/username-icon.svg" className="username-icon"/>
+                        <img src="https://nowsee.today/username-icon.svg" className="username-icon"/>
                     </div>
                     <div className="input-container">
                         <input
@@ -112,7 +112,7 @@ function SignUp() {
                 </span>
                 <span>
                     <div className="icon">
-                        <embed src="/password-icon.svg" className="password-icon"/>
+                        <img src="https://nowsee.today/password-icon.svg" className="password-icon"/>
                     </div>
                     <div className="input-container">
                         <input
@@ -129,7 +129,7 @@ function SignUp() {
                 </span>
                 <span>
                     <div className="icon">
-                        <embed src="/password-icon.svg" className="password-icon"/>
+                        <img src="https://nowsee.today/password-icon.svg" className="password-icon"/>
                     </div>
                     <div className="input-container">
                         <input
