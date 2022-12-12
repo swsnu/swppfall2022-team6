@@ -67,16 +67,24 @@ describe("<SignIn />", () => {
         if(password){
           fireEvent.change(password, { target: { value: "passtest" } });
         }
+        await screen.findByDisplayValue("test@test.com");
         await screen.findByDisplayValue("passtest");
     });
     it("should sign in", async () => {
-        render(signInJSX);
+        const view = render(signInJSX);
+        // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+        const email = view.container.querySelector('#email-input');
+        if(email){
+          fireEvent.change(email, { target: { value: "test@test.com" } });
+        }
+        // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+        const password = view.container.querySelector('#password-input');
+        if(password){
+          fireEvent.change(password, { target: { value: "passtest" } });
+        }
         const signin = screen.getByText("Sign In");
-        fireEvent.click(signin);
+        fireEvent.click(signin!);
         expect(mockDispatch).toHaveBeenCalledTimes(1);
-        // const val = window.sessionStorage.getItem('isLoggedIn')
-        // expect(val).toEqual("true");
-        // expect(mockNavigate).toHaveBeenCalledTimes(1);
     });
     it("should sign up", async () => {
         render(signInJSX);
