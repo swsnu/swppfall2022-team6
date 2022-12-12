@@ -109,14 +109,6 @@ describe("<PostList />", () => {
         const addPostButton = screen.getByText("Add Post");
         expect(addPostButton).toBeInTheDocument();
     });
-    // it("should navigate to post detail page when post is clicked", () => {
-    //     render(postList);
-    //     const first_post = screen.getByText("SWPP");
-    //     const second_post = screen.getByText("SWPP2");
-    //     fireEvent.click(first_post!);
-    //     fireEvent.click(second_post!);
-    //     expect(mockNavigate).toHaveBeenCalledTimes(2);
-    // });
     it("should show modal properly", () => {
         render(postList);
         const modalbutton = screen.getByText("Add Post");

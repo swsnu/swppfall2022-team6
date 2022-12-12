@@ -32,7 +32,6 @@ function SignIn() {
         const formData = new FormData();
         formData.append("email", email);
         formData.append("password", password);
-        // TODO: sign in error catch
         
         if (!isEmailWarning(email)) {
             alert("알맞은 이메일을 입력해주세요");

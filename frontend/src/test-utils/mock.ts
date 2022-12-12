@@ -106,8 +106,6 @@ const stubUserInitialState: UserState = {
             hashtags: [stubHashtagInitialState.hashtags[1]],
         },
     ],
-    // TODO: fill in mock badges
-    // TODO: fill in mock mainBadge
     userBadges: [
         {
             id: 1,

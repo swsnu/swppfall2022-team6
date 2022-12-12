@@ -94,9 +94,6 @@ describe("<Post />", () => {
             });
         });
         render(postJSX({image:"hi", reply_to_author:"SWPP"}));
-        // const toggleChainButton = await waitFor(() =>
-        //     screen.getByText("Show All")
-        // );
         const toggleChainButton = await screen.findByText("Show All");
         fireEvent.click(toggleChainButton);
         expect(axios.get).toHaveBeenCalled();

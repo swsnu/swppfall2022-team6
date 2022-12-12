@@ -58,7 +58,6 @@ function PostDetail() {
     const [isLoading, setIsLoading] = useState<Boolean>(true);
 
     useEffect(() => {
-        // update mainPost, replyPosts
         axios.get(`/post/${id}/`).then((response) => {
             setMainPost(response.data["post"]);
             setReplyPosts(response.data["replies"]);

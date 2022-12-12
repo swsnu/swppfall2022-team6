@@ -27,16 +27,6 @@ function NavigationBar({ navReportCallback } : {navReportCallback: () => void;})
         }
     }, []);
 
-    // const [navbarVertical, setNavBarVertical] = useState(
-    //     window.matchMedia("(min-width: 768px)").matches
-    // )
-
-    // useEffect(() => {
-    //     window
-    //     .matchMedia("(min-width: 768px)")
-    //     .addEventListener('change', e => setNavBarVertical( e.matches ));
-    // }, []);
-
     const handleClickHome = () => {
         navigate("/");
     }
