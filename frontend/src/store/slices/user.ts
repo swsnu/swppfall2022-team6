@@ -199,7 +199,8 @@ export const setLogin = createAsyncThunk(
       return response.data
     }).catch((error) => {
       console.log(error);
-      checkApiResponseStatus(error.status);
+      checkApiResponseStatus(error.response.status);
+      console.log('checked api response')
     });
   }
 );
