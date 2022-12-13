@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { checkValidUserName, checkValidEmail, checkValidPassword, checkValidPasswordCheck } from "./SignUpUtils";
 import { setSignUp } from "../../store/slices/user";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -8,9 +8,8 @@ import axios from "axios";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { selectApiError } from "../../store/slices/apierror";
+import { selectApiError, setDefaultApiError } from "../../store/slices/apierror";
 import './SignUp.scss';
-import Element from "antd/es/skeleton/Element";
 
 
 export type SignUpFormType = {
@@ -44,6 +43,10 @@ function SignUp() {
     const [passwordcheckFocus, setPasswordCheckFocus] = useState<boolean>(false);
     const [emailFocus, setEmailFocus] = useState<boolean>(true); // autofocus email
     const focusList = [setUsernameFocus, setPasswordFocus, setEmailFocus, setPasswordCheckFocus];
+
+    useEffect(()=>{
+        dispatch(setDefaultApiError())
+    }, []);
 
     const signUp = async(formData: SignUpFormType) => {
         const response = await dispatch(setSignUp(formData));

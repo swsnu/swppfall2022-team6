@@ -112,7 +112,7 @@ export const setApiError = createAsyncThunk(
   }
 );
 export const setDefaultApiError = createAsyncThunk(
-  "setApiError",
+  "setApiErrorDefault",
   async (_, {dispatch}) => {
     dispatch(apiErrorActions.setDefaultApiError({}));
   }

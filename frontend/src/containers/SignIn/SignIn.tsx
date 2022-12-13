@@ -1,6 +1,6 @@
 import axios from "axios";
 import { dispatch } from "d3";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { setLogin, fetchUserBadges } from "../../store/slices/user";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,7 +10,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import "./SignIn.scss"
-import { selectApiError } from "../../store/slices/apierror";
+import { selectApiError, setDefaultApiError } from "../../store/slices/apierror";
 
 function SignIn() {
     const authenticated = window.sessionStorage.getItem('isLoggedIn') === "true"
@@ -21,6 +21,10 @@ function SignIn() {
 
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [emailFocus, setEmailFocus] = useState<boolean>(false);
+    const [passwordFocus, setPasswordFocus] = useState<boolean>(false);
+    const focusList = [setEmailFocus, setPasswordFocus];
+
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     // const isEmailWarning = (email: string) => {
@@ -29,6 +33,9 @@ function SignIn() {
     //         return false
     //     return true;
     // };
+    useEffect(()=>{
+        dispatch(setDefaultApiError())
+    }, []);
 
     const login = async() => {
         const formData = new FormData();
@@ -41,6 +48,17 @@ function SignIn() {
         await dispatch(setLogin(formData));
     };
 
+    const onClickInput = (from: string) => {
+        focusList.forEach((func) => func(false));
+        switch (from) {
+            case "email":
+                setEmailFocus(true);
+                break;
+            case "password":
+                setPasswordFocus(true);
+                break;
+        }
+    }
     const onClickSignUpButton = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
         navigate("/signup");
@@ -60,14 +78,19 @@ function SignIn() {
                 <Row id="nowsee-logo-container">
                     <img src="https://nowsee.today/Logo.svg" className="nowsee-logo-image"/>
                 </Row>
-                <Row id="signin-title">Login to your Account</Row>
+                <Row id="page-info-container">
+                    <Row id="signin-title">Login to your Account</Row>
+                    <Row className="api-error-message">
+                        {errorState.apiError.msg}
+                    </Row>
+                </Row>
             </Row>
             <form className="login-form" onSubmit={onSubmit}>
                 <span>
                     <div className="icon">
                         <img src="/email-icon.svg" className="email-icon"/>
                     </div>
-                    <div className="input-container">
+                    <div className={(emailFocus? "focused-": "")+"input-container"}>
                         <input
                             required
                             autoComplete="email"
@@ -76,6 +99,8 @@ function SignIn() {
                             id="email-input"
                             value={email}
                             onChange={(e) => setEmail(e.target.value.trim())}
+                            onFocus={() => onClickInput("email")}
+                            onBlur={() => onClickInput("")}
                             placeholder="Email"
                         />
                     </div>
@@ -84,7 +109,7 @@ function SignIn() {
                     <div className="icon">
                         <img src="/password-icon.svg" className="password-icon"/>
                     </div>
-                    <div className="input-container">
+                    <div className={(passwordFocus? "focused-": "")+"input-container"}>
                         <input
                             required
                             autoComplete="current-password"
@@ -92,13 +117,12 @@ function SignIn() {
                             id="password-input"
                             value={password}
                             onChange={(e) => setPassword(e.target.value.trim())}
+                            onFocus={() => onClickInput("password")}
+                            onBlur={() => onClickInput("")}
                             placeholder="Password"
                         />
                     </div>
                 </span>
-                <div className="error-message">
-                    {errorState.apiError.msg}
-                </div>
                 <div className="button-container">
                     <button type="submit">Sign In</button>
                     <button
