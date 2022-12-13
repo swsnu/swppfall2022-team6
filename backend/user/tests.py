@@ -2,6 +2,7 @@
     user tests
 '''
 from django.test import TestCase, Client
+from django_fakeredis.fakeredis import FakeRedis
 from .models import Badge, User, BADGE_NUM
 
 class UserTestCase(TestCase):
@@ -10,6 +11,7 @@ class UserTestCase(TestCase):
     '''
     client = Client()
 
+    @FakeRedis('user.views.cache')
     def setUp(self) -> None:
         for i in range(1, BADGE_NUM+1):
             new_badge = Badge(title = f'title{i}', requirement=0)
@@ -135,6 +137,7 @@ class UserTestCase(TestCase):
         response = self.client.get('/user/1/report/')
         self.assertEqual(response.status_code, 200)
 
+    @FakeRedis('user.views.cache')
     def test_post(self):
         badge = Badge.objects.create()
         User.objects.create_user(

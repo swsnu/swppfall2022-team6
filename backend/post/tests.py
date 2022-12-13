@@ -2,6 +2,7 @@
     post tests
 '''
 from django.test import TestCase, Client
+from django_fakeredis.fakeredis import FakeRedis
 from .models import Post, PostHashtag
 from user.models import User, Badge, BADGE_NUM
 from hashtag.models import Hashtag
@@ -13,6 +14,7 @@ class PostTestCase(TestCase):
     '''
     client = Client()
 
+    @FakeRedis('post.views.cache')
     def setUp(self) -> None:
         for i in range(1, BADGE_NUM+1):
             new_badge = Badge(title= f'test{i}')
@@ -59,6 +61,7 @@ class PostTestCase(TestCase):
         new_posthashtag = PostHashtag(post=new_post, hashtag=new_hashtag)
         new_posthashtag.save()
 
+    @FakeRedis('post.views.cache')
     def test_post(self):
         response = self.client.post('/post/',
         data={'content':'content', 'hashtags':'hi', 'hid':'1', \
@@ -163,6 +166,7 @@ class PostTestCase(TestCase):
         #     }]
         # )
 
+    @FakeRedis('post.views.cache')
     def test_hashfeed(self):
         new_hashtag2 = Hashtag(content='hashtag2')
         new_hashtag2.save()
