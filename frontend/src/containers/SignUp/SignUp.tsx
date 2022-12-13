@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { isValidUserName, isValidPassword } from "./SignUpUtils";
+import { checkValidUserName, checkValidEmail, checkValidPassword, checkValidPasswordCheck } from "./SignUpUtils";
 import { Navigate, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { selectApiError } from "../../store/slices/apierror";
 import './SignUp.scss';
+
 
 type SignUpFormType = {
     email: string;
@@ -22,9 +25,14 @@ const initialvalues: SignUpFormType = {
 
 function SignUp() {
     const authenticated = window.sessionStorage.getItem('isLoggedIn') === "true"
+    const errorState = useSelector(selectApiError);
 
     const navigate = useNavigate();
     const [formData, setFormData] = useState<SignUpFormType>(initialvalues);
+    const [usernameErrorMsg, setUsernameErrorMsg] = useState<string>("");
+    const [passwordErrorMsg, setPasswordErrorMsg] = useState<string>("");
+    const [passwordcheckErrorMsg, setPasswordCheckErrorMsg] = useState<string>("");
+    const [emailErrorMsg, setEmailErrorMsg] = useState<string>("");
 
     const signUp = (formData: SignUpFormType) => {
         axios
@@ -52,9 +60,17 @@ function SignUp() {
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const {username, email, password, passwordCheck} = formData;
-
-        if(isValidUserName(username) && isValidPassword(password, passwordCheck)){
+        const {isValid: isValidUsername, message: messageUsername} = checkValidUserName(username);
+        const {isValid: isValidEmail, message: messageEmail} = checkValidEmail(email);
+        const {isValid: isValidPassword, message: messagePassword} = checkValidPassword(password);
+        const {isValid: isValidPasswordCheck, message: messagePasswordCheck} = checkValidPasswordCheck(password, passwordCheck);
+        if(isValidUsername && isValidEmail && isValidPassword && isValidPasswordCheck){
             signUp(formData);
+        }else{
+            setUsernameErrorMsg(messageUsername);
+            setEmailErrorMsg(messageEmail);
+            setPasswordErrorMsg(messagePassword);
+            setPasswordCheckErrorMsg(messagePasswordCheck);
         }
     }
 
@@ -93,6 +109,9 @@ function SignUp() {
                         />
                     </div>
                 </span>
+                <div className="error-message">
+                    {emailErrorMsg}
+                </div>
                 <span>
                     <div className="icon">
                         <svg className="username-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -121,6 +140,9 @@ function SignUp() {
                         />
                     </div>
                 </span>
+                <div className="error-message">
+                    {usernameErrorMsg}
+                </div>
                 <span>
                     <div className="icon">
                         <img src="https://nowsee.today/password-icon.svg" className="password-icon"/>
@@ -138,6 +160,9 @@ function SignUp() {
                         />
                     </div>
                 </span>
+                <div className="error-message">
+                    {passwordErrorMsg}
+                </div>
                 <span>
                     <div className="icon">
                         <img src="https://nowsee.today/password-icon.svg" className="password-icon"/>
@@ -155,6 +180,9 @@ function SignUp() {
                         />
                     </div>
                 </span>
+                <div className="error-message">
+                    {passwordErrorMsg}
+                </div>
                 <div className="button-container">
                     <button
                         type="submit"

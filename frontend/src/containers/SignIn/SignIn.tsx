@@ -10,32 +10,35 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import "./SignIn.scss"
+import { selectApiError } from "../../store/slices/apierror";
 
 function SignIn() {
     const authenticated = window.sessionStorage.getItem('isLoggedIn') === "true"
 
     //debug
     const userState = useSelector(selectUser);
+    const errorState = useSelector(selectApiError);
 
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-    const isEmailWarning = (email: string) => {
-        const emailRegex = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{1,})$/i;
-        if (!emailRegex.test(email))
-            return false
-        return true;
-    };
+    // const isEmailWarning = (email: string) => {
+    //     const emailRegex = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{1,})$/i;
+    //     if (!emailRegex.test(email))
+    //         return false
+    //     return true;
+    // };
 
     const login = async() => {
         const formData = new FormData();
         formData.append("email", email);
         formData.append("password", password);
-        
-        if (!isEmailWarning(email)) {
-            alert("알맞은 이메일을 입력해주세요");
-        } else await dispatch(setLogin(formData));
+
+        // if (!isEmailWarning(email)) {
+        //     alert("알맞은 이메일을 입력해주세요");
+        // } else await dispatch(setLogin(formData));
+        await dispatch(setLogin(formData));
     };
 
     const onClickSignUpButton = (e: React.MouseEvent<HTMLElement>) => {
@@ -93,6 +96,9 @@ function SignIn() {
                         />
                     </div>
                 </span>
+                <div className="error-message">
+                    {errorState.apiError.msg}
+                </div>
                 <div className="button-container">
                     <button type="submit">Sign In</button>
                     <button

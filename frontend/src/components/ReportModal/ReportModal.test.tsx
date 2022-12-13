@@ -7,6 +7,7 @@ import userEvent from "@testing-library/user-event";
 import { getMockStore, mockStore, mockStoreHashFeed1 } from "../../test-utils/mock";
 import { Provider } from "react-redux";
 import { UserState } from "../../store/slices/user";
+import { ApiErrorCode } from "../../store/slices/apierror";
 import { MemoryRouter, Route, Routes } from "react-router";
 
 const mockNavigate = jest.fn();
@@ -287,6 +288,12 @@ describe("<ReportModal />", () => {
                     lat: 37.44877599087201,
                     lng: 126.95264777802309,
                 },
+            },
+            apiErrors: {
+                apiError: {
+                    code: ApiErrorCode.NONE,
+                    msg: ""
+                }
             },
         });
         axios.post = jest.fn().mockResolvedValue({});
