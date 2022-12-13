@@ -121,13 +121,12 @@ function MyPage() {
             </div>
             </div>
             <div id="postlist-container">
-            <PostList
-                currPosition={null}
-                type={"Mypage"}
-                postListCallback={() => {}}
-                replyTo={0}
-                allPosts={posts}
-            />
+                <PostList
+                    type={"Mypage"}
+                    postListCallback={() => {}}
+                    replyTo={0}
+                    allPosts={posts}
+                />
             </div>
         </Content>
         </Layout>

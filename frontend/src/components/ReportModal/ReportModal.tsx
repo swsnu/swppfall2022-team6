@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import "./ReportModal.scss";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Slider, TextField } from "@mui/material";
-import { PositionType } from "../../store/slices/position";
+import { PositionType, selectPosition } from "../../store/slices/position";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store";
 import {
@@ -15,7 +15,6 @@ import { addReport } from "../../store/slices/report";
 import { addPost } from "../../store/slices/post";
 
 export interface IProps {
-    currPosition: PositionType;
     openReport: boolean;
     setOpenReport: React.Dispatch<React.SetStateAction<boolean>>;
     isNavbarReport: boolean;
@@ -23,13 +22,13 @@ export interface IProps {
 }
 
 function ReportModal({
-    currPosition,
     openReport,
     setOpenReport,
     isNavbarReport,
     navReportCallback,
 }: IProps) {
     const userState = useSelector(selectUser);
+    const positionState = useSelector(selectPosition);
 
     const [content, setContent] = useState<string>("");
     const [image, setImage] = useState<File>();
@@ -47,8 +46,8 @@ function ReportModal({
     const [address, setAddress] = useState<string>("");
     useEffect(() => {
         geocoder.coord2RegionCode(
-            currPosition.lng,
-            currPosition.lat,
+            positionState.currPosition.lng,
+            positionState.currPosition.lat,
             (result, status) => {
                 if (
                     status === kakao.maps.services.Status.OK &&
@@ -91,8 +90,8 @@ function ReportModal({
             wind_degree: windDegree,
             happy_degree: happyDegree,
             humidity_degree: humidityDegree,
-            latitude: currPosition.lat,
-            longitude: currPosition.lng,
+            latitude: positionState.currPosition.lat,
+            longitude: positionState.currPosition.lng,
         };
         //@ts-ignore
         const response = await dispatch(addReport(data)); //! 왜 0개의 인수,,,?
@@ -111,8 +110,8 @@ function ReportModal({
             if (image) formData.append("image", image);
             formData.append("content", content);
             formData.append("hashtags", "");
-            formData.append("latitude", currPosition.lat.toString());
-            formData.append("longitude", currPosition.lng.toString());
+            formData.append("latitude", positionState.currPosition.lat.toString());
+            formData.append("longitude", positionState.currPosition.lng.toString());
             formData.append("location", address);
             //@ts-ignore
             await dispatch(addPost(formData));

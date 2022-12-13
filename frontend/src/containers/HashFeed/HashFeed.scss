@@ -84,6 +84,7 @@ $top: 20px;
     line-height: 140%;
     color: rgba(0, 0, 0, 0.75);
     margin-top: 15px;
+    display: flex;
     flex-direction: row;
     gap: 10px;
     width: 100%;
@@ -96,8 +97,6 @@ $top: 20px;
     font-family: "NanumGothic", serif;
     font-size: 10px;
     height: 30px;
-    min-width: 200px;
-    width: 30vw;
     margin-left: 10px;
 }
 .HashFeed #only-photos-button {
@@ -131,6 +130,16 @@ $top: 20px;
 .HashFeed .no-hashtag span {
     font-size: 20px;
 }
+.HashFeed #hashtag-buttons {
+    margin-top: 10px;
+}
+.HashFeed #postlist-container {
+    margin-top: 10px;
+    height: auto;
+    display: inline-block;
+    width: 100%;
+    overflow: scroll;
+}
 
 $mobile: 1000px;
 
@@ -161,9 +170,26 @@ $mobile: 1000px;
         .post-title {
             margin-bottom: 20px;
             margin-top: 20px;
+            width: 100%;
         }
-        .hashfeed-posts-container {
-            width: 80vw;
+        #search-box-container .search-box {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+            font-family: "NanumGothic", serif;
+            font-size: 10px;
+            height: 30px;
+            width: calc(90vw - 100px);
+            margin-left: 10px;
+        }
+        #postlist-container {
+            height: calc(100vh - 500px);
+        }
+        @media (max-height: 773px) {
+            .navigation-bar {
+                opacity: 0;
+                display: none;
+            }
         }
     }
 }
@@ -193,6 +219,9 @@ $mobile: 1000px;
         .post-title {
             margin-bottom: 20px;
             margin-top: 40px;
+        }
+        #postlist-container {
+            height: calc(100vh - 300px);
         }
     }
 }

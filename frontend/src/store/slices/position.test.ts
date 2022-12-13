@@ -1,7 +1,7 @@
 import { AnyAction, configureStore, EnhancedStore } from "@reduxjs/toolkit";
 import { ThunkMiddleware } from "redux-thunk";
 import axios from "axios";
-import reducer, { PositionState, setPosition } from "./position";
+import reducer, { PositionState, setFindPosition } from "./position";
 
 describe("report reducer", () => {
     type NewType = EnhancedStore<
@@ -33,11 +33,12 @@ describe("report reducer", () => {
     });
     it("should handle initial state", () => {
         expect(reducer(undefined, { type: "unknown" })).toEqual({
-            position: fakePosition,
+            findPosition: fakePosition,
+            currPosition: fakePosition,
         });
     });
     it("should handle setPosition", async () => {
-        await store.dispatch(setPosition(fakePosition));
-        expect(store.getState().positions.position).toEqual(fakePosition);
+        await store.dispatch(setFindPosition(fakePosition));
+        expect(store.getState().positions.findPosition).toEqual(fakePosition);
     });
 });

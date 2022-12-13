@@ -8,11 +8,13 @@ import { fetchHashPosts, PostType, selectPost } from "../../store/slices/post";
 
 import { Button, Checkbox, Layout, Space } from "antd";
 import { ArrowLeftOutlined, SyncOutlined } from "@ant-design/icons";
+import SearchBar from "material-ui-search-bar";
+import { styled } from "@material-ui/core/styles";
 
 import PostList from "../../components/PostList/PostList";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 
-import { CustomSearchBar } from "../AreaFeed/AreaFeed";
+// import { CustomSearchBar } from "../AreaFeed/AreaFeed";
 
 import { Map, MapMarker, MarkerClusterer } from "react-kakao-maps-sdk";
 import { selectPosition } from "../../store/slices/position";
@@ -21,6 +23,14 @@ import Loading from "../../components/Loading/Loading";
 import "./HashFeed.scss";
 
 const { Header, Content } = Layout;
+
+export const CustomSearchBar = styled(SearchBar)({
+  backgroundColor: "#F5F5F5",
+  borderRadius: "10px",
+  fontFamily: '"NanumGothic", sans-serif',
+  fontSize: "10px",
+  // width: "500px"
+});
 
 function getWindowSize() {
   const { innerWidth, innerHeight } = window;
@@ -104,7 +114,7 @@ function HashFeed() {
     return (
       <Map
         id="map-hashfeed"
-        center={positionState.position}
+        center={positionState.findPosition}
         style={{
           width: "100%",
           height: mapHeight,
@@ -144,7 +154,6 @@ function HashFeed() {
       <div className="hashfeed-posts-container">
         <h2 className="hash-label post-title title">Posts</h2>
         <div id="search-box-container" style={{ display: "flex" }}>
-          <div>
             <CustomSearchBar
               className="search-box"
               placeholder=""
@@ -153,7 +162,6 @@ function HashFeed() {
               onCancelSearch={() => onClickClose()}
               onChange={(searchVal) => setSearchQuery(searchVal)}
             />
-          </div>
           <div id="only-photos-button">
             <Checkbox
               className="checkbox"
@@ -165,14 +173,12 @@ function HashFeed() {
         </div>
         <div id="postlist-container">
           <PostList
-            currPosition={positionState.position}
             allPosts={queryPosts}
             type={"Post"}
             replyTo={0}
             postListCallback={postListCallback}
           />
         </div>
-        ;
       </div>
     );
   };
@@ -203,32 +209,35 @@ function HashFeed() {
       {isLoading ? (
         <Content className="Content" style={{ backgroundColor: "white" }}>
           <div id="cluster-map">{showClusterMap()}</div>
-          <div id="recommended-hashtag-container">
-            <div className="hash-label title hashtag-title">
-              Recommended Hashtags
-            </div>
-            <div id="hashtag-buttons">
-              {hashtagState.top3.slice(1).length > 0 ? (
-                <Space>
-                  {hashtagState.top3.slice(1).map((item, i) => {
-                    return (
-                      <Button
-                        key={i}
-                        className="hashtag"
-                        onClick={() => {
-                          navigate(`/hashfeed/${item.id}`);
-                        }}
-                      >
-                        {"#" + item.content}
-                      </Button>
-                    );
-                  })}
-                </Space>
-              ) : (
-                <div className="no-hashtag">
-                  No recommended hashtag! 😵
-                </div>
-              )}
+          <div className="right-container">
+
+            <div id="recommended-hashtag-container">
+              <div className="hash-label title hashtag-title">
+                Recommended Hashtags
+              </div>
+              <div id="hashtag-buttons">
+                {hashtagState.top3.slice(1).length > 0 ? (
+                  <Space>
+                    {hashtagState.top3.slice(1).map((item, i) => {
+                      return (
+                        <Button
+                          key={i}
+                          className="hashtag"
+                          onClick={() => {
+                            navigate(`/hashfeed/${item.id}`);
+                          }}
+                        >
+                          {"#" + item.content}
+                        </Button>
+                      );
+                    })}
+                  </Space>
+                ) : (
+                  <div className="no-hashtag">
+                    No recommended hashtag! 😵
+                  </div>
+                )}
+              </div>
             </div>
             <HashFeedPosts></HashFeedPosts>
           </div>
@@ -236,7 +245,9 @@ function HashFeed() {
       ) : (
         <Loading />
       )}
-      <NavigationBar navReportCallback={navReportCallback} />
+      <div className="navigation-bar">
+        <NavigationBar navReportCallback={navReportCallback} />
+      </div>
     </Layout>
   );
 }

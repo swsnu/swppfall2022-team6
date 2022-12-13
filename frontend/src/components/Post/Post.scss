@@ -1,69 +1,68 @@
 $primary: #3185e7;
-@import "../../../node_modules/bootstrap/scss/functions";
 
-$font-sizes: (
-    1: 1rem * 2.5,
-    2: 1rem * 2,
-    3: 1rem * 1.5,
-    4: 1rem * 1.25,
-    5: 1rem,
-    6: 1rem * 0.75,
-    7: 1rem * 0.85,
-    8: 1rem * 0.5,
-);
-@import "../../../node_modules/bootstrap/scss/bootstrap";
-@import url("https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap");
-:root {
-    --bs-body-font-family: "Nanum Gothic", sans-serif;
-}
 #post-and-chain-container {
-    border: 1px solid #F5F5F5;
+    // width: 95%;
+    border: solid 1px #F5F5F5;
+    margin-top: 10px;
     border-radius: 20px;
-    max-width: 97%;
-}
-#post-text {
-    // padding-left: 5px;
-    font-size: 14px;
-}
-
-
-#location,
-#timestamp {
-    font-size: 8px;
-}
-#post-reply-to {
-    font-size: 14px;
-}
-
-#post-photo {
-    margin-left: 5px;
-    margin-top: 4px;
-    margin-bottom: 0;
-}
-
-.post-image {
-    max-height: 10vh;
-    border-radius: 10%;
-
-}
-
-#user-name {
-    font-size: 14px;
-}
-
-#chain-toggle-button {
-    font-size: 12px;
-}
-#main-post-div{
-    display: flex;
-    flex-direction: row;
-}
-.badge-image{
-    height: auto;
-    width: 20px;
-}
-
-#user-main-badge{
-    height: 60px;
-    width: 60px;
+    padding: 7px;
+    #main-post-div {
+        display: flex;
+        flex-direction: column;
+    }
+    #user-info {
+        display: flex;
+        gap: 5px;
+    }
+    #post-right-container {
+        position: relative;
+        top: 7px;
+        display: flex;
+        flex-flow: column wrap;
+        text-align: left;
+        gap: 12px;
+    }
+    #user-name {
+        font-size: 14px;
+    }
+    #time-and-location {
+        display: flex;
+        gap: 5px;
+        font-size: 10px;
+    }
+    #user-main-badge img {
+        width: 55px;
+    }
+    #post-content-container {
+        position: relative;
+        left: 60px;
+        text-align: left;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    #post-reply-to {
+        color: $primary;
+        font-weight: 700;
+    }
+    #chain-container {
+        margin: 7px;
+        text-align: left;
+    }
+    .chain-toggle-button {
+        border: 0;
+        outline: 0;
+        background: none;
+        color: $primary;
+        font-weight: 700;
+        font-size: 14px;
+    }
+    #post-photo {
+        padding: 10px;
+        text-align: left;
+    }
+    #post-photo img {
+        margin-left: 25px;
+        width: 200px;
+        border-radius: 15px;
+    }
 }
