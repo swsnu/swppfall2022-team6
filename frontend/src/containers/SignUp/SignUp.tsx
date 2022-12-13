@@ -4,6 +4,7 @@ import { setSignUp } from "../../store/slices/user";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store";
+import { selectUser } from "../../store/slices/user";
 import axios from "axios";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -27,6 +28,8 @@ const initialvalues: SignUpFormType = {
 
 function SignUp() {
     const authenticated = window.sessionStorage.getItem('isLoggedIn') === "true"
+
+    const userState = useSelector(selectUser);
     const errorState = useSelector(selectApiError);
 
     const dispatch = useDispatch<AppDispatch>();
@@ -49,11 +52,7 @@ function SignUp() {
     }, []);
 
     const signUp = async(formData: SignUpFormType) => {
-        const response = await dispatch(setSignUp(formData));
-        if(response.payload){
-            await alert('회원가입을 축하합니다');
-        }
-
+        await dispatch(setSignUp(formData));
     }
 
     // const signUp = (formData: SignUpFormType) => {

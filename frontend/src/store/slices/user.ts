@@ -226,6 +226,7 @@ export const setSignUp = createAsyncThunk(
       const formData = new FormData();
       formData.append("email", data.email ?? "");
       formData.append("password", data.password ?? "");
+      alert("회원가입을 축하드립니다");
       await dispatch(setLogin(formData));
       return response.data
     }).catch(async(error) => {
