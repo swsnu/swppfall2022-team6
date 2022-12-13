@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "..";
 import axios from "axios";
 import { PostType } from "./post";
+import { SignUpFormType } from "../../containers/SignUp/SignUp";
 import { checkApiResponseStatus, setDefaultApiError, ApiErrorSource } from "./apierror";
 
 export interface UserType {
@@ -211,7 +212,26 @@ export const setLogin = createAsyncThunk(
       return response.data
     }).catch(async(error) => {
       if(error.response){
-        await dispatch(checkApiResponseStatus({status: error.response.status, source: ApiErrorSource.USER}));
+        await dispatch(checkApiResponseStatus({status: error.response.status, source: ApiErrorSource.SIGNIN}));
+      }
+    });
+  }
+);
+export const setSignUp = createAsyncThunk(
+  "user/setSignUp",
+  async (data: SignUpFormType, { dispatch }) => {
+    axios
+    .post("/user/signup/", data)
+    .then(async (response) => {
+      const formData = new FormData();
+      formData.append("email", data.email ?? "");
+      formData.append("password", data.password ?? "");
+      await dispatch(setLogin(formData));
+      return response.data
+    }).catch(async(error) => {
+      if(error.response){
+        console.log(error.response);
+        await dispatch(checkApiResponseStatus({status: error.response.status, source: ApiErrorSource.SIGNUP}));
       }
     });
   }

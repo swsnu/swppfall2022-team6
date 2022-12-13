@@ -39,7 +39,7 @@ export const checkValidPassword = (password: string) => {
 
     if (password.length < 8) {
         isValid = false;
-        message = '8자리 이상의 비밀번호를 설정해 주세요';
+        message = '8자 이상의 비밀번호를 설정해 주세요';
     }
     const res: ValidType = {isValid, message};
     return res;

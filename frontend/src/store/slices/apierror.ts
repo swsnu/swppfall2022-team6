@@ -16,6 +16,8 @@ export enum ApiErrorCode {
 }
 
 export enum ApiErrorSource {
+  SIGNIN,
+  SIGNUP,
   USER,
   HASHTAG,
   POSITION,
@@ -55,10 +57,16 @@ export const checkApiResponseStatus = createAsyncThunk(
         msg = "로그인 후 2시간이 경과되었습니다. 다시 로그인해주세요.";
     } else if (data.status === 403) {
         code = ApiErrorCode.AUTH_FAIL;
-        msg = data.source === ApiErrorSource.USER? "이메일이나 비밀번호가 틀립니다.": "권한이 없습니다";
+        msg = data.source === ApiErrorSource.SIGNIN? "이메일이나 비밀번호가 틀립니다.": "권한이 없습니다";
     } else if (data.status == 400) {
         code = ApiErrorCode.BAD_REQUEST;
-        msg = data.source === ApiErrorSource.USER? "이메일을 올바른 형식으로 입력해주세요": "올바른 형식으로 입력해주세요";
+        if (data.source === ApiErrorSource.SIGNIN){
+          msg = "이메일을 올바른 형식으로 입력해주세요"
+        }else if( data.source === ApiErrorSource.SIGNUP ){
+          msg = "중복되는 이메일/아이디 입니다. 다른 이메일/아이디를 입력해주세요"
+        }else{
+          msg = "bad request";
+        }
     } else {
         code = ApiErrorCode.SERVER;
         msg = "서버에 문제가 발생했습니다. 다시 로드해 주세요";
