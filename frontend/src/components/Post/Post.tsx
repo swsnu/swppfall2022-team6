@@ -20,15 +20,12 @@ export interface postProps {
     toggleChain?: () => void; // toggle chain open/close
     isReplyList: number; // 0 when not, from replyTo in postlist
 }
-// get location from user lang, long
 
 function Post(post: postProps) {
     const postState = useSelector(selectPost);
     const userState = useSelector(selectUser);
 
-    // set chain toggle status
     const [isChainOpen, setChainOpen] = useState<boolean>(false);
-    // get replied post
     const [chainedPosts, setChainedPosts] = useState<PostType[]>([]);
 
     const navigate = useNavigate();
@@ -43,20 +40,7 @@ function Post(post: postProps) {
                 });
         }
     }, [isChainOpen]);
-    // TODO: get image from backend
-    // const mapbadges = (author_name: string) => {
-    //     if (author_name == "kmy") {
-    //         return "/badge2.svg";
-    //     } else if (author_name == "msy") {
-    //         return "/badge3.svg";
-    //     } else if (author_name == "lys") {
-    //         return "/badge4.svg";
-    //     } else if (author_name == "ice") {
-    //         return "/badge5.svg";
-    //     } else {
-    //         return "/badge1.svg";
-    //     }
-    // };
+
     const clickPostHandler = (post: PostType) => {
         navigate("/areafeed/" + post.id);
     };
@@ -166,7 +150,6 @@ function Post(post: postProps) {
                     </div>
                 </div>
             </div>
-            {/* Show chain when it is a reply */}
             {post.isReplyList !== 0 ||
             post.reply_to_author === null ? null : isChainOpen === false ? (
                 <div

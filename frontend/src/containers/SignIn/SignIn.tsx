@@ -21,12 +21,21 @@ function SignIn() {
     const [password, setPassword] = useState<string>("");
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
+    const isEmailWarning = (email: string) => {
+        const emailRegex = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{1,})$/i;
+        if (!emailRegex.test(email))
+            return false
+        return true;
+    };
 
     const login = async() => {
         const formData = new FormData();
         formData.append("email", email);
         formData.append("password", password);
-        await dispatch(setLogin(formData));
+        
+        if (!isEmailWarning(email)) {
+            alert("알맞은 이메일을 입력해주세요");
+        } else await dispatch(setLogin(formData));
     };
 
     const onClickSignUpButton = (e: React.MouseEvent<HTMLElement>) => {

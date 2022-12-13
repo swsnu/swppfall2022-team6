@@ -198,8 +198,7 @@ export const setLogin = createAsyncThunk(
       sessionStorage.setItem("user", JSON.stringify(response.data));
       return response.data
     }).catch((error) => {
-      console.log(error);
-      checkApiResponseStatus(error.status);
+      checkApiResponseStatus(error.response.status);
     });
   }
 );
