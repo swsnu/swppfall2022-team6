@@ -195,12 +195,10 @@ class UserViewSet(viewsets.GenericViewSet):
     def post(self, request, pk=None):
         del request
         user = get_object_or_404(User, pk=pk)
-        data = cache.get(f"userposts+{user.id}")
-        print("checking userpost cache...")
+        data = cache.get(f'userposts+{user.id}')
         if not data:
-            print("userpost cache not available")
             user_posts = user.userpost
             data = PostSerializer(user_posts, many=True).data
-            cache.set(f"userposts+{user.id}", data, 60*10)
+            cache.set(f'userposts+{user.id}', data, 60*10)
         return Response(data, status=status.HTTP_200_OK)
 

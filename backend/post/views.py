@@ -94,9 +94,8 @@ class PostViewSet(viewsets.GenericViewSet):
         if 'hid' in request.POST:
             hashid = Hashtag.objects.get(id=int(request.POST['hid']))
             PostHashtag.objects.create(post=post, hashtag=hashid)
-            if cache.has_key(f"hashfeed+{hashid.id}"):
-                print("hashfeed cache delete")
-                cache.delete(f"hashfeed+{hashid.id}")
+            if cache.has_key(f'hashfeed+{hashid.id}'):
+                cache.delete(f'hashfeed+{hashid.id}')
             hashid = hashid.content
         if request.POST['hashtags'] != '':
             for hashtag in request.POST['hashtags'].strip()\
@@ -107,12 +106,10 @@ class PostViewSet(viewsets.GenericViewSet):
                 if h is None:
                     h = Hashtag.objects.create(content=hashtag)
                 PostHashtag.objects.create(post=post, hashtag=h)
-                if cache.has_key(f"hashfeed+{h.id}"):
-                    print("hashfeed cache delete")
-                    cache.delete(f"hashfeed+{h.id}")
-        if cache.has_key(f"userposts+{user.id}"):
-            print("userpost cache delete")
-            cache.delete(f"userposts+{user.id}")
+                if cache.has_key(f'hashfeed+{h.id}'):
+                    cache.delete(f'hashfeed+{h.id}')
+        if cache.has_key(f'userposts+{user.id}'):
+            cache.delete(f'userposts+{user.id}')
         return Response(self.get_serializer(post, many=False).data, \
             status=status.HTTP_201_CREATED)
 
@@ -187,17 +184,15 @@ class PostViewSet(viewsets.GenericViewSet):
         user = request.user
         content = get_object_or_404(Hashtag, pk=int(pk))
 
-        posts = cache.get(f"hashfeed+{pk}")
-        print("checking hashfeed cache...")
+        posts = cache.get(f'hashfeed+{pk}')
         if not posts:
-            print("hashfeed cache not available")
             post_hashtags = PostHashtag.objects.all()
             ids = list((ph.post.id for ph in post_hashtags
             if ph.hashtag.id == int(pk)))
 
-            posts = Post.objects.all().filter(id__in=ids).order_by('-created_at')\
-                [:MAX_POST_LEN]
-            cache.set(f"hashfeed+{pk}", posts, 60*10)
+            posts = Post.objects.all().filter(id__in=ids).order_by(
+                '-created_at')[:MAX_POST_LEN]
+            cache.set(f'hashfeed+{pk}', posts, 60*10)
 
         hashtags = hash_recommend(posts.values('id'), user, int(pk))
         hashtags.insert(0, {'id':pk,
