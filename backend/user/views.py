@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.shortcuts import get_object_or_404
+from django.core.cache import cache
 
 from user.models import UserBadge, Badge, Achievement
 from .serializer import LogInSerializer, LogOutSerializer, SignUpSerializer, UserSerializer, BadgeSerializer, UserBadgeSerializer,AchievementSerializer
@@ -194,7 +195,12 @@ class UserViewSet(viewsets.GenericViewSet):
     def post(self, request, pk=None):
         del request
         user = get_object_or_404(User, pk=pk)
-        user_posts = user.userpost
-        data = PostSerializer(user_posts, many=True).data
+        data = cache.get(f"userposts+{user.id}")
+        print("checking userpost cache...")
+        if not data:
+            print("userpost cache not available")
+            user_posts = user.userpost
+            data = PostSerializer(user_posts, many=True).data
+            cache.set(f"userposts+{user.id}", data, 60*10)
         return Response(data, status=status.HTTP_200_OK)
 
