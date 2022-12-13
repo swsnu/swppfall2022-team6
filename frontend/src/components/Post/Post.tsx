@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../store/slices/user";
-import { fetchChainedPost, PostType, selectPost } from "../../store/slices/post";
+import { fetchChainedPost, PostType } from "../../store/slices/post";
 import { AppDispatch } from "../../store";
 
 import "./Post.scss";
@@ -22,7 +22,6 @@ export interface postProps {
 }
 
 function Post(post: postProps) {
-    const postState = useSelector(selectPost);
     const userState = useSelector(selectUser);
 
     const [isChainOpen, setChainOpen] = useState<boolean>(false);
@@ -68,120 +67,83 @@ function Post(post: postProps) {
         return chain;
     };
     return (
-        <div id="post-and-chain-container" className="d-flex flex-column ">
+        <div id="post-and-chain-container" 
+        // className="d-flex flex-column "
+        >
             <div
                 id="post-container"
-                className="p-1 mt-2 ms-2"
+                // className="p-1 mt-2 ms-2"
                 onClick={post.clickPost}
             >
-                <div
-                    id="main-post-div"
-                    className="d-flex justify-content-start"
-                >
-                    <div id="user-main-badge">
-                        <img
-                            className="badge-image"
-                            src={userState.userBadges.find((badge) => badge.id === post.badge_id)?.image}
-                            alt="sample"
-                            style={{ height: "5vh", width: "auto" }}
-                        />
-                    </div>
-                    <div
-                        id="post-right-container"
-                        className="d-flex flex-column ms-1 align-items-start"
-                    >
-                        <div
-                            id="user-name"
-                            className="d-flex justify-content-start gap-1 fw-bold fs-5-5"
-                        >
-                            {post.user_name}
+                <div id="main-post-div">
+                    <div id="user-info">
+                        <div id="user-main-badge">
+                            <img
+                                className="badge-image"
+                                src={userState.userBadges.find((badge) => badge.id === post.badge_id)?.image}
+                                alt="sample"
+                            />
                         </div>
-                        <div
-                            id="time-and-location"
-                            className="d-flex justify-content-start gap-1 fw-light fs-7 mt-1"
-                        >
-                            <div id="location" className="tldiv">
-                                {post.location}
+                        <div id="post-right-container">
+                            <div id="user-name">
+                                {post.user_name}
                             </div>
-                            <div> . </div>
-                            <div
-                                id="timestamp"
-                                className="tldiv"
-                                style={{ fontSize: "3px" }}
-                            >
-                                {new Date(post.created_at).toLocaleDateString(
-                                    "ko-KR",
-                                    {
-                                        year: "numeric",
-                                        month: "2-digit",
-                                        day: "2-digit",
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                    }
-                                )}
-                            </div>
-                        </div>
-                        <div
-                            id="post-content-container"
-                            className="d-flex justify-content-start gap-1 mt-2"
-                        >
-                            {post.content === "" ? null : (
-                                <div
-                                    id="post-content"
-                                    className="text-start fw-normal ms-2"
-                                >
-                                    {post.reply_to_author === null ? null : (
-                                        <span
-                                            id="post-reply-to"
-                                            className="text-primary"
-                                        >
-                                            @{post.reply_to_author}{" "}
-                                        </span>
+                            <div id="time-and-location">
+                                <span id="location" > {post.location? post.location: "No location"} </span>
+                                <span style={{fontWeight: 900}}> · </span>
+                                <span id="timestamp">
+                                    {new Date(post.created_at).toLocaleTimeString(
+                                        "ko-KR",
+                                        {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        }
                                     )}
-                                    <span id="post-text">{post.content}</span>
-                                </div>
-                            )}
+                                </span>
+                            </div>
                         </div>
-                        {post.image === "" ? null : (
-                            <div id="post-photo" className="ms-3">
-                                <img src={post.image} className="post-image" />
+                    </div>
+                    <div id="post-content-container">
+                        {post.content === "" ? null : (
+                            <div id="post-content">
+                                {post.reply_to_author === null ? null : (
+                                    <span id="post-reply-to">
+                                        @{post.reply_to_author}{" "}
+                                    </span>
+                                )}
+                                <span id="post-text">{post.content}</span>
                             </div>
                         )}
                     </div>
+                    {post.image === "" ? null : (
+                        <div id="post-photo" className="ms-3">
+                            <img src={post.image} className="post-image" />
+                        </div>
+                    )}
+                    </div>
                 </div>
-            </div>
             {post.isReplyList !== 0 ||
             post.reply_to_author === null ? null : isChainOpen === false ? (
-                <div
-                    id="chain-container"
-                    className="p-1 d-flex justify-content-start"
-                >
+                <div id="chain-container">
                     <button
-                        id="chain-toggle-button"
+                        className="chain-toggle-button"
                         type="button"
-                        className="btn btn-link text-decoration-none"
                         onClick={clickToggleChain}
                     >
                         Show All
                     </button>
                 </div>
             ) : (
-                <div id="chain-container" className="p-1">
-                    <div
-                        id="chained-posts"
-                        className="d-flex flex-column gap-2"
-                    >
+                <div id="chain-container">
+                    <div id="chained-posts">
                         {renderChainedPosts()}
                     </div>
-                    <div
-                        id="chain-toggle"
-                        className="p-2 d-flex justify-content-start"
-                    >
+                    <div id="chain-toggle">
                         <button
-                            id="chain-toggle-button"
+                            className="chain-toggle-button"
                             type="button"
-                            className="btn btn-link text-decoration-none"
                             onClick={clickToggleChain}
+                            style={{marginTop: "5px"}}
                         >
                             Close All
                         </button>

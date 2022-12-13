@@ -1,0 +1,31 @@
+#navbar-container {
+  position: absolute;
+  right: 5px;
+  font-size: 12px;
+  z-index: 100;
+}
+
+$mobile: 1000px;
+
+@mixin mobile {
+  @media (max-width: $mobile) {
+    @content;
+  }
+}
+@mixin desktop {
+  @media (min-width: ($mobile + 1)){
+    @content;
+  }
+}
+
+@include mobile {
+    #navbar-container {
+      bottom: 20%;
+    }
+}
+
+@include desktop {
+    #navbar-container {
+      bottom: 45%;
+    }
+}

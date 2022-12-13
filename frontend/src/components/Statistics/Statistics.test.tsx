@@ -61,7 +61,11 @@ describe("<Statistics />", () => {
                 top3: [],
             },
             positions: {
-                position: {
+                findPosition: {
+                    lat: 37.44877599087201,
+                    lng: 126.95264777802309,
+                },
+                currPosition: {
                     lat: 37.44877599087201,
                     lng: 126.95264777802309,
                 },

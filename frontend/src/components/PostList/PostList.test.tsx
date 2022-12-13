@@ -50,7 +50,6 @@ describe("<PostList />", () => {
                         path="/"
                         element={
                             <PostList
-                                currPosition={{ lat: 0, lng: 0 }}
                                 type={"Post"}
                                 postListCallback={jest.fn()}
                                 replyTo={0}
@@ -123,7 +122,6 @@ describe("<PostList />", () => {
                         path="/"
                         element={
                             <PostList
-                                currPosition={{ lat: 0, lng: 0 }}
                                 type={"Post"}
                                 postListCallback={mockCallback}
                                 replyTo={0}
@@ -148,7 +146,6 @@ describe("<PostList />", () => {
                         path="/"
                         element={
                             <PostList
-                                currPosition={{ lat: 0, lng: 0 }}
                                 type={"Mypage"}
                                 postListCallback={jest.fn()}
                                 replyTo={0}

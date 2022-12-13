@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
-    setPosition,
+    setFindPosition,
+    setCurrPosition as setCurrPostionState,
     PositionType,
     selectPosition,
 } from "../../store/slices/position";
@@ -39,11 +40,11 @@ const MainPage: React.FC = ()=>{
     const [currRadius, setCurrRadius] = useState<number>(currUser.radius * 25);
     const [openReport, setOpenReport] = useState<boolean>(false);
     const [markerPosition, setMarkerPosition] = useState<PositionType>(
-        positionState.position
+        positionState.findPosition
     );
-    const [currPosition, setCurrPosition] = useState<PositionType>(
-        positionState.position
-    );
+    // const [currPosition, setCurrPosition] = useState<PositionType>(
+    //     positionState.findPosition
+    // );
     const [address, setAddress] = useState<string>("");
     const [showResults, setShowResults] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -60,10 +61,10 @@ const MainPage: React.FC = ()=>{
                     lat: position.coords.latitude,
                     lng: position.coords.longitude,
                 });
-                setCurrPosition({
+                dispatch(setCurrPostionState({
                     lat: position.coords.latitude,
                     lng: position.coords.longitude,
-                });
+                }));
             });
         } else {
             console.log("Geolocation is not supported by this browser.");
@@ -72,8 +73,8 @@ const MainPage: React.FC = ()=>{
 
     useEffect(() => {
         geocoder.coord2RegionCode(
-            currPosition.lng,
-            currPosition.lat,
+            positionState.currPosition.lng,
+            positionState.currPosition.lat,
             (result, status) => {
                 if (
                     status === kakao.maps.services.Status.OK &&
@@ -83,7 +84,7 @@ const MainPage: React.FC = ()=>{
                 }
             }
         );
-    }, [currPosition]);
+    }, [positionState.currPosition]);
 
     const onClickMyPageIcon = () => {
         navigate("/mypage");
@@ -91,7 +92,7 @@ const MainPage: React.FC = ()=>{
     const onClickFindOutButton = async () => {
         const radiusKm = currRadius / 25;
         await dispatch(setRadius({ user: currUser, radius: radiusKm })); //! type mismatch error,, why?
-        await dispatch(setPosition(markerPosition));
+        await dispatch(setFindPosition(markerPosition));
         localStorage.setItem("position", JSON.stringify(markerPosition));
         navigate("/areafeed");
     };
@@ -197,7 +198,6 @@ const MainPage: React.FC = ()=>{
                 </Row>
             </Content>
             <ReportModal
-                currPosition={currPosition}
                 openReport={openReport}
                 setOpenReport={setOpenReport}
                 isNavbarReport={false}

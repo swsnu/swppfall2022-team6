@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import "./PostModal.scss";
 import { TextField } from "@mui/material";
@@ -11,10 +10,9 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store";
 import { useParams } from "react-router";
-import { PositionType } from "../../store/slices/position";
+import { selectPosition } from "../../store/slices/position";
 
 export interface IProps {
-    currPosition: PositionType | null;
     openPost: boolean;
     setOpenPost: React.Dispatch<React.SetStateAction<boolean>>;
     postModalCallback: () => void;
@@ -23,13 +21,13 @@ export interface IProps {
 }
 
 function PostModal({
-    currPosition,
     openPost,
     setOpenPost,
     postModalCallback,
     type,
     replyTo,
 }: IProps) {
+    const positionState = useSelector(selectPosition);
     const [content, setContent] = useState<string>("");
     const [image, setImage] = useState<File>();
     const [hashtags, setHashtags] = useState<string>("");
@@ -39,10 +37,10 @@ function PostModal({
     const geocoder = new kakao.maps.services.Geocoder();
     const [address, setAddress] = useState<string>("");
     useEffect(() => {
-        if (currPosition) {
+        if (positionState.currPosition) {
             geocoder.coord2RegionCode(
-                currPosition.lng,
-                currPosition.lat,
+                positionState.currPosition.lng,
+                positionState.currPosition.lat,
                 (result, status) => {
                     if (
                         status === kakao.maps.services.Status.OK &&
@@ -65,9 +63,9 @@ function PostModal({
             formData.append("hashtags", hashtags);
             if (type === "Reply")
                 formData.append("replyTo", replyTo.toString());
-            if (currPosition){
-                formData.append("latitude", currPosition.lat.toString());
-                formData.append("longitude", currPosition.lng.toString());
+            if (positionState.findPosition){
+                formData.append("latitude", positionState.findPosition.lat.toString());
+                formData.append("longitude", positionState.findPosition.lng.toString());
                 formData.append("location", address);
             }
             //@ts-ignore

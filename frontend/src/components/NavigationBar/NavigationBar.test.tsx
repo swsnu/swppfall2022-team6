@@ -76,24 +76,4 @@ describe("<NavigationBar />", () => {
         const snow_text = screen.getByText("❄️ Snow");
         expect(snow_text).toBeInTheDocument();
     });
-    it("should get current location if navigator avaliable", async () => {
-        const mockGeolocation = {
-            ...navigator.geolocation,
-            getCurrentPosition: jest.fn().mockImplementation((success) =>
-                Promise.resolve(
-                    success({
-                        coords: {
-                            latitude: 10,
-                            longitude: 10,
-                        },
-                    })
-                )
-            ),
-        };
-        // @ts-ignore
-        navigator.geolocation = mockGeolocation;
-        const spy = jest.spyOn(navigator.geolocation, "getCurrentPosition");
-        render(navbar);
-        expect(spy).toHaveBeenCalled();
-    });
 })
