@@ -17,6 +17,7 @@ import { CustomSearchBar } from "../AreaFeed/AreaFeed";
 import { Map, MapMarker, MarkerClusterer } from "react-kakao-maps-sdk";
 import { selectPosition } from "../../store/slices/position";
 import Loading from "../../components/Loading/Loading";
+import { selectApiError, setDefaultApiError } from "../../store/slices/apierror";
 
 import "./HashFeed.scss";
 
@@ -32,6 +33,7 @@ function HashFeed() {
   const hashtagState = useSelector(selectHashtag);
   const postState = useSelector(selectPost);
   const positionState = useSelector(selectPosition);
+  const errorState = useSelector(selectApiError);
 
   const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<Boolean>(false);
@@ -42,6 +44,10 @@ function HashFeed() {
   const dispatch = useDispatch<AppDispatch>();
 
   const [windowSize, setWindowSize] = useState(getWindowSize());
+
+  useEffect(()=>{
+    dispatch(setDefaultApiError())
+}, []);
 
   useEffect(() => {
     function handleWindowResize() {

@@ -231,7 +231,6 @@ export const setSignUp = createAsyncThunk(
       return response.data
     }).catch(async(error) => {
       if(error.response){
-        console.log(error.response);
         await dispatch(checkApiResponseStatus({status: error.response.status, source: ApiErrorSource.SIGNUP}));
       }
     });

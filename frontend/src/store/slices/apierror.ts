@@ -108,6 +108,12 @@ export const setApiError = createAsyncThunk(
   "setApiError",
   async (data: ApiErrorType, {dispatch}) => {
     dispatch(apiErrorActions.setApiError(data));
+    if(data.code === ApiErrorCode.TOKEN){
+      alert(data.msg);
+      sessionStorage.clear();
+      window.location.reload();
+      window.alert = function() {};
+    }
     return data;
   }
 );

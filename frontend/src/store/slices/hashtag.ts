@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "..";
 import axios from "axios";
-import { PostType } from "./post";
+import { checkApiResponseStatus, setDefaultApiError, ApiErrorSource } from "./apierror";
 
 export type HashtagType = {
     id: number;
@@ -80,17 +80,34 @@ export const fetchHashtags = createAsyncThunk(
 // );
 export const fetchHashtag = createAsyncThunk(
     "hashtag/fetchHashtag",
-    async (id: number) => {
-        const response = await axios.get<HashtagType[]>(`/hashtag/${id}/`);
-        return response.data;
+    async (id: number, { dispatch }) => {
+        // const response = await axios.get<HashtagType[]>(`/hashtag/${id}/`);
+        // return response.data;
+        await axios
+        .get<HashtagType[]>(`/hashtag/${id}/`)
+        .then(async (response) => {
+            await dispatch(setDefaultApiError());
+            return response.data;
+        }).catch(async(error) => {
+            await dispatch(checkApiResponseStatus({status: error.response.status, source: ApiErrorSource.HASHTAG}));
+        });
     }
 );
 export const addHashtag = createAsyncThunk(
     "hashtag/addHashtag",
     async (data: HashtagType, { dispatch }) => {
-        const response = await axios.post<HashtagType>("/hashtag/", data);
-        dispatch(hashtagActions.addHashtag(response.data));
-        return response.data;
+        // const response = await axios.post<HashtagType>("/hashtag/", data);
+        // dispatch(hashtagActions.addHashtag(response.data));
+        // return response.data;
+        await axios
+        .post<HashtagType>("/hashtag/", data)
+        .then(async (response) => {
+            dispatch(hashtagActions.addHashtag(response.data));
+            await dispatch(setDefaultApiError());
+            return response.data;
+        }).catch(async(error) => {
+            await dispatch(checkApiResponseStatus({status: error.response.status, source: ApiErrorSource.HASHTAG}));
+        });
     }
 );
 

@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "..";
+import { checkApiResponseStatus, setDefaultApiError, ApiErrorSource } from "./apierror";
 
 export interface PositionType {
   lat: number;
@@ -12,7 +13,7 @@ const initialState: PositionState = {
     lat: 37.44877599087201,
     lng: 126.95264777802309,
   }
-}; 
+};
 
 export const positionSlice = createSlice({
   name: "position",
@@ -31,7 +32,7 @@ export const positionSlice = createSlice({
 });
 
 export const setPosition = createAsyncThunk(
-  "position/setPosition", 
+  "position/setPosition",
   async (data: PositionType, {dispatch}) => {
     dispatch(positionActions.setPosition(data))
     return data;
