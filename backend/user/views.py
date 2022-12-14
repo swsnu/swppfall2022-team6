@@ -115,6 +115,7 @@ class UserViewSet(viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         data = serializer.data
+        cache.clear()
         return Response(data, status=status.HTTP_200_OK)
 
     # GET/POST /user/:id/badges/
