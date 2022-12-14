@@ -103,7 +103,6 @@ function ReportModal({
         };
         //@ts-ignore
         const response = await dispatch(addReport(data)); //! 왜 0개의 인수,,,?
-        console.log(response);
         if (errorState.apiError.code === ApiErrorCode.NONE){
             // update Report-Related Achievements
             const achievement_types: Achievement[] = [
