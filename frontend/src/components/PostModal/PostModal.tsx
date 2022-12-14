@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store";
 import { useParams } from "react-router";
 import { selectPosition } from "../../store/slices/position";
+import { ApiErrorCode, selectApiError, setDefaultApiError } from "../../store/slices/apierror";
+
 
 export interface IProps {
     openPost: boolean;
@@ -28,6 +30,8 @@ function PostModal({
     replyTo,
 }: IProps) {
     const positionState = useSelector(selectPosition);
+    const errorState = useSelector(selectApiError);
+
     const [content, setContent] = useState<string>("");
     const [image, setImage] = useState<File>();
     const [hashtags, setHashtags] = useState<string>("");
@@ -36,6 +40,12 @@ function PostModal({
     const userState = useSelector(selectUser);
     const geocoder = new kakao.maps.services.Geocoder();
     const [address, setAddress] = useState<string>("");
+
+
+    useEffect(()=>{
+        dispatch(setDefaultApiError())
+      }, []);
+
     useEffect(() => {
         if (positionState.currPosition) {
             geocoder.coord2RegionCode(
@@ -70,7 +80,7 @@ function PostModal({
             }
             //@ts-ignore
             const response = await dispatch(addPost(formData));
-            if (response.payload) {
+            if (errorState.apiError.code === ApiErrorCode.NONE){
                 // update Post-related Achievement(Reply)
                 if (type === "Reply") {
                     const achievement_type: Achievement = Achievement.REPLY;

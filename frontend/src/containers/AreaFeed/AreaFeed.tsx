@@ -194,7 +194,6 @@ function AreaFeed() {
                     params: { content: queryHash },
                 })
                 .then((response) => {
-                    console.log(response);
                     if (response.data) {
                         navigate(`/hashfeed/${response.data}`);
                     } else {

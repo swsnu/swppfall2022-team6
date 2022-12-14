@@ -65,9 +65,7 @@ export const fetchPosts = createAsyncThunk(
             params: { latitude: lat, longitude: lng, radius: radius },
         })
         .then(async (response) => {
-            console.log(response.data['posts']);
             dispatch(postSlice.actions.setPosts(response.data['posts']));
-            console.log("here");
             dispatch(hashtagActions.addTop3Hashtags(response.data["top3_hashtags"]));
             await dispatch(setDefaultApiError());
             return response.data['posts'];

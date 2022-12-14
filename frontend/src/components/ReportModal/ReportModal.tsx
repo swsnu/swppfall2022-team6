@@ -13,6 +13,8 @@ import {
 } from "../../store/slices/user";
 import { addReport } from "../../store/slices/report";
 import { addPost } from "../../store/slices/post";
+import { ApiErrorCode, selectApiError, setDefaultApiError } from "../../store/slices/apierror";
+
 
 export interface IProps {
     openReport: boolean;
@@ -29,6 +31,7 @@ function ReportModal({
 }: IProps) {
     const userState = useSelector(selectUser);
     const positionState = useSelector(selectPosition);
+    const errorState = useSelector(selectApiError);
 
     const [content, setContent] = useState<string>("");
     const [image, setImage] = useState<File>();
@@ -44,6 +47,11 @@ function ReportModal({
 
     const geocoder = new kakao.maps.services.Geocoder();
     const [address, setAddress] = useState<string>("");
+
+    useEffect(()=>{
+        dispatch(setDefaultApiError())
+      }, []);
+
     useEffect(() => {
         geocoder.coord2RegionCode(
             positionState.currPosition.lng,
@@ -95,8 +103,8 @@ function ReportModal({
         };
         //@ts-ignore
         const response = await dispatch(addReport(data)); //! 왜 0개의 인수,,,?
-        if (response.payload) {
-            console.log("yes");
+        console.log(response);
+        if (errorState.apiError.code === ApiErrorCode.NONE){
             // update Report-Related Achievements
             const achievement_types: Achievement[] = [
                 Achievement.FIRST_REPORT,
