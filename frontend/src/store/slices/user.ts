@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "..";
 import axios from "axios";
 import { PostType } from "./post";
+import { SignUpFormType } from "../../containers/SignUp/SignUp";
+import { checkApiResponseStatus, setDefaultApiError, ApiErrorSource } from "./apierror";
 
 export interface UserType {
     id: number;
@@ -53,17 +55,6 @@ export type LoginFormType = {
     password: string;
 };
 
-export const checkApiResponseStatus = (status: number) => {
-    if (status === 401) {
-        alert("로그인 후 2시간 이상이 경과되었습니다. 다시 로그인 해 주세요.");
-        sessionStorage.clear();
-        window.location.reload();
-    } else if (status === 403) {
-        alert("이메일이나 비밀번호가 틀립니다.");
-        // window.location.reload();
-    }
-};
-
 //@ts-ignore
 const userSlice = createSlice({
     //! userSlice type?
@@ -105,11 +96,14 @@ export const fetchUsers = createAsyncThunk(
     async (_, { dispatch }) => {
         axios
             .get("/user/")
-            .then((response) => {
+            .then(async(response) => {
                 dispatch(userActions.setUsers(response.data));
+                await dispatch(setDefaultApiError());
             })
-            .catch((error) => {
-                checkApiResponseStatus(error.response.status);
+            .catch(async(error) => {
+              if(error.response){
+                await dispatch(checkApiResponseStatus({status: error.response.status, source: ApiErrorSource.USER}));
+              }
             });
     }
 );
@@ -118,11 +112,14 @@ export const fetchUserPosts = createAsyncThunk(
     async (id: number, { dispatch }) => {
         axios
             .get<PostType[]>(`/user/${id}/post/`)
-            .then((response) => {
+            .then(async(response) => {
                 dispatch(userActions.setUserPosts(response.data));
+                await dispatch(setDefaultApiError());
             })
-            .catch((error) => {
-                checkApiResponseStatus(error.response.status);
+            .catch(async(error) => {
+              if(error.response){
+                await dispatch(checkApiResponseStatus({status: error.response.status, source: ApiErrorSource.USER}));
+              }
             });
         // const response = await axios.get<PostType[]>(`/user/${id}/post/`);
         // return response.data;
@@ -133,20 +130,24 @@ export const updateUserMainBadge = createAsyncThunk(
   async (data: {user_id: number, main_badge: number}, { dispatch }) => {
     await axios
       .post(`/user/${data.user_id}/mainbadge/`, data)
-      .then((response) => {
+      .then(async(response) => {
         dispatch(userActions.setUserMainBadge(response.data));
         sessionStorage.setItem("user", JSON.stringify(response.data));
-      }).catch((error) => {
-        checkApiResponseStatus(error.response.status);
+        await dispatch(setDefaultApiError());
+      }).catch(async(error) => {
+        if(error.response){
+          await dispatch(checkApiResponseStatus({status: error.response.status, source: ApiErrorSource.USER}));
+        }
       });
-  }
+    }
 );
+
 export const fetchUserBadges = createAsyncThunk(
   "user/fetchUserBadges",
   async (id: number, {dispatch}) => {
     axios
     .get<BadgeType[]>(`/user/${id}/badges/`)
-    .then((response) => {
+    .then(async(response) => {
       dispatch(userActions.setUserBadges(response.data));
       sessionStorage.setItem("userbadges", JSON.stringify(response.data));
       // update Attendance Achievement(login)
@@ -154,8 +155,11 @@ export const fetchUserBadges = createAsyncThunk(
       if (!response.data[achievement_type-1].is_fulfilled){
         dispatch(updateUserAchievements({id: id, type: achievement_type}));
       }
-    }).catch((error) => {
-      checkApiResponseStatus(error.status);
+      await dispatch(setDefaultApiError());
+    }).catch(async(error) => {
+      if(error.response){
+        await dispatch(checkApiResponseStatus({status: error.response.status, source: ApiErrorSource.USER}));
+      }
     });
   }
 );
@@ -164,21 +168,29 @@ export const updateUserBadges = createAsyncThunk(
   async (id: number, {dispatch}) => {
     await axios
     .post<BadgeType[]>(`/user/${id}/badges/`)
-    .then((response) => {
+    .then(async(response) => {
       dispatch(userActions.setUserBadges(response.data));
       sessionStorage.setItem("userbadges", JSON.stringify(response.data));
-    }).catch((error) => {
-      checkApiResponseStatus(error.status);
+      await dispatch(setDefaultApiError());
+    }).catch(async(error) => {
+      if(error.response){
+        await dispatch(checkApiResponseStatus({status: error.response.status, source: ApiErrorSource.USER}));
+      }
     });
   }
 );
 export const updateUserAchievements = createAsyncThunk(
   "user/updateUserAchievements",
-  async (data: {id: number, type: Achievement}) => {
+  async (data: {id: number, type: Achievement}, {dispatch}) => {
     await axios
     .put<BadgeType[]>(`/user/${data.id}/achievement/`, {badge_id: data.type})
-    .catch((error) => {
-      checkApiResponseStatus(error.response.status);
+    .then(async() => {
+      await dispatch(setDefaultApiError());
+    })
+    .catch(async(error) => {
+      if(error.response){
+        await dispatch(checkApiResponseStatus({status: error.response.status, source: ApiErrorSource.USER}));
+      }
     });
   }
 );
@@ -196,9 +208,31 @@ export const setLogin = createAsyncThunk(
       dispatch(fetchUserBadges(response.data.id));
       sessionStorage.setItem("isLoggedIn", "true");
       sessionStorage.setItem("user", JSON.stringify(response.data));
+      await dispatch(setDefaultApiError());
       return response.data
-    }).catch((error) => {
-      checkApiResponseStatus(error.response.status);
+    }).catch(async(error) => {
+      if(error.response){
+        await dispatch(checkApiResponseStatus({status: error.response.status, source: ApiErrorSource.SIGNIN}));
+      }
+    });
+  }
+);
+export const setSignUp = createAsyncThunk(
+  "user/setSignUp",
+  async (data: SignUpFormType, { dispatch }) => {
+    axios
+    .post("/user/signup/", data)
+    .then(async (response) => {
+      const formData = new FormData();
+      formData.append("email", data.email ?? "");
+      formData.append("password", data.password ?? "");
+      alert("회원가입을 축하드립니다");
+      await dispatch(setLogin(formData));
+      return response.data
+    }).catch(async(error) => {
+      if(error.response){
+        await dispatch(checkApiResponseStatus({status: error.response.status, source: ApiErrorSource.SIGNUP}));
+      }
     });
   }
 );
@@ -207,12 +241,15 @@ export const setLogout = createAsyncThunk(
     async (_, { dispatch }) => {
         await axios
             .post("/user/signout/")
-            .then(() => {
+            .then(async() => {
                 dispatch(userActions.setLogout({}));
                 window.sessionStorage.clear();
+                await dispatch(setDefaultApiError());
             })
-            .catch((error) => {
-                checkApiResponseStatus(error.status);
+            .catch(async(error) => {
+              if(error.response){
+                await dispatch(checkApiResponseStatus({status: error.response.status, source: ApiErrorSource.USER}));
+              }
             });
     }
 );
@@ -220,8 +257,17 @@ export const setRadius = createAsyncThunk(
     "user/setRadius",
     async (data: { user: UserType; radius: number }, { dispatch }) => {
         const { user, radius } = data;
-        await axios.put(`/user/${user.id}/radius/`, { radius: radius });
-        dispatch(userActions.setRadius(radius));
+        await axios
+          .put(`/user/${user.id}/radius/`, { radius: radius })
+          .then(async() => {
+            dispatch(userActions.setRadius(radius));
+            await dispatch(setDefaultApiError());
+          })
+          .catch((error) => {
+            if(error.response){
+              dispatch(checkApiResponseStatus({status: error.response.status, source: ApiErrorSource.USER}));
+            }
+          });
     }
 );
 

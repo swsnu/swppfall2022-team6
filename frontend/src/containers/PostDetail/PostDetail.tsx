@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { Layout } from "antd";
@@ -15,6 +15,8 @@ import Loading from "../../components/Loading/Loading";
 import { PostType } from "../../store/slices/post";
 import { selectUser } from "../../store/slices/user";
 import { PositionType, selectPosition } from "../../store/slices/position";
+import { selectApiError, setDefaultApiError } from "../../store/slices/apierror";
+import { AppDispatch } from "../../store";
 
 import "./PostDetail.scss";
 
@@ -26,12 +28,14 @@ function PostDetail() {
     }; // axios.get again
     const { id } = useParams();
     const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
     const onClickBackButton = () => {
         navigate(-1);
     };
 
     const positionState = useSelector(selectPosition);
     const userState = useSelector(selectUser);
+    const errorState = useSelector(selectApiError);
     let position: PositionType;
     const savedPosition = localStorage.getItem("position");
     if (savedPosition) {
@@ -39,7 +43,7 @@ function PostDetail() {
     } else {
         position = positionState.findPosition;
     }
-    
+
     const [mainPost, setMainPost] = useState<PostType>({
         id: 1,
         user_name: "swpp",
@@ -56,6 +60,10 @@ function PostDetail() {
     const [replyPosts, setReplyPosts] = useState<PostType[]>([]);
     const [refresh, setRefresh] = useState<Boolean>(true);
     const [isLoading, setIsLoading] = useState<Boolean>(true);
+
+    useEffect(()=>{
+        dispatch(setDefaultApiError())
+    }, []);
 
     useEffect(() => {
         axios.get(`/post/${id}/`).then((response) => {
@@ -81,7 +89,7 @@ function PostDetail() {
                     />
                 </div>
             </Header>
-            { isLoading 
+            { isLoading
             ? <Loading />
             : <Content className="Content">
                 <div id="main-post-container">

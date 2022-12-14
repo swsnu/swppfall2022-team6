@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
 import { fetchPosts, PostType, selectPost } from "../../store/slices/post";
 import {selectHashtag } from "../../store/slices/hashtag";
@@ -25,6 +25,7 @@ import Loading from "../../components/Loading/Loading";
 import { PositionType, selectPosition } from "../../store/slices/position";
 import { selectUser, UserType } from "../../store/slices/user";
 import { Address } from "../../components/SkimStatistics/SkimStatistics";
+import { selectApiError, setDefaultApiError } from "../../store/slices/apierror";
 
 import "./AreaFeed.scss";
 
@@ -49,6 +50,7 @@ function AreaFeed() {
     const positionState = useSelector(selectPosition);
     const userState = useSelector(selectUser);
     const reportState = useSelector(selectReport);
+    const errorState = useSelector(selectApiError);
 
     const [queryPosts, setQueryPosts] = useState<PostType[]>(postState.posts);
     const [refresh, setRefresh] = useState<Boolean>(true);
@@ -101,23 +103,23 @@ function AreaFeed() {
     };
 
     const refreshPosts = async () => {
-        const queryPostPromise = dispatch(
+        const response = await dispatch(
             fetchPosts({
                 ...position,
                 radius: user.radius,
             })
         );
-        const postData = (await queryPostPromise).payload as PostType[];
-        setQueryPosts(postData);
+        // console.log(postState.posts);
+        // setQueryPosts(postState.posts);
     };
 
     const fetchData = async () => {
-        console.time("reports");
+        // console.time("reports");
         await refreshReports();
-        console.timeEnd("reports");
-        console.time("posts");
+        // console.timeEnd("reports");
+        // console.time("posts");
         await refreshPosts();
-        console.timeEnd("posts");
+        // console.timeEnd("posts");
         // console.time("hashtags");
         // await refreshHashtag();
         // console.timeEnd("hashtags");
@@ -126,8 +128,16 @@ function AreaFeed() {
     };
 
     useEffect(() => {
+        dispatch(setDefaultApiError())
+    }, []);
+
+    useEffect(() => {
         renderWeatherAPI();
     }, []);
+
+    useEffect(() => {
+        setQueryPosts(postState.posts)
+    }, [postState.posts]);
 
     useEffect(() => {
         if (refresh) {
@@ -140,7 +150,6 @@ function AreaFeed() {
         if (onlyPhoto) {
             resultPosts = resultPosts.filter((post: PostType) => post.image);
         }
-
         setQueryPosts(resultPosts);
     }, [selectTag, onlyPhoto]);
 
@@ -185,6 +194,7 @@ function AreaFeed() {
                     params: { content: queryHash },
                 })
                 .then((response) => {
+                    console.log(response);
                     if (response.data) {
                         navigate(`/hashfeed/${response.data}`);
                     } else {
@@ -277,7 +287,7 @@ function AreaFeed() {
                     <Container className="Container">
                         <div className="areafeed-statistics-container">
                             <h2 className="title">
-                                Today's weather is likely... 
+                                Today's weather is likely...
                             </h2>
                             <div>{statisticsJSX}</div>
                             <div id="recommended-hashtag-container">

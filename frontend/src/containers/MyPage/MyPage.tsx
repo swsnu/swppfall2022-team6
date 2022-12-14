@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import PostList from "../../components/PostList/PostList";
 import { PostType } from "../../store/slices/post";
 import { setLogout, updateUserMainBadge } from "../../store/slices/user";
+import { selectApiError, setDefaultApiError } from "../../store/slices/apierror";
 import {
   fetchUserPosts,
   updateUserBadges,
@@ -23,12 +24,17 @@ const { Header, Content } = Layout;
 
 function MyPage() {
     const userState = useSelector(selectUser);
+    const errorState = useSelector(selectApiError);
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false);
     const [posts, setPosts] = useState<PostType[]>([]);
 
     const currUser = userState.currUser as UserType;
+
+    useEffect(()=>{
+        dispatch(setDefaultApiError())
+    }, []);
 
     useEffect(()=>{
         if(currUser){

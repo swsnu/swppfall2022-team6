@@ -129,7 +129,8 @@ $top: 20px;
     font-weight: 600;
 }
 .AreaFeed #postlist-container {
-    height: auto;
+    // height: auto;
+    min-height: 300px;
     margin: 10px 0;
     overflow: scroll
 }
