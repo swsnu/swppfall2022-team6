@@ -50,7 +50,7 @@ describe("<Post />", () => {
         const username = screen.getByText("User Name");
         const postContent = screen.getByText("Post Content");
         const postLoc = screen.getByText("User Loc");
-        const dtText = screen.getByText("2020. 10. 20. 오전 10:20");
+        const dtText = screen.getByText("오전 10:20");
         expect(username).toBeInTheDocument();
         expect(postContent).toBeInTheDocument();
         expect(postLoc).toBeInTheDocument();
@@ -99,7 +99,7 @@ describe("<Post />", () => {
         expect(axios.get).toHaveBeenCalled();
         const chainPostContent = await screen.findByText("CHAIN");
         expect(chainPostContent).toBeInTheDocument();
-        const chainDtText = screen.getByText("2020. 10. 21. 오전 10:20");
+        const chainDtText = screen.getAllByText("오전 10:20")[0];
         expect(chainDtText).toBeInTheDocument();
         const newToggleChainButton = screen.getByText("Close All");
         expect(newToggleChainButton).toBeInTheDocument();
@@ -133,7 +133,7 @@ describe("<Post />", () => {
         expect(axios.get).toHaveBeenCalled();
 
         const chainPostUser = await screen.findByText("SWPP2");
-        const chainDtText = screen.getByText("2020. 10. 21. 오전 10:20");
+        const chainDtText = screen.getAllByText("오전 10:20")[0];
         expect(chainPostUser).toBeInTheDocument();
         expect(chainDtText).toBeInTheDocument();
         const newToggleChainButton = screen.getByText("Close All");

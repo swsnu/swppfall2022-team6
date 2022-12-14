@@ -1,6 +1,9 @@
-@import "../../../node_modules/bootstrap/scss/bootstrap";
+// @import "../../../node_modules/bootstrap/scss/bootstrap";
 
-
+#PostList {
+    margin: 0; 
+    padding: 0 5px;
+}
 
 #postlist-modal-container {
     height: 5vh;
@@ -8,7 +11,7 @@
 }
 
 #posts-container {
-    height: calc(100% - 5vh);
+    // height: calc(100% - 5vh);
     overflow-y: scroll;
     overflow-x: hidden;
 }
@@ -30,52 +33,8 @@
     position: absolute;
     z-index: 10;
     bottom: 5%;
+    height: 33px;
 }
-
-$custom-sizes: (
-    "custom-size": (
-        property: width,
-        class: w,
-        values: (
-            60: 60%,
-        ),
-    ),
-);
-// Merge the maps
-$utilities: map-merge($utilities, $custom-sizes);
-
-$custom-margin: (
-    "margin": (
-        responsive: true,
-        property: margin,
-        class: m,
-        values:
-            map-merge(
-                $spacers,
-                (
-                    auto: 0 auto,
-                )
-            ),
-    ),
-);
-
-$custom-max-height: (
-    "max-height": (
-        property: max-height,
-        class: mh,
-        values: (
-            100: 100%,
-            70: 70%,
-            60: 60%,
-        ),
-    ),
-);
-
-$utilities: map-merge($utilities, $custom-margin);
-$utilities: map-merge($utilities, $custom-max-height);
-@import "../../../node_modules/bootstrap/scss/bootstrap";
-$utilities: map-remove($utilities, "margin");
-$utilities: map-remove($utilities, "max-height");
 
 $mobile: 767px;
 $tablet: 1024px;
@@ -101,7 +60,8 @@ $tablet: 1024px;
         height: calc(100vh - 420px);
     }
     #add-post-button {
-        left: 75%;
+        right: 3px;
+
     }
 }
 @include tablet {

@@ -41,7 +41,7 @@ function PostDetail() {
     if (savedPosition) {
         position = JSON.parse(savedPosition);
     } else {
-        position = positionState.position;
+        position = positionState.findPosition;
     }
 
     const [mainPost, setMainPost] = useState<PostType>({
@@ -102,20 +102,14 @@ function PostDetail() {
                         </div>
                         <div id="author-container">
                             <div id="author-info">
-                                <div id="author-name" className="fw-bolder fs-5 mb-1">
+                                <div id="author-name">
                                     {mainPost.user_name}
                                 </div>
-                                <div
-                                    id="time-and-location"
-                                >
-                                    <div id="author-location"
-                                        style={{ fontSize: "11px" }}>
-                                        {mainPost.location}
-                                    </div>
-                                    <div>.</div>
-                                    <div
+                                <div id="time-and-location">
+                                    <span id="author-location" > {mainPost.location? mainPost.location: "No location"} </span>
+                                    <span style={{fontWeight: 900}}> · </span>
+                                    <span
                                         id="timestamp"
-                                        className="tldiv"
                                         style={{ fontSize: "11px" }}>
                                         {new Date(mainPost.created_at).toLocaleDateString(
                                             "ko-KR",
@@ -127,7 +121,7 @@ function PostDetail() {
                                                 minute: "2-digit",
                                             }
                                         )}
-                                    </div>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -163,7 +157,6 @@ function PostDetail() {
                             Replies
                         </div>
                         <PostList
-                            currPosition={position}
                             type={"Reply"}
                             postListCallback={postListCallback}
                             replyTo={Number(id)}

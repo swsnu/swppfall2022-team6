@@ -280,7 +280,11 @@ const stubReportInitialState: ReportState = {
     ],
 };
 const stubPositionInitialState: PositionState = {
-    position: {
+    findPosition: {
+        lat: 37.44877599087201,
+        lng: 126.95264777802309,
+    },
+    currPosition: {
         lat: 37.44877599087201,
         lng: 126.95264777802309,
     },

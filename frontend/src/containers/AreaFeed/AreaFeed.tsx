@@ -69,7 +69,7 @@ function AreaFeed() {
     if (savedPosition) {
         position = JSON.parse(savedPosition);
     } else {
-        position = positionState.position;
+        position = positionState.findPosition;
     }
 
     const statisticsJSX = useMemo(() => {
@@ -112,16 +112,6 @@ function AreaFeed() {
         // console.log(postState.posts);
         // setQueryPosts(postState.posts);
     };
-
-    // const refreshHashtag = async () => {
-    //     await dispatch(
-    //         fetchTop3Hashtags({
-    //             ...position,
-    //             radius: user.radius,
-    //         })
-    //     );
-    //     setQueryHash("");
-    // };
 
     const fetchData = async () => {
         // console.time("reports");
@@ -249,7 +239,7 @@ function AreaFeed() {
                 <div id="postlist-container">
                     {queryPosts.length>0?
                     <PostList
-                        currPosition={position}
+                        // currPosition={position}
                         type={"Post"}
                         postListCallback={postListCallback}
                         replyTo={0}
@@ -287,7 +277,7 @@ function AreaFeed() {
                     </Row>
                     <div id="lower-weather-container">
                         <img src="/location-svgrepo-com.svg" />
-                        <Address position={positionState.position} />
+                        <Address position={position} />
                     </div>
                 </Col>
             </Header>
@@ -330,7 +320,9 @@ function AreaFeed() {
                     <Loading />
                 )}
             </Content>
-            <NavigationBar navReportCallback={navReportCallback} />
+            <div className="navigation-bar">
+                <NavigationBar navReportCallback={navReportCallback} />
+            </div>
         </Layout>
     );
 }

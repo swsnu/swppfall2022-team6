@@ -11,13 +11,13 @@ import "./PostList.scss";
 import { PositionType } from "../../store/slices/position";
 
 function PostList({
-    currPosition,
+    // currPosition,
     type,
     postListCallback,
     replyTo,
     allPosts,
 }: {
-    currPosition: PositionType | null;
+    // currPosition: PositionType | null;
     type: string;
     postListCallback: () => void;
     replyTo: number;
@@ -38,14 +38,13 @@ function PostList({
     };
 
     return (
-        <Container id="PostList" className="mt-3 w-95 m-auto">
-            <div id="posts-container" className="d-flex flex-column gap-3 me-4">
+        <Container id="PostList" >
+            <div id="posts-container" >
                 {allPosts.map((post) => {
                     return (
                         <Row
                             key={post.id}
                             className="post-and-chain-container ms-0"
-                            // className="border border-1 rounded-5 p-2"
                         >
                             <Post
                                 key={post.id}
@@ -69,13 +68,11 @@ function PostList({
                     <button
                         id="add-post-button"
                         type="button"
-                        // className="btn btn-primary"
                         onClick={onClickAddPostButton}
                     >
                         Add {type}
                     </button>
                     <PostModal
-                        currPosition= {currPosition}
                         openPost={openPost}
                         setOpenPost={setOpenPost}
                         postModalCallback={postModalCallback}

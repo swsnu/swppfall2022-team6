@@ -4,6 +4,7 @@
 from datetime import datetime
 from django.db import transaction
 from django.shortcuts import get_object_or_404
+from django.core.cache import cache
 from user.models import User
 #from django.shortcuts import redirect
 from rest_framework import status, viewsets, permissions
@@ -93,6 +94,8 @@ class PostViewSet(viewsets.GenericViewSet):
         if 'hid' in request.POST:
             hashid = Hashtag.objects.get(id=int(request.POST['hid']))
             PostHashtag.objects.create(post=post, hashtag=hashid)
+            if cache.has_key(f'hashfeed+{hashid.id}'):
+                cache.delete(f'hashfeed+{hashid.id}')
             hashid = hashid.content
         if request.POST['hashtags'] != '':
             for hashtag in request.POST['hashtags'].strip()\
@@ -103,13 +106,17 @@ class PostViewSet(viewsets.GenericViewSet):
                 if h is None:
                     h = Hashtag.objects.create(content=hashtag)
                 PostHashtag.objects.create(post=post, hashtag=h)
+                if cache.has_key(f'hashfeed+{h.id}'):
+                    cache.delete(f'hashfeed+{h.id}')
+        if cache.has_key(f'userposts+{user.id}'):
+            cache.delete(f'userposts+{user.id}')
         return Response(self.get_serializer(post, many=False).data, \
             status=status.HTTP_201_CREATED)
 
     # GET /post/
     def list(self, request):
         # user = request.user
-        user = User.objects.get(id=1)
+        user = request.user
 
         # if not user.is_authenticated:
         #     return Response(status=status.HTTP_401_UNAUTHORIZED)
@@ -174,26 +181,19 @@ class PostViewSet(viewsets.GenericViewSet):
     # GET /post/:id/hashfeed/
     @action(detail=True)
     def hashfeed(self, request, pk=None):
-        del request
-        user = User.objects.get(id=1)
-        post_hashtags = PostHashtag.objects.all()
-        ids = list((ph.post.id for ph in post_hashtags
-        if ph.hashtag.id == int(pk)))
-
-        posts = Post.objects.all().filter(id__in=ids).order_by('-created_at')\
-            [:MAX_POST_LEN]
-
-        # post_hashtags =
-        # [Hashtag.objects.filter(posthashtag__post=post).values()
-        # for post in posts if Hashtag.objects.filter(posthashtag__post=post)]
-        # keys = [int(pk)]
-        # hashtags = []
-        # for hashtag_ls in post_hashtags:
-        #     for hashtag in hashtag_ls:
-        #         if hashtag['id'] not in keys:
-        #             keys.append(hashtag['id'])
-        #             hashtags.append(hashtag)
+        user = request.user
         content = get_object_or_404(Hashtag, pk=int(pk))
+
+        posts = cache.get(f'hashfeed+{pk}')
+        if not posts:
+            post_hashtags = PostHashtag.objects.all()
+            ids = list((ph.post.id for ph in post_hashtags
+            if ph.hashtag.id == int(pk)))
+
+            posts = Post.objects.all().filter(id__in=ids).order_by(
+                '-created_at')[:MAX_POST_LEN]
+            cache.set(f'hashfeed+{pk}', posts, 60*10)
+
         hashtags = hash_recommend(posts.values('id'), user, int(pk))
         hashtags.insert(0, {'id':pk,
         'content':content.content})

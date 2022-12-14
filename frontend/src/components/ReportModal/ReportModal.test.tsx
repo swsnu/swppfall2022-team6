@@ -53,7 +53,6 @@ describe("<ReportModal />", () => {
                     <Routes>
                         <Route path="/" element={
                             <ReportModal
-                                currPosition={{ lat: 0, lng: 0 }}
                                 openReport={true}
                                 setOpenReport={jest.fn()}
                                 isNavbarReport={false}
@@ -79,7 +78,6 @@ describe("<ReportModal />", () => {
                     <Routes>
                         <Route path="/" element={
                             <ReportModal
-                                currPosition={{ lat: 0, lng: 0 }}
                                 openReport={true}
                                 setOpenReport={jest.fn()}
                                 isNavbarReport={false}
@@ -107,7 +105,6 @@ describe("<ReportModal />", () => {
                     <Routes>
                         <Route path="/" element={
                             <ReportModal
-                                currPosition={{ lat: 0, lng: 0 }}
                                 openReport={true}
                                 setOpenReport={jest.fn()}
                                 isNavbarReport={false}
@@ -134,7 +131,6 @@ describe("<ReportModal />", () => {
                     <Routes>
                         <Route path="/" element={
                             <ReportModal
-                                currPosition={{ lat: 0, lng: 0 }}
                                 openReport={true}
                                 setOpenReport={jest.fn()}
                                 isNavbarReport={false}
@@ -155,7 +151,7 @@ describe("<ReportModal />", () => {
                     <Routes>
                         <Route path="/" element={
                             <ReportModal
-                                currPosition={{ lat: 0, lng: 0 }}
+                                
                                 openReport={true}
                                 setOpenReport={jest.fn()}
                                 isNavbarReport={false}
@@ -194,7 +190,7 @@ describe("<ReportModal />", () => {
                     <Routes>
                         <Route path="/" element={
                             <ReportModal
-                                currPosition={{ lat: 0, lng: 0 }}
+                                
                                 openReport={true}
                                 setOpenReport={jest.fn()}
                                 isNavbarReport={false}
@@ -221,7 +217,6 @@ describe("<ReportModal />", () => {
                     <Routes>
                         <Route path="/" element={
                             <ReportModal
-                                currPosition={{ lat: 0, lng: 0 }}
                                 openReport={true}
                                 setOpenReport={jest.fn()}
                                 isNavbarReport={false}
@@ -243,7 +238,6 @@ describe("<ReportModal />", () => {
                     <Routes>
                         <Route path="/" element={
                             <ReportModal
-                                currPosition={{ lat: 0, lng: 0 }}
                                 openReport={false}
                                 setOpenReport={jest.fn()}
                                 isNavbarReport={false}
@@ -284,7 +278,11 @@ describe("<ReportModal />", () => {
                 top3: [],
             },
             positions: {
-                position: {
+                findPosition: {
+                    lat: 37.44877599087201,
+                    lng: 126.95264777802309,
+                },
+                currPosition: {
                     lat: 37.44877599087201,
                     lng: 126.95264777802309,
                 },
@@ -303,7 +301,6 @@ describe("<ReportModal />", () => {
                     <Routes>
                         <Route path="/" element={
                             <ReportModal
-                                currPosition={{ lat: 0, lng: 0 }}
                                 openReport={true}
                                 setOpenReport={jest.fn()}
                                 isNavbarReport={false}
@@ -327,7 +324,6 @@ describe("<ReportModal />", () => {
             <Provider store={mockStore}>
                 <MemoryRouter initialEntries={[areafeedRoute]}>
                     <ReportModal
-                        currPosition={{ lat: 0, lng: 0 }}
                         openReport={true}
                         setOpenReport={jest.fn()}
                         isNavbarReport={true}
@@ -351,7 +347,6 @@ describe("<ReportModal />", () => {
                     <Routes>
                         <Route path="/" element={
                             <ReportModal
-                                currPosition={{ lat: 0, lng: 0 }}
                                 openReport={true}
                                 setOpenReport={jest.fn()}
                                 isNavbarReport={false}
