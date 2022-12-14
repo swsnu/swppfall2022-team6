@@ -57,7 +57,11 @@ function HashFeed() {
 
   useEffect(()=>{
     dispatch(setDefaultApiError())
-}, []);
+  }, []);
+
+  useEffect(() => {
+    setQueryPosts(postState.posts)
+  }, [postState.posts]);
 
   useEffect(() => {
     function handleWindowResize() {
@@ -71,12 +75,13 @@ function HashFeed() {
 
   const fetchData = async () => {
     // const user = userState.currUser as UserType;
+    await dispatch(fetchHashPosts(Number(id)));
     setRefresh(false);
 
-    const queryPostPromise = await dispatch(fetchHashPosts(Number(id)));
-    if (queryPostPromise.payload === undefined) navigate("/");
-    const postData = queryPostPromise.payload as PostType[];
-    setQueryPosts(postData);
+    // const queryPostPromise = await dispatch(fetchHashPosts(Number(id)));
+    // if (queryPostPromise.payload === undefined) navigate("/");
+    // const postData = queryPostPromise.payload as PostType[];
+    // setQueryPosts(postData);
     //await dispatch(fetchHashfeedTop3Hashtags(Number(id)));
     setIsLoading(true);
   };
