@@ -345,7 +345,7 @@
             "latitude": 37.4822499942904,
             "longitude": 126.95173572626405,
             "created_at": "2022-12-15T16:33:46.132",
-            "reply_to": null,
+            "reply_to": 24,
             "location": "서울특별시 관악구 봉천동"
         }
     },
@@ -359,7 +359,7 @@
             "latitude": 37.4822499942904,
             "longitude": 126.95173572626405,
             "created_at": "2022-12-15T16:46:46.132",
-            "reply_to": null,
+            "reply_to": 24,
             "location": "서울특별시 관악구 봉천동"
         }
     },
@@ -373,7 +373,7 @@
             "latitude": 37.4822499942904,
             "longitude": 126.95173572626405,
             "created_at": "2022-12-15T16:31:46.132",
-            "reply_to": null,
+            "reply_to": 24,
             "location": "서울특별시 관악구 봉천동"
         }
     },
