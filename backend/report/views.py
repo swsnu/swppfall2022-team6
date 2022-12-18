@@ -1,7 +1,7 @@
 '''
     report views
 '''
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 from django.db import transaction
 #from django.shortcuts import redirect
@@ -65,7 +65,9 @@ class ReportViewSet(viewsets.GenericViewSet):
         <= float(radius)]
         #ids = [post.id for post in all_reports]
 
-        reports = all_reports.filter(id__in=ids).order_by('-created_at')
+        endtime = datetime.today()
+        starttime = endtime - timedelta(hours=3)
+        reports = all_reports.filter(id__in=ids, created_at__range=[starttime, endtime]).order_by('-created_at')
 
         data = self.get_serializer(reports, many=True).data
 

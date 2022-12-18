@@ -202,4 +202,3 @@ class UserViewSet(viewsets.GenericViewSet):
             data = PostSerializer(user_posts, many=True).data
             cache.set(f'userposts+{user.id}', data, 60*10)
         return Response(data, status=status.HTTP_200_OK)
-
