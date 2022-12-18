@@ -107,6 +107,7 @@ function SignUp() {
         setPasswordErrorMsg(messagePassword);
         setPasswordCheckErrorMsg(messagePasswordCheck);
         if(isValidUsername && isValidEmail && isValidPassword && isValidPasswordCheck){
+            console.log("yes");
             signUp(formData);
         }else{
             if (!isValidPasswordCheck){

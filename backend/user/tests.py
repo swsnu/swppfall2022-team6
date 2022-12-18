@@ -109,6 +109,7 @@ class UserTestCase(TestCase):
         response = self.client.post('/user/1/badges/')
         self.assertEqual(response.status_code, 201)
 
+    @FakeRedis('post.views.cache')
     def test_mainbadge(self):
         data = {'main_badge': 3}
         response = self.client.post('/user/1/mainbadge/', data, \

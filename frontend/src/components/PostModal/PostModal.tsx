@@ -47,20 +47,18 @@ function PostModal({
       }, []);
 
     useEffect(() => {
-        if (positionState.currPosition) {
-            geocoder.coord2RegionCode(
-                positionState.currPosition.lng,
-                positionState.currPosition.lat,
-                (result, status) => {
-                    if (
-                        status === kakao.maps.services.Status.OK &&
-                        !!result[0].address_name
-                    ) {
-                        setAddress(result[0].address_name);
-                    }
+        geocoder.coord2RegionCode(
+            positionState.currPosition.lng,
+            positionState.currPosition.lat,
+            (result, status) => {
+                if (
+                    status === kakao.maps.services.Status.OK &&
+                    !!result[0].address_name
+                ) {
+                    setAddress(result[0].address_name);
                 }
-            );
-        }
+            }
+        );
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -73,11 +71,9 @@ function PostModal({
             formData.append("hashtags", hashtags);
             if (type === "Reply")
                 formData.append("replyTo", replyTo.toString());
-            if (positionState.findPosition){
-                formData.append("latitude", positionState.findPosition.lat.toString());
-                formData.append("longitude", positionState.findPosition.lng.toString());
-                formData.append("location", address);
-            }
+            formData.append("latitude", positionState.findPosition.lat.toString());
+            formData.append("longitude", positionState.findPosition.lng.toString());
+            formData.append("location", address);
             //@ts-ignore
             const response = await dispatch(addPost(formData));
             if (errorState.apiError.code === ApiErrorCode.NONE){

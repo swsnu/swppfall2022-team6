@@ -5,6 +5,7 @@ import { ThunkMiddleware } from "redux-thunk";
 import UserReducer, { fetchUsers,
                         setRadius,
                         UserState,
+                        setSignUp,
                         setLogin,
                         setLogout,
                         UserType,
@@ -17,13 +18,13 @@ import UserReducer, { fetchUsers,
                         Achievement} from "./user";
 
 const localStorageMock = (() => {
-  let store: Dictionary<string> = {};
+  let store: Dictionary<UserType|BadgeType[]> = {};
 
   return {
     getItem(key: string) {
       return store[key] || null;
     },
-    setItem(key: string, value: string) {
+    setItem(key: string, value: UserType|BadgeType[]) {
       store[key] = value;
     },
     removeItem(key: string) {
@@ -44,6 +45,16 @@ Object.defineProperty(window, 'location', {
   value: { reload: jest.fn() },
 });
 window.alert = jest.fn();
+
+const mockCheckApiResponseStatus = jest.fn();
+const mockSetDefaultApiError = jest.fn();
+jest.mock("./apierror", () => ({
+  ApiErrorSource: {
+    USER: 1,
+  },
+  checkApiResponseStatus: () => mockCheckApiResponseStatus,
+  setDefaultApiError : () => mockSetDefaultApiError,
+}))
 
 describe("user reducer", ()=>{
   let store: EnhancedStore<
@@ -93,12 +104,19 @@ describe("user reducer", ()=>{
     axios.get = jest.fn().mockResolvedValue({ data: [originUser, fakeUser] });
     await store.dispatch(fetchUsers());
     expect(store.getState().users.users).toEqual([originUser, fakeUser]);
+    await waitFor(() => expect(mockSetDefaultApiError).toHaveBeenCalled());
   });
   it("should handle faulty fetchUsers 401", async ()=>{
     const err = {response: {status: 401}};
     jest.spyOn(axios, "get").mockRejectedValueOnce(err);
     await store.dispatch(fetchUsers());
-    await waitFor(() => expect(window.alert).toHaveBeenCalled());
+    await waitFor(() => expect(mockCheckApiResponseStatus).toHaveBeenCalled());
+  });
+  it("should handle faulty fetchUsers 401 faulty err", async ()=>{
+    const err = {status: 401};
+    jest.spyOn(axios, "get").mockRejectedValueOnce(err);
+    await store.dispatch(fetchUsers());
+    await waitFor(() => expect(mockCheckApiResponseStatus).not.toHaveBeenCalled());
   });
   it("should fetch user posts", async()=>{
     const userposts = [{
@@ -115,23 +133,42 @@ describe("user reducer", ()=>{
     jest.spyOn(axios, "get").mockResolvedValue({data: userposts});
     await store.dispatch(fetchUserPosts(1));
     expect(store.getState().users.userPosts).toEqual(userposts);
+    await waitFor(() => expect(mockSetDefaultApiError).toHaveBeenCalled());
   });
   it("should handle faulty fetch user posts 401", async()=>{
     const err = {response: {status: 401}};
     jest.spyOn(axios, "get").mockRejectedValueOnce(err);
     await store.dispatch(fetchUserPosts(1));
-    await waitFor(() => expect(window.alert).toHaveBeenCalled());
+    await waitFor(() => expect(mockCheckApiResponseStatus).toHaveBeenCalled());
   });
-  it("should handle faulty fetch user posts 403(?)", async()=>{
+  it("should handle faulty fetch user posts 401 faulty err", async()=>{
+    const err = {status: 401};
+    jest.spyOn(axios, "get").mockRejectedValueOnce(err);
+    await store.dispatch(fetchUserPosts(1));
+    await waitFor(() => expect(mockCheckApiResponseStatus).not.toHaveBeenCalled());
+  });
+  it("should handle signup", async ()=>{
+    jest.spyOn(axios, "post").mockResolvedValue({data: fakeUser});
+    const formData = {"email": fakeUser.email, "username": fakeUser.username, "password": "password", "passwordCheck": "password"};
+    await store.dispatch(setSignUp(formData));
+    expect(window.alert).toHaveBeenCalled();
+    // await waitFor (() => expect(store.getState().users.currUser).toBeTruthy());
+    // await waitFor(() => expect(store.getState().users.userBadges).toHaveLength(6));
+    // await waitFor(() => expect(mockSetDefaultApiError).toHaveBeenCalled());
+  });
+  it("should handle faulty signup 403", async ()=>{
     const err = {response: {status: 403}};
-    jest.spyOn(axios, "get").mockRejectedValueOnce(err);
-    await store.dispatch(fetchUserPosts(1));
-    await waitFor(() => expect(window.alert).toHaveBeenCalled());
+    jest.spyOn(axios, "post").mockRejectedValueOnce(err);
+    const formData = {"email": fakeUser.email, "username": fakeUser.username, "password": "password", "passwordCheck": "password"};
+    await store.dispatch(setSignUp(formData));
+    await waitFor(() => expect(mockCheckApiResponseStatus).toHaveBeenCalled());
   });
-  it("should handle faulty fetch user posts 500", async()=>{
-    const err = {response: {status: 500}};
-    jest.spyOn(axios, "get").mockRejectedValueOnce(err);
-    await store.dispatch(fetchUserPosts(1));
+  it("should handle faulty signup 403 faulty err", async ()=>{
+    const err = {status: 403};
+    jest.spyOn(axios, "post").mockRejectedValueOnce(err);
+    const formData = {"email": fakeUser.email, "username": fakeUser.username, "password": "password", "passwordCheck": "password"};
+    await store.dispatch(setSignUp(formData));
+    await waitFor(() => expect(mockCheckApiResponseStatus).not.toHaveBeenCalled());
   });
   it("should handle login", async ()=>{
     jest.spyOn(axios, "post").mockResolvedValue({data: fakeUser});
@@ -143,6 +180,7 @@ describe("user reducer", ()=>{
     await store.dispatch(setLogin(formData));
     expect(store.getState().users.currUser).toBeTruthy();
     await waitFor(() => expect(store.getState().users.userBadges).toHaveLength(6));
+    await waitFor(() => expect(mockSetDefaultApiError).toHaveBeenCalled());
   });
   it("should handle faulty login 403", async ()=>{
     const err = {response: {status: 403}};
@@ -151,18 +189,34 @@ describe("user reducer", ()=>{
     formData.append("email", fakeUser.email);
     formData.append("password", "password");
     await store.dispatch(setLogin(formData));
-    // await waitFor(() => expect(window.alert).toHaveBeenCalled());
+    await waitFor(() => expect(mockCheckApiResponseStatus).toHaveBeenCalled());
+  });
+  it("should handle faulty login 403 faulty err", async ()=>{
+    const err = {status: 403};
+    jest.spyOn(axios, "post").mockRejectedValueOnce(err);
+    const formData = new FormData();
+    formData.append("email", fakeUser.email);
+    formData.append("password", "password");
+    await store.dispatch(setLogin(formData));
+    await waitFor(() => expect(mockCheckApiResponseStatus).not.toHaveBeenCalled());
   });
   it("should handle logout", async ()=>{
     jest.spyOn(axios, "post").mockResolvedValue({data: {msg: "logout complete"}});
     await store.dispatch(setLogout());
     expect(store.getState().users.currUser).toBeNull();
+    await waitFor(() => expect(mockSetDefaultApiError).toHaveBeenCalled());
   });
   it("should handle faulty logout 401", async ()=>{
     const err = {response: {status: 401}};
     jest.spyOn(axios, "post").mockRejectedValueOnce(err);
     await store.dispatch(setLogout());
-    // await waitFor(() => expect(window.alert).toHaveBeenCalled());
+    await waitFor(() => expect(mockCheckApiResponseStatus).toHaveBeenCalled());
+  })
+  it("should handle faulty logout 401 faulty err", async ()=>{
+    const err = {status: 401};
+    jest.spyOn(axios, "post").mockRejectedValueOnce(err);
+    await store.dispatch(setLogout());
+    await waitFor(() => expect(mockCheckApiResponseStatus).not.toHaveBeenCalled());
   })
   it("should set radius", async()=>{
     // set curr_user to fakeuser
@@ -177,6 +231,7 @@ describe("user reducer", ()=>{
     jest.spyOn(axios, "put").mockResolvedValue({data: {radiusUser}});
     await store.dispatch(setRadius({user: fakeUser, radius: 1}));
     expect(store.getState().users.currUser?.radius).toBe(1)
+    await waitFor(() => expect(mockSetDefaultApiError).toHaveBeenCalled());
   });
   it("should not set radius when not current user", async()=>{
     // set curr_user to null
@@ -187,13 +242,57 @@ describe("user reducer", ()=>{
     const radiusUser = {...fakeUser, radius: 1};
     jest.spyOn(axios, "put").mockResolvedValue({data: {radiusUser}});
     await store.dispatch(setRadius({user: fakeUser, radius: 1}));
+    await waitFor(() => expect(mockSetDefaultApiError).toHaveBeenCalled());
   });
+  it("should handle faulty set radius 401", async ()=>{
+    // set curr_user to fakeuser
+    jest.spyOn(axios, "post").mockResolvedValue({data: fakeUser});
+    const formData = new FormData();
+    formData.append("email", fakeUser.email);
+    formData.append("password", "password");
+    await store.dispatch(setLogin(formData));
+    expect(store.getState().users.currUser).toBeTruthy();
+    // faulty set radius
+    const err = {response: {status: 401}};
+    jest.spyOn(axios, "put").mockRejectedValueOnce(err);
+    await store.dispatch(setRadius({user: fakeUser, radius: 1}));
+    await waitFor(() => expect(mockCheckApiResponseStatus).toHaveBeenCalled());
+  });
+  it("should handle faulty set radius 401 faulty err", async ()=>{
+    // set curr_user to fakeuser
+    jest.spyOn(axios, "post").mockResolvedValue({data: fakeUser});
+    const formData = new FormData();
+    formData.append("email", fakeUser.email);
+    formData.append("password", "password");
+    await store.dispatch(setLogin(formData));
+    expect(store.getState().users.currUser).toBeTruthy();
+    // faulty set radius
+    const err = {status: 401};
+    jest.spyOn(axios, "put").mockRejectedValueOnce(err);
+    await store.dispatch(setRadius({user: fakeUser, radius: 1}));
+    await waitFor(() => expect(mockCheckApiResponseStatus).not.toHaveBeenCalled());
+  })
   it("should handle fetchUserBadges", async () => {
     axios.get = jest.fn().mockResolvedValue({ data: mockBadges });
     await waitFor(() => {
       store.dispatch(fetchUserBadges(1));
       expect(store.getState().users.userBadges).toEqual(mockBadges);
     })
+    await waitFor(() => expect(mockSetDefaultApiError).toHaveBeenCalled());
+  });
+  it("should handle faulty fetchUserBadges", async () => {
+    axios.get = jest.fn().mockRejectedValue({response: {status: 401}});
+    await waitFor(() => {
+      store.dispatch(fetchUserBadges(1));
+    })
+    await waitFor(() => expect(mockCheckApiResponseStatus).toHaveBeenCalled());
+  });
+  it("should handle faulty fetchUserBadges faulty err", async () => {
+    axios.get = jest.fn().mockRejectedValue({status: 401});
+    await waitFor(() => {
+      store.dispatch(fetchUserBadges(1));
+    })
+    await waitFor(() => expect(mockCheckApiResponseStatus).not.toHaveBeenCalled());
   });
   it("should handle updateUserBadges", async () => {
     axios.post = jest.fn().mockResolvedValue({ data: mockBadges });
@@ -201,29 +300,43 @@ describe("user reducer", ()=>{
       store.dispatch(updateUserBadges(1));
       expect(store.getState().users.userBadges).toEqual(mockBadges);
     })
+    await waitFor(() => expect(mockSetDefaultApiError).toHaveBeenCalled());
   });
-
-  it("should handle faulty fetchUserBadges", async () => {
-    axios.get = jest.fn().mockRejectedValue({response: {status: 401}});
-    await waitFor(() => {
-      store.dispatch(fetchUserBadges(1));
-    })
-  });
-
-  it("should handle faulty updateMainBadge 401", async () => {
+  it("should handle faulty updateUserBadges 401", async () => {
     axios.post = jest.fn().mockRejectedValue({response: {status: 401}});
     await waitFor(() => {
-      store.dispatch(updateUserMainBadge({user_id: fakeUser.id, main_badge: 2}));
+      store.dispatch(updateUserBadges(1));
     })
+    await waitFor(() => expect(mockCheckApiResponseStatus).toHaveBeenCalled());
   });
-
-  it("should handle updateUserAchievement 401", async () => {
+  it("should handle faulty updateUserBadges 401 faulty err", async () => {
+    axios.post = jest.fn().mockRejectedValue({status: 401});
+    await waitFor(() => {
+      store.dispatch(updateUserBadges(1));
+    })
+    await waitFor(() => expect(mockCheckApiResponseStatus).not.toHaveBeenCalled());
+  });
+  it("should handle updateUserAchievement", async () => {
+    axios.put = jest.fn().mockResolvedValue({ data: {} });
+    await waitFor(() => {
+      store.dispatch(updateUserAchievements({id: fakeUser.id, type: 2}));
+    })
+    await waitFor(() => expect(mockSetDefaultApiError).toHaveBeenCalled());
+  });
+  it("should handle faulty updateUserAchievement 401", async () => {
     axios.put = jest.fn().mockRejectedValue({response: {status: 401}});
     await waitFor(() => {
       store.dispatch(updateUserAchievements({id: fakeUser.id, type: 2}));
     })
+    await waitFor(() => expect(mockCheckApiResponseStatus).toHaveBeenCalled());
   });
-
+  it("should handle faulty updateUserAchievement 401 faulty err", async () => {
+    axios.put = jest.fn().mockRejectedValue({status: 401});
+    await waitFor(() => {
+      store.dispatch(updateUserAchievements({id: fakeUser.id, type: 2}));
+    })
+    await waitFor(() => expect(mockCheckApiResponseStatus).not.toHaveBeenCalled());
+  });
   it("should update main badge", async() => {
     jest.spyOn(axios, "post").mockResolvedValue({data: fakeUser});
     const formData = new FormData();
@@ -238,8 +351,9 @@ describe("user reducer", ()=>{
       store.dispatch(updateUserMainBadge({user_id: fakeUser.id, main_badge: 2}));
       //expect(store.getState().users.currUser?.main_badge).toBe(2);
     });
+    await waitFor(() => expect(mockSetDefaultApiError).toHaveBeenCalled());
   });
-  it("should not update faulty main badge", async() => {
+  it("should not update main badge when no currUser", async() => {
     jest.spyOn(axios, "post").mockResolvedValue({data: fakeUser});
     const formData = new FormData();
     formData.append("email", fakeUser.email);
@@ -250,6 +364,21 @@ describe("user reducer", ()=>{
       store.dispatch(updateUserMainBadge({user_id: fakeUser.id, main_badge: 9}));
       // expect(window.alert).toHaveBeenCalled();
     });
+    await waitFor(() => expect(mockSetDefaultApiError).toHaveBeenCalled());
+  });
+  it("should handle faulty updateMainBadge 401", async () => {
+    axios.post = jest.fn().mockRejectedValue({response: {status: 401}});
+    await waitFor(() => {
+      store.dispatch(updateUserMainBadge({user_id: fakeUser.id, main_badge: 2}));
+    })
+    await waitFor(() => expect(mockCheckApiResponseStatus).toHaveBeenCalled());
+  });
+  it("should handle faulty updateMainBadge 401 faulty err", async () => {
+    axios.post = jest.fn().mockRejectedValue({status: 401});
+    await waitFor(() => {
+      store.dispatch(updateUserMainBadge({user_id: fakeUser.id, main_badge: 2}));
+    })
+    await waitFor(() => expect(mockCheckApiResponseStatus).not.toHaveBeenCalled());
   });
   // it("should update achievements", async() => {
   //   jest.spyOn(axios, "post").mockResolvedValue({data: fakeUser});

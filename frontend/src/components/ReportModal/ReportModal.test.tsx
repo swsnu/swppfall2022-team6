@@ -151,7 +151,7 @@ describe("<ReportModal />", () => {
                     <Routes>
                         <Route path="/" element={
                             <ReportModal
-                                
+
                                 openReport={true}
                                 setOpenReport={jest.fn()}
                                 isNavbarReport={false}
@@ -190,7 +190,7 @@ describe("<ReportModal />", () => {
                     <Routes>
                         <Route path="/" element={
                             <ReportModal
-                                
+
                                 openReport={true}
                                 setOpenReport={jest.fn()}
                                 isNavbarReport={false}
@@ -264,7 +264,45 @@ describe("<ReportModal />", () => {
                 ],
                 currUser: null,
                 userPosts: [],
-                userBadges: [],
+                userBadges: [
+                    {
+                        id: 1,
+                        title: "badge1",
+                        image: "src1",
+                        description: "badge1",
+                        is_fulfilled: true,
+                    },
+                    {
+                        id: 2,
+                        title: "badge2",
+                        image: "src2",
+                        description: "badge2",
+                        is_fulfilled: false,
+                    }
+                    ,
+                    {
+                        id: 3,
+                        title: "badge3",
+                        image: "src3",
+                        description: "badge3",
+                        is_fulfilled: true,
+                    },
+                    {
+                        id: 4,
+                        title: "badge4",
+                        image: "src4",
+                        description: "badge4",
+                        is_fulfilled: false,
+                    }
+                    ,
+                    {
+                        id: 5,
+                        title: "badge5",
+                        image: "src5",
+                        description: "badge5",
+                        is_fulfilled: true,
+                    }
+                ],
                 mainBadge: null,
             },
             posts: {
@@ -289,7 +327,7 @@ describe("<ReportModal />", () => {
             },
             apiErrors: {
                 apiError: {
-                    code: ApiErrorCode.NONE,
+                    code: ApiErrorCode.TOKEN,
                     msg: ""
                 }
             },

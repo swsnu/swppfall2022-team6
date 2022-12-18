@@ -13,7 +13,7 @@ export const store = configureStore({
     reports: reportReducer,
     hashtags: hashtagReducer,
     positions: positionReducer,
-    apiErrors: apiErrorReducer
+    apiErrors: apiErrorReducer,
   },
 });
 

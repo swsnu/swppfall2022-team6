@@ -15,6 +15,7 @@ export const getMockStore = (preloadedState?: PreloadedState<RootState>) => {
             reports: reportReducer,
             hashtags: hashtagReducer,
             positions: positionReducer,
+            apiErrors: apiErrorReducer,
         },
         preloadedState,
     });
@@ -128,6 +129,21 @@ const stubUserInitialState: UserState = {
             title: "badge3",
             image: "src3",
             description: "badge3",
+            is_fulfilled: true,
+        },
+        {
+            id: 4,
+            title: "badge4",
+            image: "src4",
+            description: "badge4",
+            is_fulfilled: false,
+        }
+        ,
+        {
+            id: 5,
+            title: "badge5",
+            image: "src5",
+            description: "badge5",
             is_fulfilled: true,
         }
     ],
@@ -296,6 +312,13 @@ const stubApiErrorInitialState: ApiErrorState = {
         msg: ""
     },
 };
+
+const stubApiErrorInitialState2: ApiErrorState = {
+    apiError: {
+        code: ApiErrorCode.TOKEN,
+        msg: "token"
+    },
+};
 export const mockStore = getMockStore({
     users: stubUserInitialState,
     posts: stubPostInitialState,
@@ -303,6 +326,14 @@ export const mockStore = getMockStore({
     hashtags: stubHashtagInitialState,
     positions: stubPositionInitialState,
     apiErrors: stubApiErrorInitialState,
+});
+export const mockStore_apierror = getMockStore({
+    users: stubUserInitialState,
+    posts: stubPostInitialState,
+    reports: stubReportInitialState,
+    hashtags: stubHashtagInitialState,
+    positions: stubPositionInitialState,
+    apiErrors: stubApiErrorInitialState2,
 });
 
 export const mockStore2 = getMockStore({

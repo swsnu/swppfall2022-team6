@@ -1,4 +1,5 @@
 import { AnyAction, configureStore, EnhancedStore } from "@reduxjs/toolkit";
+import { waitFor } from "@testing-library/react";
 import { ThunkMiddleware } from "redux-thunk";
 import axios from "axios";
 import reducer, {
@@ -10,6 +11,16 @@ import reducer, {
     //fetchTop3Hashtags,
     HashtagState,
 } from "./hashtag";
+
+const mockCheckApiResponseStatus = jest.fn();
+const mockSetDefaultApiError = jest.fn();
+jest.mock("./apierror", () => ({
+  ApiErrorSource: {
+    HASHTAG: 1,
+  },
+  checkApiResponseStatus: () => mockCheckApiResponseStatus,
+  setDefaultApiError : () => mockSetDefaultApiError,
+}))
 
 describe("report reducer", () => {
     type NewType = EnhancedStore<
@@ -46,6 +57,13 @@ describe("report reducer", () => {
         axios.post = jest.fn().mockResolvedValue({ data: fakeHashtag });
         await store.dispatch(addHashtag(fakeHashtag));
         expect(store.getState().hashtags.hashtags).toEqual([fakeHashtag]);
+        await waitFor(() => expect(mockSetDefaultApiError).toHaveBeenCalled());
+    });
+    it("should handle faulty addhashtag", async () => {
+        const err = {response: {status: 401}};
+        jest.spyOn(axios, "post").mockRejectedValueOnce(err);
+        await store.dispatch(addHashtag(fakeHashtag));
+        await waitFor(() => expect(mockCheckApiResponseStatus).toHaveBeenCalled());
     });
     it("should handle fetchHashtags", async () => {
         axios.get = jest.fn().mockResolvedValue({ data: [fakeHashtag] });
@@ -67,14 +85,11 @@ describe("report reducer", () => {
         await store.dispatch(fetchHashtag(1));
         expect(store.getState().hashtags.hashtags).toEqual([fakeHashtag]);
     });
-    it("should handle error on addhashtag", async () => {
-        const mockConsoleError = jest.fn();
-        console.error = mockConsoleError;
-        jest.spyOn(axios, "post").mockRejectedValue({
-            response: { data: { title: ["error"] } },
-        });
-        await store.dispatch(addHashtag(fakeHashtag));
-        expect(mockConsoleError).toBeCalled();
+    it("should handle faulty fetchHashtag", async () => {
+        const err = {response: {status: 401}};
+        jest.spyOn(axios, "get").mockRejectedValueOnce(err);
+        await store.dispatch(fetchHashtag(1));
+        await waitFor(() => expect(mockCheckApiResponseStatus).toHaveBeenCalled());
     });
     it("should handle addTop3Hashtag", async () => {
         axios.post = jest.fn().mockResolvedValue({ data: fakeHashtag });

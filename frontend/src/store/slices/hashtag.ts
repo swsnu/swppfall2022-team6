@@ -42,9 +42,9 @@ export const hashtagSlice = createSlice({
         //         state.top3 = action.payload;
         //     }
         // );
-        builder.addCase(addHashtag.rejected, (_state, action) => {
-            console.error(action.error); // addHashtag.pending 이면 로딩 중에 다른 작업 가능
-        });
+        // builder.addCase(addHashtag.rejected, (_state, action) => {
+        //     console.error(action.error); // addHashtag.pending 이면 로딩 중에 다른 작업 가능
+        // });
     },
 });
 

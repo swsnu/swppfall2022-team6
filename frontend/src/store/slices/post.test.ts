@@ -1,4 +1,5 @@
 import { AnyAction, configureStore, EnhancedStore } from "@reduxjs/toolkit";
+import { waitFor } from "@testing-library/react";
 import { ThunkMiddleware } from "redux-thunk";
 import axios from "axios";
 import reducer, {
@@ -9,6 +10,16 @@ import reducer, {
     fetchPosts,
     PostState,
 } from "./post";
+
+const mockCheckApiResponseStatus = jest.fn();
+const mockSetDefaultApiError = jest.fn();
+jest.mock("./apierror", () => ({
+  ApiErrorSource: {
+    POST: 1,
+  },
+  checkApiResponseStatus: () => mockCheckApiResponseStatus,
+  setDefaultApiError : () => mockSetDefaultApiError,
+}))
 
 describe("post reducer", () => {
     type NewType = EnhancedStore<
@@ -56,6 +67,14 @@ describe("post reducer", () => {
         axios.post = jest.fn().mockResolvedValue({ data: fakePost });
         await store.dispatch(addPost(fakePost));
         expect(store.getState().posts.posts).toEqual([fakePost]);
+        await waitFor(() => expect(mockSetDefaultApiError).toHaveBeenCalled());
+    });
+    it("should handle faulty addPost 401", async () => {
+        const err = {response: {status: 401}};
+        jest.spyOn(axios, "post").mockRejectedValueOnce(err);
+        await store.dispatch(addPost(fakePost));
+        expect(store.getState().posts.posts).toEqual([fakePost]);
+        await waitFor(() => expect(mockCheckApiResponseStatus).toHaveBeenCalled());
     });
     it("should handle fetchPosts", async () => {
         axios.get = jest
@@ -63,6 +82,13 @@ describe("post reducer", () => {
             .mockResolvedValue({ data: { posts: [fakePost] } });
         await store.dispatch(fetchPosts({ lat: 0, lng: 0, radius: 10 }));
         expect(store.getState().posts.posts).toEqual([fakePost]);
+        await waitFor(() => expect(mockSetDefaultApiError).toHaveBeenCalled());
+    });
+    it("should handle faulty fetchPosts 401", async () => {
+        const err = {response: {status: 401}};
+        jest.spyOn(axios, "get").mockRejectedValueOnce(err);
+        await store.dispatch(fetchPosts({ lat: 0, lng: 0, radius: 10 }));
+        await waitFor(() => expect(mockCheckApiResponseStatus).toHaveBeenCalled());
     });
     it("should handle fetchhashPosts", async () => {
         axios.get = jest
@@ -70,11 +96,25 @@ describe("post reducer", () => {
             .mockResolvedValue({ data: { posts: [fakePost] } });
         await store.dispatch(fetchHashPosts(1));
         expect(store.getState().posts.posts).toEqual([fakePost]);
+        await waitFor(() => expect(mockSetDefaultApiError).toHaveBeenCalled());
+    });
+    it("should handle faulty fetchhashPosts", async () => {
+        const err = {response: {status: 401}};
+        jest.spyOn(axios, "get").mockRejectedValueOnce(err);
+        await store.dispatch(fetchHashPosts(1));
+        await waitFor(() => expect(mockCheckApiResponseStatus).toHaveBeenCalled());
     });
     it("should handle fetchPost", async () => {
         axios.get = jest.fn().mockResolvedValue({ data: fakePost });
         await store.dispatch(fetchPost({ id: 1, lat: 0, lng: 0, radius: 10 }));
         expect(store.getState().posts.posts).toEqual([fakePost]);
+        await waitFor(() => expect(mockSetDefaultApiError).toHaveBeenCalled());
+    });
+    it("should handle faulty fetchPost 401", async () => {
+        const err = {response: {status: 401}};
+        jest.spyOn(axios, "get").mockRejectedValueOnce(err);
+        await store.dispatch(fetchPost({ id: 1, lat: 0, lng: 0, radius: 10 }));
+        await waitFor(() => expect(mockCheckApiResponseStatus).toHaveBeenCalled());
     });
     it("should handle fetchChainedPost", async () => {
         axios.get = jest
@@ -82,14 +122,5 @@ describe("post reducer", () => {
             .mockResolvedValue({ data: { posts: [fakePost] } });
         await store.dispatch(fetchChainedPost(1));
         expect(store.getState().posts.posts).toEqual([fakePost]);
-    });
-    it("should handle error on addPost", async () => {
-        const mockConsoleError = jest.fn();
-        console.error = mockConsoleError;
-        jest.spyOn(axios, "post").mockRejectedValue({
-            response: { data: { title: ["error"] } },
-        });
-        await store.dispatch(addPost(fakePost));
-        expect(mockConsoleError).toBeCalled();
     });
 });
