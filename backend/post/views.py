@@ -154,7 +154,8 @@ class PostViewSet(viewsets.GenericViewSet):
         endtime = datetime.today()
         starttime = endtime - timedelta(hours=3)
         print(endtime, starttime)
-        posts = all_posts.filter(id__in=ids, created_at__range=[starttime, endtime]).order_by('-created_at')\
+        posts = all_posts.filter(id__in=ids, \
+            created_at__range=[starttime, endtime]).order_by('-created_at')\
             [:MAX_POST_LEN]
 
         # post_hashtags =

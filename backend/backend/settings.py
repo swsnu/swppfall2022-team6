@@ -22,7 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-secret_key_default = 'default_secret_key_default_secret_key_default_secret_key_default_secret_key_default_secret_key_default_secret_key_default_secret_key_default_secret_key_'
+secret_key_default = \
+'default_secret_key_default_secret_key_default_secret_key'+ \
+'_default_secret_key_default_secret_key_default_secret_key'+ \
+'_default_secret_key_default_secret_key_'
 SECRET_KEY = os.environ.get('SECRET_KEY', secret_key_default)
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -37,13 +40,19 @@ ALLOWED_HOSTS = [
     'nowsee.today'
 ]
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')                      
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', 31536000))
-SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False') == 'True'                          # default: False
-SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'False') == 'True'                      # default: False
-CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', 'False') == 'True'                            # default: False
-SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get('SECURE_HSTS_INCLUDE_SUBDOMAINS', 'False') == 'True'    # default: False
-SECURE_HSTS_PRELOAD = os.environ.get('SECURE_HSTS_PRELOAD', 'False') == 'True'                          # default: False
+SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False') == 'True' \
+    # default: False
+SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'False') \
+    == 'True'   # default: False
+CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', 'False') == 'True'\
+    # default: False
+SECURE_HSTS_INCLUDE_SUBDOMAINS = \
+    os.environ.get('SECURE_HSTS_INCLUDE_SUBDOMAINS', 'False') == 'True' \
+         # default: False
+SECURE_HSTS_PRELOAD = os.environ.get('SECURE_HSTS_PRELOAD', 'False') == 'True'\
+    # default: False
 
 AUTH_USER_MODEL = 'user.User'
 AUTHENTICATION_BACKENDS = ['user.backends.CustomUserModelBackend']

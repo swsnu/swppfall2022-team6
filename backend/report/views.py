@@ -67,7 +67,8 @@ class ReportViewSet(viewsets.GenericViewSet):
 
         endtime = datetime.today()
         starttime = endtime - timedelta(hours=3)
-        reports = all_reports.filter(id__in=ids, created_at__range=[starttime, endtime]).order_by('-created_at')
+        reports = all_reports.filter(id__in=ids, \
+            created_at__range=[starttime, endtime]).order_by('-created_at')
 
         data = self.get_serializer(reports, many=True).data
 
