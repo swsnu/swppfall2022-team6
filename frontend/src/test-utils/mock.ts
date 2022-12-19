@@ -66,8 +66,8 @@ const stubUserInitialState: UserState = {
             main_badge: 1,
         },
         {
-            id: 4,
-            username: "user4",
+            id: 5,
+            username: "user5",
             email: "",
             radius: 0.0,
             main_badge: 1,
