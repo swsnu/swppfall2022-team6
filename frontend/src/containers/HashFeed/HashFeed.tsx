@@ -19,6 +19,7 @@ import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import { Map, MapMarker, MarkerClusterer } from "react-kakao-maps-sdk";
 import { selectPosition } from "../../store/slices/position";
 import Loading from "../../components/Loading/Loading";
+import { selectApiError, setDefaultApiError } from "../../store/slices/apierror";
 
 import "./HashFeed.scss";
 
@@ -42,6 +43,7 @@ function HashFeed() {
   const hashtagState = useSelector(selectHashtag);
   const postState = useSelector(selectPost);
   const positionState = useSelector(selectPosition);
+  const errorState = useSelector(selectApiError);
 
   const [onlyPhoto, setOnlyPhoto] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<Boolean>(false);
@@ -52,6 +54,14 @@ function HashFeed() {
   const dispatch = useDispatch<AppDispatch>();
 
   const [windowSize, setWindowSize] = useState(getWindowSize());
+
+  useEffect(()=>{
+    dispatch(setDefaultApiError())
+  }, []);
+
+  useEffect(() => {
+    setQueryPosts(postState.posts)
+  }, [postState.posts]);
 
   useEffect(() => {
     function handleWindowResize() {
@@ -65,12 +75,13 @@ function HashFeed() {
 
   const fetchData = async () => {
     // const user = userState.currUser as UserType;
+    await dispatch(fetchHashPosts(Number(id)));
     setRefresh(false);
 
-    const queryPostPromise = await dispatch(fetchHashPosts(Number(id)));
-    if (queryPostPromise.payload === undefined) navigate("/");
-    const postData = queryPostPromise.payload as PostType[];
-    setQueryPosts(postData);
+    // const queryPostPromise = await dispatch(fetchHashPosts(Number(id)));
+    // if (queryPostPromise.payload === undefined) navigate("/");
+    // const postData = queryPostPromise.payload as PostType[];
+    // setQueryPosts(postData);
     //await dispatch(fetchHashfeedTop3Hashtags(Number(id)));
     setIsLoading(true);
   };

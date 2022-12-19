@@ -4,6 +4,8 @@ import Statistics from "./Statistics";
 import React from "react";
 import { getMockStore, mockStore } from "../../test-utils/mock";
 import { Provider } from "react-redux";
+import { ApiErrorCode } from "../../store/slices/apierror";
+
 
 jest.mock("react-minimal-pie-chart", () => ({
     PieChart: ({
@@ -69,6 +71,12 @@ describe("<Statistics />", () => {
                     lat: 37.44877599087201,
                     lng: 126.95264777802309,
                 },
+            },
+            apiErrors: {
+                apiError: {
+                    code: ApiErrorCode.NONE,
+                    msg: ""
+                }
             },
         });
         render(

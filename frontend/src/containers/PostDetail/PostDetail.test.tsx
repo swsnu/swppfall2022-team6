@@ -6,7 +6,7 @@ import { MemoryRouter, Route, Routes } from "react-router";
 import PostDetail from "./PostDetail";
 import { IProps as ReportProps } from "../../components/ReportModal/ReportModal";
 import { PositionType } from "../../store/slices/position";
-import { PostType } from "../../store/slices/post";
+import post, { PostType } from "../../store/slices/post";
 
 const mockNavigate = jest.fn();
 jest.mock("react-router", () => ({
@@ -97,6 +97,32 @@ describe("<PostDetail />", () => {
         });
     });
     it("should render without errors", async () => {
+        const { container } = render(postDetailJSX);
+        await waitFor(() => {
+            expect(container).toBeTruthy();
+        });
+    });
+    it("should render without errors when faulty fakepost", async () => {
+        const fakepost = {
+                        content: "CONTENT",
+                        created_at: "2022-11-10T11:01:05.882000",
+                        hashtags: [{ id: 1, content: "HASHTAG" }],
+                        id: 1,
+                        latitude: 37.44877599087201,
+                        longitude: 126.95264777802309,
+                        location: "location",
+                        image: "Logo.svg",
+                        reply_to_author: null,
+                        user_name: "USERNAME",
+                    }
+        jest.spyOn(axios, "get").mockImplementation(() => {
+            return Promise.resolve({
+                data: {
+                    post: fakepost,
+                    replies: [],
+                }
+            });
+        });
         const { container } = render(postDetailJSX);
         await waitFor(() => {
             expect(container).toBeTruthy();

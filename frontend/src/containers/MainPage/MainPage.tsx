@@ -18,7 +18,7 @@ import { Layout, Slider } from 'antd';
 import Map from "./../../components/Map/Map";
 import ReportModal from "../../components/ReportModal/ReportModal";
 import MapSearch from "../../components/MapSearch/MapSearch";
-
+import { selectApiError, setDefaultApiError } from "../../store/slices/apierror";
 import "./MainPage.scss";
 // @ts-ignore
 import Logo from "./Logo.svg";
@@ -35,6 +35,7 @@ const sliderMarks = {
 const MainPage: React.FC = ()=>{
     const userState = useSelector(selectUser);
     const positionState = useSelector(selectPosition);
+    const errorState = useSelector(selectApiError);
 
     const currUser = userState.currUser as UserType;
     const [currRadius, setCurrRadius] = useState<number>(currUser.radius * 25);
@@ -53,6 +54,10 @@ const MainPage: React.FC = ()=>{
     const dispatch = useDispatch<AppDispatch>();
 
     const geocoder = new kakao.maps.services.Geocoder();
+
+    useEffect(()=>{
+        dispatch(setDefaultApiError())
+    }, []);
 
     useEffect(() => {
         if (navigator.geolocation) {
@@ -99,7 +104,13 @@ const MainPage: React.FC = ()=>{
     const onClickReportButton = () => {
         setOpenReport(true);
     };
-    
+
+    // if (errorPresent) {
+    //     alert("로그인 후 2시간 이상이 경과되었습니다. 다시 로그인 해 주세요.");
+    //     sessionStorage.clear();
+    //     window.location.reload();
+    // }
+
     return (
         <Layout className="MainPage">
             <Header className="Header" style={{backgroundColor: "white"}}>
@@ -185,7 +196,7 @@ const MainPage: React.FC = ()=>{
                         <div className="slider-description">
                             Change radius
                         </div>
-                        <Slider 
+                        <Slider
                             // @ts-ignore
                             tooltip={{formatter:(value: number)=>`${value/25}km`}}
                             marks={sliderMarks}

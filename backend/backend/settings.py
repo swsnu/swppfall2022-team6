@@ -22,20 +22,37 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = \
-    'django-insecure-(+(i1#d_vdga9r1r^1)nphfv$o$#vk5row3bkz^^+01#cf!jv#'
+secret_key_default = \
+'default_secret_key_default_secret_key_default_secret_key'+ \
+'_default_secret_key_default_secret_key_default_secret_key'+ \
+'_default_secret_key_default_secret_key_'
+SECRET_KEY = os.environ.get('SECRET_KEY', secret_key_default)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
     '0.0.0.0',
     'localhost',
-    'ec2-43-200-96-194.ap-northeast-2.compute.amazonaws.com',
-    '43.200.96.194',
+    'ec2-43-200-178-219.ap-northeast-2.compute.amazonaws.com',
+    '43.200.178.219',
     'nowsee.today'
 ]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', 31536000))
+SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False') == 'True' \
+    # default: False
+SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'False') \
+    == 'True'   # default: False
+CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', 'False') == 'True'\
+    # default: False
+SECURE_HSTS_INCLUDE_SUBDOMAINS = \
+    os.environ.get('SECURE_HSTS_INCLUDE_SUBDOMAINS', 'False') == 'True' \
+         # default: False
+SECURE_HSTS_PRELOAD = os.environ.get('SECURE_HSTS_PRELOAD', 'False') == 'True'\
+    # default: False
 
 AUTH_USER_MODEL = 'user.User'
 AUTHENTICATION_BACKENDS = ['user.backends.CustomUserModelBackend']
@@ -160,6 +177,7 @@ REST_USE_JWT = True
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours = 2),
+    # 'ACCESS_TOKEN_LIFETIME': timedelta(minutes = 1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days = 7),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,

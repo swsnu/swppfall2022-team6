@@ -1,7 +1,19 @@
 import { AnyAction, configureStore, EnhancedStore } from "@reduxjs/toolkit";
+import { waitFor } from "@testing-library/react";
 import { ThunkMiddleware } from "redux-thunk";
 import axios from "axios";
 import reducer, { addReport, fetchReports, ReportState } from "./report";
+
+
+const mockCheckApiResponseStatus = jest.fn();
+const mockSetDefaultApiError = jest.fn();
+jest.mock("./apierror", () => ({
+  ApiErrorSource: {
+    REPORT: 1,
+  },
+  checkApiResponseStatus: () => mockCheckApiResponseStatus,
+  setDefaultApiError : () => mockSetDefaultApiError,
+}))
 
 describe("report reducer", () => {
     type NewType = EnhancedStore<
@@ -48,19 +60,24 @@ describe("report reducer", () => {
         axios.post = jest.fn().mockResolvedValue({ data: fakeReport });
         await store.dispatch(addReport(fakeReport));
         expect(store.getState().reports.reports).toEqual([fakeReport]);
+        await waitFor(() => expect(mockSetDefaultApiError).toHaveBeenCalled());
+    });
+    it("should handle faulty addReport 401", async () => {
+        const err = {response: {status: 401}};
+        jest.spyOn(axios, "post").mockRejectedValueOnce(err);
+        await store.dispatch(addReport(fakeReport));
+        await waitFor(() => expect(mockCheckApiResponseStatus).toHaveBeenCalled());
     });
     it("should handle fetchReports", async () => {
         axios.get = jest.fn().mockResolvedValue({ data: [fakeReport] });
         await store.dispatch(fetchReports({ lat: 0, lng: 0, radius: 10 }));
         expect(store.getState().reports.reports).toEqual([fakeReport]);
+        await waitFor(() => expect(mockSetDefaultApiError).toHaveBeenCalled());
     });
-    it("should handle error on addReport", async () => {
-        const mockConsoleError = jest.fn();
-        console.error = mockConsoleError;
-        jest.spyOn(axios, "post").mockRejectedValue({
-            response: { data: { title: ["error"] } },
-        });
-        await store.dispatch(addReport(fakeReport));
-        expect(mockConsoleError).toBeCalled();
+    it("should handle faulty fetchReports 401", async () => {
+        const err = {response: {status: 401}};
+        jest.spyOn(axios, "get").mockRejectedValueOnce(err);
+        await store.dispatch(fetchReports({ lat: 0, lng: 0, radius: 10 }));
+        await waitFor(() => expect(mockCheckApiResponseStatus).toHaveBeenCalled());
     });
 });

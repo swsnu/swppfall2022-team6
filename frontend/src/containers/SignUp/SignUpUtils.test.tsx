@@ -1,34 +1,51 @@
-import {isValidUserName, isValidPassword} from "./SignUpUtils";
+import {ValidType, checkValidUserName, checkValidPassword, checkValidEmail, checkValidPasswordCheck} from "./SignUpUtils";
 
 window.alert = jest.fn();
 
 describe("<SignUpUtils />", () => {
     it("should return true for valid username", () => {
         const username = "validusername";
-        const res = isValidUserName(username);
-        expect(res).toEqual(true);
+        const res = checkValidUserName(username);
+        expect(res.isValid).toEqual(true);
     });
     it("should return false for invalid username", () => {
         const username = "iv";
-        const res = isValidUserName(username);
-        expect(res).toEqual(false);
+        const res = checkValidUserName(username);
+        expect(res.isValid).toEqual(false);
         const username2 = "한글아이디";
-        const res2 = isValidUserName(username2);
-        expect(res2).toEqual(false);
+        const res2 = checkValidUserName(username2);
+        expect(res2.isValid).toEqual(false);
+    });
+    it("should return true for valid email", () => {
+        const email = "valid@email.com";
+        const res = checkValidEmail(email);
+        expect(res.isValid).toEqual(true);
+    });
+    it("should return true for invalid email", () => {
+        const email = "invalid";
+        const res = checkValidEmail(email);
+        expect(res.isValid).toEqual(false);
     });
     it("should return true for valid password test", () => {
         const password = "passwordtest";
-        const passwordCheck = "passwordtest"
-        const res = isValidPassword(password, passwordCheck);
-        expect(res).toEqual(true);
+        const res = checkValidPassword(password);
+        expect(res.isValid).toEqual(true);
     });
     it("should return false for invalid password test", () => {
+        const password = "iv";
+        const res = checkValidPassword(password);
+        expect(res.isValid).toEqual(false);
+    });
+    it("should return true for valid passwordCheck test", () => {
         const password = "passwordtest";
-        const passwordCheck = "iv"
-        const res = isValidPassword(password, passwordCheck);
-        expect(res).toEqual(false);
-        const password2 = "iv";
-        const res2 = isValidPassword(password2, passwordCheck);
-        expect(res2).toEqual(false);
+        const passwordCheck = "passwordtest";
+        const res = checkValidPasswordCheck(password, passwordCheck);
+        expect(res.isValid).toEqual(true);
+    });
+    it("should return false for invalid passwordCheck test", () => {
+        const password = "passwordtest";
+        const passwordCheck = "passwordtest2";
+        const res = checkValidPasswordCheck(password, passwordCheck);
+        expect(res.isValid).toEqual(false);
     });
 });

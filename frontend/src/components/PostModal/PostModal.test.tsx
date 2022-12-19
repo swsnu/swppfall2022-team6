@@ -5,7 +5,7 @@ import React from "react";
 import PostModal from "./PostModal";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
-import { mockStore, mockStoreHashFeed1, mockStorePostModal1 } from "../../test-utils/mock";
+import { mockStore, mockStoreHashFeed1, mockStorePostModal1, mockStore_apierror } from "../../test-utils/mock";
 import { MemoryRouter, Route, Routes } from "react-router";
 
 const mockResultData = [
@@ -98,7 +98,7 @@ describe("<PostModal />", () => {
             expect(callbackMock).toHaveBeenCalled();
         });
     });
-    it("should submit content if only exists", async () => {
+    it("should submit content if only exists for reply type", async () => {
         axios.post = jest.fn().mockResolvedValue({});
         const callbackMock = jest.fn();
         render(
@@ -108,6 +108,28 @@ describe("<PostModal />", () => {
                     setOpenPost={jest.fn()}
                     postModalCallback={callbackMock}
                     type={"Reply"}
+                    replyTo={1}
+                />
+            </Provider>
+        );
+        const textField = screen.getByTestId("textField");
+        fireEvent.change(textField, { target: { value: "TEXT" } });
+        const submitButton = screen.getByText("Submit!");
+        fireEvent.click(submitButton);
+        await waitFor(() => {
+            expect(callbackMock).toHaveBeenCalled();
+        });
+    });
+    it("should submit content if only exists for post type", async () => {
+        axios.post = jest.fn().mockResolvedValue({});
+        const callbackMock = jest.fn();
+        render(
+            <Provider store={mockStore}>
+                <PostModal
+                    openPost={true}
+                    setOpenPost={jest.fn()}
+                    postModalCallback={callbackMock}
+                    type={"Post"}
                     replyTo={1}
                 />
             </Provider>
@@ -207,6 +229,38 @@ describe("<PostModal />", () => {
         const mockCb = jest.fn();
         render(
             <Provider store={mockStorePostModal1}>
+                <MemoryRouter>
+                    <Routes>
+                        <Route
+                            path="/"
+                            element={
+                                <PostModal
+                                    openPost={true}
+                                    setOpenPost={jest.fn()}
+                                    postModalCallback={mockCb}
+                                    type={"Reply"}
+                                    replyTo={0}
+                                />
+                            }
+                        />
+                    </Routes>
+                </MemoryRouter>
+            </Provider>
+        );
+        const textField = screen.getByTestId("textField");
+        fireEvent.change(textField, { target: { value: "TEXT" } });
+        const submitButton = screen.getByText("Submit!");
+        fireEvent.click(submitButton);
+        await waitFor(() => expect(mockCb).toHaveBeenCalled());
+    });
+    it("should not handle achievements if apierror", async () => {
+        axios.post = jest
+            .fn()
+            .mockResolvedValue({ data: { payload: "payload" } });
+        axios.put = jest.fn().mockResolvedValue({});
+        const mockCb = jest.fn();
+        render(
+            <Provider store={mockStore_apierror}>
                 <MemoryRouter>
                     <Routes>
                         <Route

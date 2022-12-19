@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -15,6 +15,7 @@ import Badge from "../../components/Badge/Badge";
 import { BadgeType, updateUserMainBadge } from "../../store/slices/user";
 import { selectUser } from "../../store/slices/user";
 import { AppDispatch } from "../../store";
+import { selectApiError, setDefaultApiError } from "../../store/slices/apierror";
 
 import "./MyBadges.scss";
 
@@ -22,11 +23,17 @@ const { Header, Content } = Layout;
 
 function MyBadges() {
     const userState = useSelector(selectUser);
+    const errorState = useSelector(selectApiError);
+
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const [selectedBadge, setSelectedBadge] = useState<BadgeType | null>(null);
     const initial_main_badge = userState.mainBadge;
     const [mainBadge, setMainBadge] = useState<BadgeType | null>(initial_main_badge);
+
+    useEffect(()=>{
+        dispatch(setDefaultApiError())
+    }, []);
 
     const onClickBackButton = () => {
         navigate("/mypage");

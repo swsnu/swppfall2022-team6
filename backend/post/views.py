@@ -1,7 +1,7 @@
 '''
     post views
 '''
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.core.cache import cache
@@ -151,7 +151,11 @@ class PostViewSet(viewsets.GenericViewSet):
             <= float(radius)]
         #ids = [post.id for post in all_posts]
 
-        posts = all_posts.filter(id__in=ids).order_by('-created_at')\
+        endtime = datetime.today()
+        starttime = endtime - timedelta(hours=3)
+        print(endtime, starttime)
+        posts = all_posts.filter(id__in=ids, \
+            created_at__range=[starttime, endtime]).order_by('-created_at')\
             [:MAX_POST_LEN]
 
         # post_hashtags =

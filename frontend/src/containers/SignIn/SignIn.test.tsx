@@ -70,6 +70,32 @@ describe("<SignIn />", () => {
         await screen.findByDisplayValue("test@test.com");
         await screen.findByDisplayValue("passtest");
     });
+    it("should change focus", async () => {
+        const view = render(signInJSX);
+        // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+        const email = view.container.querySelector('#email-input');
+        if(email){
+          fireEvent.focus(email);
+        }
+        // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+        const password = view.container.querySelector('#password-input');
+        if(password){
+          fireEvent.focus(password);
+        }
+    });
+    it("should change blur", async () => {
+        const view = render(signInJSX);
+        // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+        const email = view.container.querySelector('#email-input');
+        if(email){
+          fireEvent.blur(email);
+        }
+        // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+        const password = view.container.querySelector('#password-input');
+        if(password){
+          fireEvent.blur(password);
+        }
+    });
     it("should sign in", async () => {
         const view = render(signInJSX);
         // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
@@ -84,26 +110,8 @@ describe("<SignIn />", () => {
         }
         const signin = screen.getByText("Sign In");
         fireEvent.click(signin!);
-        expect(mockDispatch).toHaveBeenCalledTimes(1);
+        expect(mockDispatch).toHaveBeenCalledTimes(2);
     });
-    it("shouldn't sign in with wrong email", async () => {
-      const view = render(signInJSX);
-      jest.spyOn(window, "alert").mockImplementation(() => {});
-      // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
-      const email = view.container.querySelector('#email-input');
-      if(email){
-        fireEvent.change(email, { target: { value: "test.com" } });
-      }
-      // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
-      const password = view.container.querySelector('#password-input');
-      if(password){
-        fireEvent.change(password, { target: { value: "passtest" } });
-      }
-      const signin = screen.getByText("Sign In");
-      fireEvent.click(signin!);
-      expect(window.alert).toHaveBeenCalled();
-    });
-    
     it("should sign up", async () => {
         render(signInJSX);
         const signup = screen.getByText("Sign Up");

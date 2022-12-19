@@ -5,6 +5,7 @@ import postReducer, { PostState } from "../store/slices/post";
 import reportReducer, { ReportState } from "../store/slices/report";
 import hashtagReducer, { HashtagState } from "../store/slices/hashtag";
 import positionReducer, { PositionState } from "../store/slices/position";
+import apiErrorReducer, { ApiErrorState, ApiErrorCode } from "../store/slices/apierror";
 
 export const getMockStore = (preloadedState?: PreloadedState<RootState>) => {
     return configureStore({
@@ -14,6 +15,7 @@ export const getMockStore = (preloadedState?: PreloadedState<RootState>) => {
             reports: reportReducer,
             hashtags: hashtagReducer,
             positions: positionReducer,
+            apiErrors: apiErrorReducer,
         },
         preloadedState,
     });
@@ -64,8 +66,8 @@ const stubUserInitialState: UserState = {
             main_badge: 1,
         },
         {
-            id: 4,
-            username: "user4",
+            id: 5,
+            username: "user5",
             email: "",
             radius: 0.0,
             main_badge: 1,
@@ -127,6 +129,21 @@ const stubUserInitialState: UserState = {
             title: "badge3",
             image: "src3",
             description: "badge3",
+            is_fulfilled: true,
+        },
+        {
+            id: 4,
+            title: "badge4",
+            image: "src4",
+            description: "badge4",
+            is_fulfilled: false,
+        }
+        ,
+        {
+            id: 5,
+            title: "badge5",
+            image: "src5",
+            description: "badge5",
             is_fulfilled: true,
         }
     ],
@@ -288,12 +305,35 @@ const stubPositionInitialState: PositionState = {
         lng: 126.95264777802309,
     },
 };
+
+const stubApiErrorInitialState: ApiErrorState = {
+    apiError: {
+        code: ApiErrorCode.NONE,
+        msg: ""
+    },
+};
+
+const stubApiErrorInitialState2: ApiErrorState = {
+    apiError: {
+        code: ApiErrorCode.TOKEN,
+        msg: "token"
+    },
+};
 export const mockStore = getMockStore({
     users: stubUserInitialState,
     posts: stubPostInitialState,
     reports: stubReportInitialState,
     hashtags: stubHashtagInitialState,
     positions: stubPositionInitialState,
+    apiErrors: stubApiErrorInitialState,
+});
+export const mockStore_apierror = getMockStore({
+    users: stubUserInitialState,
+    posts: stubPostInitialState,
+    reports: stubReportInitialState,
+    hashtags: stubHashtagInitialState,
+    positions: stubPositionInitialState,
+    apiErrors: stubApiErrorInitialState2,
 });
 
 export const mockStore2 = getMockStore({
@@ -302,6 +342,7 @@ export const mockStore2 = getMockStore({
     reports: stubReportInitialState,
     hashtags: stubHashtagInitialState,
     positions: stubPositionInitialState,
+    apiErrors: stubApiErrorInitialState,
 });
 
 const stubUserBadgeHashFeed1 = [
@@ -356,6 +397,7 @@ export const mockStoreHashFeed1 = getMockStore({
         top3: [{ id: 1, content: "hashtag1" }],
     },
     positions: stubPositionInitialState,
+    apiErrors: stubApiErrorInitialState,
 });
 
 export const mockStorePostModal1 = getMockStore({
@@ -379,6 +421,7 @@ export const mockStorePostModal1 = getMockStore({
         top3: [{ id: 1, content: "hashtag1" }],
     },
     positions: stubPositionInitialState,
+    apiErrors: stubApiErrorInitialState,
 });
 
 export const mockSearchResultData = () => {

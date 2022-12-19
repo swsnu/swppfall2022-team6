@@ -11,7 +11,8 @@ class PostSerializer(serializers.ModelSerializer):
     '''
         PostSerializer
     '''
-    image = serializers.ImageField(use_url=True)
+    #image = serializers.ImageField(use_url=False)
+    image = serializers.SerializerMethodField()
     hashtags = serializers.SerializerMethodField()
     user_name = serializers.SerializerMethodField()
     badge_id = serializers.SerializerMethodField()
@@ -32,6 +33,8 @@ class PostSerializer(serializers.ModelSerializer):
             'reply_to_author',
             'hashtags',
         )
+    def get_image(self, post):
+        return post.image.url if post.image else None
     def get_hashtags(self, post):
         hashtags = Hashtag.objects.filter(posthashtag__post=post)
         return HashtagSerializer(hashtags, many=True).data

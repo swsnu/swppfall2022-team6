@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store";
 import { useParams } from "react-router";
 import { selectPosition } from "../../store/slices/position";
+import { ApiErrorCode, selectApiError, setDefaultApiError } from "../../store/slices/apierror";
+
 
 export interface IProps {
     openPost: boolean;
@@ -28,6 +30,8 @@ function PostModal({
     replyTo,
 }: IProps) {
     const positionState = useSelector(selectPosition);
+    const errorState = useSelector(selectApiError);
+
     const [content, setContent] = useState<string>("");
     const [image, setImage] = useState<File>();
     const [hashtags, setHashtags] = useState<string>("");
@@ -36,21 +40,25 @@ function PostModal({
     const userState = useSelector(selectUser);
     const geocoder = new kakao.maps.services.Geocoder();
     const [address, setAddress] = useState<string>("");
+
+
+    useEffect(()=>{
+        dispatch(setDefaultApiError())
+      }, []);
+
     useEffect(() => {
-        if (positionState.currPosition) {
-            geocoder.coord2RegionCode(
-                positionState.currPosition.lng,
-                positionState.currPosition.lat,
-                (result, status) => {
-                    if (
-                        status === kakao.maps.services.Status.OK &&
-                        !!result[0].address_name
-                    ) {
-                        setAddress(result[0].address_name);
-                    }
+        geocoder.coord2RegionCode(
+            positionState.currPosition.lng,
+            positionState.currPosition.lat,
+            (result, status) => {
+                if (
+                    status === kakao.maps.services.Status.OK &&
+                    !!result[0].address_name
+                ) {
+                    setAddress(result[0].address_name);
                 }
-            );
-        }
+            }
+        );
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -63,14 +71,12 @@ function PostModal({
             formData.append("hashtags", hashtags);
             if (type === "Reply")
                 formData.append("replyTo", replyTo.toString());
-            if (positionState.findPosition){
-                formData.append("latitude", positionState.findPosition.lat.toString());
-                formData.append("longitude", positionState.findPosition.lng.toString());
-                formData.append("location", address);
-            }
+            formData.append("latitude", positionState.findPosition.lat.toString());
+            formData.append("longitude", positionState.findPosition.lng.toString());
+            formData.append("location", address);
             //@ts-ignore
             const response = await dispatch(addPost(formData));
-            if (response.payload) {
+            if (errorState.apiError.code === ApiErrorCode.NONE){
                 // update Post-related Achievement(Reply)
                 if (type === "Reply") {
                     const achievement_type: Achievement = Achievement.REPLY;

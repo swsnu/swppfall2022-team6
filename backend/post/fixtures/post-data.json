@@ -4,194 +4,419 @@
         "pk": 1,
         "fields": {
             "user": 2,
-            "content": "오늘 302동 날씨 어때요?",
+            "content": "오늘 윗공대 날씨 어때요?",
             "image": "",
-            "latitude": 37.44877599087201,
-            "longitude": 126.95264777802309,
-            "created_at": "2022-11-09T09:06:28.196",
-            "reply_to": null
+            "latitude": 37.44868573858758,
+            "longitude": 126.95227263400626,
+            "created_at": "2022-12-14T11:06:28.196",
+            "reply_to": null,
+            "location": "서울특별시 관악구 신림동"
         }
     },
     {
         "model": "post.post",
         "pk": 2,
         "fields": {
-            "user": 3,
-            "content": "어제보단 덜 추운데 추워요",
-            "image": "",
-            "latitude": 37.44877599087201,
-            "longitude": 126.95264777802309,
-            "created_at": "2022-11-09T09:06:43.624",
-            "reply_to": 1
+            "user": 4,
+            "content": "어제보다 훨씬 추워요 롱패딩 필수",
+            "image": "/snow_upper.jpeg",
+            "latitude": 37.44911092552697,
+            "longitude": 126.95204633796241,
+            "created_at": "2022-12-14T11:07:43.624",
+            "reply_to": 1,
+            "location": "서울특별시 관악구 신림동"
         }
     },
     {
         "model": "post.post",
         "pk": 3,
         "fields": {
-            "user": 4,
-            "content": "패딩 입고 나올걸 후회중",
+            "user": 3,
+            "content": "돕바 입고 나올걸 후회중",
             "image": "",
             "latitude": 37.44877599087201,
             "longitude": 126.95264777802309,
-            "created_at": "2022-11-09T09:10:56.021",
-            "reply_to": 1
+            "created_at": "2022-12-14T11:19:56.021",
+            "reply_to": 1,
+            "location": "서울특별시 관악구 신림동"
         }
     },
     {
         "model": "post.post",
         "pk": 4,
         "fields": {
-            "user": 5,
-            "content": "그래도 흐린데 비는 안와서 다행",
+            "user": 7,
+            "content": "많이 춥습니다. 다들 따뜻한 데자와 한 잔씩 하세요*^^*",
             "image": "",
             "latitude": 37.44877599087201,
             "longitude": 126.95264777802309,
-            "created_at": "2022-11-09T10:16:04.749",
-            "reply_to": 1
+            "created_at": "2022-12-14T13:40:04.749",
+            "reply_to": null,
+            "location": "서울특별시 관악구 신림동"
         }
     },
     {
         "model": "post.post",
         "pk": 5,
         "fields": {
-            "user": 5,
-            "content": "나도ㅋㅋㅋ",
+            "user": 10,
+            "content": "저도요ㅋㅋㅋ",
             "image": "",
-            "latitude": 37.44877599087201,
-            "longitude": 126.95264777802309,
-            "created_at": "2022-11-09T10:16:29.791",
-            "reply_to": 3
+            "latitude": 37.44982462886546,
+            "longitude": 126.9522945132553,
+            "created_at": "2022-12-14T12:09:29.791",
+            "reply_to": 3,
+            "location": "서울특별시 관악구 신림동"
         }
     },
     {
         "model": "post.post",
         "pk": 6,
         "fields": {
-            "user": 3,
-            "content": "강아지랑 산책하는 중! 쌀쌀하지만 햇빛은 좋다ㅎㅎ",
-            "image": "/dog.jpg",
-            "latitude": 37.52266185818156,
-            "longitude": 126.9398633812787,
-            "created_at": "2022-11-09T10:26:41.559",
-            "reply_to": null
+            "user": 6,
+            "content": "역시 이런 날씨엔 아아",
+            "image": "/iced_coffee_300.jpg",
+            "latitude": 37.450823171249304,
+            "longitude": 126.95284087432384,
+            "created_at": "2022-12-14T11:58:41.559",
+            "reply_to": 4,
+            "location": "서울특별시 관악구 신림동"
         }
     },
     {
         "model": "post.post",
         "pk": 7,
         "fields": {
-            "user": 4,
-            "content": "조깅중인데 오늘 하늘 예쁘다",
-            "image": "/sky.jpg",
-            "latitude": 37.52266185818156,
-            "longitude": 126.9398633812787,
-            "created_at": "2022-11-09T10:30:24.223",
-            "reply_to": null
+            "user": 9,
+            "content": "핫팩 챙겨서 나오길 잘했다ㅎㅎ",
+            "image": "",
+            "latitude": 37.450823171249304,
+            "longitude": 126.95284087432384,
+            "created_at": "2022-12-14T13:30:24.223",
+            "reply_to": null,
+            "location": "서울특별시 관악구 신림동"
         }
     },
     {
         "model": "post.post",
         "pk": 8,
         "fields": {
-            "user": 5,
-            "content": "오늘 이렇게 입으면 많이 추울까요?",
-            "image": "/clothes.jpg",
-            "latitude": 37.44877599087201,
-            "longitude": 126.95264777802309,
-            "created_at": "2022-11-09T10:43:46.132",
-            "reply_to": null
+            "user": 1,
+            "content": "벌써 이렇게 추운데 계절은 어떻게 듣죠",
+            "image": "",
+            "latitude": 37.450823171249304,
+            "longitude": 126.95284087432384,
+            "created_at": "2022-12-14T09:09:24.223",
+            "reply_to": null,
+            "location": "서울특별시 관악구 신림동"
         }
     },
     {
         "model": "post.post",
         "pk": 9,
         "fields": {
-            "user": 2,
-            "content": "붕어빵 먹고싶은 날씨다",
+            "user": 4,
+            "content": "눈 아직도 내리는 중인가요?",
             "image": "",
-            "latitude": 37.44877599087201,
-            "longitude": 126.95264777802309,
-            "created_at": "2022-11-09T10:46:56.854",
-            "reply_to": null
+            "latitude": 37.450823171249304,
+            "longitude": 126.95284087432384,
+            "created_at": "2022-12-14T09:30:24.223",
+            "reply_to": null,
+            "location": "서울특별시 관악구 신림동"
         }
     },
     {
         "model": "post.post",
         "pk": 10,
         "fields": {
-            "user": 3,
-            "content": "오늘 우산 필요할까요",
-            "image": "",
-            "latitude": 37.44877599087201,
-            "longitude": 126.95264777802309,
-            "created_at": "2022-11-09T11:01:05.882",
-            "reply_to": null
+            "user": 6,
+            "content": "아뇨 밤 사이에 그친듯.. 쌓여는 있어요",
+            "image": "/snow_upper_2.jpg",
+            "latitude": 37.450823171249304,
+            "longitude": 126.95284087432384,
+            "created_at": "2022-12-14T09:39:24.223",
+            "reply_to": 9,
+            "location": "서울특별시 관악구 신림동"
         }
     },
     {
         "model": "post.post",
         "pk": 11,
         "fields": {
-            "user": 4,
-            "content": "비 안올것 같아요",
+            "user": 8,
+            "content": "지금 이 날씨, 온도, 습도...",
             "image": "",
-            "latitude": 37.44877599087201,
-            "longitude": 126.95264777802309,
-            "created_at": "2022-11-09T11:12:05.189",
-            "reply_to": 10
+            "latitude": 37.46459140419729,
+            "longitude": 126.95479001586092,
+            "created_at": "2022-12-14T10:43:46.132",
+            "reply_to": null,
+            "location": "서울특별시 관악구 신림동"
         }
     },
     {
         "model": "post.post",
         "pk": 12,
         "fields": {
-            "user": 2,
-            "content": "롱패딩 출현",
+            "user": 5,
+            "content": "조명 빠트리셨어요",
             "image": "",
-            "latitude": 37.47921259676618,
-            "longitude": 126.95374785602736,
-            "created_at": "2022-11-09T11:13:05.189",
-            "reply_to": null
+            "latitude": 37.46526827682399,
+            "longitude": 126.95302622676972,
+            "created_at": "2022-12-14T10:46:56.854",
+            "reply_to": 11,
+            "location": "서울특별시 관악구 신림동"
         }
     },
     {
         "model": "post.post",
         "pk": 13,
         "fields": {
-            "user": 3,
-            "content": "설입도 추운데 학교는 더춥다",
+            "user": 9,
+            "content": "오늘 테니스 칠 수 있을까요",
             "image": "",
-            "latitude": 37.44877599087201,
-            "longitude": 126.95264777802309,
-            "created_at": "2022-11-09T11:14:05.189",
-            "reply_to": null
+            "latitude": 37.46526827682399,
+            "longitude": 126.95302622676972,
+            "created_at": "2022-12-14T14:14:56.854",
+            "reply_to": null,
+            "location": "서울특별시 관악구 신림동"
         }
     },
     {
         "model": "post.post",
         "pk": 14,
         "fields": {
-            "user": 4,
-            "content": "좀 추울 것 같아요...",
+            "user": 2,
+            "content": "이 날씨에 테니스요...?",
             "image": "",
-            "latitude": 37.44877599087201,
-            "longitude": 126.95264777802309,
-            "created_at": "2022-11-09T11:15:46.132",
-            "reply_to": 8
+            "latitude": 37.4684214647971,
+            "longitude": 126.95215156941633,
+            "created_at": "2022-12-09T14:29:05.189",
+            "reply_to": 13,
+            "location": "서울특별시 관악구 신림동"
         }
     },
     {
         "model": "post.post",
         "pk": 15,
         "fields": {
-            "user": 3,
-            "content": "ㄴㄴ ㄱㅊ 나 오늘 저렇게 입음",
+            "user": 6,
+            "content": "자하연이 얼었어요!!!",
             "image": "",
-            "latitude": 37.44877599087201,
-            "longitude": 126.95264777802309,
-            "created_at": "2022-11-09T11:43:46.132",
-            "reply_to": 14
+            "latitude": 37.462096403295064,
+            "longitude": 126.9522460261749,
+            "created_at": "2022-12-14T08:13:05.189",
+            "reply_to": null,
+            "location": "서울특별시 관악구 신림동"
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 16,
+        "fields": {
+            "user": 3,
+            "content": "영하에도 얼죽아",
+            "image": "/iced_coffee.jpg",
+            "latitude": 37.46402464622676,
+            "longitude": 126.95243922071802,
+            "created_at": "2022-12-14T15:47:05.189",
+            "reply_to": null,
+            "location": "서울특별시 관악구 신림동"
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 17,
+        "fields": {
+            "user": 8,
+            "content": "관정인데 칼바람 장난 아니네요",
+            "image": "",
+            "latitude": 37.4586005410567,
+            "longitude": 126.95240648735788,
+            "created_at": "2022-12-14T17:55:46.132",
+            "reply_to": null,
+            "location": "서울특별시 관악구 신림동"
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 18,
+        "fields": {
+            "user": 10,
+            "content": "차라리 계절을 들으세요... 오늘은 야외활동 불가능",
+            "image": "",
+            "latitude": 37.45915839424676,
+            "longitude": 126.9505208254726,
+            "created_at": "2022-12-14T14:33:46.132",
+            "reply_to": 13,
+            "location": "서울특별시 관악구 신림동"
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 19,
+        "fields": {
+            "user": 1,
+            "content": "학관 편의점에 핫팩 품절이예요..",
+            "image": "",
+            "latitude": 37.45915839424676,
+            "longitude": 126.9505208254726,
+            "created_at": "2022-12-14T16:45:46.132",
+            "reply_to": null,
+            "location": "서울특별시 관악구 신림동"
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 20,
+        "fields": {
+            "user": 3,
+            "content": "내일부턴 진짜 롱패딩 입는다",
+            "image": "",
+            "latitude": 37.45915839424676,
+            "longitude": 126.9505208254726,
+            "created_at": "2022-12-14T10:11:46.132",
+            "reply_to": null,
+            "location": "서울특별시 관악구 신림동"
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 21,
+        "fields": {
+            "user": 10,
+            "content": "눈 쌓였네",
+            "image": "/snow_nakseong.jpeg",
+            "latitude": 37.47703796518704,
+            "longitude": 126.95977955011996,
+            "created_at": "2022-12-14T10:11:46.132",
+            "reply_to": null,
+            "location": "서울특별시 관악구 봉천동"
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 22,
+        "fields": {
+            "user": 6,
+            "content": "추워서 스벅으로 대피함",
+            "image": "/starbucks.jpg",
+            "latitude": 37.479619738280206,
+            "longitude": 126.95345591314657,
+            "created_at": "2022-12-14T14:08:46.132",
+            "reply_to": null,
+            "location": "서울특별시 관악구 봉천동"
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 23,
+        "fields": {
+            "user": 9,
+            "content": "이 날씨에 반팔 입는 사람이 다 있네",
+            "image": "",
+            "latitude": 37.479619738280206,
+            "longitude": 126.95345591314657,
+            "created_at": "2022-12-14T12:08:46.132",
+            "reply_to": null,
+            "location": "서울특별시 관악구 봉천동"
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 24,
+        "fields": {
+            "user": 5,
+            "content": "아직 밖에 나가보지도 않았는데 오늘 뭐 입어야 됨?",
+            "image": "",
+            "latitude": 37.48087704101379,
+            "longitude": 126.952188852496,
+            "created_at": "2022-12-14T16:30:46.132",
+            "reply_to": null,
+            "location": "서울특별시 관악구 봉천동"
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 25,
+        "fields": {
+            "user": 3,
+            "content": "무조건 롱패딩임",
+            "image": "",
+            "latitude": 37.4822499942904,
+            "longitude": 126.95173572626405,
+            "created_at": "2022-12-14T16:33:46.132",
+            "reply_to": 24,
+            "location": "서울특별시 관악구 봉천동"
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 26,
+        "fields": {
+            "user": 2,
+            "content": "일단 전 숏패딩 입었는데 벌써 힘들어요",
+            "image": "",
+            "latitude": 37.4822499942904,
+            "longitude": 126.95173572626405,
+            "created_at": "2022-12-14T16:46:46.132",
+            "reply_to": 24,
+            "location": "서울특별시 관악구 봉천동"
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 27,
+        "fields": {
+            "user": 7,
+            "content": "네 겹 껴입고 코트 입었더니 괜찮은 거 같기도 해요",
+            "image": "",
+            "latitude": 37.4822499942904,
+            "longitude": 126.95173572626405,
+            "created_at": "2022-12-14T16:31:46.132",
+            "reply_to": 24,
+            "location": "서울특별시 관악구 봉천동"
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 28,
+        "fields": {
+            "user": 8,
+            "content": "역시 겨울은 붕어빵이지",
+            "image": "/bread.jpg",
+            "latitude": 37.48081643237489,
+            "longitude": 126.95384862209592,
+            "created_at": "2022-12-14T15:40:46.132",
+            "reply_to": null,
+            "location": "서울특별시 관악구 봉천동"
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 29,
+        "fields": {
+            "user": 4,
+            "content": "어디서 사셨어요??",
+            "image": "",
+            "latitude": 37.4822499942904,
+            "longitude": 126.95173572626405,
+            "created_at": "2022-12-14T16:00:46.132",
+            "reply_to": 28,
+            "location": "서울특별시 관악구 봉천동"
+        }
+    },
+    {
+        "model": "post.post",
+        "pk": 30,
+        "fields": {
+            "user": 5,
+            "content": "설입이랑 학교랑 온도 차이가 2도는 나는듯; 그래도 추워",
+            "image": "",
+            "latitude": 37.48197627888703,
+            "longitude": 126.95220624207836,
+            "created_at": "2022-12-14T14:44:46.132",
+            "reply_to": null,
+            "location": "서울특별시 관악구 봉천동"
         }
     }
 ]
